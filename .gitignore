@@ -3,3 +3,6 @@ settings.local.json
 
 # Claude Code worktree metadata (ephemeral, per-machine)
 .claude/worktrees/
+
+# harness-flow folders in any path
+harness-flow/
