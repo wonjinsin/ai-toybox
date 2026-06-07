@@ -1,0 +1,7 @@
+# Default owner for everything in the repo.
+*                                   @wonjinsin
+
+# Context docs — keep them honest with the code.
+CLAUDE.md                           @wonjinsin
+README.md                           @wonjinsin
+**/CLAUDE.md                        @wonjinsin
