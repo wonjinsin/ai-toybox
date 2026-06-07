@@ -61,8 +61,9 @@ with your app's own.
   canonical repo path.
 - Do not edit files under `ios/` or `ios/Pods/` by hand — they are regenerated.
 
-## Reference implementation
+## Further reading
 
-A complete working example of this pattern lives in the sibling `smoke-tap`
-project (its `plugins/`, `scripts/`, `modules/`, and `ios/ExpoWidgetsTarget/`),
-if available in your workspace.
+See the [`expo-widgets`](https://github.com/expo/expo) plugin documentation and
+Apple's App Intents / WidgetKit guides for the Swift side. The pieces above
+(config plugin, App Group, Swift-writing plugin, ordered patch scripts) are the
+glue that makes them work together under Expo prebuild.
