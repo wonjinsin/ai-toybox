@@ -1,0 +1,73 @@
+{
+  "appName": "SMOKE TAP",
+  "tabs": {
+    "main": "오늘",
+    "stats": "통계",
+    "settings": "설정"
+  },
+  "main": {
+    "today": "오늘",
+    "noTapYet": "아직 기록 없음",
+    "lastTap": "마지막 기록 {{time}}",
+    "elapsedSince": "{{value}} 전",
+    "units": {
+      "d": "{{n}}일",
+      "h": "{{n}}시간",
+      "m": "{{n}}분",
+      "s": "{{n}}초"
+    }
+  },
+  "home": {
+    "hourly": "시간대별",
+    "hourlyRange": "00 — 24"
+  },
+  "toast": {
+    "added": "+1 기록됨",
+    "undo": "되돌리기"
+  },
+  "stats": {
+    "title": "통계",
+    "day": "일",
+    "week": "주",
+    "month": "월",
+    "totalThis": "이번 {{range}} 합계",
+    "recent": "최근 기록",
+    "rangeLabel": { "day": "일", "week": "주", "month": "달" },
+    "weekdays": {
+      "0": "일",
+      "1": "월",
+      "2": "화",
+      "3": "수",
+      "4": "목",
+      "5": "금",
+      "6": "토"
+    },
+    "timeAgo": {
+      "justNow": "방금",
+      "minutesAgo": "{{n}}분 전",
+      "hoursAgo": "{{n}}시간 전",
+      "daysAgo": "{{n}}일 전"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "section": {
+      "records": "기록",
+      "data": "데이터",
+      "app": "앱"
+    },
+    "shakeUndo": "실수 방지 — 흔들어 되돌리기",
+    "haptic": "햅틱 피드백",
+    "iCloud": "iCloud 동기화",
+    "iCloudOff": "꺼짐",
+    "startDate": "기록 시작일",
+    "noStartDate": "—",
+    "exportCsv": "CSV로 내보내기",
+    "appVersion": "버전",
+    "appIcon": "앱 아이콘",
+    "appIconDefault": "기본",
+    "appearance": "모양",
+    "appearanceAuto": "자동",
+    "tagline": "Smoke Tap은 목표를 설정하지 않습니다\n숫자는 그저 숫자입니다"
+  }
+}

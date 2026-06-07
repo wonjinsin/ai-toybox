@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "harness-flow@harness-flow": true
+  }
+}
