@@ -1,0 +1,16 @@
+{
+  "appName": "iOS 보일러플레이트",
+  "tabs": {
+    "home": "홈",
+    "list": "목록",
+    "community": "커뮤니티",
+    "history": "이용내역",
+    "profile": "내 정보"
+  },
+  "common": {
+    "greeting": "안녕하세요, {{name}}",
+    "loading": "불러오는 중…",
+    "empty": "아직 항목이 없습니다",
+    "retry": "다시 시도"
+  }
+}

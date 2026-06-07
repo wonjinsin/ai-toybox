@@ -1,0 +1,16 @@
+{
+  "appName": "iOS Boilerplate",
+  "tabs": {
+    "home": "Home",
+    "list": "List",
+    "community": "Community",
+    "history": "History",
+    "profile": "Profile"
+  },
+  "common": {
+    "greeting": "Hello, {{name}}",
+    "loading": "Loading…",
+    "empty": "Nothing here yet",
+    "retry": "Retry"
+  }
+}
