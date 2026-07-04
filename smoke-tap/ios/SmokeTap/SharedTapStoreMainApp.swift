@@ -2,7 +2,7 @@ import Foundation
 import WidgetKit
 
 struct SharedTapStoreMainApp {
-    static let appGroupId = "group.com.example.smoketap"
+    static let appGroupId = "group.com.wonjinsin.smoketap"
     static let pendingKey = "pendingTaps"
     static let baseKey   = "baseTodayCount"
     static let lastTapKey = "lastTapTimestamp"

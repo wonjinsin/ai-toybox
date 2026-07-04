@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const WIDGET_TARGET = 'ExpoWidgetsTarget';
 const APP_TARGET = 'SmokeTap';
-const APP_GROUP = 'group.com.example.smoketap';
+const APP_GROUP = 'group.com.wonjinsin.smoketap';
 
 // ── Widget extension ──────────────────────────────────────────────────────────
 

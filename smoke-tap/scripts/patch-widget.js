@@ -16,7 +16,7 @@ const ROOT       = path.join(__dirname, '..');
 const IOS_DIR    = path.join(ROOT, 'ios');
 const WIDGET_DIR = path.join(IOS_DIR, 'ExpoWidgetsTarget');
 const PBXPROJ    = path.join(IOS_DIR, 'SmokeTap.xcodeproj', 'project.pbxproj');
-const APP_GROUP  = 'group.com.example.smoketap';
+const APP_GROUP  = 'group.com.wonjinsin.smoketap';
 const WIDGET_TARGET = 'ExpoWidgetsTarget';
 
 // ─── Swift file content ───────────────────────────────────────────────────────

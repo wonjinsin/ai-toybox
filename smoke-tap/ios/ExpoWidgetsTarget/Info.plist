@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>ExpoWidgetsAppGroupIdentifier</key>
-	<string>group.com.example.smoketap</string>
+	<string>group.com.wonjinsin.smoketap</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>

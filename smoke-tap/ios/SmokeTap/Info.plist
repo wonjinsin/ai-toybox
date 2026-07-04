@@ -28,14 +28,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>smoke-tap</string>
-				<string>com.example.smoketap</string>
+				<string>com.wonjinsin.smoketap</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>ExpoWidgetsAppGroupIdentifier</key>
-	<string>group.com.example.smoketap</string>
+	<string>group.com.wonjinsin.smoketap</string>
 	<key>ExpoWidgets_EnablePushNotifications</key>
 	<false/>
 	<key>LSMinimumSystemVersion</key>
