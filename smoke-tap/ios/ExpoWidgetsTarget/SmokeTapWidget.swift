@@ -20,12 +20,19 @@ struct SmokeTapProvider: TimelineProvider {
         ))
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<SmokeTapEntry>) -> Void) {
-        let entry = SmokeTapEntry(
-            date: Date(),
-            count: SharedTapStore.getBaseCount() + SharedTapStore.getPendingCount(),
-            lastTap: SharedTapStore.getLastTap()
-        )
-        completion(Timeline(entries: [entry], policy: .never))
+        let now = Date()
+        let cal = Calendar.current
+        let nextMidnight = cal.startOfDay(for: cal.date(byAdding: .day, value: 1, to: now)!)
+        let count = SharedTapStore.getBaseCount() + SharedTapStore.getPendingCount()
+        let lastTap = SharedTapStore.getLastTap()
+        // Two entries so WidgetKit itself flips to 0 exactly at midnight — the
+        // .after reload is best-effort and can lag, which would otherwise leave
+        // yesterday's count on screen past midnight until the app is opened.
+        let entries = [
+            SmokeTapEntry(date: now, count: count, lastTap: lastTap),
+            SmokeTapEntry(date: nextMidnight, count: 0, lastTap: lastTap),
+        ]
+        completion(Timeline(entries: entries, policy: .after(nextMidnight)))
     }
 }
 

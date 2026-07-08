@@ -27,8 +27,14 @@ struct SharedTapStore {
     static let appGroupId = "${APP_GROUP}"
     static let pendingKey = "pendingTaps"
     static let baseKey   = "baseTodayCount"
+    static let baseDateKey = "baseDate"
     static let lastTapKey = "lastTapTimestamp"
 
+    static func todayString() -> String {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: Date())
+    }
     static func recordTap() {
         guard let d = UserDefaults(suiteName: appGroupId) else { return }
         d.set(d.integer(forKey: pendingKey) + 1, forKey: pendingKey)
@@ -36,8 +42,12 @@ struct SharedTapStore {
     static func getPendingCount() -> Int {
         UserDefaults(suiteName: appGroupId)?.integer(forKey: pendingKey) ?? 0
     }
+    // Base count is stamped with the day it was written. If the day has rolled
+    // over while the app is closed, treat it as 0 so the widget shows the new day.
     static func getBaseCount() -> Int {
-        UserDefaults(suiteName: appGroupId)?.integer(forKey: baseKey) ?? 0
+        guard let d = UserDefaults(suiteName: appGroupId) else { return 0 }
+        guard d.string(forKey: baseDateKey) == todayString() else { return 0 }
+        return d.integer(forKey: baseKey)
     }
     static func setLastTap(_ ts: Double) {
         UserDefaults(suiteName: appGroupId)?.set(ts, forKey: lastTapKey)
@@ -88,12 +98,19 @@ struct SmokeTapProvider: TimelineProvider {
         ))
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<SmokeTapEntry>) -> Void) {
-        let entry = SmokeTapEntry(
-            date: Date(),
-            count: SharedTapStore.getBaseCount() + SharedTapStore.getPendingCount(),
-            lastTap: SharedTapStore.getLastTap()
-        )
-        completion(Timeline(entries: [entry], policy: .never))
+        let now = Date()
+        let cal = Calendar.current
+        let nextMidnight = cal.startOfDay(for: cal.date(byAdding: .day, value: 1, to: now)!)
+        let count = SharedTapStore.getBaseCount() + SharedTapStore.getPendingCount()
+        let lastTap = SharedTapStore.getLastTap()
+        // Two entries so WidgetKit itself flips to 0 exactly at midnight — the
+        // .after reload is best-effort and can lag, which would otherwise leave
+        // yesterday's count on screen past midnight until the app is opened.
+        let entries = [
+            SmokeTapEntry(date: now, count: count, lastTap: lastTap),
+            SmokeTapEntry(date: nextMidnight, count: 0, lastTap: lastTap),
+        ]
+        completion(Timeline(entries: entries, policy: .after(nextMidnight)))
     }
 }
 

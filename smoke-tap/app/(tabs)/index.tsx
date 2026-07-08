@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { AppState, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTapStore } from '../../store/useTapStore';
 import { t } from '../../i18n';
@@ -14,6 +14,39 @@ import ElapsedSince from '../../components/home/ElapsedSince';
 function toLocalDateString(ts: number): string {
   const d = new Date(ts);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function msUntilNextMidnight(): number {
+  const next = new Date();
+  next.setHours(24, 0, 0, 0);
+  return next.getTime() - Date.now();
+}
+
+// Recompute "today" on day rollover: React state doesn't change on its own
+// when the calendar day flips, so the count would stay on yesterday's date.
+// Re-fire on foreground (timers are suspended in background) and via a timer
+// to next midnight (covers the app being left open across midnight).
+function useToday(): string {
+  const [today, setToday] = useState(() => toLocalDateString(Date.now()));
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      setToday(toLocalDateString(Date.now()));
+      timer = setTimeout(tick, msUntilNextMidnight());
+    };
+    timer = setTimeout(tick, msUntilNextMidnight());
+
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') setToday(toLocalDateString(Date.now()));
+    });
+    return () => {
+      clearTimeout(timer);
+      sub.remove();
+    };
+  }, []);
+
+  return today;
 }
 
 function formatDate(): string {
@@ -38,7 +71,7 @@ export default function HomeScreen() {
   const removeLastTap = useTapStore((s) => s.removeLastTap);
   const getHourlyToday = useTapStore((s) => s.getHourlyToday);
 
-  const today = toLocalDateString(Date.now());
+  const today = useToday();
   const todayCount = records.filter(
     (r) => toLocalDateString(r.timestamp) === today
   ).length;
