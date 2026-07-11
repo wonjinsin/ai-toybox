@@ -10,8 +10,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		30C46ABC434A4F64835122AD /* ExpoWidgetsTarget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1EE96A7F9AE34FC382F34AE6 /* ExpoWidgetsTarget.appex */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		3F19AAB2B7C745A9A59A8F11 /* RecordTapIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C039FB4816F4A1CAD115958 /* RecordTapIntent.swift */; };
 		566F921D6ED143E09BD12F78 /* index.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1B2E678D8D416F8B866100 /* index.swift */; };
 		89240DDF2330437382F00153 /* SharedTapStoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADCA6255503846C8B7CB41C1 /* SharedTapStoreModule.swift */; };
+		8BEA92C8AB004DDE8AA4FEF8 /* SharedTapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D622222264C03AEB29E5D /* SharedTapStore.swift */; };
 		A916915C85A58F79985B4D05 /* libPods-ExpoWidgetsTarget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D751A2F0930AFA7A52B7A33B /* libPods-ExpoWidgetsTarget.a */; };
 		B9B135C99E167E41E0572AAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EAF478827158E2FD83FABFB /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
@@ -21,8 +23,6 @@
 		DBDDAF464A564BDC874B1D59 /* SmokeTapWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD642837421421C98A107EB /* SmokeTapWidget.swift */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 		F304401885AEF9AF5AD02A7E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1CA6887D59FCAF3A5D926F4B /* PrivacyInfo.xcprivacy */; };
-		8BEA92C8AB004DDE8AA4FEF8 /* SharedTapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D622222264C03AEB29E5D /* SharedTapStore.swift */; };
-		3F19AAB2B7C745A9A59A8F11 /* RecordTapIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C039FB4816F4A1CAD115958 /* RecordTapIntent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,17 +50,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		03AA7DFC4A4F472B9753FFBB /* ExpoWidgetsTarget.entitlements */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = ExpoWidgetsTarget.entitlements; path = ExpoWidgetsTarget.entitlements; sourceTree = "<group>"; };
+		03AA7DFC4A4F472B9753FFBB /* ExpoWidgetsTarget.entitlements */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; path = ExpoWidgetsTarget.entitlements; sourceTree = "<group>"; };
 		0E454175B456103710FE7117 /* libPods-SmokeTap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SmokeTap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		11C29710CDFF76E4E338CA7B /* Pods-SmokeTap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmokeTap.debug.xcconfig"; path = "Target Support Files/Pods-SmokeTap/Pods-SmokeTap.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SmokeTap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmokeTap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SmokeTap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SmokeTap/Info.plist; sourceTree = "<group>"; };
-		1CA6887D59FCAF3A5D926F4B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = SmokeTap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1EE96A7F9AE34FC382F34AE6 /* ExpoWidgetsTarget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = undefined; name = ExpoWidgetsTarget.appex; path = ExpoWidgetsTarget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CA6887D59FCAF3A5D926F4B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = SmokeTap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		1EE96A7F9AE34FC382F34AE6 /* ExpoWidgetsTarget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; fileEncoding = 9; includeInIndex = 0; path = ExpoWidgetsTarget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F970EDBBD7D4183C33D35D6 /* Pods-SmokeTap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmokeTap.release.xcconfig"; path = "Target Support Files/Pods-SmokeTap/Pods-SmokeTap.release.xcconfig"; sourceTree = "<group>"; };
-		412594B8833D45B9A05B405D /* ExpoWidgetsTarget.entitlements */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = ExpoWidgetsTarget.entitlements; path = "/Users/WonjinSin/Documents/project/ai-toybox/smoke-tap/ios/ExpoWidgetsTarget/ExpoWidgetsTarget.entitlements"; sourceTree = "<group>"; };
+		412594B8833D45B9A05B405D /* ExpoWidgetsTarget.entitlements */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = ExpoWidgetsTarget.entitlements; path = "/Users/WonjinSin/Documents/project/ai-toybox/smoke-tap/ios/ExpoWidgetsTarget/ExpoWidgetsTarget.entitlements"; sourceTree = "<group>"; };
+		4C039FB4816F4A1CAD115958 /* RecordTapIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = RecordTapIntent.swift; path = ExpoWidgetsTarget/RecordTapIntent.swift; sourceTree = SOURCE_ROOT; };
 		6EAF478827158E2FD83FABFB /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-SmokeTap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		978D622222264C03AEB29E5D /* SharedTapStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = SharedTapStore.swift; path = ExpoWidgetsTarget/SharedTapStore.swift; sourceTree = SOURCE_ROOT; };
 		9F6E0767A0561FF122C05A0F /* Pods-ExpoWidgetsTarget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExpoWidgetsTarget.release.xcconfig"; path = "Target Support Files/Pods-ExpoWidgetsTarget/Pods-ExpoWidgetsTarget.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = SmokeTap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		AC92A9EDCB3C43AD94EB01D3 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = Info.plist; path = "/Users/WonjinSin/Documents/project/ai-toybox/smoke-tap/ios/ExpoWidgetsTarget/Info.plist"; sourceTree = "<group>"; };
@@ -75,8 +77,6 @@
 		F11748442D0722820044C1D9 /* SmokeTap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "SmokeTap-Bridging-Header.h"; path = "SmokeTap/SmokeTap-Bridging-Header.h"; sourceTree = "<group>"; };
 		F7EA2B2C12EC4032BADE7675 /* SharedTapStoreMainApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = SharedTapStoreMainApp.swift; path = SmokeTap/SharedTapStoreMainApp.swift; sourceTree = SOURCE_ROOT; };
 		FD1B2E678D8D416F8B866100 /* index.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = index.swift; path = "/Users/WonjinSin/Documents/project/ai-toybox/smoke-tap/ios/ExpoWidgetsTarget/index.swift"; sourceTree = "<group>"; };
-		978D622222264C03AEB29E5D /* SharedTapStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "SharedTapStore.swift"; path = "ExpoWidgetsTarget/SharedTapStore.swift"; sourceTree = SOURCE_ROOT; };
-		4C039FB4816F4A1CAD115958 /* RecordTapIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "RecordTapIntent.swift"; path = "ExpoWidgetsTarget/RecordTapIntent.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,8 +139,18 @@
 				11C29710CDFF76E4E338CA7B /* Pods-SmokeTap.debug.xcconfig */,
 				2F970EDBBD7D4183C33D35D6 /* Pods-SmokeTap.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		343C55042FFE8CA1003EE4BC /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				F7EA2B2C12EC4032BADE7675 /* SharedTapStoreMainApp.swift */,
+				ADCA6255503846C8B7CB41C1 /* SharedTapStoreModule.swift */,
+				978D622222264C03AEB29E5D /* SharedTapStore.swift */,
+				4C039FB4816F4A1CAD115958 /* RecordTapIntent.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		725946E8CE692708FE24E7F5 /* ExpoWidgetsTarget */ = {
@@ -168,6 +178,7 @@
 				8F63FACB0FDA4D6484B209C0 /* ExpoWidgetsTarget */,
 				34213A6340150ED1EC75CBB7 /* Pods */,
 				9582A9FBBB70F863AC8B0402 /* ExpoModulesProviders */,
+				343C55042FFE8CA1003EE4BC /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -192,7 +203,6 @@
 				DBD642837421421C98A107EB /* SmokeTapWidget.swift */,
 				03AA7DFC4A4F472B9753FFBB /* ExpoWidgetsTarget.entitlements */,
 			);
-			name = ExpoWidgetsTarget;
 			path = ExpoWidgetsTarget;
 			sourceTree = "<group>";
 		};
@@ -561,7 +571,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SmokeTap/SmokeTap.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 2KDMC5JZXC;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -597,7 +608,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SmokeTap/SmokeTap.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 2KDMC5JZXC;
 				INFOPLIST_FILE = SmokeTap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -626,7 +638,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = ExpoWidgetsTarget/ExpoWidgetsTarget.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 2KDMC5JZXC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExpoWidgetsTarget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ExpoWidgetsTarget;
@@ -770,7 +783,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = ExpoWidgetsTarget/ExpoWidgetsTarget.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 2KDMC5JZXC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExpoWidgetsTarget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ExpoWidgetsTarget;

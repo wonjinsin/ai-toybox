@@ -31,7 +31,11 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.wonjinsin.smoketap"
+      "bundleIdentifier": "com.wonjinsin.smoketap",
+      "buildNumber": "2",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     }
   }
 }
