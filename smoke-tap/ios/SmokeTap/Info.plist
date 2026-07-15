@@ -33,10 +33,12 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ExpoWidgetsAppGroupIdentifier</key>
 	<string>group.com.wonjinsin.smoketap</string>
 	<key>ExpoWidgets_EnablePushNotifications</key>
+	<false/>
+	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSMinimumSystemVersion</key>
 	<string>12.0</string>

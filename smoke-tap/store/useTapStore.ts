@@ -9,6 +9,7 @@ type MonthlyBucket = { label: string; count: number };
 type TapState = {
   records: TapRecord[];
   addTap: () => void;
+  importWidgetTaps: (epochSecs: number[]) => void;
   removeLastTap: () => void;
   getTodayCount: () => number;
   getLastTapTime: () => number | null;
@@ -37,6 +38,21 @@ export const useTapStore = create<TapState>()(
           records: [...state.records, { id: String(ts), timestamp: ts }],
         }));
         setLastTap(ts / 1000).catch(() => {});
+      },
+
+      // Replay widget taps on their real timestamps (epoch seconds) so a tap made
+      // yesterday is counted on yesterday, not the day the app happens to sync.
+      importWidgetTaps: (epochSecs: number[]) => {
+        if (!epochSecs.length) return;
+        set((state) => ({
+          records: [
+            ...state.records,
+            ...epochSecs.map((s) => {
+              const ms = Math.round(s * 1000);
+              return { id: String(ms), timestamp: ms };
+            }),
+          ],
+        }));
       },
 
       removeLastTap: () => {

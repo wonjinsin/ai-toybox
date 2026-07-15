@@ -8,11 +8,13 @@ struct SharedTapStoreMainApp {
     static let baseDateKey = "baseDate"
     static let lastTapKey = "lastTapTimestamp"
 
-    static func getPendingCount() -> Int {
-        UserDefaults(suiteName: appGroupId)?.integer(forKey: pendingKey) ?? 0
+    // Pending taps are an array of tap timestamps (epoch seconds); return them so
+    // the app can replay each on its real day instead of stamping them "now".
+    static func getPendingTaps() -> [Double] {
+        UserDefaults(suiteName: appGroupId)?.array(forKey: pendingKey) as? [Double] ?? []
     }
     static func clearPending() {
-        UserDefaults(suiteName: appGroupId)?.set(0, forKey: pendingKey)
+        UserDefaults(suiteName: appGroupId)?.removeObject(forKey: pendingKey)
     }
     // Stamp the base count with today's date so the widget can reset it once
     // the day rolls over while the app is closed. Format must match the widget's

@@ -4,7 +4,7 @@ import { AppState } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTapStore } from '../store/useTapStore';
-import { getPendingCount, clearPending, setBaseCount } from '../modules/SharedTapStore';
+import { getPendingTaps, clearPending, setBaseCount } from '../modules/SharedTapStore';
 import { C } from '../constants/colors';
 
 function toLocalDateString(ts: number): string {
@@ -18,13 +18,11 @@ function getTodayCount(records: { timestamp: number }[]): number {
 }
 
 function useWidgetSync() {
-  const addTap = useTapStore((s) => s.addTap);
-
-  // 위젯 → 앱: pending 탭을 앱 store에 반영
+  // 위젯 → 앱: pending 탭을 원본 시각 그대로 앱 store에 반영
   async function syncPending() {
-    const pending = await getPendingCount();
-    if (pending > 0) {
-      for (let i = 0; i < pending; i++) addTap();
+    const pending = await getPendingTaps();
+    if (pending.length > 0) {
+      useTapStore.getState().importWidgetTaps(pending);
       await clearPending();
     }
   }
@@ -36,14 +34,23 @@ function useWidgetSync() {
   }
 
   useEffect(() => {
-    // 앱 시작 시 동기화
-    syncPending().then(syncBaseCount);
+    const runSync = () => syncPending().then(syncBaseCount);
 
-    // 앱이 포그라운드로 돌아올 때마다 동기화
+    // Wait for persist rehydration before the first sync: importWidgetTaps must
+    // not append onto the pre-hydration empty records, or the async rehydrate
+    // merge would overwrite (and lose) the just-imported taps.
+    let unsubHydrate: (() => void) | undefined;
+    if (useTapStore.persist.hasHydrated()) runSync();
+    else unsubHydrate = useTapStore.persist.onFinishHydration(runSync);
+
+    // 앱이 포그라운드로 돌아올 때마다 동기화 (이 시점엔 이미 하이드레이션 완료)
     const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') syncPending().then(syncBaseCount);
+      if (state === 'active') runSync();
     });
-    return () => sub.remove();
+    return () => {
+      sub.remove();
+      unsubHydrate?.();
+    };
   }, []);
 
   // store records가 바뀔 때마다 위젯 기준값 갱신
