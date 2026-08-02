@@ -16,6 +16,24 @@ func NewTransactionRepo(client *ent.Client) *TransactionRepo {
 	return &TransactionRepo{client: client}
 }
 
+func (r *TransactionRepo) ExistingHashes(ctx context.Context, hashes []string) (map[string]bool, error) {
+	if len(hashes) == 0 {
+		return map[string]bool{}, nil
+	}
+	rows, err := r.client.Transaction.Query().
+		Where(enttx.HashIn(hashes...)).
+		Select(enttx.FieldHash).
+		Strings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	existing := make(map[string]bool, len(rows))
+	for _, h := range rows {
+		existing[h] = true
+	}
+	return existing, nil
+}
+
 func (r *TransactionRepo) BulkInsert(ctx context.Context, txs []domain.Transaction) (int, int, error) {
 	if len(txs) == 0 {
 		return 0, 0, nil
@@ -24,16 +42,9 @@ func (r *TransactionRepo) BulkInsert(ctx context.Context, txs []domain.Transacti
 	for i, t := range txs {
 		hashes[i] = t.Hash
 	}
-	existing, err := r.client.Transaction.Query().
-		Where(enttx.HashIn(hashes...)).
-		Select(enttx.FieldHash).
-		Strings(ctx)
+	seen, err := r.ExistingHashes(ctx, hashes)
 	if err != nil {
 		return 0, 0, err
-	}
-	seen := make(map[string]bool, len(existing))
-	for _, h := range existing {
-		seen[h] = true
 	}
 
 	var builders []*ent.TransactionCreate

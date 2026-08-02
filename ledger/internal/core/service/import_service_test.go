@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"golang.org/x/text/encoding/korean"
@@ -23,23 +24,40 @@ const bankMappingJSON = `{"header_rows":2,"date_col":0,"merchant_col":2,"memo_co
 	`"amount_mode":"split","amount_col":-1,"sign":"negative_expense",` +
 	`"withdraw_col":3,"deposit_col":4,"questions":[]}`
 
-// countingRunner returns a fixed reply and counts invocations.
-type countingRunner struct {
-	reply string
-	calls int
+const emptyReview = `{"groups":[]}`
+
+// fakeAI routes prompts to canned replies by pipeline stage.
+type fakeAI struct {
+	mappingReply string
+	reviewReply  string
+	mappingCalls int
+	reviewCalls  int
 }
 
-func (c *countingRunner) Run(_ context.Context, _ string) (string, error) {
-	c.calls++
-	return c.reply, nil
+func (f *fakeAI) Run(_ context.Context, prompt string) (string, error) {
+	switch {
+	case strings.Contains(prompt, "CSV column mapper"):
+		f.mappingCalls++
+		return f.mappingReply, nil
+	case strings.Contains(prompt, "reviewing parsed transactions"):
+		f.reviewCalls++
+		if f.reviewReply == "" {
+			return emptyReview, nil
+		}
+		return f.reviewReply, nil
+	default:
+		return "", nil
+	}
 }
 
-// scriptedPrompter answers mapping questions from a canned list and
-// records what was asked. answers empty = fail the test if called.
+// scriptedPrompter answers questions from canned lists; unexpected questions
+// fail the test.
 type scriptedPrompter struct {
-	t       *testing.T
-	answers []string
-	asked   []domain.MappingQuestion
+	t            *testing.T
+	answers      []string
+	rowDecisions []domain.Decision
+	asked        []domain.MappingQuestion
+	rowAsked     []domain.RowGroupQuestion
 }
 
 func (p *scriptedPrompter) AskMapping(_ context.Context, q domain.MappingQuestion) (string, error) {
@@ -52,12 +70,24 @@ func (p *scriptedPrompter) AskMapping(_ context.Context, q domain.MappingQuestio
 	return answer, nil
 }
 
-func setupImport(t *testing.T) (*persistence.DB, *countingRunner, *service.ImportService) {
-	db, runner, _, svc := setupImportWithPrompter(t, nil)
-	return db, runner, svc
+func (p *scriptedPrompter) AskRowGroup(_ context.Context, q domain.RowGroupQuestion) (domain.Decision, error) {
+	p.rowAsked = append(p.rowAsked, q)
+	if len(p.rowDecisions) == 0 {
+		p.t.Fatalf("unexpected row group question: %+v", q)
+	}
+	d := p.rowDecisions[0]
+	p.rowDecisions = p.rowDecisions[1:]
+	return d, nil
 }
 
-func setupImportWithPrompter(t *testing.T, answers []string) (*persistence.DB, *countingRunner, *scriptedPrompter, *service.ImportService) {
+type fixture struct {
+	db       *persistence.DB
+	ai       *fakeAI
+	prompter *scriptedPrompter
+	svc      *service.ImportService
+}
+
+func setup(t *testing.T) *fixture {
 	t.Helper()
 	db, err := persistence.Open(context.Background(), filepath.Join(t.TempDir(), "test.db"))
 	if err != nil {
@@ -69,10 +99,14 @@ func setupImportWithPrompter(t *testing.T, answers []string) (*persistence.DB, *
 	if _, err := sourceRepo.Create(context.Background(), "신한체크", "card"); err != nil {
 		t.Fatal(err)
 	}
-	runner := &countingRunner{reply: bankMappingJSON}
-	prompter := &scriptedPrompter{t: t, answers: answers}
-	svc := service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), runner, prompter)
-	return db, runner, prompter, svc
+	ai := &fakeAI{mappingReply: bankMappingJSON}
+	prompter := &scriptedPrompter{t: t}
+	svc := service.NewImportService(sourceRepo,
+		persistence.NewMappingRepo(db.Client),
+		persistence.NewTransactionRepo(db.Client),
+		persistence.NewRuleRepo(db.Client),
+		ai, prompter)
+	return &fixture{db: db, ai: ai, prompter: prompter, svc: svc}
 }
 
 func toEUCKR(t *testing.T, s string) []byte {
@@ -84,45 +118,45 @@ func toEUCKR(t *testing.T, s string) []byte {
 	return out
 }
 
-func TestImportEUCKRBankCSV(t *testing.T) {
-	db, runner, svc := setupImport(t)
-
-	res, err := svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크")
+func (f *fixture) importCSV(t *testing.T, csv string, opts domain.ImportOptions) *domain.ImportResult {
+	t.Helper()
+	res, err := f.svc.Import(context.Background(), toEUCKR(t, csv), "신한체크", opts)
 	if err != nil {
 		t.Fatal(err)
 	}
+	return res
+}
+
+func TestImportEUCKRBankCSV(t *testing.T) {
+	f := setup(t)
+	res := f.importCSV(t, bankCSV, domain.ImportOptions{})
+
 	if res.Saved != 3 || res.DupSkipped != 0 || len(res.Failed) != 0 {
 		t.Fatalf("unexpected result: %+v", res)
 	}
-	if runner.calls != 1 {
-		t.Errorf("AI mapping calls = %d, want 1", runner.calls)
+	if f.ai.mappingCalls != 1 {
+		t.Errorf("mapping calls = %d, want 1", f.ai.mappingCalls)
 	}
 	if res.MappingCached {
 		t.Error("first import should not be a cache hit")
 	}
 
 	var amount int64
-	err = db.SQL.QueryRow(`SELECT amount FROM transactions WHERE merchant = '스타벅스 강남점'`).Scan(&amount)
+	err := f.db.SQL.QueryRow(`SELECT amount FROM transactions WHERE merchant = '스타벅스 강남점'`).Scan(&amount)
 	if err != nil || amount != -4500 {
 		t.Errorf("expense amount = %d, %v; want -4500", amount, err)
 	}
-	err = db.SQL.QueryRow(`SELECT amount FROM transactions WHERE merchant = '회사급여'`).Scan(&amount)
+	err = f.db.SQL.QueryRow(`SELECT amount FROM transactions WHERE merchant = '회사급여'`).Scan(&amount)
 	if err != nil || amount != 3000000 {
 		t.Errorf("income amount = %d, %v; want 3000000", amount, err)
 	}
 }
 
 func TestReimportSameFileSkipsAllAsDuplicates(t *testing.T) {
-	_, _, svc := setupImport(t)
-	data := toEUCKR(t, bankCSV)
+	f := setup(t)
+	f.importCSV(t, bankCSV, domain.ImportOptions{})
+	res := f.importCSV(t, bankCSV, domain.ImportOptions{})
 
-	if _, err := svc.Import(context.Background(), data, "신한체크"); err != nil {
-		t.Fatal(err)
-	}
-	res, err := svc.Import(context.Background(), data, "신한체크")
-	if err != nil {
-		t.Fatal(err)
-	}
 	if res.Saved != 0 || res.DupSkipped != 3 {
 		t.Fatalf("reimport: saved=%d dup=%d, want 0/3", res.Saved, res.DupSkipped)
 	}
@@ -132,21 +166,17 @@ func TestReimportSameFileSkipsAllAsDuplicates(t *testing.T) {
 }
 
 func TestMappingCacheAvoidsSecondAICall(t *testing.T) {
-	_, runner, svc := setupImport(t)
+	f := setup(t)
+	f.importCSV(t, bankCSV, domain.ImportOptions{})
 
-	if _, err := svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크"); err != nil {
-		t.Fatal(err)
-	}
 	// Same header, different data rows: must reuse the cached mapping.
 	otherMonth := "신한은행 거래내역조회\n" +
 		"거래일자,적요,내용,출금액,입금액,잔액\n" +
 		"2026-08-01,체크카드,이마트,\"50,000\",,\"3,943,500\"\n"
-	res, err := svc.Import(context.Background(), toEUCKR(t, otherMonth), "신한체크")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if runner.calls != 1 {
-		t.Errorf("AI calls = %d, want 1 (cache should prevent second call)", runner.calls)
+	res := f.importCSV(t, otherMonth, domain.ImportOptions{})
+
+	if f.ai.mappingCalls != 1 {
+		t.Errorf("mapping calls = %d, want 1 (cache should prevent second call)", f.ai.mappingCalls)
 	}
 	if res.Saved != 1 {
 		t.Errorf("saved = %d, want 1", res.Saved)
@@ -154,21 +184,17 @@ func TestMappingCacheAvoidsSecondAICall(t *testing.T) {
 }
 
 func TestAmbiguousMappingAsksUserAndCachesResolution(t *testing.T) {
+	f := setup(t)
 	// AI is unsure whether column 1 (적요) or 2 (내용) is the merchant.
-	ambiguous := `{"header_rows":2,"date_col":0,"merchant_col":1,"memo_col":1,` +
+	f.ai.mappingReply = `{"header_rows":2,"date_col":0,"merchant_col":1,"memo_col":1,` +
 		`"amount_mode":"split","amount_col":-1,"sign":"negative_expense",` +
 		`"withdraw_col":3,"deposit_col":4,` +
 		`"questions":[{"field":"merchant_col","prompt":"가맹점 컬럼은?","options":["1: 적요","2: 내용"]}]}`
+	f.prompter.answers = []string{"2: 내용"}
 
-	db, runner, prompter, svc := setupImportWithPrompter(t, []string{"2: 내용"})
-	runner.reply = ambiguous
-
-	res, err := svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(prompter.asked) != 1 || prompter.asked[0].Field != "merchant_col" {
-		t.Fatalf("prompter asked = %+v, want 1 merchant_col question", prompter.asked)
+	res := f.importCSV(t, bankCSV, domain.ImportOptions{})
+	if len(f.prompter.asked) != 1 || f.prompter.asked[0].Field != "merchant_col" {
+		t.Fatalf("prompter asked = %+v, want 1 merchant_col question", f.prompter.asked)
 	}
 	if res.Saved != 3 {
 		t.Fatalf("saved = %d, want 3", res.Saved)
@@ -176,22 +202,72 @@ func TestAmbiguousMappingAsksUserAndCachesResolution(t *testing.T) {
 
 	// The user's choice (column 2, 내용) must be applied...
 	var count int
-	if err := db.SQL.QueryRow(`SELECT COUNT(*) FROM transactions WHERE merchant = '스타벅스 강남점'`).Scan(&count); err != nil || count != 1 {
+	if err := f.db.SQL.QueryRow(`SELECT COUNT(*) FROM transactions WHERE merchant = '스타벅스 강남점'`).Scan(&count); err != nil || count != 1 {
 		t.Errorf("merchant from chosen column not applied (count=%d, err=%v)", count, err)
 	}
 	// ...and the cached mapping must be final: re-import asks nothing.
-	prompter.answers = nil
-	if _, err := svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크"); err != nil {
-		t.Fatal(err)
+	f.importCSV(t, bankCSV, domain.ImportOptions{})
+	if len(f.prompter.asked) != 1 {
+		t.Errorf("cached mapping should not re-ask; asked %d times", len(f.prompter.asked))
 	}
-	if len(prompter.asked) != 1 {
-		t.Errorf("cached mapping should not re-ask; asked %d times", len(prompter.asked))
+}
+
+const cancelCSV = "신한은행 거래내역조회\n" +
+	"거래일자,적요,내용,출금액,입금액,잔액\n" +
+	"2026-07-01,체크카드,스타벅스 강남점,\"4,500\",,\"995,500\"\n" +
+	"2026-07-01,승인취소,스타벅스 강남점 승인취소,,\"4,500\",\"1,000,000\"\n" +
+	"2026-07-03,체크카드,GS25 역삼점,\"2,000\",,\"998,000\"\n"
+
+const cancelReview = `{"groups":[{"kind":"cancel_pair",` +
+	`"reason":"승인취소로 원거래와 상쇄됩니다","pattern":"승인취소","row_indexes":[1]}]}`
+
+func TestReviewGroupAlwaysSkipCreatesRule(t *testing.T) {
+	f := setup(t)
+	f.ai.reviewReply = cancelReview
+	f.prompter.rowDecisions = []domain.Decision{domain.DecisionAlwaysSkip}
+
+	res := f.importCSV(t, cancelCSV, domain.ImportOptions{})
+	if len(f.prompter.rowAsked) != 1 {
+		t.Fatalf("row group questions = %d, want 1 (grouped, not per-row)", len(f.prompter.rowAsked))
+	}
+	if res.Saved != 2 || res.UserSkipped != 1 || res.RulesCreated != 1 {
+		t.Fatalf("unexpected result: %+v", res)
+	}
+
+	var count int
+	if err := f.db.SQL.QueryRow(`SELECT COUNT(*) FROM import_rules WHERE pattern = '승인취소' AND action = 'skip'`).Scan(&count); err != nil || count != 1 {
+		t.Fatalf("rule not persisted (count=%d, err=%v)", count, err)
+	}
+
+	// Next import: the rule drops matching rows BEFORE review — no question.
+	res = f.importCSV(t, cancelCSV, domain.ImportOptions{})
+	if len(f.prompter.rowAsked) != 1 {
+		t.Errorf("rule should pre-drop rows; asked %d times", len(f.prompter.rowAsked))
+	}
+	if res.RuleSkipped != 1 {
+		t.Errorf("rule-skipped = %d, want 1", res.RuleSkipped)
+	}
+}
+
+func TestAutoYesSkipsReviewEntirely(t *testing.T) {
+	f := setup(t)
+	f.ai.reviewReply = cancelReview // would flag rows, but must never be called
+
+	res := f.importCSV(t, cancelCSV, domain.ImportOptions{AutoYes: true})
+	if f.ai.reviewCalls != 0 {
+		t.Errorf("review AI calls = %d, want 0 with --yes", f.ai.reviewCalls)
+	}
+	if len(f.prompter.rowAsked) != 0 {
+		t.Errorf("no questions expected with --yes")
+	}
+	if res.Saved != 3 {
+		t.Errorf("saved = %d, want 3 (everything included)", res.Saved)
 	}
 }
 
 func TestImportUnknownSourceFails(t *testing.T) {
-	_, _, svc := setupImport(t)
-	if _, err := svc.Import(context.Background(), []byte("a,b\n"), "없는소스"); err == nil {
+	f := setup(t)
+	if _, err := f.svc.Import(context.Background(), []byte("a,b\n"), "없는소스", domain.ImportOptions{}); err == nil {
 		t.Fatal("want error for unregistered source")
 	}
 }

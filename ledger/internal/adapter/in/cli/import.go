@@ -6,10 +6,13 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/wonjinsin/ledger/internal/core/domain"
 )
 
 func newImportCmd(open func(ctx context.Context) (*deps, error)) *cobra.Command {
 	var sourceName string
+	var autoYes bool
 	cmd := &cobra.Command{
 		Use:   "import <file.csv>",
 		Short: "Import a bank/card CSV into the ledger",
@@ -23,7 +26,7 @@ func newImportCmd(open func(ctx context.Context) (*deps, error)) *cobra.Command 
 			if err != nil {
 				return err
 			}
-			res, err := d.importer.Import(cmd.Context(), data, sourceName)
+			res, err := d.importer.Import(cmd.Context(), data, sourceName, domain.ImportOptions{AutoYes: autoYes})
 			if err != nil {
 				return err
 			}
@@ -33,6 +36,10 @@ func newImportCmd(open func(ctx context.Context) (*deps, error)) *cobra.Command 
 				cacheNote = "cached mapping reused"
 			}
 			fmt.Fprintf(out, "saved %d, duplicates skipped %d (%s)\n", res.Saved, res.DupSkipped, cacheNote)
+			if res.RuleSkipped > 0 || res.UserSkipped > 0 || res.RulesCreated > 0 {
+				fmt.Fprintf(out, "rule-skipped %d, user-skipped %d, rules created %d\n",
+					res.RuleSkipped, res.UserSkipped, res.RulesCreated)
+			}
 			for _, f := range res.Failed {
 				fmt.Fprintf(out, "  ! line %d not imported: %s (%s)\n", f.Line, f.Reason, f.Raw)
 			}
@@ -40,6 +47,7 @@ func newImportCmd(open func(ctx context.Context) (*deps, error)) *cobra.Command 
 		},
 	}
 	cmd.Flags().StringVar(&sourceName, "source", "", "registered source name (required)")
+	cmd.Flags().BoolVarP(&autoYes, "yes", "y", false, "skip the review pass and questions; include everything")
 	_ = cmd.MarkFlagRequired("source")
 	return cmd
 }

@@ -14,16 +14,17 @@ type ImportService struct {
 	sources  out.SourceRepo
 	mappings out.MappingRepo
 	txs      out.TransactionRepo
+	rules    out.RuleRepo
 	ai       out.AIRunner
 	prompter out.Prompter
 }
 
-func NewImportService(sources out.SourceRepo, mappings out.MappingRepo, txs out.TransactionRepo, ai out.AIRunner, prompter out.Prompter) *ImportService {
-	return &ImportService{sources: sources, mappings: mappings, txs: txs, ai: ai, prompter: prompter}
+func NewImportService(sources out.SourceRepo, mappings out.MappingRepo, txs out.TransactionRepo, rules out.RuleRepo, ai out.AIRunner, prompter out.Prompter) *ImportService {
+	return &ImportService{sources: sources, mappings: mappings, txs: txs, rules: rules, ai: ai, prompter: prompter}
 }
 
 // Import parses raw CSV bytes and stores transactions for the named source.
-func (s *ImportService) Import(ctx context.Context, data []byte, sourceName string) (*domain.ImportResult, error) {
+func (s *ImportService) Import(ctx context.Context, data []byte, sourceName string, opts domain.ImportOptions) (*domain.ImportResult, error) {
 	source, err := s.sources.GetByName(ctx, sourceName)
 	if err != nil {
 		return nil, fmt.Errorf("source %q not registered (use: ledger sources add): %w", sourceName, err)
@@ -60,11 +61,55 @@ func (s *ImportService) Import(ctx context.Context, data []byte, sourceName stri
 	}
 
 	txs, failed := parseRows(records, mapping, source.ID)
+	res := &domain.ImportResult{Failed: failed, MappingCached: cached}
+
+	rules, err := s.rules.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	txs, ruleSkipped, exempt := applyRules(txs, rules, source.ID)
+	res.RuleSkipped = ruleSkipped
+
+	// Drop already-stored rows before review so a re-import never re-asks.
+	txs, err = s.dropExisting(ctx, txs, res)
+	if err != nil {
+		return nil, err
+	}
+
+	if !opts.AutoYes && len(txs) > 0 {
+		txs, err = s.reviewRows(ctx, txs, exempt, source.ID, res)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	saved, dup, err := s.txs.BulkInsert(ctx, txs)
 	if err != nil {
 		return nil, err
 	}
-	return &domain.ImportResult{Saved: saved, DupSkipped: dup, Failed: failed, MappingCached: cached}, nil
+	res.Saved = saved
+	res.DupSkipped += dup
+	return res, nil
+}
+
+func (s *ImportService) dropExisting(ctx context.Context, txs []domain.Transaction, res *domain.ImportResult) ([]domain.Transaction, error) {
+	hashes := make([]string, len(txs))
+	for i, tx := range txs {
+		hashes[i] = tx.Hash
+	}
+	existing, err := s.txs.ExistingHashes(ctx, hashes)
+	if err != nil {
+		return nil, err
+	}
+	kept := txs[:0]
+	for _, tx := range txs {
+		if existing[tx.Hash] {
+			res.DupSkipped++
+			continue
+		}
+		kept = append(kept, tx)
+	}
+	return kept, nil
 }
 
 const mappingPromptFmt = `You are a CSV column mapper for a Korean personal ledger.

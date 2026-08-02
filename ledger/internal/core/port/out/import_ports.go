@@ -16,4 +16,12 @@ type TransactionRepo interface {
 	// BulkInsert stores transactions, silently skipping hash duplicates.
 	// Returns (inserted, duplicatesSkipped).
 	BulkInsert(ctx context.Context, txs []domain.Transaction) (int, int, error)
+	// ExistingHashes returns which of the given hashes are already stored.
+	ExistingHashes(ctx context.Context, hashes []string) (map[string]bool, error)
+}
+
+type RuleRepo interface {
+	List(ctx context.Context) ([]*domain.ImportRule, error)
+	Create(ctx context.Context, rule domain.ImportRule) (*domain.ImportRule, error)
+	Delete(ctx context.Context, id int) error
 }

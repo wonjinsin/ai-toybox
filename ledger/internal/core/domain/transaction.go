@@ -21,6 +21,9 @@ type FailedRow struct {
 type ImportResult struct {
 	Saved         int
 	DupSkipped    int
+	RuleSkipped   int // dropped by persisted import rules
+	UserSkipped   int // dropped by an interactive decision this run
+	RulesCreated  int
 	Failed        []FailedRow
 	MappingCached bool
 }
