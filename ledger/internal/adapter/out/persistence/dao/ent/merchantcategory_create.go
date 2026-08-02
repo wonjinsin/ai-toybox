@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/wonjinsin/ledger/internal/adapter/out/persistence/dao/ent/merchantcategory"
@@ -17,6 +18,7 @@ type MerchantCategoryCreate struct {
 	config
 	mutation *MerchantCategoryMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetMerchant sets the "merchant" field.
@@ -102,6 +104,7 @@ func (_c *MerchantCategoryCreate) createSpec() (*MerchantCategory, *sqlgraph.Cre
 		_node = &MerchantCategory{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(merchantcategory.Table, sqlgraph.NewFieldSpec(merchantcategory.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.Merchant(); ok {
 		_spec.SetField(merchantcategory.FieldMerchant, field.TypeString, value)
 		_node.Merchant = value
@@ -113,11 +116,199 @@ func (_c *MerchantCategoryCreate) createSpec() (*MerchantCategory, *sqlgraph.Cre
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.MerchantCategory.Create().
+//		SetMerchant(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.MerchantCategoryUpsert) {
+//			SetMerchant(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *MerchantCategoryCreate) OnConflict(opts ...sql.ConflictOption) *MerchantCategoryUpsertOne {
+	_c.conflict = opts
+	return &MerchantCategoryUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.MerchantCategory.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *MerchantCategoryCreate) OnConflictColumns(columns ...string) *MerchantCategoryUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &MerchantCategoryUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// MerchantCategoryUpsertOne is the builder for "upsert"-ing
+	//  one MerchantCategory node.
+	MerchantCategoryUpsertOne struct {
+		create *MerchantCategoryCreate
+	}
+
+	// MerchantCategoryUpsert is the "OnConflict" setter.
+	MerchantCategoryUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetMerchant sets the "merchant" field.
+func (u *MerchantCategoryUpsert) SetMerchant(v string) *MerchantCategoryUpsert {
+	u.Set(merchantcategory.FieldMerchant, v)
+	return u
+}
+
+// UpdateMerchant sets the "merchant" field to the value that was provided on create.
+func (u *MerchantCategoryUpsert) UpdateMerchant() *MerchantCategoryUpsert {
+	u.SetExcluded(merchantcategory.FieldMerchant)
+	return u
+}
+
+// SetCategoryID sets the "category_id" field.
+func (u *MerchantCategoryUpsert) SetCategoryID(v int) *MerchantCategoryUpsert {
+	u.Set(merchantcategory.FieldCategoryID, v)
+	return u
+}
+
+// UpdateCategoryID sets the "category_id" field to the value that was provided on create.
+func (u *MerchantCategoryUpsert) UpdateCategoryID() *MerchantCategoryUpsert {
+	u.SetExcluded(merchantcategory.FieldCategoryID)
+	return u
+}
+
+// AddCategoryID adds v to the "category_id" field.
+func (u *MerchantCategoryUpsert) AddCategoryID(v int) *MerchantCategoryUpsert {
+	u.Add(merchantcategory.FieldCategoryID, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.MerchantCategory.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *MerchantCategoryUpsertOne) UpdateNewValues() *MerchantCategoryUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.MerchantCategory.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *MerchantCategoryUpsertOne) Ignore() *MerchantCategoryUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *MerchantCategoryUpsertOne) DoNothing() *MerchantCategoryUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the MerchantCategoryCreate.OnConflict
+// documentation for more info.
+func (u *MerchantCategoryUpsertOne) Update(set func(*MerchantCategoryUpsert)) *MerchantCategoryUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&MerchantCategoryUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetMerchant sets the "merchant" field.
+func (u *MerchantCategoryUpsertOne) SetMerchant(v string) *MerchantCategoryUpsertOne {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.SetMerchant(v)
+	})
+}
+
+// UpdateMerchant sets the "merchant" field to the value that was provided on create.
+func (u *MerchantCategoryUpsertOne) UpdateMerchant() *MerchantCategoryUpsertOne {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.UpdateMerchant()
+	})
+}
+
+// SetCategoryID sets the "category_id" field.
+func (u *MerchantCategoryUpsertOne) SetCategoryID(v int) *MerchantCategoryUpsertOne {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.SetCategoryID(v)
+	})
+}
+
+// AddCategoryID adds v to the "category_id" field.
+func (u *MerchantCategoryUpsertOne) AddCategoryID(v int) *MerchantCategoryUpsertOne {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.AddCategoryID(v)
+	})
+}
+
+// UpdateCategoryID sets the "category_id" field to the value that was provided on create.
+func (u *MerchantCategoryUpsertOne) UpdateCategoryID() *MerchantCategoryUpsertOne {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.UpdateCategoryID()
+	})
+}
+
+// Exec executes the query.
+func (u *MerchantCategoryUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for MerchantCategoryCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *MerchantCategoryUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *MerchantCategoryUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *MerchantCategoryUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // MerchantCategoryCreateBulk is the builder for creating many MerchantCategory entities in bulk.
 type MerchantCategoryCreateBulk struct {
 	config
 	err      error
 	builders []*MerchantCategoryCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the MerchantCategory entities in the database.
@@ -146,6 +337,7 @@ func (_c *MerchantCategoryCreateBulk) Save(ctx context.Context) ([]*MerchantCate
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -196,6 +388,145 @@ func (_c *MerchantCategoryCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *MerchantCategoryCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.MerchantCategory.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.MerchantCategoryUpsert) {
+//			SetMerchant(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *MerchantCategoryCreateBulk) OnConflict(opts ...sql.ConflictOption) *MerchantCategoryUpsertBulk {
+	_c.conflict = opts
+	return &MerchantCategoryUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.MerchantCategory.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *MerchantCategoryCreateBulk) OnConflictColumns(columns ...string) *MerchantCategoryUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &MerchantCategoryUpsertBulk{
+		create: _c,
+	}
+}
+
+// MerchantCategoryUpsertBulk is the builder for "upsert"-ing
+// a bulk of MerchantCategory nodes.
+type MerchantCategoryUpsertBulk struct {
+	create *MerchantCategoryCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.MerchantCategory.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *MerchantCategoryUpsertBulk) UpdateNewValues() *MerchantCategoryUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.MerchantCategory.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *MerchantCategoryUpsertBulk) Ignore() *MerchantCategoryUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *MerchantCategoryUpsertBulk) DoNothing() *MerchantCategoryUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the MerchantCategoryCreateBulk.OnConflict
+// documentation for more info.
+func (u *MerchantCategoryUpsertBulk) Update(set func(*MerchantCategoryUpsert)) *MerchantCategoryUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&MerchantCategoryUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetMerchant sets the "merchant" field.
+func (u *MerchantCategoryUpsertBulk) SetMerchant(v string) *MerchantCategoryUpsertBulk {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.SetMerchant(v)
+	})
+}
+
+// UpdateMerchant sets the "merchant" field to the value that was provided on create.
+func (u *MerchantCategoryUpsertBulk) UpdateMerchant() *MerchantCategoryUpsertBulk {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.UpdateMerchant()
+	})
+}
+
+// SetCategoryID sets the "category_id" field.
+func (u *MerchantCategoryUpsertBulk) SetCategoryID(v int) *MerchantCategoryUpsertBulk {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.SetCategoryID(v)
+	})
+}
+
+// AddCategoryID adds v to the "category_id" field.
+func (u *MerchantCategoryUpsertBulk) AddCategoryID(v int) *MerchantCategoryUpsertBulk {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.AddCategoryID(v)
+	})
+}
+
+// UpdateCategoryID sets the "category_id" field to the value that was provided on create.
+func (u *MerchantCategoryUpsertBulk) UpdateCategoryID() *MerchantCategoryUpsertBulk {
+	return u.Update(func(s *MerchantCategoryUpsert) {
+		s.UpdateCategoryID()
+	})
+}
+
+// Exec executes the query.
+func (u *MerchantCategoryUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the MerchantCategoryCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for MerchantCategoryCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *MerchantCategoryUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

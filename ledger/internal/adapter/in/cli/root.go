@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/wonjinsin/ledger/internal/adapter/out/ai"
 	"github.com/wonjinsin/ledger/internal/adapter/out/persistence"
 	"github.com/wonjinsin/ledger/internal/config"
 	"github.com/wonjinsin/ledger/internal/core/service"
@@ -13,8 +14,9 @@ import (
 // deps carries wired usecases for commands; built lazily on first use
 // so that --help never touches the DB.
 type deps struct {
-	db     *persistence.DB
-	source *service.SourceService
+	db       *persistence.DB
+	source   *service.SourceService
+	importer *service.ImportService
 }
 
 func NewRootCmd() *cobra.Command {
@@ -38,9 +40,15 @@ func NewRootCmd() *cobra.Command {
 		if err != nil {
 			return nil, err
 		}
+		runner, err := ai.NewRunner(cfg.AI)
+		if err != nil {
+			return nil, err
+		}
+		sourceRepo := persistence.NewSourceRepo(db.Client)
 		d = &deps{
-			db:     db,
-			source: service.NewSourceService(persistence.NewSourceRepo(db.Client)),
+			db:       db,
+			source:   service.NewSourceService(sourceRepo),
+			importer: service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), runner),
 		}
 		return d, nil
 	}
@@ -51,6 +59,6 @@ func NewRootCmd() *cobra.Command {
 		return nil
 	}
 
-	root.AddCommand(newSourcesCmd(open))
+	root.AddCommand(newSourcesCmd(open), newImportCmd(open))
 	return root
 }

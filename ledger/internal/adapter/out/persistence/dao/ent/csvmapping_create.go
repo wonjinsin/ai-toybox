@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/wonjinsin/ledger/internal/adapter/out/persistence/dao/ent/csvmapping"
@@ -17,6 +18,7 @@ type CSVMappingCreate struct {
 	config
 	mutation *CSVMappingMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetHeaderHash sets the "header_hash" field.
@@ -102,6 +104,7 @@ func (_c *CSVMappingCreate) createSpec() (*CSVMapping, *sqlgraph.CreateSpec) {
 		_node = &CSVMapping{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(csvmapping.Table, sqlgraph.NewFieldSpec(csvmapping.FieldID, field.TypeInt))
 	)
+	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.HeaderHash(); ok {
 		_spec.SetField(csvmapping.FieldHeaderHash, field.TypeString, value)
 		_node.HeaderHash = value
@@ -113,11 +116,186 @@ func (_c *CSVMappingCreate) createSpec() (*CSVMapping, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.CSVMapping.Create().
+//		SetHeaderHash(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.CSVMappingUpsert) {
+//			SetHeaderHash(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *CSVMappingCreate) OnConflict(opts ...sql.ConflictOption) *CSVMappingUpsertOne {
+	_c.conflict = opts
+	return &CSVMappingUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.CSVMapping.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *CSVMappingCreate) OnConflictColumns(columns ...string) *CSVMappingUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &CSVMappingUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// CSVMappingUpsertOne is the builder for "upsert"-ing
+	//  one CSVMapping node.
+	CSVMappingUpsertOne struct {
+		create *CSVMappingCreate
+	}
+
+	// CSVMappingUpsert is the "OnConflict" setter.
+	CSVMappingUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetHeaderHash sets the "header_hash" field.
+func (u *CSVMappingUpsert) SetHeaderHash(v string) *CSVMappingUpsert {
+	u.Set(csvmapping.FieldHeaderHash, v)
+	return u
+}
+
+// UpdateHeaderHash sets the "header_hash" field to the value that was provided on create.
+func (u *CSVMappingUpsert) UpdateHeaderHash() *CSVMappingUpsert {
+	u.SetExcluded(csvmapping.FieldHeaderHash)
+	return u
+}
+
+// SetMappingJSON sets the "mapping_json" field.
+func (u *CSVMappingUpsert) SetMappingJSON(v string) *CSVMappingUpsert {
+	u.Set(csvmapping.FieldMappingJSON, v)
+	return u
+}
+
+// UpdateMappingJSON sets the "mapping_json" field to the value that was provided on create.
+func (u *CSVMappingUpsert) UpdateMappingJSON() *CSVMappingUpsert {
+	u.SetExcluded(csvmapping.FieldMappingJSON)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.CSVMapping.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *CSVMappingUpsertOne) UpdateNewValues() *CSVMappingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.CSVMapping.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *CSVMappingUpsertOne) Ignore() *CSVMappingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *CSVMappingUpsertOne) DoNothing() *CSVMappingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the CSVMappingCreate.OnConflict
+// documentation for more info.
+func (u *CSVMappingUpsertOne) Update(set func(*CSVMappingUpsert)) *CSVMappingUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&CSVMappingUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetHeaderHash sets the "header_hash" field.
+func (u *CSVMappingUpsertOne) SetHeaderHash(v string) *CSVMappingUpsertOne {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.SetHeaderHash(v)
+	})
+}
+
+// UpdateHeaderHash sets the "header_hash" field to the value that was provided on create.
+func (u *CSVMappingUpsertOne) UpdateHeaderHash() *CSVMappingUpsertOne {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.UpdateHeaderHash()
+	})
+}
+
+// SetMappingJSON sets the "mapping_json" field.
+func (u *CSVMappingUpsertOne) SetMappingJSON(v string) *CSVMappingUpsertOne {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.SetMappingJSON(v)
+	})
+}
+
+// UpdateMappingJSON sets the "mapping_json" field to the value that was provided on create.
+func (u *CSVMappingUpsertOne) UpdateMappingJSON() *CSVMappingUpsertOne {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.UpdateMappingJSON()
+	})
+}
+
+// Exec executes the query.
+func (u *CSVMappingUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for CSVMappingCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *CSVMappingUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *CSVMappingUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *CSVMappingUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // CSVMappingCreateBulk is the builder for creating many CSVMapping entities in bulk.
 type CSVMappingCreateBulk struct {
 	config
 	err      error
 	builders []*CSVMappingCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the CSVMapping entities in the database.
@@ -146,6 +324,7 @@ func (_c *CSVMappingCreateBulk) Save(ctx context.Context) ([]*CSVMapping, error)
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -196,6 +375,138 @@ func (_c *CSVMappingCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *CSVMappingCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.CSVMapping.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.CSVMappingUpsert) {
+//			SetHeaderHash(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *CSVMappingCreateBulk) OnConflict(opts ...sql.ConflictOption) *CSVMappingUpsertBulk {
+	_c.conflict = opts
+	return &CSVMappingUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.CSVMapping.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *CSVMappingCreateBulk) OnConflictColumns(columns ...string) *CSVMappingUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &CSVMappingUpsertBulk{
+		create: _c,
+	}
+}
+
+// CSVMappingUpsertBulk is the builder for "upsert"-ing
+// a bulk of CSVMapping nodes.
+type CSVMappingUpsertBulk struct {
+	create *CSVMappingCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.CSVMapping.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+func (u *CSVMappingUpsertBulk) UpdateNewValues() *CSVMappingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.CSVMapping.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *CSVMappingUpsertBulk) Ignore() *CSVMappingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *CSVMappingUpsertBulk) DoNothing() *CSVMappingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the CSVMappingCreateBulk.OnConflict
+// documentation for more info.
+func (u *CSVMappingUpsertBulk) Update(set func(*CSVMappingUpsert)) *CSVMappingUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&CSVMappingUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetHeaderHash sets the "header_hash" field.
+func (u *CSVMappingUpsertBulk) SetHeaderHash(v string) *CSVMappingUpsertBulk {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.SetHeaderHash(v)
+	})
+}
+
+// UpdateHeaderHash sets the "header_hash" field to the value that was provided on create.
+func (u *CSVMappingUpsertBulk) UpdateHeaderHash() *CSVMappingUpsertBulk {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.UpdateHeaderHash()
+	})
+}
+
+// SetMappingJSON sets the "mapping_json" field.
+func (u *CSVMappingUpsertBulk) SetMappingJSON(v string) *CSVMappingUpsertBulk {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.SetMappingJSON(v)
+	})
+}
+
+// UpdateMappingJSON sets the "mapping_json" field to the value that was provided on create.
+func (u *CSVMappingUpsertBulk) UpdateMappingJSON() *CSVMappingUpsertBulk {
+	return u.Update(func(s *CSVMappingUpsert) {
+		s.UpdateMappingJSON()
+	})
+}
+
+// Exec executes the query.
+func (u *CSVMappingUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the CSVMappingCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for CSVMappingCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *CSVMappingUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
