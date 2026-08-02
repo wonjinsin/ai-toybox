@@ -18,6 +18,21 @@ type TransactionRepo interface {
 	BulkInsert(ctx context.Context, txs []domain.Transaction) (int, int, error)
 	// ExistingHashes returns which of the given hashes are already stored.
 	ExistingHashes(ctx context.Context, hashes []string) (map[string]bool, error)
+	// UncategorizedMerchants lists distinct merchants with NULL category.
+	UncategorizedMerchants(ctx context.Context) ([]string, error)
+	// ApplyMerchantCategories sets category_id on uncategorized transactions
+	// of each merchant. Returns the number of updated rows.
+	ApplyMerchantCategories(ctx context.Context, byMerchant map[string]int) (int, error)
+}
+
+type CategoryRepo interface {
+	GetOrCreate(ctx context.Context, name string) (*domain.Category, error)
+}
+
+type MerchantCategoryRepo interface {
+	// All returns the merchant -> category_id cache.
+	All(ctx context.Context) (map[string]int, error)
+	SaveBatch(ctx context.Context, entries map[string]int) error
 }
 
 type RuleRepo interface {

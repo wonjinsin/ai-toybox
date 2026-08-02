@@ -11,16 +11,25 @@ import (
 )
 
 type ImportService struct {
-	sources  out.SourceRepo
-	mappings out.MappingRepo
-	txs      out.TransactionRepo
-	rules    out.RuleRepo
-	ai       out.AIRunner
-	prompter out.Prompter
+	sources      out.SourceRepo
+	mappings     out.MappingRepo
+	txs          out.TransactionRepo
+	rules        out.RuleRepo
+	categories   out.CategoryRepo
+	merchantCats out.MerchantCategoryRepo
+	ai           out.AIRunner
+	prompter     out.Prompter
 }
 
-func NewImportService(sources out.SourceRepo, mappings out.MappingRepo, txs out.TransactionRepo, rules out.RuleRepo, ai out.AIRunner, prompter out.Prompter) *ImportService {
-	return &ImportService{sources: sources, mappings: mappings, txs: txs, rules: rules, ai: ai, prompter: prompter}
+func NewImportService(
+	sources out.SourceRepo, mappings out.MappingRepo, txs out.TransactionRepo,
+	rules out.RuleRepo, categories out.CategoryRepo, merchantCats out.MerchantCategoryRepo,
+	ai out.AIRunner, prompter out.Prompter,
+) *ImportService {
+	return &ImportService{
+		sources: sources, mappings: mappings, txs: txs, rules: rules,
+		categories: categories, merchantCats: merchantCats, ai: ai, prompter: prompter,
+	}
 }
 
 // Import parses raw CSV bytes and stores transactions for the named source.
@@ -89,6 +98,12 @@ func (s *ImportService) Import(ctx context.Context, data []byte, sourceName stri
 	}
 	res.Saved = saved
 	res.DupSkipped += dup
+
+	categorized, err := s.categorize(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res.Categorized = categorized
 	return res, nil
 }
 

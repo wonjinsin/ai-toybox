@@ -50,10 +50,13 @@ func NewRootCmd() *cobra.Command {
 		ruleRepo := persistence.NewRuleRepo(db.Client)
 		prompter := NewTerminalPrompter(os.Stdin, os.Stdout)
 		d = &deps{
-			db:       db,
-			source:   service.NewSourceService(sourceRepo),
-			importer: service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), ruleRepo, runner, prompter),
-			rules:    ruleRepo,
+			db:     db,
+			source: service.NewSourceService(sourceRepo),
+			importer: service.NewImportService(sourceRepo,
+				persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client),
+				ruleRepo, persistence.NewCategoryRepo(db.Client), persistence.NewMerchantCategoryRepo(db.Client),
+				runner, prompter),
+			rules: ruleRepo,
 		}
 		return d, nil
 	}

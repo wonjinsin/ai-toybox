@@ -35,7 +35,8 @@ func newImportCmd(open func(ctx context.Context) (*deps, error)) *cobra.Command 
 			if res.MappingCached {
 				cacheNote = "cached mapping reused"
 			}
-			fmt.Fprintf(out, "saved %d, duplicates skipped %d (%s)\n", res.Saved, res.DupSkipped, cacheNote)
+			fmt.Fprintf(out, "saved %d, duplicates skipped %d, categorized %d (%s)\n",
+				res.Saved, res.DupSkipped, res.Categorized, cacheNote)
 			if res.RuleSkipped > 0 || res.UserSkipped > 0 || res.RulesCreated > 0 {
 				fmt.Fprintf(out, "rule-skipped %d, user-skipped %d, rules created %d\n",
 					res.RuleSkipped, res.UserSkipped, res.RulesCreated)

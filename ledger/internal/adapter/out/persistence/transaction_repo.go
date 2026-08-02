@@ -73,3 +73,26 @@ func (r *TransactionRepo) BulkInsert(ctx context.Context, txs []domain.Transacti
 	}
 	return len(builders), len(txs) - len(builders), nil
 }
+
+func (r *TransactionRepo) UncategorizedMerchants(ctx context.Context) ([]string, error) {
+	return r.client.Transaction.Query().
+		Where(enttx.CategoryIDIsNil(), enttx.MerchantNEQ("")).
+		Unique(true).
+		Select(enttx.FieldMerchant).
+		Strings(ctx)
+}
+
+func (r *TransactionRepo) ApplyMerchantCategories(ctx context.Context, byMerchant map[string]int) (int, error) {
+	total := 0
+	for merchant, categoryID := range byMerchant {
+		n, err := r.client.Transaction.Update().
+			Where(enttx.Merchant(merchant), enttx.CategoryIDIsNil()).
+			SetCategoryID(categoryID).
+			Save(ctx)
+		if err != nil {
+			return total, err
+		}
+		total += n
+	}
+	return total, nil
+}

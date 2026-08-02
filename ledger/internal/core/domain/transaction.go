@@ -24,6 +24,7 @@ type ImportResult struct {
 	RuleSkipped   int // dropped by persisted import rules
 	UserSkipped   int // dropped by an interactive decision this run
 	RulesCreated  int
+	Categorized   int // transactions assigned a category this run
 	Failed        []FailedRow
 	MappingCached bool
 }

@@ -28,10 +28,13 @@ const emptyReview = `{"groups":[]}`
 
 // fakeAI routes prompts to canned replies by pipeline stage.
 type fakeAI struct {
-	mappingReply string
-	reviewReply  string
-	mappingCalls int
-	reviewCalls  int
+	mappingReply  string
+	reviewReply   string
+	classifyReply string
+	mappingCalls  int
+	reviewCalls   int
+	classifyCalls int
+	lastClassify  string
 }
 
 func (f *fakeAI) Run(_ context.Context, prompt string) (string, error) {
@@ -45,6 +48,13 @@ func (f *fakeAI) Run(_ context.Context, prompt string) (string, error) {
 			return emptyReview, nil
 		}
 		return f.reviewReply, nil
+	case strings.Contains(prompt, "classifying Korean merchants"):
+		f.classifyCalls++
+		f.lastClassify = prompt
+		if f.classifyReply == "" {
+			return `{"classifications":[]}`, nil
+		}
+		return f.classifyReply, nil
 	default:
 		return "", nil
 	}
@@ -105,6 +115,8 @@ func setup(t *testing.T) *fixture {
 		persistence.NewMappingRepo(db.Client),
 		persistence.NewTransactionRepo(db.Client),
 		persistence.NewRuleRepo(db.Client),
+		persistence.NewCategoryRepo(db.Client),
+		persistence.NewMerchantCategoryRepo(db.Client),
 		ai, prompter)
 	return &fixture{db: db, ai: ai, prompter: prompter, svc: svc}
 }
@@ -262,6 +274,85 @@ func TestAutoYesSkipsReviewEntirely(t *testing.T) {
 	}
 	if res.Saved != 3 {
 		t.Errorf("saved = %d, want 3 (everything included)", res.Saved)
+	}
+}
+
+func TestCategorizeNewMerchantsAndReuseCache(t *testing.T) {
+	f := setup(t)
+	f.ai.classifyReply = `{"classifications":[` +
+		`{"merchant":"스타벅스 강남점","category":"카페/간식"},` +
+		`{"merchant":"GS25 역삼점","category":"생활/마트"},` +
+		`{"merchant":"회사급여","category":"급여/수입"}]}`
+
+	res := f.importCSV(t, bankCSV, domain.ImportOptions{})
+	if f.ai.classifyCalls != 1 {
+		t.Fatalf("classify calls = %d, want 1", f.ai.classifyCalls)
+	}
+	if res.Categorized != 3 {
+		t.Errorf("categorized = %d, want 3", res.Categorized)
+	}
+
+	var name string
+	err := f.db.SQL.QueryRow(`SELECT c.name FROM transactions t
+		JOIN categories c ON c.id = t.category_id
+		WHERE t.merchant = '스타벅스 강남점'`).Scan(&name)
+	if err != nil || name != "카페/간식" {
+		t.Errorf("category = %q, %v; want 카페/간식", name, err)
+	}
+	var cached int
+	if err := f.db.SQL.QueryRow(`SELECT COUNT(*) FROM merchant_categories`).Scan(&cached); err != nil || cached != 3 {
+		t.Errorf("merchant_categories cache = %d, %v; want 3", cached, err)
+	}
+
+	// New file, same merchants: cache applies, AI not called again.
+	augustCSV := "신한은행 거래내역조회\n" +
+		"거래일자,적요,내용,출금액,입금액,잔액\n" +
+		"2026-08-01,체크카드,스타벅스 강남점,\"5,000\",,\"990,500\"\n"
+	res = f.importCSV(t, augustCSV, domain.ImportOptions{})
+	if f.ai.classifyCalls != 1 {
+		t.Errorf("classify calls = %d, want still 1 (cache hit)", f.ai.classifyCalls)
+	}
+	if res.Categorized != 1 {
+		t.Errorf("categorized = %d, want 1", res.Categorized)
+	}
+}
+
+func TestClassifyOnlySendsUnknownMerchants(t *testing.T) {
+	f := setup(t)
+	f.ai.classifyReply = `{"classifications":[{"merchant":"스타벅스 강남점","category":"카페/간식"}]}`
+	f.importCSV(t, bankCSV, domain.ImportOptions{})
+
+	// 스타벅스 is now cached; a new file with 스타벅스 + a new merchant must
+	// only send the new one to the AI.
+	f.ai.classifyReply = `{"classifications":[{"merchant":"이마트","category":"생활/마트"}]}`
+	augustCSV := "신한은행 거래내역조회\n" +
+		"거래일자,적요,내용,출금액,입금액,잔액\n" +
+		"2026-08-01,체크카드,스타벅스 강남점,\"5,000\",,\"990,500\"\n" +
+		"2026-08-02,체크카드,이마트,\"70,000\",,\"920,500\"\n"
+	f.importCSV(t, augustCSV, domain.ImportOptions{})
+
+	if strings.Contains(f.ai.lastClassify, "스타벅스") {
+		t.Error("cached merchant must not be sent to the AI again")
+	}
+	if !strings.Contains(f.ai.lastClassify, "이마트") {
+		t.Error("new merchant missing from classify prompt")
+	}
+}
+
+func TestUnclassifiableMerchantStaysNull(t *testing.T) {
+	f := setup(t)
+	// AI omits 회사급여 and hallucinates an unknown category for GS25.
+	f.ai.classifyReply = `{"classifications":[` +
+		`{"merchant":"스타벅스 강남점","category":"카페/간식"},` +
+		`{"merchant":"GS25 역삼점","category":"없는카테고리"}]}`
+
+	res := f.importCSV(t, bankCSV, domain.ImportOptions{})
+	if res.Categorized != 1 {
+		t.Errorf("categorized = %d, want 1 (invalid category rejected)", res.Categorized)
+	}
+	var nulls int
+	if err := f.db.SQL.QueryRow(`SELECT COUNT(*) FROM transactions WHERE category_id IS NULL`).Scan(&nulls); err != nil || nulls != 2 {
+		t.Errorf("uncategorized rows = %d, %v; want 2", nulls, err)
 	}
 }
 
