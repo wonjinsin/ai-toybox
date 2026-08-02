@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -45,10 +46,11 @@ func NewRootCmd() *cobra.Command {
 			return nil, err
 		}
 		sourceRepo := persistence.NewSourceRepo(db.Client)
+		prompter := NewTerminalPrompter(os.Stdin, os.Stdout)
 		d = &deps{
 			db:       db,
 			source:   service.NewSourceService(sourceRepo),
-			importer: service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), runner),
+			importer: service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), runner, prompter),
 		}
 		return d, nil
 	}

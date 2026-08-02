@@ -9,6 +9,7 @@ import (
 	"golang.org/x/text/transform"
 
 	"github.com/wonjinsin/ledger/internal/adapter/out/persistence"
+	"github.com/wonjinsin/ledger/internal/core/domain"
 	"github.com/wonjinsin/ledger/internal/core/service"
 )
 
@@ -33,7 +34,30 @@ func (c *countingRunner) Run(_ context.Context, _ string) (string, error) {
 	return c.reply, nil
 }
 
+// scriptedPrompter answers mapping questions from a canned list and
+// records what was asked. answers empty = fail the test if called.
+type scriptedPrompter struct {
+	t       *testing.T
+	answers []string
+	asked   []domain.MappingQuestion
+}
+
+func (p *scriptedPrompter) AskMapping(_ context.Context, q domain.MappingQuestion) (string, error) {
+	p.asked = append(p.asked, q)
+	if len(p.answers) == 0 {
+		p.t.Fatalf("unexpected mapping question: %+v", q)
+	}
+	answer := p.answers[0]
+	p.answers = p.answers[1:]
+	return answer, nil
+}
+
 func setupImport(t *testing.T) (*persistence.DB, *countingRunner, *service.ImportService) {
+	db, runner, _, svc := setupImportWithPrompter(t, nil)
+	return db, runner, svc
+}
+
+func setupImportWithPrompter(t *testing.T, answers []string) (*persistence.DB, *countingRunner, *scriptedPrompter, *service.ImportService) {
 	t.Helper()
 	db, err := persistence.Open(context.Background(), filepath.Join(t.TempDir(), "test.db"))
 	if err != nil {
@@ -46,8 +70,9 @@ func setupImport(t *testing.T) (*persistence.DB, *countingRunner, *service.Impor
 		t.Fatal(err)
 	}
 	runner := &countingRunner{reply: bankMappingJSON}
-	svc := service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), runner)
-	return db, runner, svc
+	prompter := &scriptedPrompter{t: t, answers: answers}
+	svc := service.NewImportService(sourceRepo, persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client), runner, prompter)
+	return db, runner, prompter, svc
 }
 
 func toEUCKR(t *testing.T, s string) []byte {
@@ -125,6 +150,42 @@ func TestMappingCacheAvoidsSecondAICall(t *testing.T) {
 	}
 	if res.Saved != 1 {
 		t.Errorf("saved = %d, want 1", res.Saved)
+	}
+}
+
+func TestAmbiguousMappingAsksUserAndCachesResolution(t *testing.T) {
+	// AI is unsure whether column 1 (적요) or 2 (내용) is the merchant.
+	ambiguous := `{"header_rows":2,"date_col":0,"merchant_col":1,"memo_col":1,` +
+		`"amount_mode":"split","amount_col":-1,"sign":"negative_expense",` +
+		`"withdraw_col":3,"deposit_col":4,` +
+		`"questions":[{"field":"merchant_col","prompt":"가맹점 컬럼은?","options":["1: 적요","2: 내용"]}]}`
+
+	db, runner, prompter, svc := setupImportWithPrompter(t, []string{"2: 내용"})
+	runner.reply = ambiguous
+
+	res, err := svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(prompter.asked) != 1 || prompter.asked[0].Field != "merchant_col" {
+		t.Fatalf("prompter asked = %+v, want 1 merchant_col question", prompter.asked)
+	}
+	if res.Saved != 3 {
+		t.Fatalf("saved = %d, want 3", res.Saved)
+	}
+
+	// The user's choice (column 2, 내용) must be applied...
+	var count int
+	if err := db.SQL.QueryRow(`SELECT COUNT(*) FROM transactions WHERE merchant = '스타벅스 강남점'`).Scan(&count); err != nil || count != 1 {
+		t.Errorf("merchant from chosen column not applied (count=%d, err=%v)", count, err)
+	}
+	// ...and the cached mapping must be final: re-import asks nothing.
+	prompter.answers = nil
+	if _, err := svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크"); err != nil {
+		t.Fatal(err)
+	}
+	if len(prompter.asked) != 1 {
+		t.Errorf("cached mapping should not re-ask; asked %d times", len(prompter.asked))
 	}
 }
 

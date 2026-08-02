@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/wonjinsin/ledger/internal/core/domain"
@@ -14,10 +15,11 @@ type ImportService struct {
 	mappings out.MappingRepo
 	txs      out.TransactionRepo
 	ai       out.AIRunner
+	prompter out.Prompter
 }
 
-func NewImportService(sources out.SourceRepo, mappings out.MappingRepo, txs out.TransactionRepo, ai out.AIRunner) *ImportService {
-	return &ImportService{sources: sources, mappings: mappings, txs: txs, ai: ai}
+func NewImportService(sources out.SourceRepo, mappings out.MappingRepo, txs out.TransactionRepo, ai out.AIRunner, prompter out.Prompter) *ImportService {
+	return &ImportService{sources: sources, mappings: mappings, txs: txs, ai: ai, prompter: prompter}
 }
 
 // Import parses raw CSV bytes and stores transactions for the named source.
@@ -47,6 +49,9 @@ func (s *ImportService) Import(ctx context.Context, data []byte, sourceName stri
 	if !cached {
 		mapping, err = s.generateMapping(ctx, records)
 		if err != nil {
+			return nil, err
+		}
+		if err := s.resolveMappingQuestions(ctx, mapping); err != nil {
 			return nil, err
 		}
 		if err := s.mappings.Save(ctx, hash, mapping); err != nil {
@@ -95,4 +100,57 @@ func (s *ImportService) generateMapping(ctx context.Context, records [][]string)
 		return nil, fmt.Errorf("AI mapping has invalid amount_mode %q", m.AmountMode)
 	}
 	return &m, nil
+}
+
+// resolveMappingQuestions lets the user settle AI-flagged ambiguities,
+// then clears them so the cached mapping is final.
+func (s *ImportService) resolveMappingQuestions(ctx context.Context, m *domain.ColumnMapping) error {
+	for _, q := range m.Questions {
+		answer, err := s.prompter.AskMapping(ctx, q)
+		if err != nil {
+			return fmt.Errorf("resolve mapping question %q: %w", q.Field, err)
+		}
+		if err := applyMappingAnswer(m, q.Field, answer); err != nil {
+			return err
+		}
+	}
+	m.Questions = nil
+	return nil
+}
+
+// applyMappingAnswer sets the field named by the question to the answered
+// option's value. Options use the format "<value>: <description>".
+func applyMappingAnswer(m *domain.ColumnMapping, field, answer string) error {
+	value := strings.TrimSpace(strings.SplitN(answer, ":", 2)[0])
+	switch field {
+	case "sign":
+		m.Sign = value
+		return nil
+	case "amount_mode":
+		m.AmountMode = value
+		return nil
+	}
+	n, err := strconv.Atoi(value)
+	if err != nil {
+		return fmt.Errorf("mapping answer %q for %s: expected leading integer", answer, field)
+	}
+	switch field {
+	case "header_rows":
+		m.HeaderRows = n
+	case "date_col":
+		m.DateCol = n
+	case "merchant_col":
+		m.MerchantCol = n
+	case "memo_col":
+		m.MemoCol = n
+	case "amount_col":
+		m.AmountCol = n
+	case "withdraw_col":
+		m.WithdrawCol = n
+	case "deposit_col":
+		m.DepositCol = n
+	default:
+		return fmt.Errorf("unknown mapping question field %q", field)
+	}
+	return nil
 }
