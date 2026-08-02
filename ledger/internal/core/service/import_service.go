@@ -64,12 +64,16 @@ func (s *ImportService) Import(ctx context.Context, data []byte, sourceName stri
 		if err := s.resolveMappingQuestions(ctx, mapping); err != nil {
 			return nil, err
 		}
+	}
+
+	txs, failed := parseRows(records, mapping, source.ID)
+	// Cache the mapping only once it proved able to parse at least one row;
+	// a broken mapping must not poison every future import of this format.
+	if !cached && (len(txs) > 0 || len(failed) == 0) {
 		if err := s.mappings.Save(ctx, hash, mapping); err != nil {
 			return nil, err
 		}
 	}
-
-	txs, failed := parseRows(records, mapping, source.ID)
 	res := &domain.ImportResult{Failed: failed, MappingCached: cached}
 
 	rules, err := s.rules.List(ctx)
@@ -137,7 +141,7 @@ Rules:
 - amount_mode "single": one amount column. Set amount_col. sign is "positive_expense" if a positive number means spending (typical card CSV), else "negative_expense". Set withdraw_col=-1, deposit_col=-1.
 - merchant_col: the column best describing where money went (가맹점/거래처/적요/내용).
 - memo_col: a secondary descriptive column, or -1.
-- questions: normally []. ONLY if genuinely ambiguous (e.g. two equally plausible merchant columns), add {"field","prompt","options"} entries. prompt and options in Korean.
+- questions: normally []. ONLY if genuinely ambiguous (e.g. two equally plausible merchant columns), add {"field","prompt","options"} entries. prompt in Korean. Every option MUST start with the machine value followed by ": " and a Korean description — for column fields the value is the 0-indexed column number (e.g. "2: 내용 컬럼"), for sign/amount_mode it is the enum literal (e.g. "positive_expense: 양수가 지출").
 
 Reply with ONLY this JSON:
 {"header_rows":int,"date_col":int,"merchant_col":int,"memo_col":int,"amount_mode":"single|split","amount_col":int,"sign":"positive_expense|negative_expense","withdraw_col":int,"deposit_col":int,"questions":[]}
@@ -158,6 +162,9 @@ func (s *ImportService) generateMapping(ctx context.Context, records [][]string)
 	}
 	if m.AmountMode != domain.AmountModeSingle && m.AmountMode != domain.AmountModeSplit {
 		return nil, fmt.Errorf("AI mapping has invalid amount_mode %q", m.AmountMode)
+	}
+	if m.HeaderRows < 0 || m.HeaderRows >= len(records) {
+		return nil, fmt.Errorf("AI mapping has invalid header_rows %d for %d rows", m.HeaderRows, len(records))
 	}
 	return &m, nil
 }

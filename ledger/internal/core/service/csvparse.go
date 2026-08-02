@@ -21,7 +21,7 @@ import (
 // valid UTF-8 input passes through unchanged.
 func decodeToUTF8(data []byte) ([]byte, error) {
 	if utf8.Valid(data) {
-		return data, nil
+		return bytes.TrimPrefix(data, []byte("\xEF\xBB\xBF")), nil
 	}
 	decoded, _, err := transform.Bytes(korean.EUCKR.NewDecoder(), data)
 	if err != nil {
@@ -98,6 +98,10 @@ func cell(row []string, idx int) string {
 func parseRows(records [][]string, m *domain.ColumnMapping, sourceID int) ([]domain.Transaction, []domain.FailedRow) {
 	var txs []domain.Transaction
 	var failed []domain.FailedRow
+	// occurrence index distinguishes legitimate same-day/same-amount/same-
+	// merchant duplicates (two coffees) while keeping re-imports a no-op:
+	// the same file always yields the same ordering, hence the same hashes.
+	occurrence := make(map[string]int)
 
 	for i := m.HeaderRows; i < len(records); i++ {
 		row := records[i]
@@ -128,6 +132,10 @@ func parseRows(records [][]string, m *domain.ColumnMapping, sourceID int) ([]dom
 			merchant = memo
 		}
 
+		occKey := fmt.Sprintf("%s|%d|%s", date, amount, merchant)
+		occ := occurrence[occKey]
+		occurrence[occKey]++
+
 		txs = append(txs, domain.Transaction{
 			SourceID: sourceID,
 			TxDate:   date,
@@ -135,7 +143,7 @@ func parseRows(records [][]string, m *domain.ColumnMapping, sourceID int) ([]dom
 			Merchant: merchant,
 			Memo:     memo,
 			RawLine:  raw,
-			Hash:     txHash(sourceID, date, amount, merchant),
+			Hash:     txHash(sourceID, date, amount, merchant, occ),
 		})
 	}
 	return txs, failed
@@ -167,7 +175,7 @@ func rowAmount(row []string, m *domain.ColumnMapping) (int64, error) {
 	}
 }
 
-func txHash(sourceID int, date string, amount int64, merchant string) string {
-	sum := sha256.Sum256(fmt.Appendf(nil, "%d|%s|%d|%s", sourceID, date, amount, merchant))
+func txHash(sourceID int, date string, amount int64, merchant string, occurrence int) string {
+	sum := sha256.Sum256(fmt.Appendf(nil, "%d|%s|%d|%s|%d", sourceID, date, amount, merchant, occurrence))
 	return hex.EncodeToString(sum[:])
 }

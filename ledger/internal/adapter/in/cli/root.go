@@ -31,7 +31,7 @@ func NewRootCmd() *cobra.Command {
 		Use:           "ledger",
 		Short:         "AI-powered personal ledger",
 		SilenceUsage:  true,
-		SilenceErrors: false,
+		SilenceErrors: true, // main.go prints the error once
 	}
 	root.PersistentFlags().StringVar(&cfg.DBPath, "db", config.DefaultDBPath(), "path to SQLite database file")
 	root.PersistentFlags().StringVar(&cfg.AI, "ai", "claude", "AI backend: claude | codex")

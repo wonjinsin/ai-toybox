@@ -356,6 +356,59 @@ func TestUnclassifiableMerchantStaysNull(t *testing.T) {
 	}
 }
 
+func TestSameDayIdenticalTransactionsBothSaved(t *testing.T) {
+	f := setup(t)
+	// Two identical coffees on the same day are BOTH real transactions.
+	twoCoffees := "신한은행 거래내역조회\n" +
+		"거래일자,적요,내용,출금액,입금액,잔액\n" +
+		"2026-07-01,체크카드,스타벅스 강남점,\"4,500\",,\"995,500\"\n" +
+		"2026-07-01,체크카드,스타벅스 강남점,\"4,500\",,\"991,000\"\n"
+
+	res := f.importCSV(t, twoCoffees, domain.ImportOptions{})
+	if res.Saved != 2 {
+		t.Fatalf("saved = %d, want 2 (same-day duplicates are distinct transactions)", res.Saved)
+	}
+	// Re-importing the same file must still be a no-op.
+	res = f.importCSV(t, twoCoffees, domain.ImportOptions{})
+	if res.Saved != 0 || res.DupSkipped != 2 {
+		t.Errorf("reimport: saved=%d dup=%d, want 0/2", res.Saved, res.DupSkipped)
+	}
+}
+
+func TestInvalidHeaderRowsMappingRejected(t *testing.T) {
+	f := setup(t)
+	f.ai.mappingReply = `{"header_rows":-1,"date_col":0,"merchant_col":2,"memo_col":1,` +
+		`"amount_mode":"split","amount_col":-1,"sign":"negative_expense",` +
+		`"withdraw_col":3,"deposit_col":4,"questions":[]}`
+
+	if _, err := f.svc.Import(context.Background(), toEUCKR(t, bankCSV), "신한체크", domain.ImportOptions{}); err == nil {
+		t.Fatal("negative header_rows must be rejected, not panic")
+	}
+}
+
+func TestBrokenMappingNotCached(t *testing.T) {
+	f := setup(t)
+	// date_col points at a non-date column: every row fails to parse.
+	f.ai.mappingReply = `{"header_rows":2,"date_col":1,"merchant_col":2,"memo_col":1,` +
+		`"amount_mode":"split","amount_col":-1,"sign":"negative_expense",` +
+		`"withdraw_col":3,"deposit_col":4,"questions":[]}`
+
+	res := f.importCSV(t, bankCSV, domain.ImportOptions{})
+	if res.Saved != 0 || len(res.Failed) != 3 {
+		t.Fatalf("expected total parse failure, got %+v", res)
+	}
+
+	// The broken mapping must NOT be cached: next import re-asks the AI.
+	f.ai.mappingReply = bankMappingJSON
+	res = f.importCSV(t, bankCSV, domain.ImportOptions{})
+	if f.ai.mappingCalls != 2 {
+		t.Errorf("mapping calls = %d, want 2 (broken mapping must not be cached)", f.ai.mappingCalls)
+	}
+	if res.Saved != 3 {
+		t.Errorf("saved = %d, want 3 after corrected mapping", res.Saved)
+	}
+}
+
 func TestImportUnknownSourceFails(t *testing.T) {
 	f := setup(t)
 	if _, err := f.svc.Import(context.Background(), []byte("a,b\n"), "없는소스", domain.ImportOptions{}); err == nil {
