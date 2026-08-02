@@ -1,0 +1,56 @@
+package cli
+
+import (
+	"context"
+
+	"github.com/spf13/cobra"
+
+	"github.com/wonjinsin/ledger/internal/adapter/out/persistence"
+	"github.com/wonjinsin/ledger/internal/config"
+	"github.com/wonjinsin/ledger/internal/core/service"
+)
+
+// deps carries wired usecases for commands; built lazily on first use
+// so that --help never touches the DB.
+type deps struct {
+	db     *persistence.DB
+	source *service.SourceService
+}
+
+func NewRootCmd() *cobra.Command {
+	cfg := &config.Config{}
+	var d *deps
+
+	root := &cobra.Command{
+		Use:           "ledger",
+		Short:         "AI-powered personal ledger",
+		SilenceUsage:  true,
+		SilenceErrors: false,
+	}
+	root.PersistentFlags().StringVar(&cfg.DBPath, "db", config.DefaultDBPath(), "path to SQLite database file")
+	root.PersistentFlags().StringVar(&cfg.AI, "ai", "claude", "AI backend: claude | codex")
+
+	open := func(ctx context.Context) (*deps, error) {
+		if d != nil {
+			return d, nil
+		}
+		db, err := persistence.Open(ctx, cfg.DBPath)
+		if err != nil {
+			return nil, err
+		}
+		d = &deps{
+			db:     db,
+			source: service.NewSourceService(persistence.NewSourceRepo(db.Client)),
+		}
+		return d, nil
+	}
+	root.PersistentPostRunE = func(cmd *cobra.Command, args []string) error {
+		if d != nil {
+			return d.db.Close()
+		}
+		return nil
+	}
+
+	root.AddCommand(newSourcesCmd(open))
+	return root
+}
