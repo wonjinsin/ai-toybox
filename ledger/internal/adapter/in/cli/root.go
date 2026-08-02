@@ -16,8 +16,10 @@ import (
 // so that --help never touches the DB.
 type deps struct {
 	db       *persistence.DB
+	roExec   *persistence.ReadOnlyExecutor
 	source   *service.SourceService
 	importer *service.ImportService
+	ask      *service.AskService
 	rules    *persistence.RuleRepo
 }
 
@@ -46,27 +48,34 @@ func NewRootCmd() *cobra.Command {
 		if err != nil {
 			return nil, err
 		}
+		roExec, err := persistence.NewReadOnlyExecutor(cfg.DBPath)
+		if err != nil {
+			return nil, err
+		}
 		sourceRepo := persistence.NewSourceRepo(db.Client)
 		ruleRepo := persistence.NewRuleRepo(db.Client)
 		prompter := NewTerminalPrompter(os.Stdin, os.Stdout)
 		d = &deps{
 			db:     db,
+			roExec: roExec,
 			source: service.NewSourceService(sourceRepo),
 			importer: service.NewImportService(sourceRepo,
 				persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client),
 				ruleRepo, persistence.NewCategoryRepo(db.Client), persistence.NewMerchantCategoryRepo(db.Client),
 				runner, prompter),
+			ask:   service.NewAskService(roExec, runner),
 			rules: ruleRepo,
 		}
 		return d, nil
 	}
 	root.PersistentPostRunE = func(cmd *cobra.Command, args []string) error {
 		if d != nil {
+			d.roExec.Close()
 			return d.db.Close()
 		}
 		return nil
 	}
 
-	root.AddCommand(newSourcesCmd(open), newImportCmd(open), newRulesCmd(open))
+	root.AddCommand(newSourcesCmd(open), newImportCmd(open), newRulesCmd(open), newAskCmd(open))
 	return root
 }

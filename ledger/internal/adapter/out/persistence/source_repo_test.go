@@ -35,6 +35,29 @@ func TestOpenCreatesAllTables(t *testing.T) {
 	}
 }
 
+func TestReadOnlyExecutorRejectsWrites(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "test.db")
+	db, err := Open(context.Background(), path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+
+	ro, err := NewReadOnlyExecutor(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ro.Close()
+
+	if _, _, err := ro.Query(context.Background(), "INSERT INTO sources(name, kind) VALUES ('x','card')"); err == nil {
+		t.Fatal("INSERT on read-only connection must fail")
+	}
+	cols, _, err := ro.Query(context.Background(), "SELECT id, name FROM sources")
+	if err != nil || len(cols) != 2 {
+		t.Errorf("SELECT should work: cols=%v err=%v", cols, err)
+	}
+}
+
 func TestSourceRepoCreateAndList(t *testing.T) {
 	db := openTestDB(t)
 	repo := NewSourceRepo(db.Client)
