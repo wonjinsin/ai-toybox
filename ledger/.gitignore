@@ -1,3 +1,2 @@
 *.db
-ledger
-!cmd/ledger
+/ledger
