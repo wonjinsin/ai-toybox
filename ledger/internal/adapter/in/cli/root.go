@@ -1,0 +1,84 @@
+package cli
+
+import (
+	"context"
+	"os"
+
+	"github.com/spf13/cobra"
+
+	"github.com/wonjinsin/ledger/internal/adapter/out/ai"
+	"github.com/wonjinsin/ledger/internal/adapter/out/persistence"
+	"github.com/wonjinsin/ledger/internal/config"
+	"github.com/wonjinsin/ledger/internal/core/service"
+)
+
+// deps carries wired usecases for commands; built lazily on first use
+// so that --help never touches the DB.
+type deps struct {
+	db       *persistence.DB
+	roExec   *persistence.ReadOnlyExecutor
+	source   *service.SourceService
+	importer *service.ImportService
+	ask      *service.AskService
+	rules    *persistence.RuleRepo
+	txs      *persistence.TransactionRepo
+}
+
+func NewRootCmd() *cobra.Command {
+	cfg := &config.Config{}
+	var d *deps
+
+	root := &cobra.Command{
+		Use:           "ledger",
+		Short:         "AI-powered personal ledger",
+		SilenceUsage:  true,
+		SilenceErrors: true, // main.go prints the error once
+	}
+	root.PersistentFlags().StringVar(&cfg.DBPath, "db", config.DefaultDBPath(), "path to SQLite database file")
+	root.PersistentFlags().StringVar(&cfg.AI, "ai", "claude", "AI backend: claude | codex")
+
+	open := func(ctx context.Context) (*deps, error) {
+		if d != nil {
+			return d, nil
+		}
+		db, err := persistence.Open(ctx, cfg.DBPath)
+		if err != nil {
+			return nil, err
+		}
+		runner, err := ai.NewRunner(cfg.AI)
+		if err != nil {
+			return nil, err
+		}
+		roExec, err := persistence.NewReadOnlyExecutor(cfg.DBPath)
+		if err != nil {
+			return nil, err
+		}
+		sourceRepo := persistence.NewSourceRepo(db.Client)
+		ruleRepo := persistence.NewRuleRepo(db.Client)
+		txRepo := persistence.NewTransactionRepo(db.Client)
+		prompter := NewTerminalPrompter(os.Stdin, os.Stdout)
+		d = &deps{
+			db:     db,
+			roExec: roExec,
+			source: service.NewSourceService(sourceRepo),
+			importer: service.NewImportService(sourceRepo,
+				persistence.NewMappingRepo(db.Client), txRepo,
+				ruleRepo, persistence.NewCategoryRepo(db.Client), persistence.NewMerchantCategoryRepo(db.Client),
+				runner, prompter),
+			ask:   service.NewAskService(roExec, runner),
+			rules: ruleRepo,
+			txs:   txRepo,
+		}
+		return d, nil
+	}
+	root.PersistentPostRunE = func(cmd *cobra.Command, args []string) error {
+		if d != nil {
+			d.roExec.Close()
+			return d.db.Close()
+		}
+		return nil
+	}
+
+	root.AddCommand(newSourcesCmd(open), newImportCmd(open), newRulesCmd(open), newAskCmd(open), newTxCmd(open))
+	return root
+}
