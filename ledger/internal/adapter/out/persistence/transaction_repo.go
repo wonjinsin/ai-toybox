@@ -74,6 +74,36 @@ func (r *TransactionRepo) BulkInsert(ctx context.Context, txs []domain.Transacti
 	return len(builders), len(txs) - len(builders), nil
 }
 
+// Search returns transactions whose merchant or memo contains match,
+// ordered by date. An empty match returns all transactions.
+func (r *TransactionRepo) Search(ctx context.Context, match string) ([]domain.Transaction, error) {
+	q := r.client.Transaction.Query()
+	if match != "" {
+		q = q.Where(enttx.Or(enttx.MerchantContains(match), enttx.MemoContains(match)))
+	}
+	rows, err := q.Order(ent.Asc(enttx.FieldTxDate), ent.Asc(enttx.FieldID)).All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	txs := make([]domain.Transaction, len(rows))
+	for i, row := range rows {
+		txs[i] = domain.Transaction{
+			ID: row.ID, SourceID: row.SourceID, TxDate: row.TxDate,
+			Amount: row.Amount, Merchant: row.Merchant, Memo: row.Memo,
+			CategoryID: row.CategoryID, RawLine: row.RawLine, Hash: row.Hash,
+		}
+	}
+	return txs, nil
+}
+
+// Delete removes transactions by id, returning how many were deleted.
+func (r *TransactionRepo) Delete(ctx context.Context, ids []int) (int, error) {
+	if len(ids) == 0 {
+		return 0, nil
+	}
+	return r.client.Transaction.Delete().Where(enttx.IDIn(ids...)).Exec(ctx)
+}
+
 func (r *TransactionRepo) UncategorizedMerchants(ctx context.Context) ([]string, error) {
 	return r.client.Transaction.Query().
 		Where(enttx.CategoryIDIsNil(), enttx.MerchantNEQ("")).

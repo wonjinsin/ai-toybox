@@ -16,7 +16,7 @@ const (
 // RowGroupQuestion asks the user what to do with a group of same-kind
 // questionable rows found by the AI review pass.
 type RowGroupQuestion struct {
-	Kind    string // cancel_pair | internal_transfer | zero_amount | duplicate_suspect | other
+	Kind    string // cancel_pair | internal_transfer | card_settlement | zero_amount | duplicate_suspect | other
 	Reason  string // Korean explanation for the user
 	Pattern string // merchant/memo substring identifying the group ("" = no rule possible)
 	Rows    []Transaction

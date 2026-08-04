@@ -21,6 +21,7 @@ type deps struct {
 	importer *service.ImportService
 	ask      *service.AskService
 	rules    *persistence.RuleRepo
+	txs      *persistence.TransactionRepo
 }
 
 func NewRootCmd() *cobra.Command {
@@ -54,17 +55,19 @@ func NewRootCmd() *cobra.Command {
 		}
 		sourceRepo := persistence.NewSourceRepo(db.Client)
 		ruleRepo := persistence.NewRuleRepo(db.Client)
+		txRepo := persistence.NewTransactionRepo(db.Client)
 		prompter := NewTerminalPrompter(os.Stdin, os.Stdout)
 		d = &deps{
 			db:     db,
 			roExec: roExec,
 			source: service.NewSourceService(sourceRepo),
 			importer: service.NewImportService(sourceRepo,
-				persistence.NewMappingRepo(db.Client), persistence.NewTransactionRepo(db.Client),
+				persistence.NewMappingRepo(db.Client), txRepo,
 				ruleRepo, persistence.NewCategoryRepo(db.Client), persistence.NewMerchantCategoryRepo(db.Client),
 				runner, prompter),
 			ask:   service.NewAskService(roExec, runner),
 			rules: ruleRepo,
+			txs:   txRepo,
 		}
 		return d, nil
 	}
@@ -76,6 +79,6 @@ func NewRootCmd() *cobra.Command {
 		return nil
 	}
 
-	root.AddCommand(newSourcesCmd(open), newImportCmd(open), newRulesCmd(open), newAskCmd(open))
+	root.AddCommand(newSourcesCmd(open), newImportCmd(open), newRulesCmd(open), newAskCmd(open), newTxCmd(open))
 	return root
 }

@@ -12,6 +12,7 @@ const reviewPromptFmt = `You are reviewing parsed transactions from a Korean ban
 before they are saved to a personal ledger. Flag rows that may NOT belong:
 - cancel_pair: cancellations/refunds that offset an original transaction (승인취소, 거래취소, 환불)
 - internal_transfer: transfers between the user's own accounts/pay services (내계좌이체, 카카오페이 충전 등)
+- card_settlement: card bill payments withdrawn from a bank account (카드대금, 카드결제, OO카드 출금 등) — these double-count spending when the card's own transactions are imported separately
 - zero_amount: zero-amount rows
 - duplicate_suspect: rows that look like duplicates of each other
 - other: anything else worth confirming
