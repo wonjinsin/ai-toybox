@@ -134,16 +134,16 @@ func resolveModelPath(explicitPath string) (string, error) {
 
 	candidates := make([]string, 0, 3)
 	if workingDirectory, err := os.Getwd(); err == nil {
-		candidates = append(candidates, filepath.Join(workingDirectory, "models", "ggml-small.bin"))
+		candidates = append(candidates, filepath.Join(workingDirectory, "models", "ggml-large-v3-turbo.bin"))
 	}
 	if executablePath, err := os.Executable(); err == nil {
 		if resolvedPath, resolveErr := filepath.EvalSymlinks(executablePath); resolveErr == nil {
 			executablePath = resolvedPath
 		}
-		candidates = append(candidates, filepath.Join(filepath.Dir(executablePath), "..", "models", "ggml-small.bin"))
+		candidates = append(candidates, filepath.Join(filepath.Dir(executablePath), "..", "models", "ggml-large-v3-turbo.bin"))
 	}
 	if cacheDirectory, err := os.UserCacheDir(); err == nil {
-		candidates = append(candidates, filepath.Join(cacheDirectory, "whisper-local", "models", "ggml-small.bin"))
+		candidates = append(candidates, filepath.Join(cacheDirectory, "whisper-local", "models", "ggml-large-v3-turbo.bin"))
 	}
 
 	for _, candidate := range candidates {

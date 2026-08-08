@@ -1,6 +1,6 @@
 # 로컬 Whisper 명령어
 
-`whisper.cpp`의 다국어 `small` 모델을 사용해 음성·영상 파일을 로컬에서 전사합니다. OpenAI API 키와 API 비용이 필요하지 않으며, 파일을 외부 서버로 전송하지 않습니다.
+`whisper.cpp`의 다국어 `large-v3-turbo` 모델을 사용해 음성·영상 파일을 로컬에서 전사합니다. OpenAI API 키와 API 비용이 필요하지 않으며, 파일을 외부 서버로 전송하지 않습니다.
 
 ## 빠른 사용법
 
@@ -40,12 +40,12 @@ whisper-local -help
 ## 현재 설치 구성
 
 - `whisper.cpp` 1.9.1: Homebrew로 설치
-- 다국어 `small` 모델: `models/ggml-small.bin`
-- 모델 SHA-256: `1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b`
+- 다국어 `large-v3-turbo` 모델: `models/ggml-large-v3-turbo.bin`
+- 모델 SHA-256: `1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69`
 - Go 실행 파일: `bin/whisper-local`
 - 전역 명령 링크: `/opt/homebrew/bin/whisper-local`
 
-모델은 용량이 약 488MB이므로 Git에 포함되지 않습니다.
+모델은 용량이 약 1.62GB이므로 Git에 포함되지 않습니다.
 
 ## 설치 요구 사항
 
@@ -61,12 +61,12 @@ brew install ffmpeg whisper-cpp
 
 mkdir -p models bin
 curl -L \
-  -o models/ggml-small.bin \
-  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin
+  -o models/ggml-large-v3-turbo.bin \
+  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
 
 printf '%s  %s\n' \
-  '1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b' \
-  'models/ggml-small.bin' | shasum -a 256 -c -
+  '1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69' \
+  'models/ggml-large-v3-turbo.bin' | shasum -a 256 -c -
 
 go build -o bin/whisper-local ./cmd/whisper-local
 ln -s "$(pwd)/bin/whisper-local" /opt/homebrew/bin/whisper-local
@@ -84,9 +84,9 @@ ls -l /opt/homebrew/bin/whisper-local
 
 1. `-model` 옵션 경로
 2. `WHISPER_MODEL` 환경 변수
-3. 현재 디렉터리의 `models/ggml-small.bin`
-4. 실행 파일 기준 `../models/ggml-small.bin`
-5. 사용자 캐시 디렉터리의 `whisper-local/models/ggml-small.bin`
+3. 현재 디렉터리의 `models/ggml-large-v3-turbo.bin`
+4. 실행 파일 기준 `../models/ggml-large-v3-turbo.bin`
+5. 사용자 캐시 디렉터리의 `whisper-local/models/ggml-large-v3-turbo.bin`
 
 ## 개발 검증
 

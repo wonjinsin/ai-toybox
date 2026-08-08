@@ -95,7 +95,7 @@ func TestResolveModelPathUsesWorkingDirectory(t *testing.T) {
 	if err := os.Mkdir(modelDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	modelPath := filepath.Join(modelDir, "ggml-small.bin")
+	modelPath := filepath.Join(modelDir, "ggml-large-v3-turbo.bin")
 	if err := os.WriteFile(modelPath, []byte("model"), 0o644); err != nil {
 		t.Fatal(err)
 	}
