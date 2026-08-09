@@ -111,6 +111,24 @@ func TestResolveModelPathUsesWorkingDirectory(t *testing.T) {
 	}
 }
 
+func TestResolveVADModelPathFoundNextToModel(t *testing.T) {
+	modelDir := t.TempDir()
+	vadPath := filepath.Join(modelDir, "ggml-silero-v5.1.2.bin")
+	if err := os.WriteFile(vadPath, []byte("vad"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	if resolved := resolveVADModelPath(filepath.Join(modelDir, "ggml-large-v3.bin")); resolved != vadPath {
+		t.Errorf("resolveVADModelPath() = %q, want %q", resolved, vadPath)
+	}
+}
+
+func TestResolveVADModelPathMissingReturnsEmpty(t *testing.T) {
+	if resolved := resolveVADModelPath(filepath.Join(t.TempDir(), "ggml-large-v3.bin")); resolved != "" {
+		t.Errorf("resolveVADModelPath() = %q, want empty", resolved)
+	}
+}
+
 func TestRunCommandIncludesProcessError(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("test helper executable uses POSIX shell")

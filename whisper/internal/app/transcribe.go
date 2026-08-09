@@ -103,12 +103,29 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 		"-l", options.Language,
 		"-of", temporaryOutputBase,
 		formatFlag,
+		// Contain hallucination on non-speech audio: -mc 0 stops it from
+		// propagating to later windows, -sns suppresses non-speech tokens.
+		"-mc", "0",
+		"-sns",
+	}
+	if vadModelPath := resolveVADModelPath(modelPath); vadModelPath != "" {
+		// Default threshold (0.5) keeps quiet speech; 30s max speech duration
+		// prevents hallucinated subtitles from spanning minutes.
+		whisperArgs = append(whisperArgs,
+			"--vad", "-vm", vadModelPath,
+			"-vmsd", "30",
+		)
 	}
 	if err := runCommand(ctx, whisperPath, whisperArgs); err != nil {
 		return "", fmt.Errorf("transcribe audio with whisper.cpp: %w", err)
 	}
 	if _, err := requireRegularFile(temporaryOutputPath, "transcript"); err != nil {
 		return "", fmt.Errorf("whisper.cpp did not create expected output: %w", err)
+	}
+	if options.Format == "srt" || options.Format == "vtt" {
+		if err := postProcessTranscript(temporaryOutputPath); err != nil {
+			return "", err
+		}
 	}
 	if options.Force {
 		if err := os.Rename(temporaryOutputPath, outputPath); err != nil {
@@ -170,6 +187,16 @@ func requireRegularFile(path, label string) (string, error) {
 		return "", fmt.Errorf("%s path %q is not a regular file", label, absolutePath)
 	}
 	return absolutePath, nil
+}
+
+// resolveVADModelPath looks for the silero VAD model next to the Whisper model.
+// Returns "" when absent so transcription still works without VAD.
+func resolveVADModelPath(modelPath string) string {
+	candidate := filepath.Join(filepath.Dir(modelPath), "ggml-silero-v5.1.2.bin")
+	if vadPath, err := requireRegularFile(candidate, "VAD model"); err == nil {
+		return vadPath
+	}
+	return ""
 }
 
 func runCommand(ctx context.Context, executable string, args []string) error {

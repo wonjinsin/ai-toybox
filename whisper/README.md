@@ -42,6 +42,8 @@ whisper-local -help
 - `whisper.cpp` 1.9.1: Homebrew로 설치
 - 다국어 `large-v3` 모델: `models/ggml-large-v3.bin`
 - 모델 SHA-256: `64d182b440b98d5203c4f9bd541544d84c605196c4f7b845dfa11fb23594d1e2`
+- silero VAD 모델: `models/ggml-silero-v5.1.2.bin` (음성 구간만 전사해 무음·음악 구간의 환각 반복 방지)
+- VAD 모델 SHA-256: `29940d98d42b91fbd05ce489f3ecf7c72f0a42f027e4875919a28fb4c04ea2cf`
 - Go 실행 파일: `bin/whisper-local`
 - 전역 명령 링크: `/opt/homebrew/bin/whisper-local`
 
@@ -68,6 +70,14 @@ printf '%s  %s\n' \
   '64d182b440b98d5203c4f9bd541544d84c605196c4f7b845dfa11fb23594d1e2' \
   'models/ggml-large-v3.bin' | shasum -a 256 -c -
 
+curl -L \
+  -o models/ggml-silero-v5.1.2.bin \
+  https://huggingface.co/ggml-org/whisper-vad/resolve/main/ggml-silero-v5.1.2.bin
+
+printf '%s  %s\n' \
+  '29940d98d42b91fbd05ce489f3ecf7c72f0a42f027e4875919a28fb4c04ea2cf' \
+  'models/ggml-silero-v5.1.2.bin' | shasum -a 256 -c -
+
 go build -o bin/whisper-local ./cmd/whisper-local
 ln -s "$(pwd)/bin/whisper-local" /opt/homebrew/bin/whisper-local
 ```
@@ -87,6 +97,8 @@ ls -l /opt/homebrew/bin/whisper-local
 3. 현재 디렉터리의 `models/ggml-large-v3.bin`
 4. 실행 파일 기준 `../models/ggml-large-v3.bin`
 5. 사용자 캐시 디렉터리의 `whisper-local/models/ggml-large-v3.bin`
+
+VAD 모델(`ggml-silero-v5.1.2.bin`)은 확정된 Whisper 모델과 같은 디렉터리에서 찾으며, 없으면 VAD 없이 전사합니다.
 
 ## 개발 검증
 
