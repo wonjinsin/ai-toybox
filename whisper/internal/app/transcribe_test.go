@@ -129,6 +129,149 @@ func TestResolveVADModelPathMissingReturnsEmpty(t *testing.T) {
 	}
 }
 
+func TestTranscribeUsesSpeechPreservingVADSettings(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+set -eu
+for argument do output="$argument"; done
+: > "$output"
+`)
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
+set -eu
+printf '%s\n' "$@" > "$WHISPER_ARGS"
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -of) output_base="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+printf '안녕하세요\n' > "${output_base}.txt"
+`)
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	argsPath := filepath.Join(tempDir, "whisper-args")
+	t.Setenv("WHISPER_ARGS", argsPath)
+
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+	vadPath := filepath.Join(tempDir, "ggml-silero-v5.1.2.bin")
+	if err := os.WriteFile(vadPath, []byte("vad"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := Transcribe(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "txt",
+		ModelPath: modelPath,
+	}); err != nil {
+		t.Fatalf("Transcribe() error = %v", err)
+	}
+
+	captured, err := os.ReadFile(argsPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	arguments := strings.Fields(string(captured))
+	for _, expected := range [][2]string{
+		{"-mc", "0"},
+		{"-vm", vadPath},
+		{"-vt", "0.35"},
+		{"-vspd", "100"},
+		{"-vsd", "500"},
+		{"-vp", "250"},
+		{"-vo", "0.20"},
+		{"-vmsd", "30"},
+	} {
+		if !containsConsecutiveArguments(arguments, expected[0], expected[1]) {
+			t.Errorf("whisper arguments = %q, want %q followed by %q", arguments, expected[0], expected[1])
+		}
+	}
+	for _, expected := range []string{"-sns", "--vad"} {
+		if !containsArgument(arguments, expected) {
+			t.Errorf("whisper arguments = %q, want %q", arguments, expected)
+		}
+	}
+}
+
+func TestTranscribeDoesNotUseVADSettingsWithoutVADModel(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+set -eu
+for argument do output="$argument"; done
+: > "$output"
+`)
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
+set -eu
+printf '%s\n' "$@" > "$WHISPER_ARGS"
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -of) output_base="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+printf '안녕하세요\n' > "${output_base}.txt"
+`)
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	argsPath := filepath.Join(tempDir, "whisper-args")
+	t.Setenv("WHISPER_ARGS", argsPath)
+
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+	if _, err := Transcribe(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "txt",
+		ModelPath: modelPath,
+	}); err != nil {
+		t.Fatalf("Transcribe() error = %v", err)
+	}
+
+	captured, err := os.ReadFile(argsPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	arguments := strings.Fields(string(captured))
+	for _, unexpected := range []string{
+		"--vad", "-vm", "-vt", "-vspd", "-vsd", "-vp", "-vo", "-vmsd",
+	} {
+		if containsArgument(arguments, unexpected) {
+			t.Errorf("whisper arguments = %q, do not want %q without a VAD model", arguments, unexpected)
+		}
+	}
+}
+
+func containsConsecutiveArguments(arguments []string, first, second string) bool {
+	for index := 0; index+1 < len(arguments); index++ {
+		if arguments[index] == first && arguments[index+1] == second {
+			return true
+		}
+	}
+	return false
+}
+
+func containsArgument(arguments []string, expected string) bool {
+	for _, argument := range arguments {
+		if argument == expected {
+			return true
+		}
+	}
+	return false
+}
+
 func TestRunCommandIncludesProcessError(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("test helper executable uses POSIX shell")

@@ -109,10 +109,14 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 		"-sns",
 	}
 	if vadModelPath := resolveVADModelPath(modelPath); vadModelPath != "" {
-		// Default threshold (0.5) keeps quiet speech; 30s max speech duration
-		// prevents hallucinated subtitles from spanning minutes.
+		// Preserve quiet, short speech and pad VAD boundaries to avoid clipped words.
 		whisperArgs = append(whisperArgs,
 			"--vad", "-vm", vadModelPath,
+			"-vt", "0.35",
+			"-vspd", "100",
+			"-vsd", "500",
+			"-vp", "250",
+			"-vo", "0.20",
 			"-vmsd", "30",
 		)
 	}
