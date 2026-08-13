@@ -103,3 +103,128 @@ printf 'transcript\n' > "${output_base}.txt"
 		t.Errorf("stdout = %q, want transcript path", stdout.String())
 	}
 }
+
+func TestExecuteProcessesEveryMediaFileInDirectory(t *testing.T) {
+	stdout, stderr, exitCode, inputDir, inputLog := executeDirectory(t, []string{"a.mp3", "b.mp4"}, "")
+
+	if exitCode != 0 {
+		t.Fatalf("Execute() exit code = %d, want 0; stderr = %q", exitCode, stderr)
+	}
+	for _, name := range []string{"a.txt", "b.txt"} {
+		if !strings.Contains(stdout, filepath.Join(inputDir, name)) {
+			t.Errorf("stdout = %q, want output %q", stdout, name)
+		}
+	}
+	loggedInputs, err := os.ReadFile(inputLog)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if lines := strings.Fields(string(loggedInputs)); len(lines) != 2 {
+		t.Errorf("processed inputs = %q, want 2 files", lines)
+	}
+}
+
+func TestExecuteSummarizesDirectoryWithOneMediaFile(t *testing.T) {
+	stdout, stderr, exitCode, _, _ := executeDirectory(t, []string{"only.mp3"}, "")
+
+	if exitCode != 0 {
+		t.Fatalf("Execute() exit code = %d, want 0; stderr = %q", exitCode, stderr)
+	}
+	if !strings.Contains(stdout, "요약: 성공 1개, 실패 0개") {
+		t.Errorf("stdout = %q, want single-file directory summary", stdout)
+	}
+}
+
+func TestExecuteContinuesDirectoryAfterOneFileFails(t *testing.T) {
+	stdout, stderr, exitCode, inputDir, inputLog := executeDirectory(
+		t,
+		[]string{"a.mp3", "b.mp3", "c.mp3"},
+		"b.mp3",
+	)
+
+	if exitCode != 1 {
+		t.Errorf("Execute() exit code = %d, want 1", exitCode)
+	}
+	for _, name := range []string{"a.txt", "c.txt"} {
+		if !strings.Contains(stdout, filepath.Join(inputDir, name)) {
+			t.Errorf("stdout = %q, want successful output %q", stdout, name)
+		}
+	}
+	if !strings.Contains(stderr, filepath.Join(inputDir, "b.mp3")) || !strings.Contains(stderr, "bad media") {
+		t.Errorf("stderr = %q, want failed input and command error", stderr)
+	}
+	if !strings.Contains(stdout, "요약: 성공 2개, 실패 1개") {
+		t.Errorf("stdout = %q, want partial failure summary", stdout)
+	}
+	loggedInputs, err := os.ReadFile(inputLog)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if lines := strings.Fields(string(loggedInputs)); len(lines) != 3 {
+		t.Errorf("processed inputs = %q, want all 3 files", lines)
+	}
+}
+
+func executeDirectory(t *testing.T, inputNames []string, failingInput string) (string, string, int, string, string) {
+	t.Helper()
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+set -eu
+input=
+output=
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -i) input="$2"; shift 2 ;;
+    *) output="$1"; shift ;;
+  esac
+done
+printf '%s\n' "$input" >> "$INPUT_LOG"
+if [ "$(basename "$input")" = "$FAILING_INPUT" ]; then
+  printf 'bad media' >&2
+  exit 3
+fi
+: > "$output"
+`)
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
+set -eu
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -of) output_base="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+printf 'transcript\n' > "${output_base}.txt"
+`)
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputLog := filepath.Join(tempDir, "inputs.log")
+	t.Setenv("INPUT_LOG", inputLog)
+	t.Setenv("FAILING_INPUT", failingInput)
+
+	inputDir := filepath.Join(tempDir, "recordings")
+	if err := os.Mkdir(inputDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range inputNames {
+		if err := os.WriteFile(filepath.Join(inputDir, name), []byte("media"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	modelPath := filepath.Join(tempDir, "model.bin")
+	if err := os.WriteFile(modelPath, []byte("model"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exitCode := Execute(context.Background(), []string{
+		"-model", modelPath,
+		inputDir,
+	}, &stdout, &stderr)
+
+	return stdout.String(), stderr.String(), exitCode, inputDir, inputLog
+}

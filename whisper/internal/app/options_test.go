@@ -21,6 +21,51 @@ func TestParseOptionsUsesSafeDefaults(t *testing.T) {
 	}
 }
 
+func TestParseOptionsDefaultsParallelToOne(t *testing.T) {
+	t.Parallel()
+
+	options, err := ParseOptions([]string{"meeting.mp4"})
+	if err != nil {
+		t.Fatalf("ParseOptions() error = %v", err)
+	}
+
+	if options.Parallel != 1 {
+		t.Errorf("Parallel = %d, want 1", options.Parallel)
+	}
+}
+
+func TestParseOptionsReadsParallelFlag(t *testing.T) {
+	t.Parallel()
+
+	options, err := ParseOptions([]string{"-parallel", "3", "meeting.mp4"})
+	if err != nil {
+		t.Fatalf("ParseOptions() error = %v", err)
+	}
+
+	if options.Parallel != 3 {
+		t.Errorf("Parallel = %d, want 3", options.Parallel)
+	}
+}
+
+func TestParseOptionsRejectsParallelBelowOne(t *testing.T) {
+	t.Parallel()
+
+	for _, parallel := range []string{"0", "-1"} {
+		parallel := parallel
+		t.Run(parallel, func(t *testing.T) {
+			t.Parallel()
+
+			_, err := ParseOptions([]string{"-parallel", parallel, "meeting.mp4"})
+			if err == nil {
+				t.Fatal("ParseOptions() error = nil, want parallel validation error")
+			}
+			if got, want := err.Error(), "parallel must be at least 1"; got != want {
+				t.Errorf("ParseOptions() error = %q, want %q", got, want)
+			}
+		})
+	}
+}
+
 func TestParseOptionsRequiresInput(t *testing.T) {
 	t.Parallel()
 

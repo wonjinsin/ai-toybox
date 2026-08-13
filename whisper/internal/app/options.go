@@ -12,6 +12,7 @@ type Options struct {
 	ModelPath string
 	OutputDir string
 	Force     bool
+	Parallel  int
 }
 
 func ParseOptions(args []string) (Options, error) {
@@ -22,12 +23,16 @@ func ParseOptions(args []string) (Options, error) {
 	modelPath := flags.String("model", "", "Whisper model path")
 	outputDir := flags.String("output", "", "output directory")
 	force := flags.Bool("force", false, "overwrite an existing transcript")
+	parallel := flags.Int("parallel", 1, "maximum number of concurrent transcriptions")
 
 	if err := flags.Parse(args); err != nil {
 		return Options{}, err
 	}
 	if flags.NArg() != 1 {
 		return Options{}, errors.New("input file is required")
+	}
+	if *parallel < 1 {
+		return Options{}, errors.New("parallel must be at least 1")
 	}
 	if err := validateLanguage(*language); err != nil {
 		return Options{}, err
@@ -43,6 +48,7 @@ func ParseOptions(args []string) (Options, error) {
 		ModelPath: *modelPath,
 		OutputDir: *outputDir,
 		Force:     *force,
+		Parallel:  *parallel,
 	}, nil
 }
 
