@@ -40,6 +40,11 @@ func TestExecuteShowsHelp(t *testing.T) {
 	if stderr.Len() != 0 {
 		t.Errorf("stderr = %q, want empty", stderr.String())
 	}
+	for _, option := range []string{"-vad-model", "-corrections"} {
+		if !strings.Contains(stdout.String(), option) {
+			t.Errorf("stdout = %q, want %q option", stdout.String(), option)
+		}
+	}
 }
 
 func TestExecuteReportsTranscriptionFailure(t *testing.T) {
@@ -68,16 +73,8 @@ set -eu
 for argument do output="$argument"; done
 : > "$output"
 `)
-	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
-set -eu
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -of) output_base="$2"; shift 2 ;;
-    *) shift ;;
-  esac
-done
-printf 'transcript\n' > "${output_base}.txt"
-`)
+	writeFakeFFprobe(t, binDir, "60.0")
+	writeSuccessfulWhisperPipeline(t, binDir, "transcript")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 
 	inputPath := filepath.Join(tempDir, "input.mp4")
@@ -86,6 +83,9 @@ printf 'transcript\n' > "${output_base}.txt"
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(modelPath, []byte("model"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(tempDir, "ggml-silero-v6.2.0.bin"), []byte("vad"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -183,23 +183,19 @@ while [ "$#" -gt 0 ]; do
     *) output="$1"; shift ;;
   esac
 done
-printf '%s\n' "$input" >> "$INPUT_LOG"
-if [ "$(basename "$input")" = "$FAILING_INPUT" ]; then
-  printf 'bad media' >&2
-  exit 3
-fi
+case "$input" in
+  *.mp3|*.mp4)
+    printf '%s\n' "$input" >> "$INPUT_LOG"
+    if [ "$(basename "$input")" = "$FAILING_INPUT" ]; then
+      printf 'bad media' >&2
+      exit 3
+    fi
+    ;;
+esac
 : > "$output"
 `)
-	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
-set -eu
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    -of) output_base="$2"; shift 2 ;;
-    *) shift ;;
-  esac
-done
-printf 'transcript\n' > "${output_base}.txt"
-`)
+	writeFakeFFprobe(t, binDir, "60.0")
+	writeSuccessfulWhisperPipeline(t, binDir, "transcript")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputLog := filepath.Join(tempDir, "inputs.log")
 	t.Setenv("INPUT_LOG", inputLog)
@@ -216,6 +212,9 @@ printf 'transcript\n' > "${output_base}.txt"
 	}
 	modelPath := filepath.Join(tempDir, "model.bin")
 	if err := os.WriteFile(modelPath, []byte("model"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(tempDir, "ggml-silero-v6.2.0.bin"), []byte("vad"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 

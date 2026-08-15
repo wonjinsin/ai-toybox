@@ -8,7 +8,17 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
+	"time"
+)
+
+const audioNormalizationFilter = "dynaudnorm=f=500:g=31:p=0.95:m=10:b=1"
+
+var (
+	vadSegmentLogPattern   = regexp.MustCompile(`VAD segment \d+: start = ([0-9]+(?:\.[0-9]+)?), end = ([0-9]+(?:\.[0-9]+)?)`)
+	vadSegmentCountPattern = regexp.MustCompile(`Final speech segments after filtering: ([0-9]+)`)
 )
 
 func Transcribe(ctx context.Context, options Options) (string, error) {
@@ -27,10 +37,22 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	vadModelPath, err := resolveRequiredVADModelPath(options.VADModelPath, modelPath)
+	if err != nil {
+		return "", err
+	}
+	corrections, err := loadCorrections(options.CorrectionsPath)
+	if err != nil {
+		return "", err
+	}
 
 	ffmpegPath, err := exec.LookPath("ffmpeg")
 	if err != nil {
 		return "", errors.New("ffmpeg not found: install it with 'brew install ffmpeg'")
+	}
+	ffprobePath, err := exec.LookPath("ffprobe")
+	if err != nil {
+		return "", errors.New("ffprobe not found: install it with 'brew install ffmpeg'")
 	}
 	whisperPath, err := exec.LookPath("whisper-cli")
 	if err != nil {
@@ -85,51 +107,49 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 	ffmpegArgs := []string{
 		"-nostdin", "-hide_banner", "-loglevel", "error", "-y",
 		"-i", inputPath,
-		"-vn", "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le",
+		"-vn", "-af", audioNormalizationFilter,
+		"-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le",
 		tempPath,
 	}
 	if err := runCommand(ctx, ffmpegPath, ffmpegArgs); err != nil {
 		return "", fmt.Errorf("extract audio with ffmpeg: %w", err)
 	}
 
-	formatFlag := map[string]string{
-		"srt": "-osrt",
-		"txt": "-otxt",
-		"vtt": "-ovtt",
-	}[options.Format]
-	whisperArgs := []string{
-		"-m", modelPath,
-		"-f", tempPath,
-		"-l", options.Language,
-		"-of", temporaryOutputBase,
-		formatFlag,
-		// Contain hallucination on non-speech audio: -mc 0 stops it from
-		// propagating to later windows, -sns suppresses non-speech tokens.
-		"-mc", "0",
-		"-sns",
+	mediaDuration, err := probeMediaDuration(ctx, ffprobePath, inputPath)
+	if err != nil {
+		return "", err
 	}
-	if vadModelPath := resolveVADModelPath(modelPath); vadModelPath != "" {
-		// Preserve quiet, short speech and pad VAD boundaries to avoid clipped words.
-		whisperArgs = append(whisperArgs,
-			"--vad", "-vm", vadModelPath,
-			"-vt", "0.35",
-			"-vspd", "100",
-			"-vsd", "500",
-			"-vp", "250",
-			"-vo", "0.20",
-			"-vmsd", "30",
-		)
+	speechSegments, err := detectSpeechSegments(ctx, whisperPath, modelPath, tempPath, options.Language, vadModelPath)
+	if err != nil {
+		return "", err
 	}
-	if err := runCommand(ctx, whisperPath, whisperArgs); err != nil {
-		return "", fmt.Errorf("transcribe audio with whisper.cpp: %w", err)
+	chunks := buildSpeechChunks(speechSegments, mediaDuration)
+	chunkDirectory, err := os.MkdirTemp("", "whisper-local-chunks-*")
+	if err != nil {
+		return "", fmt.Errorf("create temporary chunk directory: %w", err)
 	}
-	if _, err := requireRegularFile(temporaryOutputPath, "transcript"); err != nil {
-		return "", fmt.Errorf("whisper.cpp did not create expected output: %w", err)
+	defer os.RemoveAll(chunkDirectory)
+	transcriptionChunks, err := extractTranscriptionChunks(ctx, ffmpegPath, tempPath, chunkDirectory, chunks)
+	if err != nil {
+		return "", err
 	}
-	if options.Format == "srt" || options.Format == "vtt" {
-		if err := postProcessTranscript(temporaryOutputPath); err != nil {
-			return "", err
-		}
+	if err := transcribeAudioChunks(ctx, whisperPath, modelPath, options.Language, transcriptionChunks); err != nil {
+		return "", err
+	}
+	rawCues, err := loadTranscriptionCues(transcriptionChunks)
+	if err != nil {
+		return "", err
+	}
+	cues := cleanSubtitleCues(rawCues, options.Language, corrections, mediaDuration)
+	if err := validateSubtitleCues(cues, mediaDuration); err != nil {
+		return "", err
+	}
+	transcript, err := renderTranscript(cues, options.Format, options.Language)
+	if err != nil {
+		return "", err
+	}
+	if err := os.WriteFile(temporaryOutputPath, []byte(transcript), 0o644); err != nil {
+		return "", fmt.Errorf("write temporary transcript %q: %w", temporaryOutputPath, err)
 	}
 	if options.Force {
 		if err := os.Rename(temporaryOutputPath, outputPath); err != nil {
@@ -143,6 +163,35 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 	}
 
 	return outputPath, nil
+}
+
+func parseSpeechSegments(log string) ([]speechSegment, error) {
+	countMatch := vadSegmentCountPattern.FindStringSubmatch(log)
+	if countMatch == nil {
+		return nil, errors.New("VAD segment summary not found in whisper.cpp output")
+	}
+	expectedCount, err := strconv.Atoi(countMatch[1])
+	if err != nil {
+		return nil, fmt.Errorf("parse VAD segment count %q: %w", countMatch[1], err)
+	}
+
+	matches := vadSegmentLogPattern.FindAllStringSubmatch(log, -1)
+	segments := make([]speechSegment, 0, len(matches))
+	for _, match := range matches {
+		startSeconds, startErr := strconv.ParseFloat(match[1], 64)
+		endSeconds, endErr := strconv.ParseFloat(match[2], 64)
+		if startErr != nil || endErr != nil || endSeconds <= startSeconds {
+			continue
+		}
+		segments = append(segments, speechSegment{
+			Start: time.Duration(startSeconds * float64(time.Second)),
+			End:   time.Duration(endSeconds * float64(time.Second)),
+		})
+	}
+	if len(segments) != expectedCount {
+		return nil, fmt.Errorf("parsed %d VAD segments, want %d from whisper.cpp summary", len(segments), expectedCount)
+	}
+	return segments, nil
 }
 
 func resolveModelPath(explicitPath string) (string, error) {
@@ -193,26 +242,43 @@ func requireRegularFile(path, label string) (string, error) {
 	return absolutePath, nil
 }
 
-// resolveVADModelPath looks for the silero VAD model next to the Whisper model.
-// Returns "" when absent so transcription still works without VAD.
+// resolveVADModelPath looks for the required Silero VAD model next to the Whisper model.
 func resolveVADModelPath(modelPath string) string {
-	candidate := filepath.Join(filepath.Dir(modelPath), "ggml-silero-v5.1.2.bin")
+	candidate := filepath.Join(filepath.Dir(modelPath), "ggml-silero-v6.2.0.bin")
 	if vadPath, err := requireRegularFile(candidate, "VAD model"); err == nil {
 		return vadPath
 	}
 	return ""
 }
 
+func resolveRequiredVADModelPath(explicitPath, modelPath string) (string, error) {
+	if explicitPath != "" {
+		return requireRegularFile(explicitPath, "VAD model")
+	}
+	if environmentPath := os.Getenv("WHISPER_VAD_MODEL"); environmentPath != "" {
+		return requireRegularFile(environmentPath, "VAD model from WHISPER_VAD_MODEL")
+	}
+	if resolved := resolveVADModelPath(modelPath); resolved != "" {
+		return resolved, nil
+	}
+	return "", fmt.Errorf("VAD model not found next to Whisper model %q; use --vad-model or WHISPER_VAD_MODEL", modelPath)
+}
+
 func runCommand(ctx context.Context, executable string, args []string) error {
+	_, err := runCommandCaptureStderr(ctx, executable, args)
+	return err
+}
+
+func runCommandCaptureStderr(ctx context.Context, executable string, args []string) (string, error) {
 	var stderr bytes.Buffer
 	command := exec.CommandContext(ctx, executable, args...)
 	command.Stderr = &stderr
 	if err := command.Run(); err != nil {
 		message := strings.TrimSpace(stderr.String())
 		if message == "" {
-			return err
+			return "", err
 		}
-		return fmt.Errorf("%w: %s", err, message)
+		return "", fmt.Errorf("%w: %s", err, message)
 	}
-	return nil
+	return stderr.String(), nil
 }

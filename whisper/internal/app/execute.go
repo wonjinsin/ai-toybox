@@ -16,6 +16,8 @@ const usage = `사용법:
   -language auto|ko|ja|zh|en  음성 언어 (기본값: auto)
   -format txt|srt|vtt         출력 형식 (기본값: txt)
   -model <경로>               Whisper 모델 경로
+  -vad-model <경로>           Silero VAD 모델 경로
+  -corrections <경로>         문구 교정 JSON 경로
   -output <디렉터리>          출력 디렉터리 (기본값: 입력 파일 위치)
   -parallel <개수>             최대 동시 전사 수 (기본값: 1)
   -force                      기존 결과 파일 덮어쓰기

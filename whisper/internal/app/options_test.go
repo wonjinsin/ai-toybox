@@ -82,6 +82,8 @@ func TestParseOptionsReadsFlags(t *testing.T) {
 		"-language", "ja",
 		"-format", "srt",
 		"-model", "/models/ggml-small.bin",
+		"-vad-model", "/models/silero.bin",
+		"-corrections", "/config/corrections-ja.json",
 		"-output", "/transcripts",
 		"-force",
 		"movie.mp4",
@@ -101,6 +103,12 @@ func TestParseOptionsReadsFlags(t *testing.T) {
 	}
 	if options.ModelPath != "/models/ggml-small.bin" {
 		t.Errorf("ModelPath = %q, want %q", options.ModelPath, "/models/ggml-small.bin")
+	}
+	if options.VADModelPath != "/models/silero.bin" {
+		t.Errorf("VADModelPath = %q, want %q", options.VADModelPath, "/models/silero.bin")
+	}
+	if options.CorrectionsPath != "/config/corrections-ja.json" {
+		t.Errorf("CorrectionsPath = %q, want %q", options.CorrectionsPath, "/config/corrections-ja.json")
 	}
 	if options.OutputDir != "/transcripts" {
 		t.Errorf("OutputDir = %q, want %q", options.OutputDir, "/transcripts")

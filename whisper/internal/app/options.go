@@ -6,13 +6,15 @@ import "fmt"
 import "io"
 
 type Options struct {
-	InputPath string
-	Language  string
-	Format    string
-	ModelPath string
-	OutputDir string
-	Force     bool
-	Parallel  int
+	InputPath       string
+	Language        string
+	Format          string
+	ModelPath       string
+	VADModelPath    string
+	CorrectionsPath string
+	OutputDir       string
+	Force           bool
+	Parallel        int
 }
 
 func ParseOptions(args []string) (Options, error) {
@@ -21,6 +23,8 @@ func ParseOptions(args []string) (Options, error) {
 	language := flags.String("language", "auto", "transcription language")
 	format := flags.String("format", "txt", "output format")
 	modelPath := flags.String("model", "", "Whisper model path")
+	vadModelPath := flags.String("vad-model", "", "Silero VAD model path")
+	correctionsPath := flags.String("corrections", "", "JSON text corrections path")
 	outputDir := flags.String("output", "", "output directory")
 	force := flags.Bool("force", false, "overwrite an existing transcript")
 	parallel := flags.Int("parallel", 1, "maximum number of concurrent transcriptions")
@@ -42,13 +46,15 @@ func ParseOptions(args []string) (Options, error) {
 	}
 
 	return Options{
-		InputPath: flags.Arg(0),
-		Language:  *language,
-		Format:    *format,
-		ModelPath: *modelPath,
-		OutputDir: *outputDir,
-		Force:     *force,
-		Parallel:  *parallel,
+		InputPath:       flags.Arg(0),
+		Language:        *language,
+		Format:          *format,
+		ModelPath:       *modelPath,
+		VADModelPath:    *vadModelPath,
+		CorrectionsPath: *correctionsPath,
+		OutputDir:       *outputDir,
+		Force:           *force,
+		Parallel:        *parallel,
 	}, nil
 }
 
