@@ -113,13 +113,17 @@ func transcribeAudioChunks(ctx context.Context, whisperPath, modelPath, language
 
 func loadTranscriptionCues(chunks []transcriptionChunk) ([]subtitleCue, error) {
 	cues := make([]subtitleCue, 0, len(chunks))
-	for _, chunk := range chunks {
+	for index, chunk := range chunks {
 		jsonPath := chunk.Path + ".json"
 		content, err := os.ReadFile(jsonPath)
 		if err != nil {
 			return nil, fmt.Errorf("read whisper JSON %q: %w", jsonPath, err)
 		}
-		chunkCues, err := parseWhisperJSON(content, chunk.Start)
+		chunkCues, err := parseWhisperJSONForOrigin(content, transcriptionOrigin{
+			Index: index,
+			Start: chunk.Start,
+			End:   chunk.End,
+		})
 		if err != nil {
 			return nil, fmt.Errorf("parse whisper JSON %q: %w", jsonPath, err)
 		}
