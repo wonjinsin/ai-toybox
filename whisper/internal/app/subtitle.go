@@ -52,7 +52,7 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 
 	cleaned := make([]subtitleCue, 0, len(ordered))
 	for _, cue := range ordered {
-		cue.Text = normalizeSubtitleText(cue.Text, language, corrections)
+		cue.Text = strings.TrimSpace(cue.Text)
 		if cue.Probability < minimumSubtitleProbability {
 			continue
 		}
@@ -74,7 +74,11 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 	}
 	expanded := make([]subtitleCue, 0, len(cleaned))
 	for _, cue := range cleaned {
-		appendSplitSubtitleCue(&expanded, cue, 2*subtitleLineWidth(language))
+		appendSplitSubtitleCue(&expanded, cue, 2*subtitleLineWidth(language), corrections)
+	}
+	for index, cue := range expanded {
+		cue.Text = normalizeSubtitleText(cue.Text, language, corrections)
+		expanded[index] = cue
 	}
 	cleaned = expanded
 
@@ -108,21 +112,203 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 	return timed
 }
 
-func appendSplitSubtitleCue(destination *[]subtitleCue, cue subtitleCue, maximumCharacters int) {
+func appendSplitSubtitleCue(destination *[]subtitleCue, cue subtitleCue, maximumCharacters int, corrections map[string]string) {
 	characters := []rune(cue.Text)
 	if len(characters) <= maximumCharacters {
 		*destination = append(*destination, cue)
 		return
 	}
 
-	splitAt := subtitleSplitPosition(characters)
+	if first, second, ok := splitSubtitleCueAtTokenBoundary(cue, corrections); ok {
+		appendSplitSubtitleCue(destination, first, maximumCharacters, corrections)
+		appendSplitSubtitleCue(destination, second, maximumCharacters, corrections)
+		return
+	}
+
+	splitAt, ok := subtitleSplitPositionOutsideCorrections(cue.Text, characters, corrections)
+	if !ok {
+		*destination = append(*destination, cue)
+		return
+	}
 	splitTime := cue.Start + time.Duration(float64(cue.End-cue.Start)*float64(splitAt)/float64(len(characters)))
 	appendSplitSubtitleCue(destination, subtitleCue{
-		Start: cue.Start, End: splitTime, Text: string(characters[:splitAt]), Probability: cue.Probability,
-	}, maximumCharacters)
+		Start: cue.Start, End: splitTime, Text: string(characters[:splitAt]), Probability: cue.Probability, Origin: cue.Origin,
+	}, maximumCharacters, corrections)
 	appendSplitSubtitleCue(destination, subtitleCue{
-		Start: splitTime, End: cue.End, Text: string(characters[splitAt:]), Probability: cue.Probability,
-	}, maximumCharacters)
+		Start: splitTime, End: cue.End, Text: string(characters[splitAt:]), Probability: cue.Probability, Origin: cue.Origin,
+	}, maximumCharacters, corrections)
+}
+
+type subtitleTokenBoundary struct {
+	TokenIndex int
+	Position   int
+	End        time.Duration
+	NextStart  time.Duration
+	Preferred  bool
+}
+
+func splitSubtitleCueAtTokenBoundary(cue subtitleCue, corrections map[string]string) (subtitleCue, subtitleCue, bool) {
+	boundary, ok := subtitleTokenSplitBoundary(cue, corrections)
+	if !ok {
+		return subtitleCue{}, subtitleCue{}, false
+	}
+	characters := []rune(cue.Text)
+	first := subtitleCue{
+		Start:       cue.Start,
+		End:         boundary.End,
+		Text:        strings.TrimSpace(string(characters[:boundary.Position])),
+		Probability: cue.Probability,
+		Tokens:      append([]subtitleToken(nil), cue.Tokens[:boundary.TokenIndex+1]...),
+		Origin:      cue.Origin,
+	}
+	second := subtitleCue{
+		Start:       boundary.NextStart,
+		End:         cue.End,
+		Text:        strings.TrimSpace(string(characters[boundary.Position:])),
+		Probability: cue.Probability,
+		Tokens:      append([]subtitleToken(nil), cue.Tokens[boundary.TokenIndex+1:]...),
+		Origin:      cue.Origin,
+	}
+	if first.End <= first.Start || second.End <= second.Start || first.Text == "" || second.Text == "" {
+		return subtitleCue{}, subtitleCue{}, false
+	}
+	return first, second, true
+}
+
+func subtitleTokenSplitBoundary(cue subtitleCue, corrections map[string]string) (subtitleTokenBoundary, bool) {
+	if len(cue.Tokens) < 2 {
+		return subtitleTokenBoundary{}, false
+	}
+
+	characters := []rune(cue.Text)
+	prefix := ""
+	boundaries := make([]subtitleTokenBoundary, 0, len(cue.Tokens)-1)
+	for index, token := range cue.Tokens {
+		prefix += token.Text
+		if index == len(cue.Tokens)-1 {
+			break
+		}
+		next := cue.Tokens[index+1]
+		position := len([]rune(strings.TrimSpace(prefix)))
+		if position < 6 || len(characters)-position < 6 || token.End > next.Start || isProtectedSubtitleSplit(cue.Text, position, corrections) {
+			continue
+		}
+		boundaries = append(boundaries, subtitleTokenBoundary{
+			TokenIndex: index,
+			Position:   position,
+			End:        token.End,
+			NextStart:  next.Start,
+			Preferred:  tokenEndsWithPunctuation(token.Text) || tokenStartsWithSpace(next.Text),
+		})
+	}
+	if strings.TrimSpace(prefix) != cue.Text || len(boundaries) == 0 {
+		return subtitleTokenBoundary{}, false
+	}
+
+	preferred := make([]subtitleTokenBoundary, 0, len(boundaries))
+	for _, boundary := range boundaries {
+		if boundary.Preferred {
+			preferred = append(preferred, boundary)
+		}
+	}
+	if len(preferred) > 0 {
+		boundaries = preferred
+	}
+
+	target := len(characters) / 2
+	best := boundaries[0]
+	bestDistance := absoluteDifference(best.Position, target)
+	for _, boundary := range boundaries[1:] {
+		distance := absoluteDifference(boundary.Position, target)
+		if distance < bestDistance {
+			best = boundary
+			bestDistance = distance
+		}
+	}
+	return best, true
+}
+
+func subtitleSplitPositionOutsideCorrections(text string, characters []rune, corrections map[string]string) (int, bool) {
+	if len(corrections) == 0 {
+		return subtitleSplitPosition(characters), true
+	}
+	target := len(characters) / 2
+	candidates := make([]int, 0, len(characters)-1)
+	punctuationCandidates := make([]int, 0, len(characters)-1)
+	for index, character := range characters {
+		candidate := index + 1
+		if candidate < 6 || len(characters)-candidate < 6 || isProtectedSubtitleSplit(text, candidate, corrections) {
+			continue
+		}
+		candidates = append(candidates, candidate)
+		if strings.ContainsRune("、。！？,.!?", character) {
+			punctuationCandidates = append(punctuationCandidates, candidate)
+		}
+	}
+	if len(punctuationCandidates) > 0 {
+		candidates = punctuationCandidates
+	}
+	if len(candidates) == 0 {
+		return 0, false
+	}
+	best := candidates[0]
+	bestDistance := absoluteDifference(best, target)
+	for _, candidate := range candidates[1:] {
+		distance := absoluteDifference(candidate, target)
+		if distance < bestDistance {
+			best = candidate
+			bestDistance = distance
+		}
+	}
+	return best, true
+}
+
+func isProtectedSubtitleSplit(text string, position int, corrections map[string]string) bool {
+	for source := range corrections {
+		if source == "" {
+			continue
+		}
+		for searchStart := 0; searchStart < len(text); {
+			relativeStart := strings.Index(text[searchStart:], source)
+			if relativeStart < 0 {
+				break
+			}
+			start := searchStart + relativeStart
+			end := start + len(source)
+			startPosition := len([]rune(text[:start]))
+			endPosition := startPosition + len([]rune(source))
+			if position > startPosition && position < endPosition {
+				return true
+			}
+			searchStart = end
+		}
+	}
+	return false
+}
+
+func absoluteDifference(first, second int) int {
+	if first < second {
+		return second - first
+	}
+	return first - second
+}
+
+func tokenEndsWithPunctuation(text string) bool {
+	for index := len([]rune(text)) - 1; index >= 0; index-- {
+		character := []rune(text)[index]
+		if unicode.IsSpace(character) {
+			continue
+		}
+		return unicode.IsPunct(character)
+	}
+	return false
+}
+
+func tokenStartsWithSpace(text string) bool {
+	for _, character := range text {
+		return unicode.IsSpace(character)
+	}
+	return false
 }
 
 func subtitleSplitPosition(characters []rune) int {

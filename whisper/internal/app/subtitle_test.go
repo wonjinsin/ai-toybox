@@ -3,6 +3,7 @@ package app
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -301,5 +302,93 @@ func TestCleanSubtitleCuesSplitsTextBeyondTwoLines(t *testing.T) {
 		if length := len([]rune(cue.Text)); length > 36 {
 			t.Errorf("split cue length = %d, want at most 36", length)
 		}
+	}
+}
+
+func TestCleanSubtitleCuesSplitsLongCueAtActualTokenTimes(t *testing.T) {
+	t.Parallel()
+
+	text := "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"
+	cues := []subtitleCue{{
+		Start:       time.Second,
+		End:         7 * time.Second,
+		Text:        text,
+		Probability: 0.9,
+		Tokens: []subtitleToken{
+			{Start: time.Second, End: 2 * time.Second, Text: "一二三四五六七八九十"},
+			{Start: 2500 * time.Millisecond, End: 3800 * time.Millisecond, Text: "一二三四五六七八九十"},
+			{Start: 5 * time.Second, End: 6 * time.Second, Text: "一二三四五六七八九十"},
+			{Start: 6 * time.Second, End: 7 * time.Second, Text: "一二三四五六七八九十"},
+		},
+	}}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 10*time.Second)
+	if len(got) != 2 {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want 2", len(got))
+	}
+	if got[0].End != 3800*time.Millisecond {
+		t.Errorf("first cue end = %s, want 3.8s", got[0].End)
+	}
+	if got[1].Start != 5*time.Second {
+		t.Errorf("second cue start = %s, want 5s", got[1].Start)
+	}
+}
+
+func TestCleanSubtitleCuesPreservesTokenTimingAroundCorrectionSource(t *testing.T) {
+	t.Parallel()
+
+	text := strings.Repeat("가", 15) + strings.Repeat("나", 10) + strings.Repeat("다", 15)
+	source := strings.Repeat("가", 5) + strings.Repeat("나", 10) + strings.Repeat("다", 5)
+	cues := []subtitleCue{{
+		Start:       time.Second,
+		End:         7 * time.Second,
+		Text:        text,
+		Probability: 0.9,
+		Tokens: []subtitleToken{
+			{Start: time.Second, End: 2 * time.Second, Text: strings.Repeat("가", 10)},
+			{Start: 2500 * time.Millisecond, End: 3800 * time.Millisecond, Text: strings.Repeat("가", 5) + strings.Repeat("나", 5)},
+			{Start: 5 * time.Second, End: 6 * time.Second, Text: strings.Repeat("나", 5) + strings.Repeat("다", 5)},
+			{Start: 6 * time.Second, End: 7 * time.Second, Text: strings.Repeat("다", 10)},
+		},
+	}}
+
+	got := cleanSubtitleCues(cues, "ja", map[string]string{source: strings.Repeat("마", 20)}, 10*time.Second)
+	if len(got) != 2 {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want 2", len(got))
+	}
+	if got[0].End != 2*time.Second {
+		t.Errorf("first cue end = %s, want 2s", got[0].End)
+	}
+	if got[1].Start != 2500*time.Millisecond {
+		t.Errorf("second cue start = %s, want 2.5s", got[1].Start)
+	}
+	if got[1].Text != strings.Repeat("마", 20)+strings.Repeat("다", 10) {
+		t.Errorf("second cue text = %q", got[1].Text)
+	}
+}
+
+func TestCleanSubtitleCuesPrefersPunctuationTokenBoundary(t *testing.T) {
+	t.Parallel()
+
+	text := strings.Repeat("가", 9) + "。" + strings.Repeat("나", 10) + strings.Repeat("다", 10) + strings.Repeat("라", 10)
+	cues := []subtitleCue{{
+		Start:       time.Second,
+		End:         7 * time.Second,
+		Text:        text,
+		Probability: 0.9,
+		Tokens: []subtitleToken{
+			{Start: time.Second, End: 2 * time.Second, Text: strings.Repeat("가", 9) + "。"},
+			{Start: 2500 * time.Millisecond, End: 3800 * time.Millisecond, Text: strings.Repeat("나", 10)},
+			{Start: 5 * time.Second, End: 6 * time.Second, Text: strings.Repeat("다", 10)},
+			{Start: 6 * time.Second, End: 7 * time.Second, Text: strings.Repeat("라", 10)},
+		},
+	}}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 10*time.Second)
+	if len(got) != 2 {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want 2", len(got))
+	}
+	if got[0].End != 2*time.Second || got[1].Start != 2500*time.Millisecond {
+		t.Errorf("cue timing = %s --> %s and %s --> %s, want 1s --> 2s and 2.5s --> 7s", got[0].Start, got[0].End, got[1].Start, got[1].End)
 	}
 }
