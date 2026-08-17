@@ -49,6 +49,7 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 		}
 		return ordered[first].Start < ordered[second].Start
 	})
+	ordered = reconcileChunkBoundaries(ordered)
 
 	cleaned := make([]subtitleCue, 0, len(ordered))
 	for _, cue := range ordered {
@@ -57,17 +58,6 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 			continue
 		}
 		if language == "ja" && isJapaneseNonlexical(cue.Text) {
-			continue
-		}
-		duplicate := false
-		for index := len(cleaned) - 1; index >= 0 && index >= len(cleaned)-8; index-- {
-			prior := cleaned[index]
-			if cue.Text == prior.Text && cue.Start-prior.Start < 10*time.Second {
-				duplicate = true
-				break
-			}
-		}
-		if duplicate {
 			continue
 		}
 		cleaned = append(cleaned, cue)

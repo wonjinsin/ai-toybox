@@ -216,7 +216,7 @@ func TestCleanSubtitleCuesDropsJapaneseVocalizationButKeepsResponse(t *testing.T
 	}
 }
 
-func TestCleanSubtitleCuesDropsNearbyDuplicate(t *testing.T) {
+func TestCleanSubtitleCuesKeepsNearbyDuplicateWithoutConfirmedBoundary(t *testing.T) {
 	t.Parallel()
 
 	cues := []subtitleCue{
@@ -226,8 +226,8 @@ func TestCleanSubtitleCuesDropsNearbyDuplicate(t *testing.T) {
 	}
 
 	got := cleanSubtitleCues(cues, "ja", nil, 30*time.Second)
-	if len(got) != 2 || got[0].Start != time.Second || got[1].Start != 20*time.Second {
-		t.Fatalf("cleanSubtitleCues() = %#v, want distant duplicates only", got)
+	if len(got) != 3 || got[0].Start != time.Second || got[1].Start != 3*time.Second || got[2].Start != 20*time.Second {
+		t.Fatalf("cleanSubtitleCues() = %#v, want every actual repeat", got)
 	}
 }
 
