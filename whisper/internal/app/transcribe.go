@@ -22,6 +22,15 @@ var (
 )
 
 func Transcribe(ctx context.Context, options Options) (string, error) {
+	return transcribeWithProgress(ctx, options, nil)
+}
+
+func transcribeWithProgress(ctx context.Context, options Options, progress progressReporter) (string, error) {
+	return transcribeWithProgressUsingRunner(ctx, options, progress, newWhisperCommandRunner(1, runCommandCaptureStderr))
+}
+
+func transcribeWithProgressUsingRunner(ctx context.Context, options Options, progress progressReporter, whisperRunner *whisperCommandRunner) (string, error) {
+	overallStartedAt := time.Now()
 	if err := validateLanguage(options.Language); err != nil {
 		return "", err
 	}
@@ -33,6 +42,25 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	outputDir := options.OutputDir
+	if outputDir == "" {
+		outputDir = filepath.Dir(inputPath)
+	}
+	outputDir, err = filepath.Abs(outputDir)
+	if err != nil {
+		return "", fmt.Errorf("resolve output directory: %w", err)
+	}
+	baseName := strings.TrimSuffix(filepath.Base(inputPath), filepath.Ext(inputPath))
+	outputBase := filepath.Join(outputDir, baseName)
+	outputPath := outputBase + "." + options.Format
+	if !options.Force {
+		if _, err := os.Stat(outputPath); err == nil {
+			return "", newOutputExistsError(outputPath)
+		} else if !os.IsNotExist(err) {
+			return "", fmt.Errorf("inspect output file %q: %w", outputPath, err)
+		}
+	}
+
 	modelPath, err := resolveModelPath(options.ModelPath)
 	if err != nil {
 		return "", err
@@ -59,27 +87,8 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 		return "", errors.New("whisper-cli not found: install it with 'brew install whisper-cpp'")
 	}
 
-	outputDir := options.OutputDir
-	if outputDir == "" {
-		outputDir = filepath.Dir(inputPath)
-	}
-	outputDir, err = filepath.Abs(outputDir)
-	if err != nil {
-		return "", fmt.Errorf("resolve output directory: %w", err)
-	}
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		return "", fmt.Errorf("create output directory %q: %w", outputDir, err)
-	}
-
-	baseName := strings.TrimSuffix(filepath.Base(inputPath), filepath.Ext(inputPath))
-	outputBase := filepath.Join(outputDir, baseName)
-	outputPath := outputBase + "." + options.Format
-	if !options.Force {
-		if _, err := os.Stat(outputPath); err == nil {
-			return "", fmt.Errorf("output file %q already exists; use --force to overwrite it", outputPath)
-		} else if !os.IsNotExist(err) {
-			return "", fmt.Errorf("inspect output file %q: %w", outputPath, err)
-		}
 	}
 	outputReservation, err := os.CreateTemp(outputDir, ".whisper-local-output-*")
 	if err != nil {
@@ -111,7 +120,9 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 		"-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le",
 		tempPath,
 	}
-	if err := runCommand(ctx, ffmpegPath, ffmpegArgs); err != nil {
+	if err := runWithProgress(progress, inputPath, "오디오 추출 중...", overallStartedAt, func() error {
+		return runCommand(ctx, ffmpegPath, ffmpegArgs)
+	}); err != nil {
 		return "", fmt.Errorf("extract audio with ffmpeg: %w", err)
 	}
 
@@ -119,8 +130,12 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	speechSegments, err := detectSpeechSegments(ctx, whisperPath, modelPath, tempPath, options.Language, vadModelPath)
-	if err != nil {
+	var speechSegments []speechSegment
+	if err := runWithProgress(progress, inputPath, "음성 구간 탐지 중...", overallStartedAt, func() error {
+		var operationErr error
+		speechSegments, operationErr = detectSpeechSegments(ctx, whisperRunner, whisperPath, modelPath, tempPath, options.Language, vadModelPath)
+		return operationErr
+	}); err != nil {
 		return "", err
 	}
 	chunks := buildSpeechChunks(speechSegments, mediaDuration)
@@ -129,17 +144,33 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 		return "", fmt.Errorf("create temporary chunk directory: %w", err)
 	}
 	defer os.RemoveAll(chunkDirectory)
-	transcriptionChunks, err := extractTranscriptionChunks(ctx, ffmpegPath, tempPath, chunkDirectory, chunks)
-	if err != nil {
+	var transcriptionChunks []transcriptionChunk
+	if err := runWithProgress(progress, inputPath, fmt.Sprintf("음성 조각 생성: %d개", len(chunks)), overallStartedAt, func() error {
+		var operationErr error
+		transcriptionChunks, operationErr = extractTranscriptionChunks(ctx, ffmpegPath, tempPath, chunkDirectory, chunks)
+		return operationErr
+	}); err != nil {
 		return "", err
 	}
-	if err := transcribeAudioChunks(ctx, whisperPath, modelPath, options.Language, transcriptionChunks); err != nil {
+	if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개", len(transcriptionChunks)), overallStartedAt, func() error {
+		return transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks)
+	}); err != nil {
 		return "", err
 	}
 	rawCues, err := loadTranscriptionCues(transcriptionChunks)
 	if err != nil {
 		return "", err
 	}
+	rawCues = reconcileChunkBoundaries(rawCues)
+	retryCount := countLowConfidenceCues(rawCues)
+	if err := runWithProgress(progress, inputPath, fmt.Sprintf("저신뢰 구간 재시도: %d개", retryCount), overallStartedAt, func() error {
+		var operationErr error
+		rawCues, operationErr = retryLowConfidenceCues(ctx, whisperRunner, ffmpegPath, whisperPath, modelPath, options.Language, tempPath, chunkDirectory, rawCues, mediaDuration)
+		return operationErr
+	}); err != nil {
+		return "", err
+	}
+	reportProgress(progress, inputPath, "자막 정리 및 검증 중...")
 	cues := cleanSubtitleCues(rawCues, options.Language, corrections, mediaDuration)
 	if err := validateSubtitleCues(cues, mediaDuration); err != nil {
 		return "", err
@@ -148,6 +179,7 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	reportProgress(progress, inputPath, "결과 저장 중...")
 	if err := os.WriteFile(temporaryOutputPath, []byte(transcript), 0o644); err != nil {
 		return "", fmt.Errorf("write temporary transcript %q: %w", temporaryOutputPath, err)
 	}
@@ -157,11 +189,12 @@ func Transcribe(ctx context.Context, options Options) (string, error) {
 		}
 	} else if err := os.Link(temporaryOutputPath, outputPath); err != nil {
 		if os.IsExist(err) {
-			return "", fmt.Errorf("output file %q already exists; use --force to overwrite it", outputPath)
+			return "", newOutputExistsError(outputPath)
 		}
 		return "", fmt.Errorf("publish output file %q: %w", outputPath, err)
 	}
 
+	reportProgress(progress, inputPath, "처리 완료")
 	return outputPath, nil
 }
 

@@ -68,11 +68,14 @@ func parseWhisperJSONForOrigin(content []byte, origin transcriptionOrigin) ([]su
 		if text == "" {
 			continue
 		}
-		start := origin.Start + time.Duration(segment.Offsets.From)*time.Millisecond
-		end := origin.Start + time.Duration(segment.Offsets.To)*time.Millisecond
-		if end <= start {
+		if segment.Offsets.From == segment.Offsets.To {
+			continue
+		}
+		if segment.Offsets.From > segment.Offsets.To {
 			return nil, fmt.Errorf("invalid whisper segment timing %d --> %d", segment.Offsets.From, segment.Offsets.To)
 		}
+		start := origin.Start + time.Duration(segment.Offsets.From)*time.Millisecond
+		end := origin.Start + time.Duration(segment.Offsets.To)*time.Millisecond
 		tokens, tokensValid := absoluteSubtitleTokens(segment.Tokens, segment.Offsets, origin)
 		if !tokensValid {
 			tokens = nil

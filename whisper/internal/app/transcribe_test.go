@@ -506,6 +506,80 @@ done
 	}
 }
 
+func TestTranscribeRetriesLowConfidenceCueWithDeterministicDecoding(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeFakeFFprobe(t, binDir, "10.0")
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+set -eu
+for argument do output="$argument"; done
+: > "$output"
+`)
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
+set -eu
+case " $* " in
+  *" --vad "*)
+    printf '%s\n' \
+      'whisper_vad_segments_from_probs: Final speech segments after filtering: 1' \
+      'whisper_vad_segments_from_probs: VAD segment 0: start = 1.00, end = 2.00 (duration: 1.00)' >&2
+    exit 0
+    ;;
+esac
+case " $* " in
+  *" -bs 8 "*)
+    printf '%s\n' "$@" > "$RETRY_ARGS"
+    payload='{"transcription":[{"offsets":{"from":1000,"to":2000},"text":"재시도","tokens":[{"text":" 재시도","offsets":{"from":1000,"to":2000},"p":0.9}]}]}'
+    ;;
+  *)
+    payload='{"transcription":[{"offsets":{"from":150,"to":1150},"text":"초기","tokens":[{"text":" 초기","offsets":{"from":150,"to":1150},"p":0.31}]}]}'
+    ;;
+esac
+for argument do
+  case "$argument" in
+    *.wav) printf '%s\n' "$payload" > "$argument.json" ;;
+  esac
+done
+`)
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	retryArgsPath := filepath.Join(tempDir, "retry-args")
+	t.Setenv("RETRY_ARGS", retryArgsPath)
+
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+	if err := os.WriteFile(filepath.Join(tempDir, "ggml-silero-v6.2.0.bin"), []byte("vad"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	outputPath, err := Transcribe(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "txt",
+		ModelPath: modelPath,
+	})
+	if err != nil {
+		t.Fatalf("Transcribe() error = %v", err)
+	}
+	content, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(content) != "재시도\n" {
+		t.Errorf("transcript = %q, want retry result", content)
+	}
+	arguments, err := os.ReadFile(retryArgsPath)
+	if err != nil {
+		t.Fatalf("read retry arguments: %v", err)
+	}
+	if !containsConsecutiveArguments(strings.Fields(string(arguments)), "-tp", "0") || !containsConsecutiveArguments(strings.Fields(string(arguments)), "-bs", "8") {
+		t.Errorf("retry arguments = %q, want temperature 0 and beam size 8", arguments)
+	}
+}
+
 func TestTranscribeUsesSpeechPreservingVADSettings(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("test helper executables use POSIX shell")
@@ -739,6 +813,9 @@ func TestTranscribeRefusesToOverwriteTranscript(t *testing.T) {
 	if !strings.Contains(err.Error(), "already exists") {
 		t.Errorf("Transcribe() error = %q, want existing output context", err)
 	}
+	if !isOutputExistsError(err) {
+		t.Errorf("Transcribe() error = %v, want output-exists classification", err)
+	}
 	content, readErr := os.ReadFile(outputPath)
 	if readErr != nil {
 		t.Fatal(readErr)
@@ -799,6 +876,9 @@ done
 	}
 	if !strings.Contains(err.Error(), "already exists") {
 		t.Errorf("Transcribe() error = %q, want existing output context", err)
+	}
+	if !isOutputExistsError(err) {
+		t.Errorf("Transcribe() error = %v, want output-exists classification", err)
 	}
 	content, readErr := os.ReadFile(outputPath)
 	if readErr != nil {
@@ -961,6 +1041,30 @@ func writeSuccessfulWhisperPipeline(t *testing.T, binDir, transcript string) {
 	t.Setenv("WHISPER_TEST_TEXT", transcript)
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
 set -eu
+if [ -n "${WHISPER_OOM_ONCE_FILE:-}" ] && [ ! -e "$WHISPER_OOM_ONCE_FILE" ]; then
+  : > "$WHISPER_OOM_ONCE_FILE"
+  printf '%s\n' 'error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)' >&2
+  exit 1
+fi
+if [ -n "${WHISPER_CONCURRENCY_DIR:-}" ]; then
+  while ! mkdir "$WHISPER_CONCURRENCY_DIR/lock" 2>/dev/null; do sleep 0.01; done
+  active=0
+  if [ -f "$WHISPER_CONCURRENCY_DIR/active" ]; then active=$(cat "$WHISPER_CONCURRENCY_DIR/active"); fi
+  active=$((active + 1))
+  printf '%s\n' "$active" > "$WHISPER_CONCURRENCY_DIR/active"
+  maximum=0
+  if [ -f "$WHISPER_CONCURRENCY_DIR/max" ]; then maximum=$(cat "$WHISPER_CONCURRENCY_DIR/max"); fi
+  if [ "$active" -gt "$maximum" ]; then printf '%s\n' "$active" > "$WHISPER_CONCURRENCY_DIR/max"; fi
+  rmdir "$WHISPER_CONCURRENCY_DIR/lock"
+  cleanup_concurrency() {
+    while ! mkdir "$WHISPER_CONCURRENCY_DIR/lock" 2>/dev/null; do sleep 0.01; done
+    active=$(cat "$WHISPER_CONCURRENCY_DIR/active")
+    printf '%s\n' "$((active - 1))" > "$WHISPER_CONCURRENCY_DIR/active"
+    rmdir "$WHISPER_CONCURRENCY_DIR/lock"
+  }
+  trap cleanup_concurrency EXIT
+  sleep 0.20
+fi
 case " $* " in
   *" --vad "*)
     printf '%s\n' \
@@ -969,10 +1073,16 @@ case " $* " in
     exit 0
     ;;
 esac
+probability="${WHISPER_TEST_PROBABILITY:-0.95}"
+from=150
+to=1150
+case " $* " in
+  *" -bs 8 "*) probability=0.95; from=1000; to=2000 ;;
+esac
 for argument do
   case "$argument" in
     *.wav)
-      printf '{"transcription":[{"offsets":{"from":150,"to":1150},"text":"%s","tokens":[{"text":"%s","offsets":{"from":150,"to":1150},"p":0.95}]}]}\n' "$WHISPER_TEST_TEXT" "$WHISPER_TEST_TEXT" > "$argument.json"
+      printf '{"transcription":[{"offsets":{"from":%s,"to":%s},"text":"%s","tokens":[{"text":"%s","offsets":{"from":%s,"to":%s},"p":%s}]}]}\n' "$from" "$to" "$WHISPER_TEST_TEXT" "$WHISPER_TEST_TEXT" "$from" "$to" "$probability" > "$argument.json"
       ;;
   esac
 done

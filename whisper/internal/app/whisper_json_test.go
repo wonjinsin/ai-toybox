@@ -69,6 +69,65 @@ func TestParseWhisperJSONIgnoresInvalidTokenTimingForCueConfidence(t *testing.T)
 	}
 }
 
+func TestParseWhisperJSONSkipsZeroDurationSegment(t *testing.T) {
+	t.Parallel()
+
+	payload := []byte(`{
+  "transcription": [
+    {
+      "offsets": {"from": 12580, "to": 12580},
+      "text": "0초 발화",
+      "tokens": [
+        {"text": " 0초 발화", "offsets": {"from": 12580, "to": 12580}, "p": 0.8}
+      ]
+    },
+    {
+      "offsets": {"from": 13000, "to": 14000},
+      "text": "정상 발화",
+      "tokens": [
+        {"text": " 정상 발화", "offsets": {"from": 13000, "to": 14000}, "p": 0.9}
+      ]
+    }
+  ]
+}`)
+
+	cues, err := parseWhisperJSON(payload, 0)
+	if err != nil {
+		t.Fatalf("parseWhisperJSON() error = %v", err)
+	}
+	if len(cues) != 1 {
+		t.Fatalf("len(cues) = %d, want 1", len(cues))
+	}
+	if got := cues[0].Text; got != "정상 발화" {
+		t.Errorf("cue text = %q, want %q", got, "정상 발화")
+	}
+	if cues[0].Start != 13*time.Second || cues[0].End != 14*time.Second {
+		t.Errorf("cue timing = %s --> %s, want 13s --> 14s", cues[0].Start, cues[0].End)
+	}
+}
+
+func TestParseWhisperJSONRejectsReversedSegmentTiming(t *testing.T) {
+	t.Parallel()
+
+	payload := []byte(`{
+  "transcription": [
+    {
+      "offsets": {"from": 12581, "to": 12580},
+      "text": "역전 발화"
+    }
+  ]
+}`)
+
+	_, err := parseWhisperJSON(payload, 0)
+	if err == nil {
+		t.Fatal("parseWhisperJSON() error = nil, want reversed timing error")
+	}
+	want := "invalid whisper segment timing 12581 --> 12580"
+	if got := err.Error(); got != want {
+		t.Errorf("parseWhisperJSON() error = %q, want %q", got, want)
+	}
+}
+
 func TestParseWhisperJSONPreservesAbsoluteLexicalAndPunctuationTokens(t *testing.T) {
 	t.Parallel()
 

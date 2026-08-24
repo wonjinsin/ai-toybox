@@ -46,6 +46,26 @@ func TestDiscoverInputPathsReturnsSupportedFilesInNameOrder(t *testing.T) {
 	}
 }
 
+func TestDiscoverInputPathsIgnoresAppleDoubleMediaFiles(t *testing.T) {
+	t.Parallel()
+
+	inputDir := t.TempDir()
+	for _, name := range []string{"._recording.mp4", "recording.mp4"} {
+		if err := os.WriteFile(filepath.Join(inputDir, name), []byte("input"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	paths, err := discoverInputPaths(inputDir)
+	if err != nil {
+		t.Fatalf("discoverInputPaths() error = %v", err)
+	}
+	want := []string{filepath.Join(inputDir, "recording.mp4")}
+	if !reflect.DeepEqual(paths, want) {
+		t.Errorf("discoverInputPaths() = %q, want %q", paths, want)
+	}
+}
+
 func TestTranscribeAllRejectsOutputNameCollisionsBeforeStarting(t *testing.T) {
 	inputDir := t.TempDir()
 	for _, name := range []string{"same.mp3", "same.wav"} {

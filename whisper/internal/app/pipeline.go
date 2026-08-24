@@ -43,7 +43,7 @@ func probeMediaDuration(ctx context.Context, ffprobePath, inputPath string) (tim
 	return time.Duration(seconds * float64(time.Second)), nil
 }
 
-func detectSpeechSegments(ctx context.Context, whisperPath, modelPath, audioPath, language, vadModelPath string) ([]speechSegment, error) {
+func detectSpeechSegments(ctx context.Context, whisperRunner *whisperCommandRunner, whisperPath, modelPath, audioPath, language, vadModelPath string) ([]speechSegment, error) {
 	args := []string{
 		"-m", modelPath,
 		"-f", audioPath,
@@ -58,7 +58,7 @@ func detectSpeechSegments(ctx context.Context, whisperPath, modelPath, audioPath
 		"-vo", "0.20",
 		"-vmsd", "20",
 	}
-	log, err := runCommandCaptureStderr(ctx, whisperPath, args)
+	log, err := whisperRunner.Run(ctx, whisperPath, args)
 	if err != nil {
 		return nil, fmt.Errorf("detect speech with whisper.cpp: %w", err)
 	}
@@ -89,7 +89,7 @@ func extractTranscriptionChunks(ctx context.Context, ffmpegPath, audioPath, dire
 	return results, nil
 }
 
-func transcribeAudioChunks(ctx context.Context, whisperPath, modelPath, language string, chunks []transcriptionChunk) error {
+func transcribeAudioChunks(ctx context.Context, whisperRunner *whisperCommandRunner, whisperPath, modelPath, language string, chunks []transcriptionChunk) error {
 	if len(chunks) == 0 {
 		return nil
 	}
@@ -105,8 +105,32 @@ func transcribeAudioChunks(ctx context.Context, whisperPath, modelPath, language
 	for _, chunk := range chunks {
 		args = append(args, chunk.Path)
 	}
-	if _, err := runCommandCaptureStderr(ctx, whisperPath, args); err != nil {
+	if _, err := whisperRunner.Run(ctx, whisperPath, args); err != nil {
 		return fmt.Errorf("transcribe speech chunks with whisper.cpp: %w", err)
+	}
+	return nil
+}
+
+func transcribeRetryAudioChunks(ctx context.Context, whisperRunner *whisperCommandRunner, whisperPath, modelPath, language string, chunks []transcriptionChunk) error {
+	if len(chunks) == 0 {
+		return nil
+	}
+	args := []string{
+		"-m", modelPath,
+		"-l", language,
+		"-ojf",
+		"-mc", "0",
+		"-sns",
+		"-ml", "30",
+		"-sow",
+		"-tp", "0",
+		"-bs", "8",
+	}
+	for _, chunk := range chunks {
+		args = append(args, chunk.Path)
+	}
+	if _, err := whisperRunner.Run(ctx, whisperPath, args); err != nil {
+		return fmt.Errorf("retry low-confidence speech chunks with whisper.cpp: %w", err)
 	}
 	return nil
 }

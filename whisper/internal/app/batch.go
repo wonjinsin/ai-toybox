@@ -116,7 +116,7 @@ func discoverInputPaths(inputPath string) ([]string, error) {
 
 	paths := make([]string, 0, len(entries))
 	for _, entry := range entries {
-		if entry.Type().IsRegular() {
+		if entry.Type().IsRegular() && !strings.HasPrefix(entry.Name(), "._") {
 			if _, supported := supportedMediaExtensions[strings.ToLower(filepath.Ext(entry.Name()))]; supported {
 				paths = append(paths, filepath.Join(inputPath, entry.Name()))
 			}

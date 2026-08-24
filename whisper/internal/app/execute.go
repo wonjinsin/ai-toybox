@@ -37,14 +37,29 @@ func Execute(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	inputInfo, statErr := os.Stat(options.InputPath)
 	inputIsDirectory := statErr == nil && inputInfo.IsDir()
 
-	results, err := transcribeAll(ctx, options, Transcribe)
+	progress := newProgressReporter(stderr)
+	whisperRunner := newWhisperCommandRunner(min(options.Parallel, 2), runCommandCaptureStderr)
+	transcribe := func(ctx context.Context, options Options) (string, error) {
+		outputPath, err := transcribeWithProgressUsingRunner(ctx, options, progress, whisperRunner)
+		if err != nil && !isOutputExistsError(err) {
+			reportProgress(progress, options.InputPath, fmt.Sprintf("처리 실패: %v", err))
+		}
+		return outputPath, err
+	}
+	results, err := transcribeAll(ctx, options, transcribe)
 	if err != nil {
 		fmt.Fprintf(stderr, "전사 실패: %v\n", err)
 		return 1
 	}
 
 	failures := 0
+	skipped := 0
 	for _, result := range results {
+		if isOutputExistsError(result.Err) {
+			skipped++
+			fmt.Fprintf(stdout, "건너뜀: %s\n", result.InputPath)
+			continue
+		}
 		if result.Err != nil {
 			failures++
 			fmt.Fprintf(stderr, "실패: %s: %v\n", result.InputPath, result.Err)
@@ -53,7 +68,7 @@ func Execute(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stdout, "완료: %s\n", result.OutputPath)
 	}
 	if inputIsDirectory {
-		fmt.Fprintf(stdout, "요약: 성공 %d개, 실패 %d개\n", len(results)-failures, failures)
+		fmt.Fprintf(stdout, "요약: 성공 %d개, 건너뜀 %d개, 실패 %d개\n", len(results)-skipped-failures, skipped, failures)
 	}
 	if failures > 0 {
 		return 1
