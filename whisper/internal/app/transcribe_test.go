@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"encoding/binary"
+	"errors"
+	"fmt"
 	"math"
 	"os"
 	"os/exec"
@@ -12,6 +14,151 @@ import (
 	"testing"
 	"time"
 )
+
+func TestTranscribePersistsPartialAfterCompletedBatchWhenNextBatchFails(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	writeFakeFFprobe(t, binDir, "120.0")
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+
+	var mainCalls int
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
+		if containsArgument(args, "--vad") {
+			return vadLogWithSegments(33), nil
+		}
+		mainCalls++
+		if mainCalls == 2 {
+			return "", errors.New("second batch failed")
+		}
+		for _, argument := range args {
+			if !strings.Contains(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			payload := []byte(`{"transcription":[{"offsets":{"from":100,"to":500},"text":"발화","tokens":[{"text":"발화","offsets":{"from":100,"to":500},"p":0.95}]}]}`)
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		return "", nil
+	})
+
+	_, err := transcribeWithProgressUsingRunner(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "srt",
+		ModelPath: modelPath,
+	}, nil, runner)
+	if err == nil || !strings.Contains(err.Error(), "second batch failed") {
+		t.Fatalf("transcribeWithProgressUsingRunner() error = %v, want second batch failure", err)
+	}
+	if mainCalls != 2 {
+		t.Fatalf("main transcription calls = %d, want 2", mainCalls)
+	}
+	partialPath := filepath.Join(tempDir, "input.partial.srt")
+	partial, readErr := os.ReadFile(partialPath)
+	if readErr != nil {
+		t.Fatalf("read partial transcript: %v", readErr)
+	}
+	if got := strings.Count(string(partial), " --> "); got != 32 {
+		t.Errorf("partial cues = %d, want 32", got)
+	}
+	checkpointPath := filepath.Join(tempDir, ".input.srt.whisper-local-checkpoint.json")
+	if _, statErr := os.Stat(checkpointPath); statErr != nil {
+		t.Errorf("checkpoint stat error = %v", statErr)
+	}
+	if _, statErr := os.Stat(filepath.Join(tempDir, "input.srt")); !os.IsNotExist(statErr) {
+		t.Errorf("final transcript exists after batch failure; stat error = %v", statErr)
+	}
+}
+
+func TestTranscribeReconcilesBoundaryAcrossTranscriptionBatches(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	writeFakeFFprobe(t, binDir, "700.0")
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+
+	var mainCalls int
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
+		if containsArgument(args, "--vad") {
+			return "whisper_vad_segments_from_probs: Final speech segments after filtering: 1\n" +
+				"whisper_vad_segments_from_probs: VAD segment 0: start = 1.00, end = 651.00 (duration: 650.00)\n", nil
+		}
+		mainCalls++
+		for _, argument := range args {
+			baseName := filepath.Base(argument)
+			if !strings.HasPrefix(baseName, "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			var chunkIndex int
+			if _, err := fmt.Sscanf(baseName, "chunk_%04d_", &chunkIndex); err != nil {
+				return "", err
+			}
+			from, to, text := 100, 500, "일반"
+			switch chunkIndex {
+			case 31:
+				from, to, text = 19750, 19850, "경계"
+			case 32:
+				from, to, text = 200, 300, "경계"
+			}
+			payload := []byte(fmt.Sprintf(`{"transcription":[{"offsets":{"from":%d,"to":%d},"text":%q,"tokens":[{"text":%q,"offsets":{"from":%d,"to":%d},"p":0.95}]}]}`, from, to, text, text, from, to))
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		return "", nil
+	})
+
+	outputPath, err := transcribeWithProgressUsingRunner(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "srt",
+		ModelPath: modelPath,
+	}, nil, runner)
+	if err != nil {
+		t.Fatalf("transcribeWithProgressUsingRunner() error = %v", err)
+	}
+	if mainCalls != 2 {
+		t.Fatalf("main transcription calls = %d, want 2", mainCalls)
+	}
+	content, readErr := os.ReadFile(outputPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if got := strings.Count(string(content), " --> "); got != 32 {
+		t.Errorf("final cues = %d, want 32 after boundary reconciliation", got)
+	}
+}
+
+func vadLogWithSegments(count int) string {
+	var log strings.Builder
+	fmt.Fprintf(&log, "whisper_vad_segments_from_probs: Final speech segments after filtering: %d\n", count)
+	for index := range count {
+		start := float64(index*3 + 1)
+		end := start + 1
+		fmt.Fprintf(&log, "whisper_vad_segments_from_probs: VAD segment %d: start = %.2f, end = %.2f (duration: 1.00)\n", index, start, end)
+	}
+	return log.String()
+}
 
 func TestTranscribeCreatesTranscriptNextToInput(t *testing.T) {
 	if runtime.GOOS == "windows" {

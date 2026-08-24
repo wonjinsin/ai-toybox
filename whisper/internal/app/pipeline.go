@@ -136,6 +136,10 @@ func transcribeRetryAudioChunks(ctx context.Context, whisperRunner *whisperComma
 }
 
 func loadTranscriptionCues(chunks []transcriptionChunk) ([]subtitleCue, error) {
+	return loadTranscriptionCuesFromIndex(chunks, 0)
+}
+
+func loadTranscriptionCuesFromIndex(chunks []transcriptionChunk, firstIndex int) ([]subtitleCue, error) {
 	cues := make([]subtitleCue, 0, len(chunks))
 	for index, chunk := range chunks {
 		jsonPath := chunk.Path + ".json"
@@ -144,7 +148,7 @@ func loadTranscriptionCues(chunks []transcriptionChunk) ([]subtitleCue, error) {
 			return nil, fmt.Errorf("read whisper JSON %q: %w", jsonPath, err)
 		}
 		chunkCues, err := parseWhisperJSONForOrigin(content, transcriptionOrigin{
-			Index: index,
+			Index: firstIndex + index,
 			Start: chunk.Start,
 			End:   chunk.End,
 		})

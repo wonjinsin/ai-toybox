@@ -9,11 +9,11 @@ Constraints: 점진적 저장은 SRT에만 적용한다. 배치 크기는 32개�
 Delivers: SRT 전사가 두 번째 이후 배치에서 실패해도 첫 32개 조각의 partial SRT와 유효한 체크포인트가 남는다.
 Touches: `internal/app/checkpoint.go`, `internal/app/checkpoint_test.go`, `internal/app/pipeline.go`, `internal/app/transcribe.go`, `internal/app/transcribe_test.go`
 Blocked by: none
-- [ ] 33개 이상의 조각에서 배치 호출이 32개로 제한되고 첫 배치 실패 이후가 아니라 첫 배치 성공 직후 partial SRT가 저장됨을 실패하는 테스트로 고정한다.
-- [ ] 체크포인트 스키마가 원시 cue의 토큰·확률·원본 위치와 음성 조각 경계를 손실 없이 왕복함을 검증한다.
-- [ ] 배치 슬라이스와 재개 이후에도 각 cue가 전체 조각 목록의 전역 origin 인덱스를 유지한다.
-- [ ] partial SRT와 체크포인트를 같은 디렉터리의 임시 파일에서 원자적으로 교체하고 불완전한 쓰기 파일을 남기지 않는다.
-- [ ] TXT와 VTT가 기존 단일 호출 경로를 유지한다.
+- [x] 33개 이상의 조각에서 배치 호출이 32개로 제한되고 첫 배치 실패 이후가 아니라 첫 배치 성공 직후 partial SRT가 저장됨을 실패하는 테스트로 고정한다.
+- [x] 체크포인트 스키마가 원시 cue의 토큰·확률·원본 위치와 음성 조각 경계를 손실 없이 왕복함을 검증한다.
+- [x] 배치 슬라이스와 재개 이후에도 각 cue가 전체 조각 목록의 전역 origin 인덱스를 유지한다.
+- [x] partial SRT와 체크포인트를 같은 디렉터리의 임시 파일에서 원자적으로 교체하고 불완전한 쓰기 파일을 남기지 않는다.
+- [x] TXT와 VTT가 기존 단일 호출 경로를 유지한다.
 
 ### Task 2: 유효한 체크포인트에서 완료 배치 재개
 

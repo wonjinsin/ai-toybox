@@ -151,14 +151,38 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	}); err != nil {
 		return "", err
 	}
-	if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개", len(transcriptionChunks)), overallStartedAt, func() error {
-		return transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks)
-	}); err != nil {
-		return "", err
-	}
-	rawCues, err := loadTranscriptionCues(transcriptionChunks)
-	if err != nil {
-		return "", err
+	var rawCues []subtitleCue
+	if options.Format == "srt" {
+		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개", len(transcriptionChunks)), overallStartedAt, func() error {
+			for start := 0; start < len(transcriptionChunks); start += transcriptionBatchSize {
+				end := min(start+transcriptionBatchSize, len(transcriptionChunks))
+				if err := transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks[start:end]); err != nil {
+					return err
+				}
+				batchCues, err := loadTranscriptionCuesFromIndex(transcriptionChunks[start:end], start)
+				if err != nil {
+					return err
+				}
+				rawCues = append(rawCues, batchCues...)
+				if err := persistIncrementalProgress(outputBase, options.Language, corrections, mediaDuration, chunks, end, rawCues); err != nil {
+					return err
+				}
+				reportProgress(progress, inputPath, fmt.Sprintf("전사 진행: %d/%d개 (partial SRT 저장됨)", end, len(transcriptionChunks)))
+			}
+			return nil
+		}); err != nil {
+			return "", err
+		}
+	} else {
+		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개", len(transcriptionChunks)), overallStartedAt, func() error {
+			return transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks)
+		}); err != nil {
+			return "", err
+		}
+		rawCues, err = loadTranscriptionCues(transcriptionChunks)
+		if err != nil {
+			return "", err
+		}
 	}
 	rawCues = reconcileChunkBoundaries(rawCues)
 	retryCount := countLowConfidenceCues(rawCues)
