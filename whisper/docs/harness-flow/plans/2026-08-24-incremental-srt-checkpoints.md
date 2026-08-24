@@ -33,4 +33,4 @@ Blocked by: Task 2
 - [x] 최종 출력 저장 성공 뒤 증분 파일을 정리하고, 정리 오류는 최종 성공을 뒤집지 않고 경고로 표시한다.
 - [x] Ctrl-C, 배치 오류, 저장 오류에서는 마지막 유효한 partial SRT와 체크포인트를 보존한다.
 - [x] README에 partial 파일명, 자동 재개 조건, 임시 결과라는 점을 한국어로 설명한다.
-- [ ] `gofmt`, `go vet ./...`, `go test ./...`, `go test -race -cover ./internal/app`, `make build`가 통과한다.
+- [x] `gofmt`, `go vet ./...`, `go test ./...`, `go test -race -cover ./internal/app`, `make build`가 통과한다.
