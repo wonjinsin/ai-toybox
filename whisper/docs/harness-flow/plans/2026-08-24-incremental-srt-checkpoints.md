@@ -20,9 +20,9 @@ Blocked by: none
 Delivers: 같은 SRT 명령을 다시 실행하면 VAD와 완료된 Whisper 배치를 건너뛰고 남은 조각만 처리해 최종 SRT를 만든다.
 Touches: `internal/app/checkpoint.go`, `internal/app/checkpoint_test.go`, `internal/app/transcribe.go`, `internal/app/transcribe_test.go`, `internal/app/progress.go`
 Blocked by: Task 1
-- [ ] 첫 실행을 다음 배치에서 중단한 뒤 두 번째 실행이 저장된 음성 조각 경계와 cue를 복원하고 남은 배치만 호출함을 실패하는 통합 테스트로 고정한다.
-- [ ] 입력·모델·도구·언어·파이프라인 식별 정보가 다르거나 체크포인트가 손상되면 재개하지 않고 새로 시작한다.
-- [ ] 재개 시 완료 개수와 전체 개수를 로그로 알리고 현재 교정 사전으로 partial SRT를 다시 렌더링한다.
+- [x] 첫 실행을 다음 배치에서 중단한 뒤 두 번째 실행이 저장된 음성 조각 경계와 cue를 복원하고 남은 배치만 호출함을 실패하는 통합 테스트로 고정한다.
+- [x] 입력·모델·도구·언어·파이프라인 식별 정보가 다르면 새로 시작하고, 손상된 체크포인트는 보존한 채 경로가 포함된 오류로 중단한다.
+- [x] 재개 시 완료 개수와 전체 개수를 로그로 알리고 현재 교정 사전으로 partial SRT를 다시 렌더링한다.
 
 ### Task 3: 저신뢰 재시도 재개와 최종 정리
 

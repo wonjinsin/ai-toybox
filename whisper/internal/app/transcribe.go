@@ -90,6 +90,20 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		return "", fmt.Errorf("create output directory %q: %w", outputDir, err)
 	}
+	var fingerprint incrementalFingerprint
+	var restoredCheckpoint incrementalCheckpoint
+	hasRestoredCheckpoint := false
+	if options.Format == "srt" {
+		fingerprint, err = newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, ffmpegPath, ffprobePath, options.Language)
+		if err != nil {
+			return "", err
+		}
+		_, checkpointPath := incrementalArtifactPaths(outputBase)
+		restoredCheckpoint, hasRestoredCheckpoint, err = loadIncrementalCheckpoint(checkpointPath, fingerprint)
+		if err != nil {
+			return "", err
+		}
+	}
 	outputReservation, err := os.CreateTemp(outputDir, ".whisper-local-output-*")
 	if err != nil {
 		return "", fmt.Errorf("reserve temporary transcript: %w", err)
@@ -125,49 +139,80 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 		return "", fmt.Errorf("extract audio with ffmpeg: %w", err)
 	}
 
-	mediaDuration, err := probeMediaDuration(ctx, ffprobePath, inputPath)
-	if err != nil {
-		return "", err
+	var mediaDuration time.Duration
+	var chunks []audioChunk
+	var rawCues []subtitleCue
+	completedChunks := 0
+	if hasRestoredCheckpoint {
+		mediaDuration = restoredCheckpoint.MediaDuration
+		chunks = audioChunksFromCheckpoint(restoredCheckpoint.Chunks)
+		rawCues = subtitleCuesFromCheckpointCues(restoredCheckpoint.Cues)
+		completedChunks = restoredCheckpoint.CompletedChunks
+		reportProgress(progress, inputPath, fmt.Sprintf("체크포인트 재개: %d/%d개", completedChunks, len(chunks)))
+		if completedChunks > 0 {
+			if err := persistIncrementalProgress(outputBase, options.Language, corrections, fingerprint, mediaDuration, chunks, completedChunks, rawCues); err != nil {
+				return "", err
+			}
+		}
+	} else {
+		mediaDuration, err = probeMediaDuration(ctx, ffprobePath, inputPath)
+		if err != nil {
+			return "", err
+		}
+		var speechSegments []speechSegment
+		if err := runWithProgress(progress, inputPath, "음성 구간 탐지 중...", overallStartedAt, func() error {
+			var operationErr error
+			speechSegments, operationErr = detectSpeechSegments(ctx, whisperRunner, whisperPath, modelPath, tempPath, options.Language, vadModelPath)
+			return operationErr
+		}); err != nil {
+			return "", err
+		}
+		chunks = buildSpeechChunks(speechSegments, mediaDuration)
+		if options.Format == "srt" {
+			_, checkpointPath := incrementalArtifactPaths(outputBase)
+			checkpoint := newIncrementalCheckpointWithFingerprint(fingerprint, mediaDuration, chunks, 0, nil)
+			if err := persistIncrementalCheckpoint(checkpointPath, checkpoint); err != nil {
+				return "", err
+			}
+		}
 	}
-	var speechSegments []speechSegment
-	if err := runWithProgress(progress, inputPath, "음성 구간 탐지 중...", overallStartedAt, func() error {
-		var operationErr error
-		speechSegments, operationErr = detectSpeechSegments(ctx, whisperRunner, whisperPath, modelPath, tempPath, options.Language, vadModelPath)
-		return operationErr
-	}); err != nil {
-		return "", err
-	}
-	chunks := buildSpeechChunks(speechSegments, mediaDuration)
 	chunkDirectory, err := os.MkdirTemp("", "whisper-local-chunks-*")
 	if err != nil {
 		return "", fmt.Errorf("create temporary chunk directory: %w", err)
 	}
 	defer os.RemoveAll(chunkDirectory)
 	var transcriptionChunks []transcriptionChunk
-	if err := runWithProgress(progress, inputPath, fmt.Sprintf("음성 조각 생성: %d개", len(chunks)), overallStartedAt, func() error {
+	chunksToExtract := chunks
+	firstChunkIndex := 0
+	if options.Format == "srt" {
+		chunksToExtract = chunks[completedChunks:]
+		firstChunkIndex = completedChunks
+	}
+	if err := runWithProgress(progress, inputPath, fmt.Sprintf("음성 조각 생성: %d개", len(chunksToExtract)), overallStartedAt, func() error {
 		var operationErr error
-		transcriptionChunks, operationErr = extractTranscriptionChunks(ctx, ffmpegPath, tempPath, chunkDirectory, chunks)
+		transcriptionChunks, operationErr = extractTranscriptionChunksFromIndex(ctx, ffmpegPath, tempPath, chunkDirectory, chunksToExtract, firstChunkIndex)
 		return operationErr
 	}); err != nil {
 		return "", err
 	}
-	var rawCues []subtitleCue
 	if options.Format == "srt" {
-		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개", len(transcriptionChunks)), overallStartedAt, func() error {
+		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개 (완료 %d/%d개)", len(transcriptionChunks), completedChunks, len(chunks)), overallStartedAt, func() error {
 			for start := 0; start < len(transcriptionChunks); start += transcriptionBatchSize {
 				end := min(start+transcriptionBatchSize, len(transcriptionChunks))
 				if err := transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks[start:end]); err != nil {
 					return err
 				}
-				batchCues, err := loadTranscriptionCuesFromIndex(transcriptionChunks[start:end], start)
+				globalStart := completedChunks + start
+				globalEnd := completedChunks + end
+				batchCues, err := loadTranscriptionCuesFromIndex(transcriptionChunks[start:end], globalStart)
 				if err != nil {
 					return err
 				}
 				rawCues = append(rawCues, batchCues...)
-				if err := persistIncrementalProgress(outputBase, options.Language, corrections, mediaDuration, chunks, end, rawCues); err != nil {
+				if err := persistIncrementalProgress(outputBase, options.Language, corrections, fingerprint, mediaDuration, chunks, globalEnd, rawCues); err != nil {
 					return err
 				}
-				reportProgress(progress, inputPath, fmt.Sprintf("전사 진행: %d/%d개 (partial SRT 저장됨)", end, len(transcriptionChunks)))
+				reportProgress(progress, inputPath, fmt.Sprintf("전사 진행: %d/%d개 (partial SRT 저장됨)", globalEnd, len(chunks)))
 			}
 			return nil
 		}); err != nil {

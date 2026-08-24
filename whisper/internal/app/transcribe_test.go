@@ -149,6 +149,117 @@ func TestTranscribeReconcilesBoundaryAcrossTranscriptionBatches(t *testing.T) {
 	}
 }
 
+func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	writeFakeFFprobe(t, binDir, "120.0")
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+	partialPath := filepath.Join(tempDir, "input.partial.srt")
+
+	var vadCalls int
+	var mainCalls int
+	var partialRebuilt bool
+	chunkAttempts := make(map[int]int)
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
+		if containsArgument(args, "--vad") {
+			vadCalls++
+			return vadLogWithSegments(33), nil
+		}
+		mainCalls++
+		if mainCalls == 3 {
+			partial, err := os.ReadFile(partialPath)
+			if err != nil {
+				return "", fmt.Errorf("read rebuilt partial: %w", err)
+			}
+			partialRebuilt = strings.Count(string(partial), " --> ") == 32 && strings.Contains(string(partial), "수정")
+		}
+		for _, argument := range args {
+			baseName := filepath.Base(argument)
+			if !strings.HasPrefix(baseName, "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			var chunkIndex int
+			if _, err := fmt.Sscanf(baseName, "chunk_%04d_", &chunkIndex); err != nil {
+				return "", err
+			}
+			chunkAttempts[chunkIndex]++
+		}
+		if mainCalls == 2 {
+			return "", errors.New("second batch failed")
+		}
+		for _, argument := range args {
+			if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			payload := []byte(`{"transcription":[{"offsets":{"from":100,"to":500},"text":"발화","tokens":[{"text":"발화","offsets":{"from":100,"to":500},"p":0.95}]}]}`)
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		return "", nil
+	})
+	options := Options{InputPath: inputPath, Language: "ko", Format: "srt", ModelPath: modelPath}
+
+	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err == nil {
+		t.Fatal("first transcription error = nil, want second batch failure")
+	}
+	correctionsPath := filepath.Join(tempDir, "corrections.json")
+	if err := os.WriteFile(correctionsPath, []byte(`{"발화":"수정"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	options.CorrectionsPath = correctionsPath
+	if err := os.Remove(partialPath); err != nil {
+		t.Fatal(err)
+	}
+	var progressMessages []string
+	outputPath, err := transcribeWithProgressUsingRunner(context.Background(), options, func(_ string, message string) {
+		progressMessages = append(progressMessages, message)
+	}, runner)
+	if err != nil {
+		t.Fatalf("resumed transcription error = %v", err)
+	}
+	if vadCalls != 1 {
+		t.Errorf("VAD calls = %d, want 1", vadCalls)
+	}
+	if mainCalls != 3 {
+		t.Errorf("main transcription calls = %d, want 3", mainCalls)
+	}
+	if !partialRebuilt {
+		t.Error("partial transcript was not rebuilt from checkpoint before resumed batch")
+	}
+	if !containsArgument(progressMessages, "체크포인트 재개: 32/33개") {
+		t.Errorf("progress messages = %q, want checkpoint resume count", progressMessages)
+	}
+	for index := range 32 {
+		if chunkAttempts[index] != 1 {
+			t.Errorf("chunk %d attempts = %d, want 1", index, chunkAttempts[index])
+		}
+	}
+	if chunkAttempts[32] != 2 {
+		t.Errorf("chunk 32 attempts = %d, want 2", chunkAttempts[32])
+	}
+	content, readErr := os.ReadFile(outputPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if got := strings.Count(string(content), " --> "); got != 33 {
+		t.Errorf("final cues = %d, want 33", got)
+	}
+	if !strings.Contains(string(content), "수정") {
+		t.Errorf("final transcript = %q, want current corrections", content)
+	}
+}
+
 func vadLogWithSegments(count int) string {
 	var log strings.Builder
 	fmt.Fprintf(&log, "whisper_vad_segments_from_probs: Final speech segments after filtering: %d\n", count)

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -36,6 +37,53 @@ func TestIncrementalCheckpointJSONPreservesCueDetails(t *testing.T) {
 	}
 	if !reflect.DeepEqual(decoded, checkpoint) {
 		t.Errorf("decoded checkpoint = %#v, want %#v", decoded, checkpoint)
+	}
+}
+
+func TestLoadIncrementalCheckpointRejectsDifferentFingerprint(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
+	fingerprint := incrementalFingerprint{PipelineVersion: incrementalPipelineVersion, Language: "ja"}
+	checkpoint := newIncrementalCheckpointWithFingerprint(fingerprint, 60*time.Second, []audioChunk{{Start: time.Second, End: 2 * time.Second}}, 1, nil)
+	if err := persistIncrementalCheckpoint(path, checkpoint); err != nil {
+		t.Fatal(err)
+	}
+
+	changed := fingerprint
+	changed.Language = "ko"
+	_, found, err := loadIncrementalCheckpoint(path, changed)
+	if err != nil {
+		t.Fatalf("loadIncrementalCheckpoint() error = %v", err)
+	}
+	if found {
+		t.Fatal("loadIncrementalCheckpoint() found = true, want false")
+	}
+}
+
+func TestLoadIncrementalCheckpointReportsCorruptFileWithoutRemovingIt(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
+	content := []byte(`{"version":`)
+	if err := os.WriteFile(path, content, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, found, err := loadIncrementalCheckpoint(path, incrementalFingerprint{})
+	if err == nil {
+		t.Fatal("loadIncrementalCheckpoint() error = nil, want decode error")
+	}
+	if found {
+		t.Fatal("loadIncrementalCheckpoint() found = true, want false")
+	}
+	if !strings.Contains(err.Error(), path) {
+		t.Errorf("error = %q, want checkpoint path %q", err, path)
+	}
+	stored, readErr := os.ReadFile(path)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if string(stored) != string(content) {
+		t.Errorf("corrupt checkpoint = %q, want preserved content %q", stored, content)
 	}
 }
 

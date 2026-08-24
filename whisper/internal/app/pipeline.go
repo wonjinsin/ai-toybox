@@ -70,9 +70,13 @@ func detectSpeechSegments(ctx context.Context, whisperRunner *whisperCommandRunn
 }
 
 func extractTranscriptionChunks(ctx context.Context, ffmpegPath, audioPath, directory string, chunks []audioChunk) ([]transcriptionChunk, error) {
+	return extractTranscriptionChunksFromIndex(ctx, ffmpegPath, audioPath, directory, chunks, 0)
+}
+
+func extractTranscriptionChunksFromIndex(ctx context.Context, ffmpegPath, audioPath, directory string, chunks []audioChunk, firstIndex int) ([]transcriptionChunk, error) {
 	results := make([]transcriptionChunk, 0, len(chunks))
 	for index, chunk := range chunks {
-		path := filepath.Join(directory, fmt.Sprintf("chunk_%04d_%012d.wav", index, chunk.Start.Milliseconds()))
+		path := filepath.Join(directory, fmt.Sprintf("chunk_%04d_%012d.wav", firstIndex+index, chunk.Start.Milliseconds()))
 		args := []string{
 			"-nostdin", "-hide_banner", "-loglevel", "error", "-y",
 			"-ss", formatSeconds(chunk.Start),
@@ -82,7 +86,7 @@ func extractTranscriptionChunks(ctx context.Context, ffmpegPath, audioPath, dire
 			path,
 		}
 		if err := runCommand(ctx, ffmpegPath, args); err != nil {
-			return nil, fmt.Errorf("extract speech chunk %d: %w", index, err)
+			return nil, fmt.Errorf("extract speech chunk %d: %w", firstIndex+index, err)
 		}
 		results = append(results, transcriptionChunk{audioChunk: chunk, Path: path})
 	}
