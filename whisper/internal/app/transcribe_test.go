@@ -147,6 +147,13 @@ func TestTranscribeReconcilesBoundaryAcrossTranscriptionBatches(t *testing.T) {
 	if got := strings.Count(string(content), " --> "); got != 32 {
 		t.Errorf("final cues = %d, want 32 after boundary reconciliation", got)
 	}
+	partialPath, checkpointPath := incrementalArtifactPaths(strings.TrimSuffix(outputPath, ".srt"))
+	if _, statErr := os.Stat(partialPath); !os.IsNotExist(statErr) {
+		t.Errorf("partial transcript remains after final success; stat error = %v", statErr)
+	}
+	if _, statErr := os.Stat(checkpointPath); !os.IsNotExist(statErr) {
+		t.Errorf("checkpoint remains after final success; stat error = %v", statErr)
+	}
 }
 
 func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) {
@@ -257,6 +264,169 @@ func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) 
 	}
 	if !strings.Contains(string(content), "수정") {
 		t.Errorf("final transcript = %q, want current corrections", content)
+	}
+}
+
+func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	writeFakeFFprobe(t, binDir, "10.0")
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+	partialPath := filepath.Join(tempDir, "input.partial.srt")
+
+	var vadCalls int
+	var mainCalls int
+	var retryCalls int
+	var improvedPartialRestored bool
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
+		if containsArgument(args, "--vad") {
+			vadCalls++
+			return vadLogWithSegments(2), nil
+		}
+		isRetry := containsConsecutiveArguments(args, "-bs", "8")
+		if !isRetry {
+			mainCalls++
+			for _, argument := range args {
+				if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+					continue
+				}
+				payload := []byte(`{"transcription":[{"offsets":{"from":100,"to":500},"text":"초기","tokens":[{"text":"초기","offsets":{"from":100,"to":500},"p":0.40}]}]}`)
+				if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+					return "", err
+				}
+			}
+			return "", nil
+		}
+
+		retryCalls++
+		if retryCalls == 3 {
+			partial, err := os.ReadFile(partialPath)
+			if err != nil {
+				return "", fmt.Errorf("read retry partial: %w", err)
+			}
+			improvedPartialRestored = strings.Contains(string(partial), "개선1")
+		}
+		if retryCalls == 2 {
+			return "", errors.New("second retry failed")
+		}
+		for _, argument := range args {
+			if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			text := fmt.Sprintf("개선%d", retryCalls)
+			payload := []byte(fmt.Sprintf(`{"transcription":[{"offsets":{"from":1000,"to":1200},"text":%q,"tokens":[{"text":%q,"offsets":{"from":1000,"to":1200},"p":0.95}]}]}`, text, text))
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		return "", nil
+	})
+	options := Options{InputPath: inputPath, Language: "ko", Format: "srt", ModelPath: modelPath}
+
+	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err == nil || !strings.Contains(err.Error(), "second retry failed") {
+		t.Fatalf("first transcription error = %v, want second retry failure", err)
+	}
+	partial, readErr := os.ReadFile(partialPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if !strings.Contains(string(partial), "개선1") {
+		t.Errorf("partial transcript = %q, want completed retry result", partial)
+	}
+
+	outputPath, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner)
+	if err != nil {
+		t.Fatalf("resumed transcription error = %v", err)
+	}
+	if vadCalls != 1 {
+		t.Errorf("VAD calls = %d, want 1", vadCalls)
+	}
+	if mainCalls != 1 {
+		t.Errorf("main transcription calls = %d, want 1", mainCalls)
+	}
+	if retryCalls != 3 {
+		t.Errorf("retry calls = %d, want 3", retryCalls)
+	}
+	if !improvedPartialRestored {
+		t.Error("completed retry result was not restored before remaining retry")
+	}
+	content, readErr := os.ReadFile(outputPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if !strings.Contains(string(content), "개선1") || !strings.Contains(string(content), "개선3") {
+		t.Errorf("final transcript = %q, want preserved and resumed retry results", content)
+	}
+}
+
+func TestTranscribeKeepsIncrementalArtifactsWhenFinalOutputAppearsDuringRun(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	writeFakeFFprobe(t, binDir, "10.0")
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+	finalPath := filepath.Join(tempDir, "input.srt")
+
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
+		if containsArgument(args, "--vad") {
+			return vadLogWithSegments(1), nil
+		}
+		for _, argument := range args {
+			if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			payload := []byte(`{"transcription":[{"offsets":{"from":100,"to":500},"text":"발화","tokens":[{"text":"발화","offsets":{"from":100,"to":500},"p":0.95}]}]}`)
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		if err := os.WriteFile(finalPath, []byte("external\n"), 0o644); err != nil {
+			return "", err
+		}
+		return "", nil
+	})
+
+	_, err := transcribeWithProgressUsingRunner(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "srt",
+		ModelPath: modelPath,
+	}, nil, runner)
+	if !isOutputExistsError(err) {
+		t.Fatalf("transcription error = %v, want output-exists error", err)
+	}
+	content, readErr := os.ReadFile(finalPath)
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
+	if string(content) != "external\n" {
+		t.Errorf("final transcript = %q, want external content preserved", content)
+	}
+	partialPath, checkpointPath := incrementalArtifactPaths(strings.TrimSuffix(finalPath, ".srt"))
+	if _, statErr := os.Stat(partialPath); statErr != nil {
+		t.Errorf("partial transcript stat error = %v", statErr)
+	}
+	if _, statErr := os.Stat(checkpointPath); statErr != nil {
+		t.Errorf("checkpoint stat error = %v", statErr)
 	}
 }
 

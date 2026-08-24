@@ -13,6 +13,9 @@ const (
 	incrementalCheckpointVersion = 1
 	incrementalPipelineVersion   = 1
 	transcriptionBatchSize       = 32
+	checkpointStageTranscribing  = "transcribing"
+	checkpointStageRetrying      = "retrying"
+	checkpointStageRetryComplete = "retry_complete"
 )
 
 type incrementalCheckpoint struct {
@@ -85,6 +88,10 @@ func newIncrementalCheckpoint(mediaDuration time.Duration, chunks []audioChunk, 
 }
 
 func newIncrementalCheckpointWithFingerprint(fingerprint incrementalFingerprint, mediaDuration time.Duration, chunks []audioChunk, completedChunks int, cues []subtitleCue) incrementalCheckpoint {
+	return newIncrementalCheckpointWithState(fingerprint, checkpointStageTranscribing, 0, mediaDuration, chunks, completedChunks, cues)
+}
+
+func newIncrementalCheckpointWithState(fingerprint incrementalFingerprint, stage string, retryCursor int, mediaDuration time.Duration, chunks []audioChunk, completedChunks int, cues []subtitleCue) incrementalCheckpoint {
 	checkpointChunks := make([]checkpointAudioChunk, len(chunks))
 	for index, chunk := range chunks {
 		checkpointChunks[index] = checkpointAudioChunk{Start: chunk.Start, End: chunk.End}
@@ -92,10 +99,11 @@ func newIncrementalCheckpointWithFingerprint(fingerprint incrementalFingerprint,
 	return incrementalCheckpoint{
 		Version:         incrementalCheckpointVersion,
 		Fingerprint:     fingerprint,
-		Stage:           "transcribing",
+		Stage:           stage,
 		BatchSize:       transcriptionBatchSize,
 		MediaDuration:   mediaDuration,
 		CompletedChunks: completedChunks,
+		RetryCursor:     retryCursor,
 		Chunks:          checkpointChunks,
 		Cues:            checkpointCuesFromSubtitleCues(cues),
 	}
@@ -219,11 +227,23 @@ func loadIncrementalCheckpoint(path string, fingerprint incrementalFingerprint) 
 	if checkpoint.Version != incrementalCheckpointVersion || checkpoint.BatchSize != transcriptionBatchSize || checkpoint.Fingerprint != fingerprint {
 		return incrementalCheckpoint{}, false, nil
 	}
-	if checkpoint.Stage != "transcribing" {
+	if checkpoint.Stage != checkpointStageTranscribing && checkpoint.Stage != checkpointStageRetrying && checkpoint.Stage != checkpointStageRetryComplete {
 		return incrementalCheckpoint{}, false, fmt.Errorf("validate transcription checkpoint %q: unsupported stage %q", path, checkpoint.Stage)
 	}
 	if checkpoint.MediaDuration <= 0 || checkpoint.CompletedChunks < 0 || checkpoint.CompletedChunks > len(checkpoint.Chunks) {
 		return incrementalCheckpoint{}, false, fmt.Errorf("validate transcription checkpoint %q: invalid progress", path)
+	}
+	if checkpoint.RetryCursor < 0 || checkpoint.RetryCursor > len(checkpoint.Cues) {
+		return incrementalCheckpoint{}, false, fmt.Errorf("validate transcription checkpoint %q: invalid retry cursor", path)
+	}
+	if checkpoint.Stage == checkpointStageTranscribing && checkpoint.RetryCursor != 0 {
+		return incrementalCheckpoint{}, false, fmt.Errorf("validate transcription checkpoint %q: retry cursor set during main transcription", path)
+	}
+	if checkpoint.Stage != checkpointStageTranscribing && checkpoint.CompletedChunks != len(checkpoint.Chunks) {
+		return incrementalCheckpoint{}, false, fmt.Errorf("validate transcription checkpoint %q: retry stage before main transcription completed", path)
+	}
+	if checkpoint.Stage == checkpointStageRetryComplete && checkpoint.RetryCursor != len(checkpoint.Cues) {
+		return incrementalCheckpoint{}, false, fmt.Errorf("validate transcription checkpoint %q: incomplete retry cursor", path)
 	}
 	for index, chunk := range checkpoint.Chunks {
 		if chunk.Start < 0 || chunk.End <= chunk.Start || chunk.End > checkpoint.MediaDuration {
@@ -245,6 +265,10 @@ func persistIncrementalCheckpoint(path string, checkpoint incrementalCheckpoint)
 }
 
 func persistIncrementalProgress(outputBase, language string, corrections map[string]string, fingerprint incrementalFingerprint, mediaDuration time.Duration, chunks []audioChunk, completedChunks int, rawCues []subtitleCue) error {
+	return persistIncrementalProgressWithState(outputBase, language, corrections, fingerprint, checkpointStageTranscribing, 0, mediaDuration, chunks, completedChunks, rawCues)
+}
+
+func persistIncrementalProgressWithState(outputBase, language string, corrections map[string]string, fingerprint incrementalFingerprint, stage string, retryCursor int, mediaDuration time.Duration, chunks []audioChunk, completedChunks int, rawCues []subtitleCue) error {
 	partialCues := cleanSubtitleCues(rawCues, language, corrections, mediaDuration)
 	if err := validateSubtitleCues(partialCues, mediaDuration); err != nil {
 		return fmt.Errorf("validate partial transcript: %w", err)
@@ -257,11 +281,22 @@ func persistIncrementalProgress(outputBase, language string, corrections map[str
 	if err := replaceFileAtomically(partialPath, []byte(partial), 0o644); err != nil {
 		return fmt.Errorf("write partial transcript %q: %w", partialPath, err)
 	}
-	checkpoint := newIncrementalCheckpointWithFingerprint(fingerprint, mediaDuration, chunks, completedChunks, rawCues)
+	checkpoint := newIncrementalCheckpointWithState(fingerprint, stage, retryCursor, mediaDuration, chunks, completedChunks, rawCues)
 	if err := persistIncrementalCheckpoint(checkpointPath, checkpoint); err != nil {
 		return err
 	}
 	return nil
+}
+
+func removeIncrementalArtifacts(outputBase string) error {
+	partialPath, checkpointPath := incrementalArtifactPaths(outputBase)
+	var removalErrors []error
+	for _, path := range []string{checkpointPath, partialPath} {
+		if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
+			removalErrors = append(removalErrors, fmt.Errorf("remove incremental artifact %q: %w", path, err))
+		}
+	}
+	return errors.Join(removalErrors...)
 }
 
 func replaceFileAtomically(path string, content []byte, mode os.FileMode) (returnErr error) {

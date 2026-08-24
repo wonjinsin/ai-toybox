@@ -29,8 +29,8 @@ Blocked by: Task 1
 Delivers: 저신뢰 재시도 중 중단되어도 완료된 선택을 보존하며, 최종 SRT 성공 후 partial SRT와 체크포인트가 사라진다.
 Touches: `internal/app/checkpoint.go`, `internal/app/retry.go`, `internal/app/retry_test.go`, `internal/app/transcribe.go`, `internal/app/transcribe_test.go`, `README.md`
 Blocked by: Task 2
-- [ ] 저신뢰 cue 처리 후 커서와 선택 결과를 저장하고 재실행이 완료된 cue를 재시도하지 않음을 실패하는 테스트로 고정한다.
-- [ ] 최종 출력 저장 성공 뒤 증분 파일을 정리하고, 정리 오류는 최종 성공을 뒤집지 않고 경고로 표시한다.
-- [ ] Ctrl-C, 배치 오류, 저장 오류에서는 마지막 유효한 partial SRT와 체크포인트를 보존한다.
-- [ ] README에 partial 파일명, 자동 재개 조건, 임시 결과라는 점을 한국어로 설명한다.
+- [x] 저신뢰 cue 처리 후 커서와 선택 결과를 저장하고 재실행이 완료된 cue를 재시도하지 않음을 실패하는 테스트로 고정한다.
+- [x] 최종 출력 저장 성공 뒤 증분 파일을 정리하고, 정리 오류는 최종 성공을 뒤집지 않고 경고로 표시한다.
+- [x] Ctrl-C, 배치 오류, 저장 오류에서는 마지막 유효한 partial SRT와 체크포인트를 보존한다.
+- [x] README에 partial 파일명, 자동 재개 조건, 임시 결과라는 점을 한국어로 설명한다.
 - [ ] `gofmt`, `go vet ./...`, `go test ./...`, `go test -race -cover ./internal/app`, `make build`가 통과한다.

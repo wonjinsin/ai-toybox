@@ -143,11 +143,15 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	var chunks []audioChunk
 	var rawCues []subtitleCue
 	completedChunks := 0
+	checkpointStage := checkpointStageTranscribing
+	retryCursor := 0
 	if hasRestoredCheckpoint {
 		mediaDuration = restoredCheckpoint.MediaDuration
 		chunks = audioChunksFromCheckpoint(restoredCheckpoint.Chunks)
 		rawCues = subtitleCuesFromCheckpointCues(restoredCheckpoint.Cues)
 		completedChunks = restoredCheckpoint.CompletedChunks
+		checkpointStage = restoredCheckpoint.Stage
+		retryCursor = restoredCheckpoint.RetryCursor
 		reportProgress(progress, inputPath, fmt.Sprintf("체크포인트 재개: %d/%d개", completedChunks, len(chunks)))
 		if completedChunks > 0 {
 			if err := persistIncrementalProgress(outputBase, options.Language, corrections, fingerprint, mediaDuration, chunks, completedChunks, rawCues); err != nil {
@@ -185,8 +189,12 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	chunksToExtract := chunks
 	firstChunkIndex := 0
 	if options.Format == "srt" {
-		chunksToExtract = chunks[completedChunks:]
-		firstChunkIndex = completedChunks
+		if checkpointStage == checkpointStageTranscribing {
+			chunksToExtract = chunks[completedChunks:]
+			firstChunkIndex = completedChunks
+		} else {
+			chunksToExtract = nil
+		}
 	}
 	if err := runWithProgress(progress, inputPath, fmt.Sprintf("음성 조각 생성: %d개", len(chunksToExtract)), overallStartedAt, func() error {
 		var operationErr error
@@ -195,7 +203,7 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	}); err != nil {
 		return "", err
 	}
-	if options.Format == "srt" {
+	if options.Format == "srt" && checkpointStage == checkpointStageTranscribing {
 		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개 (완료 %d/%d개)", len(transcriptionChunks), completedChunks, len(chunks)), overallStartedAt, func() error {
 			for start := 0; start < len(transcriptionChunks); start += transcriptionBatchSize {
 				end := min(start+transcriptionBatchSize, len(transcriptionChunks))
@@ -218,7 +226,7 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 		}); err != nil {
 			return "", err
 		}
-	} else {
+	} else if options.Format != "srt" {
 		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개", len(transcriptionChunks)), overallStartedAt, func() error {
 			return transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks)
 		}); err != nil {
@@ -229,14 +237,46 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 			return "", err
 		}
 	}
-	rawCues = reconcileChunkBoundaries(rawCues)
-	retryCount := countLowConfidenceCues(rawCues)
-	if err := runWithProgress(progress, inputPath, fmt.Sprintf("저신뢰 구간 재시도: %d개", retryCount), overallStartedAt, func() error {
-		var operationErr error
-		rawCues, operationErr = retryLowConfidenceCues(ctx, whisperRunner, ffmpegPath, whisperPath, modelPath, options.Language, tempPath, chunkDirectory, rawCues, mediaDuration)
-		return operationErr
-	}); err != nil {
-		return "", err
+	if options.Format == "srt" {
+		if checkpointStage == checkpointStageTranscribing {
+			rawCues = reconcileChunkBoundaries(rawCues)
+			checkpointStage = checkpointStageRetrying
+			retryCursor = 0
+			if err := persistIncrementalProgressWithState(outputBase, options.Language, corrections, fingerprint, checkpointStage, retryCursor, mediaDuration, chunks, len(chunks), rawCues); err != nil {
+				return "", err
+			}
+		}
+		if checkpointStage == checkpointStageRetrying {
+			retryCount := countLowConfidenceCues(rawCues[retryCursor:])
+			if err := runWithProgress(progress, inputPath, fmt.Sprintf("저신뢰 구간 재시도: %d개", retryCount), overallStartedAt, func() error {
+				var operationErr error
+				rawCues, operationErr = retryLowConfidenceCuesFromCursor(ctx, whisperRunner, ffmpegPath, whisperPath, modelPath, options.Language, tempPath, chunkDirectory, rawCues, mediaDuration, retryCursor, func(nextCursor int, updatedCues []subtitleCue) error {
+					if err := persistIncrementalProgressWithState(outputBase, options.Language, corrections, fingerprint, checkpointStageRetrying, nextCursor, mediaDuration, chunks, len(chunks), updatedCues); err != nil {
+						return err
+					}
+					reportProgress(progress, inputPath, fmt.Sprintf("저신뢰 재시도 진행: %d/%d cue", nextCursor, len(updatedCues)))
+					return nil
+				})
+				return operationErr
+			}); err != nil {
+				return "", err
+			}
+			checkpointStage = checkpointStageRetryComplete
+			retryCursor = len(rawCues)
+			if err := persistIncrementalProgressWithState(outputBase, options.Language, corrections, fingerprint, checkpointStage, retryCursor, mediaDuration, chunks, len(chunks), rawCues); err != nil {
+				return "", err
+			}
+		}
+	} else {
+		rawCues = reconcileChunkBoundaries(rawCues)
+		retryCount := countLowConfidenceCues(rawCues)
+		if err := runWithProgress(progress, inputPath, fmt.Sprintf("저신뢰 구간 재시도: %d개", retryCount), overallStartedAt, func() error {
+			var operationErr error
+			rawCues, operationErr = retryLowConfidenceCues(ctx, whisperRunner, ffmpegPath, whisperPath, modelPath, options.Language, tempPath, chunkDirectory, rawCues, mediaDuration)
+			return operationErr
+		}); err != nil {
+			return "", err
+		}
 	}
 	reportProgress(progress, inputPath, "자막 정리 및 검증 중...")
 	cues := cleanSubtitleCues(rawCues, options.Language, corrections, mediaDuration)
@@ -250,6 +290,11 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	reportProgress(progress, inputPath, "결과 저장 중...")
 	if err := writeAndPublishTranscript(temporaryOutputPath, outputPath, []byte(transcript), options.Force, os.Link); err != nil {
 		return "", err
+	}
+	if options.Format == "srt" {
+		if err := removeIncrementalArtifacts(outputBase); err != nil {
+			reportProgress(progress, inputPath, fmt.Sprintf("경고: 증분 파일 정리 실패: %v", err))
+		}
 	}
 
 	reportProgress(progress, inputPath, "처리 완료")

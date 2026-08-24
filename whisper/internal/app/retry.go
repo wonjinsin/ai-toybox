@@ -14,6 +14,8 @@ const (
 	minimumRetryConfidenceGain = 0.05
 )
 
+type retryProgressFunc func(nextCursor int, cues []subtitleCue) error
+
 func countLowConfidenceCues(cues []subtitleCue) int {
 	count := 0
 	for _, cue := range cues {
@@ -25,8 +27,17 @@ func countLowConfidenceCues(cues []subtitleCue) int {
 }
 
 func retryLowConfidenceCues(ctx context.Context, whisperRunner *whisperCommandRunner, ffmpegPath, whisperPath, modelPath, language, audioPath, directory string, cues []subtitleCue, mediaDuration time.Duration) ([]subtitleCue, error) {
+	return retryLowConfidenceCuesFromCursor(ctx, whisperRunner, ffmpegPath, whisperPath, modelPath, language, audioPath, directory, cues, mediaDuration, 0, nil)
+}
+
+func retryLowConfidenceCuesFromCursor(ctx context.Context, whisperRunner *whisperCommandRunner, ffmpegPath, whisperPath, modelPath, language, audioPath, directory string, cues []subtitleCue, mediaDuration time.Duration, startCursor int, onProgress retryProgressFunc) ([]subtitleCue, error) {
+	if startCursor < 0 || startCursor > len(cues) {
+		return nil, fmt.Errorf("invalid retry cursor %d for %d cues", startCursor, len(cues))
+	}
 	result := append([]subtitleCue(nil), cues...)
-	for index, cue := range cues {
+	lastSavedCursor := startCursor
+	for index := startCursor; index < len(cues); index++ {
+		cue := cues[index]
 		if cue.Probability >= retrySubtitleProbability {
 			continue
 		}
@@ -55,6 +66,17 @@ func retryLowConfidenceCues(ctx context.Context, whisperRunner *whisperCommandRu
 			return nil, err
 		}
 		result[index] = selectRetryCue(cue, candidate)
+		if onProgress != nil {
+			if err := onProgress(index+1, result); err != nil {
+				return nil, err
+			}
+			lastSavedCursor = index + 1
+		}
+	}
+	if onProgress != nil && lastSavedCursor < len(cues) {
+		if err := onProgress(len(cues), result); err != nil {
+			return nil, err
+		}
 	}
 	return result, nil
 }

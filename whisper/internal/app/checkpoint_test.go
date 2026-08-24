@@ -87,6 +87,26 @@ func TestLoadIncrementalCheckpointReportsCorruptFileWithoutRemovingIt(t *testing
 	}
 }
 
+func TestLoadIncrementalCheckpointRejectsRetryCursorDuringTranscription(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
+	fingerprint := incrementalFingerprint{PipelineVersion: incrementalPipelineVersion, Language: "ja"}
+	checkpoint := newIncrementalCheckpointWithState(fingerprint, checkpointStageTranscribing, 1, 60*time.Second, []audioChunk{{Start: time.Second, End: 2 * time.Second}}, 1, []subtitleCue{{
+		Start: time.Second, End: 2 * time.Second, Text: "invalid cursor", Probability: 0.9,
+	}})
+	if err := persistIncrementalCheckpoint(path, checkpoint); err != nil {
+		t.Fatal(err)
+	}
+
+	_, found, err := loadIncrementalCheckpoint(path, fingerprint)
+	if err == nil {
+		t.Fatal("loadIncrementalCheckpoint() error = nil, want stage validation error")
+	}
+	if found {
+		t.Fatal("loadIncrementalCheckpoint() found = true, want false")
+	}
+}
+
 func TestReplaceFileAtomicallyReplacesContentWithoutTemporaryFile(t *testing.T) {
 	directory := t.TempDir()
 	path := filepath.Join(directory, "input.partial.srt")
