@@ -101,7 +101,6 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	}
 	defer os.Remove(temporaryOutputBase)
 	temporaryOutputPath := temporaryOutputBase + "." + options.Format
-	defer os.Remove(temporaryOutputPath)
 
 	tempFile, err := os.CreateTemp("", "whisper-local-*.wav")
 	if err != nil {
@@ -180,18 +179,8 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 		return "", err
 	}
 	reportProgress(progress, inputPath, "결과 저장 중...")
-	if err := os.WriteFile(temporaryOutputPath, []byte(transcript), 0o644); err != nil {
-		return "", fmt.Errorf("write temporary transcript %q: %w", temporaryOutputPath, err)
-	}
-	if options.Force {
-		if err := os.Rename(temporaryOutputPath, outputPath); err != nil {
-			return "", fmt.Errorf("replace output file %q: %w", outputPath, err)
-		}
-	} else if err := os.Link(temporaryOutputPath, outputPath); err != nil {
-		if os.IsExist(err) {
-			return "", newOutputExistsError(outputPath)
-		}
-		return "", fmt.Errorf("publish output file %q: %w", outputPath, err)
+	if err := writeAndPublishTranscript(temporaryOutputPath, outputPath, []byte(transcript), options.Force, os.Link); err != nil {
+		return "", err
 	}
 
 	reportProgress(progress, inputPath, "처리 완료")
