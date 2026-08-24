@@ -154,7 +154,7 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 		retryCursor = restoredCheckpoint.RetryCursor
 		reportProgress(progress, inputPath, fmt.Sprintf("체크포인트 재개: %d/%d개", completedChunks, len(chunks)))
 		if completedChunks > 0 {
-			if err := persistIncrementalProgress(outputBase, options.Language, corrections, fingerprint, mediaDuration, chunks, completedChunks, rawCues); err != nil {
+			if err := persistIncrementalProgressWithState(outputBase, options.Language, corrections, fingerprint, checkpointStage, retryCursor, mediaDuration, chunks, completedChunks, rawCues); err != nil {
 				return "", err
 			}
 		}

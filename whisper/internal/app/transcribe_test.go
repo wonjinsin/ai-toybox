@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"encoding/binary"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math"
@@ -366,6 +367,94 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 	}
 	if !strings.Contains(string(content), "개선1") || !strings.Contains(string(content), "개선3") {
 		t.Errorf("final transcript = %q, want preserved and resumed retry results", content)
+	}
+}
+
+func TestTranscribePreservesRetryCursorWhenResumedRetryFailsAgain(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	writeFakeFFprobe(t, binDir, "10.0")
+	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	inputPath, modelPath := writeInputAndModel(t, tempDir)
+
+	var retryCalls int
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
+		if containsArgument(args, "--vad") {
+			return vadLogWithSegments(2), nil
+		}
+		if !containsConsecutiveArguments(args, "-bs", "8") {
+			for _, argument := range args {
+				if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+					continue
+				}
+				payload := []byte(`{"transcription":[{"offsets":{"from":100,"to":500},"text":"초기","tokens":[{"text":"초기","offsets":{"from":100,"to":500},"p":0.40}]}]}`)
+				if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+					return "", err
+				}
+			}
+			return "", nil
+		}
+
+		retryCalls++
+		if retryCalls == 2 {
+			return "", errors.New("first resumed cue failed")
+		}
+		if retryCalls == 3 {
+			return "", errors.New("second resumed cue failed")
+		}
+		probability := 0.40
+		text := "변화없음"
+		if retryCalls >= 4 {
+			probability = 0.95
+			text = "개선"
+		}
+		for _, argument := range args {
+			if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			payload := []byte(fmt.Sprintf(`{"transcription":[{"offsets":{"from":1000,"to":1200},"text":%q,"tokens":[{"text":%q,"offsets":{"from":1000,"to":1200},"p":%.2f}]}]}`, text, text, probability))
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		return "", nil
+	})
+	options := Options{InputPath: inputPath, Language: "ko", Format: "srt", ModelPath: modelPath}
+
+	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err == nil || !strings.Contains(err.Error(), "first resumed cue failed") {
+		t.Fatalf("first transcription error = %v, want first retry failure", err)
+	}
+	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err == nil || !strings.Contains(err.Error(), "second resumed cue failed") {
+		t.Fatalf("second transcription error = %v, want repeated retry failure", err)
+	}
+
+	checkpointPath := filepath.Join(tempDir, ".input.srt.whisper-local-checkpoint.json")
+	checkpointContent, err := os.ReadFile(checkpointPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var checkpoint incrementalCheckpoint
+	if err := json.Unmarshal(checkpointContent, &checkpoint); err != nil {
+		t.Fatal(err)
+	}
+	if checkpoint.Stage != checkpointStageRetrying || checkpoint.RetryCursor != 1 {
+		t.Errorf("checkpoint state = %s/%d, want retrying/1", checkpoint.Stage, checkpoint.RetryCursor)
+	}
+
+	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err != nil {
+		t.Fatalf("third transcription error = %v", err)
+	}
+	if retryCalls != 4 {
+		t.Errorf("retry calls = %d, want 4 without repeating completed retry", retryCalls)
 	}
 }
 
