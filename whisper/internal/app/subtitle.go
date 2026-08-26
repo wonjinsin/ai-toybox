@@ -71,6 +71,12 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 		expanded[index] = cue
 	}
 	cleaned = expanded
+	sort.SliceStable(cleaned, func(first, second int) bool {
+		if cleaned[first].Start == cleaned[second].Start {
+			return cleaned[first].End < cleaned[second].End
+		}
+		return cleaned[first].Start < cleaned[second].Start
+	})
 
 	timed := make([]subtitleCue, 0, len(cleaned))
 	for index, cue := range cleaned {

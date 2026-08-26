@@ -334,6 +334,34 @@ func TestCleanSubtitleCuesSplitsLongCueAtActualTokenTimes(t *testing.T) {
 	}
 }
 
+func TestCleanSubtitleCuesSortsTokenSplitCuesBeforeTiming(t *testing.T) {
+	t.Parallel()
+
+	firstHalf := strings.Repeat("前", 20)
+	secondHalf := strings.Repeat("後", 20)
+	cues := []subtitleCue{
+		{
+			Start:       3 * time.Second,
+			End:         9 * time.Second,
+			Text:        firstHalf + secondHalf,
+			Probability: 0.9,
+			Tokens: []subtitleToken{
+				{Start: 3 * time.Second, End: 6 * time.Second, Text: firstHalf},
+				{Start: 7 * time.Second, End: 9 * time.Second, Text: secondHalf},
+			},
+		},
+		{Start: 5 * time.Second, End: 5500 * time.Millisecond, Text: "割り込み", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 10*time.Second)
+	if err := validateSubtitleCues(got, 10*time.Second); err != nil {
+		t.Fatalf("validateSubtitleCues() error = %v", err)
+	}
+	if len(got) != 3 {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want 3", len(got))
+	}
+}
+
 func TestCleanSubtitleCuesPreservesTokenTimingAroundCorrectionSource(t *testing.T) {
 	t.Parallel()
 
