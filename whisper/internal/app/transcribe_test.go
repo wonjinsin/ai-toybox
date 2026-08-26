@@ -622,7 +622,7 @@ for argument do output="$argument"; done
 		t.Fatal(err)
 	}
 	arguments := strings.Fields(string(captured))
-	if !containsConsecutiveArguments(arguments, "-af", "dynaudnorm=f=500:g=31:p=0.95:m=10:b=1") {
+	if !containsConsecutiveArguments(arguments, "-af", "dynaudnorm=f=500:g=31:p=0.95:m=100:b=1") {
 		t.Errorf("ffmpeg arguments = %q, want quiet-speech normalization filter", arguments)
 	}
 }
@@ -686,8 +686,8 @@ printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filt
 	}
 	inputPeak := pcmPeak(inputSamples)
 	normalizedPeak := pcmPeak(normalizedSamples)
-	if normalizedPeak < inputPeak*5 || normalizedPeak > inputPeak*11 {
-		t.Errorf("normalized peak = %d, want 5x to 11x input peak %d", normalizedPeak, inputPeak)
+	if normalizedPeak < inputPeak*50 || normalizedPeak > inputPeak*110 {
+		t.Errorf("normalized peak = %d, want 50x to 110x input peak %d", normalizedPeak, inputPeak)
 	}
 	leadingSilenceSamples := 8 * 16000
 	if peak := pcmPeak(normalizedSamples[:leadingSilenceSamples]); peak != 0 {

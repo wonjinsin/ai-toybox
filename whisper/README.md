@@ -79,7 +79,7 @@ whisper-local -help
 - 단일 파일 입력: FFmpeg가 읽을 수 있는 음성·영상 파일
 - 폴더 입력 확장자: `3g2`, `3gp`, `aac`, `ac3`, `aif`, `aiff`, `alac`, `amr`, `ape`, `au`, `avi`, `caf`, `dts`, `flac`, `m2ts`, `m4a`, `m4v`, `mka`, `mkv`, `mov`, `mp3`, `mp4`, `mpeg`, `mpg`, `mts`, `mxf`, `oga`, `ogg`, `ogv`, `opus`, `ts`, `vob`, `wav`, `webm`, `wma`, `wmv`
 - 영상: 영상 속 음성 트랙을 전사하며 화면 내용은 분석하지 않음
-- 음성 전처리: 16kHz 모노 PCM 변환과 동적 음량 정규화
+- 음성 전처리: 16kHz 모노 PCM 변환과 작은 발화를 위한 최대 증폭 계수 100의 동적 음량 정규화
 - 발화 탐지: Silero VAD 필수. VAD 모델이 없으면 명확한 오류로 중단
 - 자막 시간: 원본 타임라인 기준 최대 20초 조각으로 전사해 긴 무음 후에도 시간 밀림 방지
 - 자막 정리: 토큰 신뢰도, 근접 반복, 일본어 비언어 발성 필터링

@@ -11,7 +11,7 @@ import (
 
 const (
 	incrementalCheckpointVersion = 1
-	incrementalPipelineVersion   = 1
+	incrementalPipelineVersion   = 2
 	transcriptionBatchSize       = 32
 	checkpointStageTranscribing  = "transcribing"
 	checkpointStageRetrying      = "retrying"

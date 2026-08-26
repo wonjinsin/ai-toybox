@@ -60,6 +60,25 @@ func TestLoadIncrementalCheckpointRejectsDifferentFingerprint(t *testing.T) {
 	}
 }
 
+func TestLoadIncrementalCheckpointRejectsVersionBeforeQuietSpeechNormalization(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
+	legacyFingerprint := incrementalFingerprint{PipelineVersion: 1, Language: "ko"}
+	checkpoint := newIncrementalCheckpointWithFingerprint(legacyFingerprint, 60*time.Second, []audioChunk{{Start: time.Second, End: 2 * time.Second}}, 1, nil)
+	if err := persistIncrementalCheckpoint(path, checkpoint); err != nil {
+		t.Fatal(err)
+	}
+
+	currentFingerprint := incrementalFingerprint{PipelineVersion: incrementalPipelineVersion, Language: "ko"}
+	_, found, err := loadIncrementalCheckpoint(path, currentFingerprint)
+	if err != nil {
+		t.Fatalf("loadIncrementalCheckpoint() error = %v", err)
+	}
+	if found {
+		t.Fatal("loadIncrementalCheckpoint() found = true, want false for checkpoint created before quiet-speech normalization")
+	}
+}
+
 func TestLoadIncrementalCheckpointReportsCorruptFileWithoutRemovingIt(t *testing.T) {
 	directory := t.TempDir()
 	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")

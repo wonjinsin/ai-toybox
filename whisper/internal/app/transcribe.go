@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-const audioNormalizationFilter = "dynaudnorm=f=500:g=31:p=0.95:m=10:b=1"
+const audioNormalizationFilter = "dynaudnorm=f=500:g=31:p=0.95:m=100:b=1"
 
 var (
 	vadSegmentLogPattern   = regexp.MustCompile(`VAD segment \d+: start = ([0-9]+(?:\.[0-9]+)?), end = ([0-9]+(?:\.[0-9]+)?)`)
