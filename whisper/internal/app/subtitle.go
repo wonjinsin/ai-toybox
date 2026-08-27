@@ -62,6 +62,9 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 		}
 		cleaned = append(cleaned, cue)
 	}
+	if language == "ja" || language == "auto" {
+		cleaned = removeRepeatedJapaneseHallucinations(cleaned)
+	}
 	expanded := make([]subtitleCue, 0, len(cleaned))
 	for _, cue := range cleaned {
 		appendSplitSubtitleCue(&expanded, cue, 2*subtitleLineWidth(language), corrections)
@@ -106,6 +109,40 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 		timed = append(timed, cue)
 	}
 	return timed
+}
+
+func removeRepeatedJapaneseHallucinations(cues []subtitleCue) []subtitleCue {
+	counts := make(map[string]int)
+	for _, cue := range cues {
+		if key := japaneseHallucinationKey(cue.Text); key != "" {
+			counts[key]++
+		}
+	}
+	filtered := make([]subtitleCue, 0, len(cues))
+	for _, cue := range cues {
+		if key := japaneseHallucinationKey(cue.Text); key != "" && counts[key] > 1 {
+			continue
+		}
+		filtered = append(filtered, cue)
+	}
+	return filtered
+}
+
+func japaneseHallucinationKey(text string) string {
+	compact := strings.Map(func(character rune) rune {
+		if unicode.IsSpace(character) || unicode.IsPunct(character) || unicode.IsSymbol(character) {
+			return -1
+		}
+		return character
+	}, text)
+	switch compact {
+	case "ご視聴ありがとうございました", "ご視聴ありがとうございます":
+		return "viewing-thanks"
+	case "おめでとうございます", "おめでとうございました":
+		return "congratulations"
+	default:
+		return ""
+	}
 }
 
 func appendSplitSubtitleCue(destination *[]subtitleCue, cue subtitleCue, maximumCharacters int, corrections map[string]string) {
