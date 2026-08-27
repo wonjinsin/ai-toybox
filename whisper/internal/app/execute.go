@@ -38,7 +38,7 @@ func Execute(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	inputIsDirectory := statErr == nil && inputInfo.IsDir()
 
 	progress := newProgressReporter(stderr)
-	whisperRunner := newWhisperCommandRunner(min(options.Parallel, 2), runCommandCaptureStderr)
+	whisperRunner := newWhisperCommandRunner(1, runCommandCaptureStderr)
 	transcribe := func(ctx context.Context, options Options) (string, error) {
 		outputPath, err := transcribeWithProgressUsingRunner(ctx, options, progress, whisperRunner)
 		if err != nil && !isOutputExistsError(err) {

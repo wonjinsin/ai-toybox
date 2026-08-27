@@ -189,8 +189,8 @@ func TestExecuteLimitsWhisperCommandsWhileKeepingThreeFileWorkers(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := strings.TrimSpace(string(content)); got != "2" {
-		t.Errorf("maximum concurrent whisper-cli commands = %s, want 2", got)
+	if got := strings.TrimSpace(string(content)); got != "1" {
+		t.Errorf("maximum concurrent whisper-cli commands = %s, want 1", got)
 	}
 }
 
