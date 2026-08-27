@@ -233,6 +233,141 @@ func TestCleanSubtitleCuesDropsRepeatedKnownJapaneseHallucinations(t *testing.T)
 	}
 }
 
+func TestCleanSubtitleCuesDropsRepeatedJapaneseNextVideoHallucinations(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "また次の動画でお会いしましょう。", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "残す", Probability: 0.9},
+		{Start: 5 * time.Second, End: 6 * time.Second, Text: "次回の動画でお会いしましょう", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 8*time.Second)
+	if len(got) != 1 || got[0].Text != "残す" {
+		t.Fatalf("cleanSubtitleCues() = %#v, want only unrelated speech", got)
+	}
+}
+
+func TestCleanSubtitleCuesDropsRepeatedJapaneseViewingThanksVariants(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "最後までご視聴いただきありがとうございました。", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "残す", Probability: 0.9},
+		{Start: 5 * time.Second, End: 6 * time.Second, Text: "ご覧いただきありがとうございます", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 8*time.Second)
+	if len(got) != 1 || got[0].Text != "残す" {
+		t.Fatalf("cleanSubtitleCues() = %#v, want only unrelated speech", got)
+	}
+}
+
+func TestCleanSubtitleCuesDropsJapaneseGoodNightHallucinationAtThreshold(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "おやすみなさい。", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "残す", Probability: 0.9},
+		{Start: 5 * time.Second, End: 6 * time.Second, Text: "お休みなさい", Probability: 0.9},
+		{Start: 7 * time.Second, End: 8 * time.Second, Text: "おやすみなさい", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 10*time.Second)
+	if len(got) != 1 || got[0].Text != "残す" {
+		t.Fatalf("cleanSubtitleCues() = %#v, want only unrelated speech", got)
+	}
+}
+
+func TestCleanSubtitleCuesKeepsJapaneseGoodNightBelowThreshold(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "おやすみなさい。", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "お休みなさい", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 6*time.Second)
+	if len(got) != len(cues) {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want %d legitimate phrases preserved", len(got), len(cues))
+	}
+}
+
+func TestCleanSubtitleCuesDropsGenericJapaneseThanksAtThreshold(t *testing.T) {
+	t.Parallel()
+
+	for _, phrase := range []string{"ありがとうございました", "ありがとうございます"} {
+		phrase := phrase
+		t.Run(phrase, func(t *testing.T) {
+			t.Parallel()
+
+			cues := []subtitleCue{
+				{Start: time.Second, End: 2 * time.Second, Text: phrase + "。", Probability: 0.9},
+				{Start: 3 * time.Second, End: 4 * time.Second, Text: "残す", Probability: 0.9},
+				{Start: 5 * time.Second, End: 6 * time.Second, Text: phrase, Probability: 0.9},
+				{Start: 7 * time.Second, End: 8 * time.Second, Text: " " + phrase + " ", Probability: 0.9},
+				{Start: 9 * time.Second, End: 10 * time.Second, Text: phrase, Probability: 0.9},
+			}
+
+			got := cleanSubtitleCues(cues, "ja", nil, 12*time.Second)
+			if len(got) != 1 || got[0].Text != "残す" {
+				t.Fatalf("cleanSubtitleCues() = %#v, want only unrelated speech", got)
+			}
+		})
+	}
+}
+
+func TestCleanSubtitleCuesDoesNotCombineGenericJapaneseThanksForms(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "ありがとうございました", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "ありがとうございました。", Probability: 0.9},
+		{Start: 5 * time.Second, End: 6 * time.Second, Text: "ありがとうございます", Probability: 0.9},
+		{Start: 7 * time.Second, End: 8 * time.Second, Text: "ありがとうございます。", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 10*time.Second)
+	if len(got) != len(cues) {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want %d separate legitimate thanks forms preserved", len(got), len(cues))
+	}
+}
+
+func TestCleanSubtitleCuesKeepsGenericJapaneseThanksBelowThreshold(t *testing.T) {
+	t.Parallel()
+
+	for _, phrase := range []string{"ありがとうございました", "ありがとうございます"} {
+		phrase := phrase
+		t.Run(phrase, func(t *testing.T) {
+			t.Parallel()
+
+			cues := []subtitleCue{
+				{Start: time.Second, End: 2 * time.Second, Text: phrase, Probability: 0.9},
+				{Start: 3 * time.Second, End: 4 * time.Second, Text: phrase + "。", Probability: 0.9},
+				{Start: 5 * time.Second, End: 6 * time.Second, Text: " " + phrase + " ", Probability: 0.9},
+			}
+
+			got := cleanSubtitleCues(cues, "ja", nil, 8*time.Second)
+			if len(got) != len(cues) {
+				t.Fatalf("len(cleanSubtitleCues()) = %d, want %d legitimate thanks preserved", len(got), len(cues))
+			}
+		})
+	}
+}
+
+func TestCleanSubtitleCuesKeepsSingleJapaneseNextVideoPhrase(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{{
+		Start: time.Second, End: 2 * time.Second, Text: "また次の動画でお会いしましょう", Probability: 0.9,
+	}}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 4*time.Second)
+	if len(got) != 1 || got[0].Text != cues[0].Text {
+		t.Fatalf("cleanSubtitleCues() = %#v, want single legitimate phrase preserved", got)
+	}
+}
+
 func TestCleanSubtitleCuesDropsRepeatedKnownJapaneseHallucinationsInAutoMode(t *testing.T) {
 	t.Parallel()
 

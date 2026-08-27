@@ -23,6 +23,12 @@ const repeatedCueRunLimit = 3
 const minimumSubtitleProbability = 0.32
 
 const (
+	minimumSpecificHallucinationOccurrences = 2
+	minimumGoodNightOccurrences             = 3
+	minimumGenericThanksOccurrences          = 4
+)
+
+const (
 	maximumReadableCueDuration = 5500 * time.Millisecond
 	minimumReadableCueDuration = 650 * time.Millisecond
 	shortCueDisplayDuration    = 1100 * time.Millisecond
@@ -114,13 +120,14 @@ func cleanSubtitleCues(cues []subtitleCue, language string, corrections map[stri
 func removeRepeatedJapaneseHallucinations(cues []subtitleCue) []subtitleCue {
 	counts := make(map[string]int)
 	for _, cue := range cues {
-		if key := japaneseHallucinationKey(cue.Text); key != "" {
+		if key, _ := japaneseHallucinationRule(cue.Text); key != "" {
 			counts[key]++
 		}
 	}
 	filtered := make([]subtitleCue, 0, len(cues))
 	for _, cue := range cues {
-		if key := japaneseHallucinationKey(cue.Text); key != "" && counts[key] > 1 {
+		key, minimumOccurrences := japaneseHallucinationRule(cue.Text)
+		if key != "" && counts[key] >= minimumOccurrences {
 			continue
 		}
 		filtered = append(filtered, cue)
@@ -128,7 +135,7 @@ func removeRepeatedJapaneseHallucinations(cues []subtitleCue) []subtitleCue {
 	return filtered
 }
 
-func japaneseHallucinationKey(text string) string {
+func japaneseHallucinationRule(text string) (string, int) {
 	compact := strings.Map(func(character rune) rune {
 		if unicode.IsSpace(character) || unicode.IsPunct(character) {
 			return -1
@@ -136,12 +143,25 @@ func japaneseHallucinationKey(text string) string {
 		return character
 	}, text)
 	switch compact {
-	case "ご視聴ありがとうございました", "ご視聴ありがとうございます":
-		return "viewing-thanks"
+	case "ご視聴ありがとうございました", "ご視聴ありがとうございます",
+		"ご視聴いただきありがとうございました", "ご視聴いただきありがとうございます",
+		"最後までご視聴ありがとうございました", "最後までご視聴ありがとうございます",
+		"最後までご視聴いただきありがとうございました", "最後までご視聴いただきありがとうございます",
+		"ご覧いただきありがとうございました", "ご覧いただきありがとうございます":
+		return "viewing-thanks", minimumSpecificHallucinationOccurrences
+	case "次の動画でお会いしましょう", "また次の動画でお会いしましょう",
+		"次回の動画でお会いしましょう", "また次回の動画でお会いしましょう":
+		return "next-video", minimumSpecificHallucinationOccurrences
+	case "おやすみなさい", "お休みなさい":
+		return "good-night", minimumGoodNightOccurrences
+	case "ありがとうございました":
+		return "thanks-past", minimumGenericThanksOccurrences
+	case "ありがとうございます":
+		return "thanks-present", minimumGenericThanksOccurrences
 	case "おめでとうございます", "おめでとうございました":
-		return "congratulations"
+		return "congratulations", minimumSpecificHallucinationOccurrences
 	default:
-		return ""
+		return "", 0
 	}
 }
 
