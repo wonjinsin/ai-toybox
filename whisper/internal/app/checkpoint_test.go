@@ -40,6 +40,15 @@ func TestIncrementalCheckpointJSONPreservesCueDetails(t *testing.T) {
 	}
 }
 
+func TestIncrementalCheckpointUsesLargerTranscriptionBatch(t *testing.T) {
+	t.Parallel()
+
+	checkpoint := newIncrementalCheckpoint(time.Minute, nil, 0, nil)
+	if checkpoint.BatchSize != 128 {
+		t.Errorf("batch size = %d, want 128", checkpoint.BatchSize)
+	}
+}
+
 func TestLoadIncrementalCheckpointRejectsDifferentFingerprint(t *testing.T) {
 	directory := t.TempDir()
 	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
@@ -76,6 +85,44 @@ func TestLoadIncrementalCheckpointRejectsVersionBeforeQuietSpeechNormalization(t
 	}
 	if found {
 		t.Fatal("loadIncrementalCheckpoint() found = true, want false for checkpoint created before quiet-speech normalization")
+	}
+}
+
+func TestLoadIncrementalCheckpointRejectsVersionBeforeDedicatedVADTool(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
+	legacyFingerprint := incrementalFingerprint{PipelineVersion: 2, Language: "ko"}
+	checkpoint := newIncrementalCheckpointWithFingerprint(legacyFingerprint, 60*time.Second, []audioChunk{{Start: time.Second, End: 2 * time.Second}}, 1, nil)
+	if err := persistIncrementalCheckpoint(path, checkpoint); err != nil {
+		t.Fatal(err)
+	}
+
+	currentFingerprint := incrementalFingerprint{PipelineVersion: incrementalPipelineVersion, Language: "ko"}
+	_, found, err := loadIncrementalCheckpoint(path, currentFingerprint)
+	if err != nil {
+		t.Fatalf("loadIncrementalCheckpoint() error = %v", err)
+	}
+	if found {
+		t.Fatal("loadIncrementalCheckpoint() found = true, want false for checkpoint created before dedicated VAD tool")
+	}
+}
+
+func TestLoadIncrementalCheckpointRejectsVersionBeforePeriodicVADReset(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, ".input.srt.whisper-local-checkpoint.json")
+	legacyFingerprint := incrementalFingerprint{PipelineVersion: 3, Language: "ko"}
+	checkpoint := newIncrementalCheckpointWithFingerprint(legacyFingerprint, 60*time.Second, []audioChunk{{Start: time.Second, End: 2 * time.Second}}, 1, nil)
+	if err := persistIncrementalCheckpoint(path, checkpoint); err != nil {
+		t.Fatal(err)
+	}
+
+	currentFingerprint := incrementalFingerprint{PipelineVersion: incrementalPipelineVersion, Language: "ko"}
+	_, found, err := loadIncrementalCheckpoint(path, currentFingerprint)
+	if err != nil {
+		t.Fatalf("loadIncrementalCheckpoint() error = %v", err)
+	}
+	if found {
+		t.Fatal("loadIncrementalCheckpoint() found = true, want false for checkpoint created before periodic VAD reset")
 	}
 }
 

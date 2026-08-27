@@ -5,7 +5,7 @@ import "time"
 const (
 	maxAudioChunkDuration = 20 * time.Second
 	chunkBoundaryPadding  = 150 * time.Millisecond
-	maxChunkGap           = time.Second
+	maxChunkGap           = 3 * time.Second
 )
 
 type audioChunk struct {

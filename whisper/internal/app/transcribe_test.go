@@ -26,16 +26,16 @@ func TestTranscribePersistsPartialAfterCompletedBatchWhenNextBatchFails(t *testi
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
-	writeFakeFFprobe(t, binDir, "120.0")
+	writeFakeFFprobe(t, binDir, "700.0")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 
 	var mainCalls int
-	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
-		if containsArgument(args, "--vad") {
-			return vadLogWithSegments(33), nil
+	runner := newWhisperCommandRunner(1, func(_ context.Context, executable string, args []string) (string, error) {
+		if filepath.Base(executable) == "whisper-vad-speech-segments" {
+			return vadLogWithSegments(129), nil
 		}
 		mainCalls++
 		if mainCalls == 2 {
@@ -70,8 +70,8 @@ func TestTranscribePersistsPartialAfterCompletedBatchWhenNextBatchFails(t *testi
 	if readErr != nil {
 		t.Fatalf("read partial transcript: %v", readErr)
 	}
-	if got := strings.Count(string(partial), " --> "); got != 32 {
-		t.Errorf("partial cues = %d, want 32", got)
+	if got := strings.Count(string(partial), " --> "); got != 128 {
+		t.Errorf("partial cues = %d, want 128", got)
 	}
 	checkpointPath := filepath.Join(tempDir, ".input.srt.whisper-local-checkpoint.json")
 	if _, statErr := os.Stat(checkpointPath); statErr != nil {
@@ -92,17 +92,17 @@ func TestTranscribeReconcilesBoundaryAcrossTranscriptionBatches(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
-	writeFakeFFprobe(t, binDir, "700.0")
+	writeFakeFFprobe(t, binDir, "2600.0")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 
 	var mainCalls int
-	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
-		if containsArgument(args, "--vad") {
+	runner := newWhisperCommandRunner(1, func(_ context.Context, executable string, args []string) (string, error) {
+		if filepath.Base(executable) == "whisper-vad-speech-segments" {
 			return "whisper_vad_segments_from_probs: Final speech segments after filtering: 1\n" +
-				"whisper_vad_segments_from_probs: VAD segment 0: start = 1.00, end = 651.00 (duration: 650.00)\n", nil
+				"whisper_vad_segments_from_probs: VAD segment 0: start = 1.00, end = 2541.00 (duration: 2540.00)\n", nil
 		}
 		mainCalls++
 		for _, argument := range args {
@@ -116,9 +116,9 @@ func TestTranscribeReconcilesBoundaryAcrossTranscriptionBatches(t *testing.T) {
 			}
 			from, to, text := 100, 500, "일반"
 			switch chunkIndex {
-			case 31:
+			case 127:
 				from, to, text = 19750, 19850, "경계"
-			case 32:
+			case 128:
 				from, to, text = 200, 300, "경계"
 			}
 			payload := []byte(fmt.Sprintf(`{"transcription":[{"offsets":{"from":%d,"to":%d},"text":%q,"tokens":[{"text":%q,"offsets":{"from":%d,"to":%d},"p":0.95}]}]}`, from, to, text, text, from, to))
@@ -145,8 +145,8 @@ func TestTranscribeReconcilesBoundaryAcrossTranscriptionBatches(t *testing.T) {
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
-	if got := strings.Count(string(content), " --> "); got != 32 {
-		t.Errorf("final cues = %d, want 32 after boundary reconciliation", got)
+	if got := strings.Count(string(content), " --> "); got != 128 {
+		t.Errorf("final cues = %d, want 128 after boundary reconciliation", got)
 	}
 	partialPath, checkpointPath := incrementalArtifactPaths(strings.TrimSuffix(outputPath, ".srt"))
 	if _, statErr := os.Stat(partialPath); !os.IsNotExist(statErr) {
@@ -167,9 +167,9 @@ func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) 
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
-	writeFakeFFprobe(t, binDir, "120.0")
+	writeFakeFFprobe(t, binDir, "700.0")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 	partialPath := filepath.Join(tempDir, "input.partial.srt")
@@ -178,10 +178,10 @@ func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) 
 	var mainCalls int
 	var partialRebuilt bool
 	chunkAttempts := make(map[int]int)
-	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
-		if containsArgument(args, "--vad") {
+	runner := newWhisperCommandRunner(1, func(_ context.Context, executable string, args []string) (string, error) {
+		if filepath.Base(executable) == "whisper-vad-speech-segments" {
 			vadCalls++
-			return vadLogWithSegments(33), nil
+			return vadLogWithSegments(129), nil
 		}
 		mainCalls++
 		if mainCalls == 3 {
@@ -189,7 +189,7 @@ func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) 
 			if err != nil {
 				return "", fmt.Errorf("read rebuilt partial: %w", err)
 			}
-			partialRebuilt = strings.Count(string(partial), " --> ") == 32 && strings.Contains(string(partial), "수정")
+			partialRebuilt = strings.Count(string(partial), " --> ") == 128 && strings.Contains(string(partial), "수정")
 		}
 		for _, argument := range args {
 			baseName := filepath.Base(argument)
@@ -245,30 +245,30 @@ func TestTranscribeResumesWithoutRetranscribingCheckpointedChunks(t *testing.T) 
 	if !partialRebuilt {
 		t.Error("partial transcript was not rebuilt from checkpoint before resumed batch")
 	}
-	if !containsArgument(progressMessages, "체크포인트 재개: 32/33개") {
+	if !containsArgument(progressMessages, "체크포인트 재개: 128/129개") {
 		t.Errorf("progress messages = %q, want checkpoint resume count", progressMessages)
 	}
-	for index := range 32 {
+	for index := range 128 {
 		if chunkAttempts[index] != 1 {
 			t.Errorf("chunk %d attempts = %d, want 1", index, chunkAttempts[index])
 		}
 	}
-	if chunkAttempts[32] != 2 {
-		t.Errorf("chunk 32 attempts = %d, want 2", chunkAttempts[32])
+	if chunkAttempts[128] != 2 {
+		t.Errorf("chunk 128 attempts = %d, want 2", chunkAttempts[128])
 	}
 	content, readErr := os.ReadFile(outputPath)
 	if readErr != nil {
 		t.Fatal(readErr)
 	}
-	if got := strings.Count(string(content), " --> "); got != 33 {
-		t.Errorf("final cues = %d, want 33", got)
+	if got := strings.Count(string(content), " --> "); got != 129 {
+		t.Errorf("final cues = %d, want 129", got)
 	}
 	if !strings.Contains(string(content), "수정") {
 		t.Errorf("final transcript = %q, want current corrections", content)
 	}
 }
 
-func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
+func TestTranscribeResumesAfterCompletedLowConfidenceRetryBatch(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("test helper executables use POSIX shell")
 	}
@@ -278,9 +278,9 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
-	writeFakeFFprobe(t, binDir, "10.0")
+	writeFakeFFprobe(t, binDir, "700.0")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 	partialPath := filepath.Join(tempDir, "input.partial.srt")
@@ -289,10 +289,10 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 	var mainCalls int
 	var retryCalls int
 	var improvedPartialRestored bool
-	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
-		if containsArgument(args, "--vad") {
+	runner := newWhisperCommandRunner(1, func(_ context.Context, executable string, args []string) (string, error) {
+		if filepath.Base(executable) == "whisper-vad-speech-segments" {
 			vadCalls++
-			return vadLogWithSegments(2), nil
+			return vadLogWithSegments(129), nil
 		}
 		isRetry := containsConsecutiveArguments(args, "-bs", "8")
 		if !isRetry {
@@ -318,7 +318,7 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 			improvedPartialRestored = strings.Contains(string(partial), "개선1")
 		}
 		if retryCalls == 2 {
-			return "", errors.New("second retry failed")
+			return "", errors.New("second retry batch failed")
 		}
 		for _, argument := range args {
 			if !strings.HasPrefix(filepath.Base(argument), "chunk_") || filepath.Ext(argument) != ".wav" {
@@ -334,8 +334,8 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 	})
 	options := Options{InputPath: inputPath, Language: "ko", Format: "srt", ModelPath: modelPath}
 
-	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err == nil || !strings.Contains(err.Error(), "second retry failed") {
-		t.Fatalf("first transcription error = %v, want second retry failure", err)
+	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err == nil || !strings.Contains(err.Error(), "second retry batch failed") {
+		t.Fatalf("first transcription error = %v, want second retry batch failure", err)
 	}
 	partial, readErr := os.ReadFile(partialPath)
 	if readErr != nil {
@@ -352,8 +352,8 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 	if vadCalls != 1 {
 		t.Errorf("VAD calls = %d, want 1", vadCalls)
 	}
-	if mainCalls != 1 {
-		t.Errorf("main transcription calls = %d, want 1", mainCalls)
+	if mainCalls != 2 {
+		t.Errorf("main transcription calls = %d, want 2", mainCalls)
 	}
 	if retryCalls != 3 {
 		t.Errorf("retry calls = %d, want 3", retryCalls)
@@ -370,7 +370,7 @@ func TestTranscribeResumesAfterCompletedLowConfidenceRetry(t *testing.T) {
 	}
 }
 
-func TestTranscribePreservesRetryCursorWhenResumedRetryFailsAgain(t *testing.T) {
+func TestTranscribePreservesRetryBatchCursorWhenResumedRetryFailsAgain(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("test helper executables use POSIX shell")
 	}
@@ -380,16 +380,16 @@ func TestTranscribePreservesRetryCursorWhenResumedRetryFailsAgain(t *testing.T) 
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
-	writeFakeFFprobe(t, binDir, "10.0")
+	writeFakeFFprobe(t, binDir, "700.0")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 
 	var retryCalls int
-	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
-		if containsArgument(args, "--vad") {
-			return vadLogWithSegments(2), nil
+	runner := newWhisperCommandRunner(1, func(_ context.Context, executable string, args []string) (string, error) {
+		if filepath.Base(executable) == "whisper-vad-speech-segments" {
+			return vadLogWithSegments(129), nil
 		}
 		if !containsConsecutiveArguments(args, "-bs", "8") {
 			for _, argument := range args {
@@ -446,8 +446,8 @@ func TestTranscribePreservesRetryCursorWhenResumedRetryFailsAgain(t *testing.T) 
 	if err := json.Unmarshal(checkpointContent, &checkpoint); err != nil {
 		t.Fatal(err)
 	}
-	if checkpoint.Stage != checkpointStageRetrying || checkpoint.RetryCursor != 1 {
-		t.Errorf("checkpoint state = %s/%d, want retrying/1", checkpoint.Stage, checkpoint.RetryCursor)
+	if checkpoint.Stage != checkpointStageRetrying || checkpoint.RetryCursor != 128 {
+		t.Errorf("checkpoint state = %s/%d, want retrying/128", checkpoint.Stage, checkpoint.RetryCursor)
 	}
 
 	if _, err := transcribeWithProgressUsingRunner(context.Background(), options, nil, runner); err != nil {
@@ -468,15 +468,15 @@ func TestTranscribeKeepsIncrementalArtifactsWhenFinalOutputAppearsDuringRun(t *t
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
 	writeFakeFFprobe(t, binDir, "10.0")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 	finalPath := filepath.Join(tempDir, "input.srt")
 
-	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, args []string) (string, error) {
-		if containsArgument(args, "--vad") {
+	runner := newWhisperCommandRunner(1, func(_ context.Context, executable string, args []string) (string, error) {
+		if filepath.Base(executable) == "whisper-vad-speech-segments" {
 			return vadLogWithSegments(1), nil
 		}
 		for _, argument := range args {
@@ -523,7 +523,7 @@ func vadLogWithSegments(count int) string {
 	var log strings.Builder
 	fmt.Fprintf(&log, "whisper_vad_segments_from_probs: Final speech segments after filtering: %d\n", count)
 	for index := range count {
-		start := float64(index*3 + 1)
+		start := float64(index*5 + 1)
 		end := start + 1
 		fmt.Fprintf(&log, "whisper_vad_segments_from_probs: VAD segment %d: start = %.2f, end = %.2f (duration: 1.00)\n", index, start, end)
 	}
@@ -541,7 +541,7 @@ func TestTranscribeCreatesTranscriptNextToInput(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -596,13 +596,14 @@ func TestTranscribeNormalizesAudioForQuietSpeech(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 printf '%s\n' "$@" > "$FFMPEG_ARGS"
 for argument do output="$argument"; done
 : > "$output"
 `)
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nprintf '%s\\n' 'whisper_vad_segments_from_probs: Final speech segments after filtering: 0' >&2\n")
+	writeFakeVADTool(t, binDir, vadLogWithSegments(0))
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	argsPath := filepath.Join(tempDir, "ffmpeg-args")
 	t.Setenv("FFMPEG_ARGS", argsPath)
@@ -645,7 +646,7 @@ func TestTranscribeAmplifiesQuietAudioAfterSilence(t *testing.T) {
 		t.Fatal(err)
 	}
 	writeFakeFFprobe(t, binDir, "18.0")
-	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
+	writeExecutable(t, filepath.Join(binDir, "whisper-vad-speech-segments"), `#!/bin/sh
 set -eu
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -653,9 +654,10 @@ while [ "$#" -gt 0 ]; do
     *) shift ;;
   esac
 done
-cp "$input_audio" "$NORMALIZED_AUDIO"
+cp "$input_audio" "$NORMALIZED_AUDIO_DIR/${input_audio##*/}"
 printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filtering: 0' >&2
 `)
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 
 	inputPath := filepath.Join(tempDir, "quiet.wav")
@@ -668,8 +670,11 @@ printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filt
 	if err := os.WriteFile(filepath.Join(tempDir, "ggml-silero-v6.2.0.bin"), []byte("vad"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	normalizedPath := filepath.Join(tempDir, "normalized.wav")
-	t.Setenv("NORMALIZED_AUDIO", normalizedPath)
+	normalizedDirectory := filepath.Join(tempDir, "normalized")
+	if err := os.Mkdir(normalizedDirectory, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("NORMALIZED_AUDIO_DIR", normalizedDirectory)
 
 	if _, err := Transcribe(context.Background(), Options{
 		InputPath: inputPath,
@@ -680,7 +685,14 @@ printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filt
 		t.Fatalf("Transcribe() error = %v", err)
 	}
 
-	normalizedSamples := readPCM16WAV(t, normalizedPath)
+	normalizedPaths, err := filepath.Glob(filepath.Join(normalizedDirectory, "vad_*.wav"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var normalizedSamples []int16
+	for _, path := range normalizedPaths {
+		normalizedSamples = append(normalizedSamples, readPCM16WAV(t, path)...)
+	}
 	if len(normalizedSamples) != len(inputSamples) {
 		t.Fatalf("normalized samples = %d, want %d", len(normalizedSamples), len(inputSamples))
 	}
@@ -710,22 +722,13 @@ func TestTranscribePreservesSilenceGapFromVADLog(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
 `)
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
 set -eu
-case " $* " in
-  *" --vad "*)
-    printf '%s\n' \
-      'whisper_vad_segments_from_probs: Final speech segments after filtering: 2' \
-      'whisper_vad_segments_from_probs: VAD segment 0: start = 9.89, end = 12.67 (duration: 2.78)' \
-      'whisper_vad_segments_from_probs: VAD segment 1: start = 32.65, end = 35.16 (duration: 2.51)' >&2
-    exit 0
-    ;;
-esac
 index=0
 for argument do
   case "$argument" in
@@ -736,6 +739,9 @@ for argument do
   esac
 done
 `)
+	writeFakeVADTool(t, binDir, "whisper_vad_segments_from_probs: Final speech segments after filtering: 2\n"+
+		"whisper_vad_segments_from_probs: VAD segment 0: start = 9.89, end = 12.67 (duration: 2.78)\n"+
+		"whisper_vad_segments_from_probs: VAD segment 1: start = 32.65, end = 35.16 (duration: 2.51)\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
@@ -770,7 +776,7 @@ func TestTranscribeCreatesEmptySubtitleWhenNoSpeechIsDetected(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -778,6 +784,7 @@ for argument do output="$argument"; done
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
 printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filtering: 0' >&2
 `)
+	writeFakeVADTool(t, binDir, vadLogWithSegments(0))
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
@@ -957,7 +964,7 @@ func TestTranscribeUsesOriginalTimelineChunksAndSingleMultiFileInference(t *test
 		t.Fatal(err)
 	}
 	writeExecutable(t, filepath.Join(binDir, "ffprobe"), "#!/bin/sh\nprintf '60.0\\n'\n")
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -965,16 +972,6 @@ for argument do output="$argument"; done
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
 set -eu
 printf 'call\n' >> "$WHISPER_CALLS"
-case " $* " in
-  *" --vad "*)
-    printf '%s\n' \
-      'whisper_vad_segments_from_probs: Final speech segments after filtering: 3' \
-      'whisper_vad_segments_from_probs: VAD segment 0: start = 10.00, end = 12.00 (duration: 2.00)' \
-      'whisper_vad_segments_from_probs: VAD segment 1: start = 12.50, end = 15.00 (duration: 2.50)' \
-      'whisper_vad_segments_from_probs: VAD segment 2: start = 30.00, end = 55.00 (duration: 25.00)' >&2
-    exit 0
-    ;;
-esac
 for argument do
   case "$argument" in
     *.wav)
@@ -983,6 +980,10 @@ for argument do
   esac
 done
 `)
+	writeFakeVADTool(t, binDir, "whisper_vad_segments_from_probs: Final speech segments after filtering: 3\n"+
+		"whisper_vad_segments_from_probs: VAD segment 0: start = 10.00, end = 12.00 (duration: 2.00)\n"+
+		"whisper_vad_segments_from_probs: VAD segment 1: start = 12.50, end = 15.00 (duration: 2.50)\n"+
+		"whisper_vad_segments_from_probs: VAD segment 2: start = 30.00, end = 55.00 (duration: 25.00)\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	callLog := filepath.Join(tempDir, "whisper-calls")
 	t.Setenv("WHISPER_CALLS", callLog)
@@ -1018,8 +1019,8 @@ done
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := len(strings.Fields(string(calls))); got != 2 {
-		t.Errorf("whisper-cli calls = %d, want VAD scan plus one multi-file inference", got)
+	if got := len(strings.Fields(string(calls))); got != 1 {
+		t.Errorf("whisper-cli calls = %d, want one multi-file inference", got)
 	}
 }
 
@@ -1034,21 +1035,13 @@ func TestTranscribeRetriesLowConfidenceCueWithDeterministicDecoding(t *testing.T
 		t.Fatal(err)
 	}
 	writeFakeFFprobe(t, binDir, "10.0")
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
 `)
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
 set -eu
-case " $* " in
-  *" --vad "*)
-    printf '%s\n' \
-      'whisper_vad_segments_from_probs: Final speech segments after filtering: 1' \
-      'whisper_vad_segments_from_probs: VAD segment 0: start = 1.00, end = 2.00 (duration: 1.00)' >&2
-    exit 0
-    ;;
-esac
 case " $* " in
   *" -bs 8 "*)
     printf '%s\n' "$@" > "$RETRY_ARGS"
@@ -1064,6 +1057,8 @@ for argument do
   esac
 done
 `)
+	writeFakeVADTool(t, binDir, "whisper_vad_segments_from_probs: Final speech segments after filtering: 1\n"+
+		"whisper_vad_segments_from_probs: VAD segment 0: start = 1.00, end = 2.00 (duration: 1.00)\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	retryArgsPath := filepath.Join(tempDir, "retry-args")
 	t.Setenv("RETRY_ARGS", retryArgsPath)
@@ -1107,19 +1102,20 @@ func TestTranscribeUsesSpeechPreservingVADSettings(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
 `)
-	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
+	writeExecutable(t, filepath.Join(binDir, "whisper-vad-speech-segments"), `#!/bin/sh
 set -eu
-printf '%s\n' "$@" > "$WHISPER_ARGS"
+printf '%s\n' "$@" > "$VAD_ARGS"
 printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filtering: 0' >&2
 `)
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
-	argsPath := filepath.Join(tempDir, "whisper-args")
-	t.Setenv("WHISPER_ARGS", argsPath)
+	argsPath := filepath.Join(tempDir, "vad-args")
+	t.Setenv("VAD_ARGS", argsPath)
 
 	inputPath, modelPath := writeInputAndModel(t, tempDir)
 	vadPath := filepath.Join(tempDir, "ggml-silero-v6.2.0.bin")
@@ -1142,26 +1138,25 @@ printf '%s\n' 'whisper_vad_segments_from_probs: Final speech segments after filt
 	}
 	arguments := strings.Fields(string(captured))
 	if containsArgument(arguments, "-d") {
-		t.Errorf("whisper arguments = %q, duration limit must not be set during VAD scan", arguments)
+		t.Errorf("VAD arguments = %q, duration limit must not be set during VAD scan", arguments)
 	}
 	for _, expected := range [][2]string{
-		{"-mc", "0"},
 		{"-vm", vadPath},
 		{"-vt", "0.35"},
-		{"-vspd", "100"},
-		{"-vsd", "500"},
-		{"-vp", "250"},
-		{"-vo", "0.20"},
-		{"-vmsd", "20"},
+		{"--vad-min-speech-duration-ms", "100"},
+		{"--vad-speech-pad-ms", "250"},
+		{"--vad-samples-overlap", "0.20"},
+		{"--vad-max-speech-duration-s", "20"},
 	} {
 		if !containsConsecutiveArguments(arguments, expected[0], expected[1]) {
-			t.Errorf("whisper arguments = %q, want %q followed by %q", arguments, expected[0], expected[1])
+			t.Errorf("VAD arguments = %q, want %q followed by %q", arguments, expected[0], expected[1])
 		}
 	}
-	for _, expected := range []string{"-sns", "--vad"} {
+	for _, expected := range []string{"-m", "-l", "-mc", "-sns", "--vad", "--vad-min-silence-duration-ms"} {
 		if !containsArgument(arguments, expected) {
-			t.Errorf("whisper arguments = %q, want %q", arguments, expected)
+			continue
 		}
+		t.Errorf("VAD arguments = %q, must not include transcription option %q", arguments, expected)
 	}
 }
 
@@ -1175,7 +1170,7 @@ func TestTranscribeRequiresVADModel(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\ntouch \"$COMMAND_SENTINEL\"\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\ntouch \"$COMMAND_SENTINEL\"\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\ntouch \"$COMMAND_SENTINEL\"\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	sentinelPath := filepath.Join(tempDir, "command-ran")
@@ -1196,6 +1191,44 @@ func TestTranscribeRequiresVADModel(t *testing.T) {
 	}
 	if _, statErr := os.Stat(sentinelPath); !os.IsNotExist(statErr) {
 		t.Errorf("external command ran without VAD model; stat error = %v", statErr)
+	}
+}
+
+func TestTranscribeRequiresDedicatedVADTool(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("test helper executables use POSIX shell")
+	}
+
+	tempDir := t.TempDir()
+	binDir := filepath.Join(tempDir, "bin")
+	if err := os.Mkdir(binDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nexit 0\n")
+	writeExecutable(t, filepath.Join(binDir, "ffprobe"), "#!/bin/sh\nexit 0\n")
+	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\nexit 0\n")
+	t.Setenv("PATH", binDir)
+
+	inputPath := filepath.Join(tempDir, "input.mp4")
+	modelPath := filepath.Join(tempDir, "model.bin")
+	for path, content := range map[string]string{
+		inputPath: "media",
+		modelPath: "model",
+		filepath.Join(tempDir, "ggml-silero-v6.2.0.bin"): "vad",
+	} {
+		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	_, err := Transcribe(context.Background(), Options{
+		InputPath: inputPath,
+		Language:  "ko",
+		Format:    "txt",
+		ModelPath: modelPath,
+	})
+	if err == nil || !strings.Contains(err.Error(), "whisper-vad-speech-segments not found") {
+		t.Fatalf("Transcribe() error = %v, want missing dedicated VAD tool error", err)
 	}
 }
 
@@ -1244,7 +1277,7 @@ func TestTranscribeStopsWhenFFmpegFails(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), "#!/bin/sh\nprintf 'bad media' >&2\nexit 3\n")
+	writeFakeFFmpeg(t, binDir, "#!/bin/sh\nprintf 'bad media' >&2\nexit 3\n")
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), "#!/bin/sh\ntouch \"$WHISPER_SENTINEL\"\n")
 	t.Setenv("PATH", binDir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	sentinelPath := filepath.Join(tempDir, "whisper-ran")
@@ -1278,7 +1311,7 @@ func TestTranscribeReportsMissingOutput(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -1352,7 +1385,7 @@ func TestTranscribeDoesNotOverwriteOutputCreatedDuringProcessing(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -1416,7 +1449,7 @@ func TestTranscribeRemovesPartialOutputWhenWhisperFails(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -1471,7 +1504,7 @@ func TestTranscribeForceReplacesExistingTranscript(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -1544,6 +1577,10 @@ func writeInputAndModel(t *testing.T, directory string) (string, string) {
 		if _, err := os.Stat(ffprobePath); os.IsNotExist(err) {
 			writeExecutable(t, ffprobePath, "#!/bin/sh\nprintf '60.0\\n'\n")
 		}
+		vadToolPath := filepath.Join(binDir, "whisper-vad-speech-segments")
+		if _, err := os.Stat(vadToolPath); os.IsNotExist(err) {
+			writeFakeVADTool(t, binDir, vadLogWithSegments(1))
+		}
 	}
 	return inputPath, modelPath
 }
@@ -1553,9 +1590,32 @@ func writeFakeFFprobe(t *testing.T, binDir, duration string) {
 	writeExecutable(t, filepath.Join(binDir, "ffprobe"), "#!/bin/sh\nprintf '"+duration+"\\n'\n")
 }
 
+func writeFakeFFmpeg(t *testing.T, binDir, content string) {
+	t.Helper()
+	const setupMarker = "set -eu\n"
+	const segmentSupport = `manifest=""
+previous=""
+for argument do
+  if [ "$previous" = "-segment_list" ]; then manifest="$argument"; fi
+  previous="$argument"
+done
+if [ -n "$manifest" ]; then
+  directory=${manifest%/*}
+  : > "$directory/vad_00000.wav"
+  printf '%s\n' 'vad_00000.wav,0.000000,100000.000000' > "$manifest"
+  exit 0
+fi
+`
+	if strings.Contains(content, setupMarker) {
+		content = strings.Replace(content, setupMarker, setupMarker+segmentSupport, 1)
+	}
+	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), content)
+}
+
 func writeSuccessfulWhisperPipeline(t *testing.T, binDir, transcript string) {
 	t.Helper()
 	t.Setenv("WHISPER_TEST_TEXT", transcript)
+	writeFakeVADTool(t, binDir, vadLogWithSegments(1))
 	writeExecutable(t, filepath.Join(binDir, "whisper-cli"), `#!/bin/sh
 set -eu
 if [ -n "${WHISPER_OOM_ONCE_FILE:-}" ] && [ ! -e "$WHISPER_OOM_ONCE_FILE" ]; then
@@ -1604,6 +1664,16 @@ for argument do
   esac
 done
 `)
+}
+
+func writeFakeVADTool(t *testing.T, binDir, log string) {
+	t.Helper()
+	content := "#!/bin/sh\nset -eu\nprintf '%s' " + shellSingleQuote(log) + " >&2\n"
+	writeExecutable(t, filepath.Join(binDir, "whisper-vad-speech-segments"), content)
+}
+
+func shellSingleQuote(value string) string {
+	return "'" + strings.ReplaceAll(value, "'", "'\"'\"'") + "'"
 }
 
 func writeExecutable(t *testing.T, path, content string) {

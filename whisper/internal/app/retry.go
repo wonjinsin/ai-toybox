@@ -9,12 +9,19 @@ import (
 )
 
 const (
-	retrySubtitleProbability   = 0.50
-	retryContextDuration       = time.Second
-	minimumRetryConfidenceGain = 0.05
+	retrySubtitleProbability    = 0.50
+	retryContextDuration        = time.Second
+	minimumRetryConfidenceGain  = 0.05
+	retryTranscriptionBatchSize = 128
 )
 
 type retryProgressFunc func(nextCursor int, cues []subtitleCue) error
+
+type retryBatchItem struct {
+	index  int
+	cue    subtitleCue
+	window audioChunk
+}
 
 func countLowConfidenceCues(cues []subtitleCue) int {
 	count := 0
@@ -36,47 +43,86 @@ func retryLowConfidenceCuesFromCursor(ctx context.Context, whisperRunner *whispe
 	}
 	result := append([]subtitleCue(nil), cues...)
 	lastSavedCursor := startCursor
-	for index := startCursor; index < len(cues); index++ {
-		cue := cues[index]
-		if cue.Probability >= retrySubtitleProbability {
+	for cursor := startCursor; cursor < len(cues); {
+		batch, nextCursor, err := collectRetryBatch(cues, cursor, mediaDuration)
+		if err != nil {
+			return nil, err
+		}
+		cursor = nextCursor
+		if len(batch) == 0 {
 			continue
 		}
-		window, err := retryWindowForCue(cue, mediaDuration)
+		selectedCues, err := transcribeRetryBatch(ctx, whisperRunner, ffmpegPath, whisperPath, modelPath, language, audioPath, directory, batch)
 		if err != nil {
 			return nil, err
 		}
-		retryDirectory, err := os.MkdirTemp(directory, "retry-*")
-		if err != nil {
-			return nil, fmt.Errorf("create retry chunk directory: %w", err)
+		updated := append([]subtitleCue(nil), result...)
+		for index, item := range batch {
+			updated[item.index] = selectedCues[index]
 		}
-		defer os.RemoveAll(retryDirectory)
-		chunks, err := extractTranscriptionChunks(ctx, ffmpegPath, audioPath, retryDirectory, []audioChunk{window})
-		if err != nil {
-			return nil, fmt.Errorf("extract retry chunk: %w", err)
-		}
-		if err := transcribeRetryAudioChunks(ctx, whisperRunner, whisperPath, modelPath, language, chunks); err != nil {
-			return nil, err
-		}
-		retryCues, err := loadTranscriptionCues(chunks)
-		if err != nil {
-			return nil, fmt.Errorf("load retry cues: %w", err)
-		}
-		candidate, err := retryCandidateForCue(cue, retryCues)
-		if err != nil {
-			return nil, err
-		}
-		result[index] = selectRetryCue(cue, candidate)
+		result = updated
 		if onProgress != nil {
-			if err := onProgress(index+1, result); err != nil {
+			if err := onProgress(nextCursor, result); err != nil {
 				return nil, err
 			}
-			lastSavedCursor = index + 1
+			lastSavedCursor = nextCursor
 		}
 	}
 	if onProgress != nil && lastSavedCursor < len(cues) {
 		if err := onProgress(len(cues), result); err != nil {
 			return nil, err
 		}
+	}
+	return result, nil
+}
+
+func collectRetryBatch(cues []subtitleCue, startCursor int, mediaDuration time.Duration) ([]retryBatchItem, int, error) {
+	batch := make([]retryBatchItem, 0, retryTranscriptionBatchSize)
+	cursor := startCursor
+	for cursor < len(cues) && len(batch) < retryTranscriptionBatchSize {
+		cue := cues[cursor]
+		if cue.Probability < retrySubtitleProbability {
+			window, err := retryWindowForCue(cue, mediaDuration)
+			if err != nil {
+				return nil, startCursor, err
+			}
+			batch = append(batch, retryBatchItem{index: cursor, cue: cue, window: window})
+		}
+		cursor++
+	}
+	return batch, cursor, nil
+}
+
+func transcribeRetryBatch(ctx context.Context, whisperRunner *whisperCommandRunner, ffmpegPath, whisperPath, modelPath, language, audioPath, directory string, batch []retryBatchItem) ([]subtitleCue, error) {
+	retryDirectory, err := os.MkdirTemp(directory, "retry-*")
+	if err != nil {
+		return nil, fmt.Errorf("create retry chunk directory: %w", err)
+	}
+	defer os.RemoveAll(retryDirectory)
+
+	windows := make([]audioChunk, len(batch))
+	for index, item := range batch {
+		windows[index] = item.window
+	}
+	chunks, err := extractTranscriptionChunks(ctx, ffmpegPath, audioPath, retryDirectory, windows)
+	if err != nil {
+		return nil, fmt.Errorf("extract retry chunks: %w", err)
+	}
+	if err := transcribeRetryAudioChunks(ctx, whisperRunner, whisperPath, modelPath, language, chunks); err != nil {
+		return nil, err
+	}
+
+	result := make([]subtitleCue, len(batch))
+	for index, item := range batch {
+		retryCues, err := loadTranscriptionCues(chunks[index : index+1])
+		if err != nil {
+			return nil, fmt.Errorf("load retry cues: %w", err)
+		}
+		candidate, err := retryCandidateForCue(item.cue, retryCues)
+		if err != nil {
+			return nil, err
+		}
+		result[index] = selectRetryCue(item.cue, candidate)
 	}
 	return result, nil
 }

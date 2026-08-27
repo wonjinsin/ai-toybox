@@ -86,6 +86,10 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	if err != nil {
 		return "", errors.New("whisper-cli not found: install it with 'brew install whisper-cpp'")
 	}
+	vadToolPath, err := exec.LookPath("whisper-vad-speech-segments")
+	if err != nil {
+		return "", errors.New("whisper-vad-speech-segments not found: install it with 'brew install whisper-cpp'")
+	}
 
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		return "", fmt.Errorf("create output directory %q: %w", outputDir, err)
@@ -94,7 +98,7 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 	var restoredCheckpoint incrementalCheckpoint
 	hasRestoredCheckpoint := false
 	if options.Format == "srt" {
-		fingerprint, err = newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, ffmpegPath, ffprobePath, options.Language)
+		fingerprint, err = newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, vadToolPath, ffmpegPath, ffprobePath, options.Language)
 		if err != nil {
 			return "", err
 		}
@@ -166,7 +170,7 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 		var speechSegments []speechSegment
 		if err := runWithProgress(progress, inputPath, "음성 구간 탐지 중...", overallStartedAt, func() error {
 			var operationErr error
-			speechSegments, operationErr = detectSpeechSegments(ctx, whisperRunner, whisperPath, modelPath, tempPath, options.Language, vadModelPath)
+			speechSegments, operationErr = detectSpeechSegments(ctx, whisperRunner.execute, ffmpegPath, vadToolPath, tempPath, vadModelPath)
 			return operationErr
 		}); err != nil {
 			return "", err
@@ -204,10 +208,13 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 		return "", err
 	}
 	if options.Format == "srt" && checkpointStage == checkpointStageTranscribing {
-		if err := runWithProgress(progress, inputPath, fmt.Sprintf("전사 중: %d개 (완료 %d/%d개)", len(transcriptionChunks), completedChunks, len(chunks)), overallStartedAt, func() error {
+		if err := runWithProgressUpdates(progress, inputPath, fmt.Sprintf("전사 중: %d개 (완료 %d/%d개)", len(transcriptionChunks), completedChunks, len(chunks)), overallStartedAt, func(updateMessage func(string)) error {
 			for start := 0; start < len(transcriptionChunks); start += transcriptionBatchSize {
 				end := min(start+transcriptionBatchSize, len(transcriptionChunks))
-				if err := transcribeAudioChunks(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks[start:end]); err != nil {
+				batchStart := completedChunks + start
+				if err := transcribeAudioChunksWithProgress(ctx, whisperRunner, whisperPath, modelPath, options.Language, transcriptionChunks[start:end], func(batchCompleted int) {
+					updateMessage(fmt.Sprintf("전사 중: %d개 (완료 %d/%d개)", len(transcriptionChunks), batchStart+batchCompleted, len(chunks)))
+				}); err != nil {
 					return err
 				}
 				globalStart := completedChunks + start
@@ -220,6 +227,7 @@ func transcribeWithProgressUsingRunner(ctx context.Context, options Options, pro
 				if err := persistIncrementalProgress(outputBase, options.Language, corrections, fingerprint, mediaDuration, chunks, globalEnd, rawCues); err != nil {
 					return err
 				}
+				updateMessage(fmt.Sprintf("전사 중: %d개 (완료 %d/%d개)", len(transcriptionChunks), globalEnd, len(chunks)))
 				reportProgress(progress, inputPath, fmt.Sprintf("전사 진행: %d/%d개 (partial SRT 저장됨)", globalEnd, len(chunks)))
 			}
 			return nil

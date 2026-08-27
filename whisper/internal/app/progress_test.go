@@ -52,3 +52,52 @@ func TestRunWithProgressIntervalReportsStageAndOverallElapsedWhileOperationRuns(
 		t.Fatalf("runWithProgressInterval() error = %v", err)
 	}
 }
+
+func TestRunWithProgressUpdatesIntervalReportsLatestMessage(t *testing.T) {
+	t.Parallel()
+
+	messages := make(chan string, 16)
+	releaseOperation := make(chan struct{})
+	statusUpdated := make(chan struct{})
+	var releaseOnce sync.Once
+	release := func() { releaseOnce.Do(func() { close(releaseOperation) }) }
+	t.Cleanup(release)
+	operationDone := make(chan error, 1)
+	reporter := func(_ string, message string) {
+		messages <- message
+	}
+
+	go func() {
+		operationDone <- runWithProgressUpdatesInterval(
+			reporter,
+			"meeting.mp4",
+			"전사 중: 84개 (완료 0/84개)",
+			time.Now(),
+			5*time.Millisecond,
+			func(updateMessage func(string)) error {
+				updateMessage("전사 중: 84개 (완료 32/84개)")
+				close(statusUpdated)
+				<-releaseOperation
+				return nil
+			},
+		)
+	}()
+
+	if message := <-messages; message != "전사 중: 84개 (완료 0/84개)" {
+		t.Fatalf("initial progress = %q, want initial transcription count", message)
+	}
+	<-statusUpdated
+	select {
+	case message := <-messages:
+		if !strings.Contains(message, "전사 중: 84개 (완료 32/84개)") {
+			t.Errorf("heartbeat = %q, want latest completed transcription count", message)
+		}
+	case <-time.After(100 * time.Millisecond):
+		t.Fatal("progress heartbeat was not reported")
+	}
+
+	release()
+	if err := <-operationDone; err != nil {
+		t.Fatalf("runWithProgressUpdatesInterval() error = %v", err)
+	}
+}

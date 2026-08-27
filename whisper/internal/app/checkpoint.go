@@ -11,8 +11,8 @@ import (
 
 const (
 	incrementalCheckpointVersion = 1
-	incrementalPipelineVersion   = 2
-	transcriptionBatchSize       = 32
+	incrementalPipelineVersion   = 4
+	transcriptionBatchSize       = 128
 	checkpointStageTranscribing  = "transcribing"
 	checkpointStageRetrying      = "retrying"
 	checkpointStageRetryComplete = "retry_complete"
@@ -37,6 +37,7 @@ type incrementalFingerprint struct {
 	Model           checkpointFileIdentity `json:"model"`
 	VADModel        checkpointFileIdentity `json:"vad_model"`
 	Whisper         checkpointFileIdentity `json:"whisper"`
+	VADTool         checkpointFileIdentity `json:"vad_tool"`
 	FFmpeg          checkpointFileIdentity `json:"ffmpeg"`
 	FFprobe         checkpointFileIdentity `json:"ffprobe"`
 }
@@ -109,7 +110,7 @@ func newIncrementalCheckpointWithState(fingerprint incrementalFingerprint, stage
 	}
 }
 
-func newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, ffmpegPath, ffprobePath, language string) (incrementalFingerprint, error) {
+func newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, vadToolPath, ffmpegPath, ffprobePath, language string) (incrementalFingerprint, error) {
 	paths := []struct {
 		label string
 		path  string
@@ -118,6 +119,7 @@ func newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, 
 		{label: "model", path: modelPath},
 		{label: "VAD model", path: vadModelPath},
 		{label: "whisper-cli", path: whisperPath},
+		{label: "whisper-vad-speech-segments", path: vadToolPath},
 		{label: "ffmpeg", path: ffmpegPath},
 		{label: "ffprobe", path: ffprobePath},
 	}
@@ -136,8 +138,9 @@ func newIncrementalFingerprint(inputPath, modelPath, vadModelPath, whisperPath, 
 		Model:           identities[1],
 		VADModel:        identities[2],
 		Whisper:         identities[3],
-		FFmpeg:          identities[4],
-		FFprobe:         identities[5],
+		VADTool:         identities[4],
+		FFmpeg:          identities[5],
+		FFprobe:         identities[6],
 	}, nil
 }
 

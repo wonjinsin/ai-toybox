@@ -32,8 +32,34 @@ func runWithProgress(reporter progressReporter, inputPath, message string, overa
 }
 
 func runWithProgressInterval(reporter progressReporter, inputPath, message string, overallStartedAt time.Time, interval time.Duration, operation func() error) error {
+	return runWithProgressMessageInterval(reporter, inputPath, func() string { return message }, overallStartedAt, interval, operation)
+}
+
+func runWithProgressUpdates(reporter progressReporter, inputPath, initialMessage string, overallStartedAt time.Time, operation func(updateMessage func(string)) error) error {
+	return runWithProgressUpdatesInterval(reporter, inputPath, initialMessage, overallStartedAt, progressHeartbeatInterval, operation)
+}
+
+func runWithProgressUpdatesInterval(reporter progressReporter, inputPath, initialMessage string, overallStartedAt time.Time, interval time.Duration, operation func(updateMessage func(string)) error) error {
+	var messageMutex sync.RWMutex
+	currentMessage := initialMessage
+	loadMessage := func() string {
+		messageMutex.RLock()
+		defer messageMutex.RUnlock()
+		return currentMessage
+	}
+	updateMessage := func(message string) {
+		messageMutex.Lock()
+		defer messageMutex.Unlock()
+		currentMessage = message
+	}
+	return runWithProgressMessageInterval(reporter, inputPath, loadMessage, overallStartedAt, interval, func() error {
+		return operation(updateMessage)
+	})
+}
+
+func runWithProgressMessageInterval(reporter progressReporter, inputPath string, message func() string, overallStartedAt time.Time, interval time.Duration, operation func() error) error {
 	stageStartedAt := time.Now()
-	reportProgress(reporter, inputPath, message)
+	reportProgress(reporter, inputPath, message())
 	if reporter == nil || interval <= 0 {
 		return operation()
 	}
@@ -57,7 +83,7 @@ func runWithProgressInterval(reporter progressReporter, inputPath, message strin
 				reportedAt := time.Now()
 				stageElapsed := reportedAt.Sub(stageStartedAt).Round(time.Second)
 				overallElapsed := reportedAt.Sub(overallStartedAt).Round(time.Second)
-				reportProgress(reporter, inputPath, fmt.Sprintf("%s (이 단계 경과 %s / 전체 %s)", message, stageElapsed, overallElapsed))
+				reportProgress(reporter, inputPath, fmt.Sprintf("%s (이 단계 경과 %s / 전체 %s)", message(), stageElapsed, overallElapsed))
 			}
 		}
 	}()

@@ -31,3 +31,31 @@ func TestBuildSpeechChunksKeepsOriginalTimelineAndTwentySecondLimit(t *testing.T
 		}
 	}
 }
+
+func TestBuildSpeechChunksCoalescesShortSilenceSplitByDedicatedVAD(t *testing.T) {
+	t.Parallel()
+
+	combined := buildSpeechChunks([]speechSegment{{Start: time.Second, End: 4 * time.Second}}, 10*time.Second)
+	split := buildSpeechChunks([]speechSegment{
+		{Start: time.Second, End: 2500 * time.Millisecond},
+		{Start: 2500 * time.Millisecond, End: 4 * time.Second},
+	}, 10*time.Second)
+
+	if !reflect.DeepEqual(split, combined) {
+		t.Errorf("split VAD chunks = %#v, want legacy-equivalent chunks %#v", split, combined)
+	}
+}
+
+func TestBuildSpeechChunksKeepsLanguageContextAcrossConversationalPause(t *testing.T) {
+	t.Parallel()
+
+	got := buildSpeechChunks([]speechSegment{
+		{Start: 10 * time.Second, End: 12 * time.Second},
+		{Start: 14 * time.Second, End: 16 * time.Second},
+	}, 30*time.Second)
+	want := []audioChunk{{Start: 9850 * time.Millisecond, End: 16150 * time.Millisecond}}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("buildSpeechChunks() = %#v, want one context-preserving chunk %#v", got, want)
+	}
+}

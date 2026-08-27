@@ -1,9 +1,70 @@
 package app
 
 import (
+	"context"
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 )
+
+func TestRetryLowConfidenceCuesBatchesModelInference(t *testing.T) {
+	if testing.Short() {
+		t.Skip("test uses helper processes")
+	}
+
+	directory := t.TempDir()
+	ffmpegPath := filepath.Join(directory, "ffmpeg")
+	writeExecutable(t, ffmpegPath, "#!/bin/sh\nset -eu\nfor argument do output=\"$argument\"; done\n: > \"$output\"\n")
+
+	cues := make([]subtitleCue, 129)
+	for index := range cues {
+		start := time.Duration(index*3+2) * time.Second
+		cues[index] = subtitleCue{
+			Start:       start,
+			End:         start + time.Second,
+			Text:        "원본",
+			Probability: 0.40,
+		}
+	}
+	var inferenceBatchSizes []int
+	runner := newWhisperCommandRunner(1, func(_ context.Context, _ string, arguments []string) (string, error) {
+		batchSize := 0
+		for _, argument := range arguments {
+			if filepath.Ext(argument) != ".wav" {
+				continue
+			}
+			batchSize++
+			payload := []byte(`{"transcription":[{"offsets":{"from":1100,"to":1900},"text":"개선","tokens":[{"text":" 개선","offsets":{"from":1100,"to":1900},"p":0.90}]}]}`)
+			if err := os.WriteFile(argument+".json", payload, 0o644); err != nil {
+				return "", err
+			}
+		}
+		inferenceBatchSizes = append(inferenceBatchSizes, batchSize)
+		return "", nil
+	})
+
+	got, err := retryLowConfidenceCues(
+		context.Background(), runner, ffmpegPath, "whisper-cli", "model.bin", "ko", "audio.wav", directory, cues, 390*time.Second,
+	)
+	if err != nil {
+		t.Fatalf("retryLowConfidenceCues() error = %v", err)
+	}
+	wantBatchSizes := []int{128, 1}
+	if len(inferenceBatchSizes) != len(wantBatchSizes) {
+		t.Fatalf("inference batch sizes = %v, want %v", inferenceBatchSizes, wantBatchSizes)
+	}
+	for index := range wantBatchSizes {
+		if inferenceBatchSizes[index] != wantBatchSizes[index] {
+			t.Errorf("inference batch sizes = %v, want %v", inferenceBatchSizes, wantBatchSizes)
+		}
+	}
+	for index, cue := range got {
+		if cue.Text != "개선" {
+			t.Errorf("cue %d text = %q, want retry result", index, cue.Text)
+		}
+	}
+}
 
 func TestSelectRetryCueUsesSpecifiedConfidenceThresholds(t *testing.T) {
 	t.Parallel()

@@ -69,7 +69,7 @@ func TestExecuteReportsCreatedTranscript(t *testing.T) {
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 for argument do output="$argument"; done
 : > "$output"
@@ -397,7 +397,7 @@ func executeDirectoryWithOptions(
 	if err := os.Mkdir(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeExecutable(t, filepath.Join(binDir, "ffmpeg"), `#!/bin/sh
+	writeFakeFFmpeg(t, binDir, `#!/bin/sh
 set -eu
 input=
 output=
