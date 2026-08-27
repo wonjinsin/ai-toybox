@@ -304,6 +304,20 @@ func TestCleanSubtitleCuesKeepsSentencesContainingKnownJapanesePhrase(t *testing
 	}
 }
 
+func TestCleanSubtitleCuesKeepsKnownJapanesePhraseDecoratedWithSymbol(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "★ご視聴ありがとうございました", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "ご視聴ありがとうございました", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 5*time.Second)
+	if len(got) != 2 {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want symbol-decorated phrase preserved", len(got))
+	}
+}
+
 func TestCleanSubtitleCuesKeepsNearbyDuplicateWithoutConfirmedBoundary(t *testing.T) {
 	t.Parallel()
 

@@ -130,7 +130,7 @@ func removeRepeatedJapaneseHallucinations(cues []subtitleCue) []subtitleCue {
 
 func japaneseHallucinationKey(text string) string {
 	compact := strings.Map(func(character rune) rune {
-		if unicode.IsSpace(character) || unicode.IsPunct(character) || unicode.IsSymbol(character) {
+		if unicode.IsSpace(character) || unicode.IsPunct(character) {
 			return -1
 		}
 		return character
