@@ -453,6 +453,20 @@ func TestCleanSubtitleCuesKeepsKnownJapanesePhraseDecoratedWithSymbol(t *testing
 	}
 }
 
+func TestCleanSubtitleCuesKeepsJapaneseHallucinationPhraseWrappedInPunctuation(t *testing.T) {
+	t.Parallel()
+
+	cues := []subtitleCue{
+		{Start: time.Second, End: 2 * time.Second, Text: "「次の動画でお会いしましょう」", Probability: 0.9},
+		{Start: 3 * time.Second, End: 4 * time.Second, Text: "「次の動画でお会いしましょう」", Probability: 0.9},
+	}
+
+	got := cleanSubtitleCues(cues, "ja", nil, 6*time.Second)
+	if len(got) != len(cues) {
+		t.Fatalf("len(cleanSubtitleCues()) = %d, want punctuation-wrapped phrases preserved", len(got))
+	}
+}
+
 func TestCleanSubtitleCuesKeepsNearbyDuplicateWithoutConfirmedBoundary(t *testing.T) {
 	t.Parallel()
 

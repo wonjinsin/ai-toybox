@@ -25,7 +25,7 @@ const minimumSubtitleProbability = 0.32
 const (
 	minimumSpecificHallucinationOccurrences = 2
 	minimumGoodNightOccurrences             = 3
-	minimumGenericThanksOccurrences          = 4
+	minimumGenericThanksOccurrences         = 4
 )
 
 const (
@@ -137,11 +137,14 @@ func removeRepeatedJapaneseHallucinations(cues []subtitleCue) []subtitleCue {
 
 func japaneseHallucinationRule(text string) (string, int) {
 	compact := strings.Map(func(character rune) rune {
-		if unicode.IsSpace(character) || unicode.IsPunct(character) {
+		if unicode.IsSpace(character) {
 			return -1
 		}
 		return character
 	}, text)
+	compact = strings.TrimRightFunc(compact, func(character rune) bool {
+		return strings.ContainsRune("。．.!！?？", character)
+	})
 	switch compact {
 	case "ご視聴ありがとうございました", "ご視聴ありがとうございます",
 		"ご視聴いただきありがとうございました", "ご視聴いただきありがとうございます",
