@@ -2,18 +2,23 @@ package main
 
 import (
 	"context"
+	"io"
 	"os"
 	"os/signal"
 	"syscall"
-)
 
-import "github.com/wonjinsin/ai-toybox/whisper/internal/app"
+	"github.com/wonjinsin/ai-toybox/whisper/internal/bootstrap"
+)
 
 func main() {
 	ctx, stop := signalContext()
 	defer stop()
 
-	os.Exit(app.Execute(ctx, os.Args[1:], os.Stdout, os.Stderr))
+	os.Exit(run(ctx, os.Args[1:], os.Stdout, os.Stderr))
+}
+
+func run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
+	return bootstrap.Run(ctx, args, stdout, stderr)
 }
 
 func signalContext() (context.Context, context.CancelFunc) {

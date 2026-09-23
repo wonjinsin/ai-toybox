@@ -193,12 +193,28 @@ VAD 모델은 다음 순서로 찾습니다.
 
 VAD 모델은 필수입니다. 찾지 못하면 시간 복원 품질을 낮춘 대체 경로로 진행하지 않고 실행을 중단합니다. 구형 v5.1.2 모델은 사용하지 않습니다.
 
-## 개발 검증
+## Development and Architecture
+
+Architectural roles are separate Go packages:
+
+- `internal/domain`: pure subtitle, timing, and retry policies.
+- `internal/usecase`: transcription, batch, resume, and retry orchestration.
+- `internal/port/in`: transcription interfaces, requests, results, and progress responses.
+- `internal/port/out`: audio, recognition, discovery, session, and storage contracts.
+- `internal/port`: output-collision errors shared across the boundaries.
+- `internal/adapter/in/cli`: command-line input and presentation.
+- `internal/adapter/out`: FFmpeg, Whisper, filesystem, subtitle, and process implementations.
+- `internal/bootstrap`: concrete wiring, per-job sessions, and the shared inference runner.
+- `cmd/whisper-local`: process entry point and signal handling; delegates to bootstrap.
+
+Adapters never import `usecase`. Use cases implement input ports and consume output ports. The two port directions do not import each other. Read `bootstrap/run.go`, `port/in/transcription.go`, and `usecase/service.go` to follow a request.
+
+See [ADR 0002](docs/adr/0002-hexagonal-architecture.md) for dependency rules and compatibility contracts.
 
 ```bash
-go test -race -cover ./internal/app
-go test ./...
-go vet ./...
+make test   # Race-enabled tests; aggregate coverage must be at least 80%.
+make check  # Formatting and go vet.
+make build  # Build bin/whisper-local.
 ```
 
-테스트는 실제 셸 명령 문자열을 조합하지 않고 `ffmpeg`, `whisper-cli`, `whisper-vad-speech-segments`에 인자를 분리해 전달하는지 검증합니다. 공백과 한글이 포함된 파일 경로도 지원합니다.
+Use-case tests use in-memory ports. Architecture tests enforce import direction and reject the former `app`, `application`, and `adapters` packages. Adapter and integration tests verify argument separation, paths containing spaces and Korean characters, checkpoint compatibility, safe publication, cancellation, and inference serialization. Media remains local throughout the pipeline.
