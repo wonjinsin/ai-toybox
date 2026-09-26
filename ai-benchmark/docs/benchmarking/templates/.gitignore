@@ -1,0 +1,2 @@
+# Preserve the empty diagnostic template despite global log exclusions.
+!run/errors.log

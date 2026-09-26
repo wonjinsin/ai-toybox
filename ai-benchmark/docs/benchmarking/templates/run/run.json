@@ -1,0 +1,92 @@
+{
+  "format_version": "0.2",
+  "record_status": "template",
+  "task_id": null,
+  "run_id": null,
+  "experiment": {
+    "path": null,
+    "sha256": null
+  },
+  "cli": {
+    "name": null,
+    "version": null,
+    "mode": "non_interactive"
+  },
+  "requested": {
+    "model": null,
+    "effort": null,
+    "skills": null,
+    "tools": null,
+    "mcp_servers": null,
+    "agents": null
+  },
+  "prompt": {
+    "path": "prompt.md",
+    "version": null,
+    "sha256": null,
+    "task_snapshot_path": null,
+    "task_sha256": null,
+    "treatment_snapshot_path": null,
+    "treatment_sha256": null
+  },
+  "context": {
+    "known_instruction_sources": null,
+    "configuration_evidence_path": null,
+    "isolation_status": "unverified"
+  },
+  "reported": {
+    "model": null,
+    "model_version": null,
+    "effort": null,
+    "evidence_source": null
+  },
+  "execution": {
+    "status": "not_started",
+    "started_at": null,
+    "finished_at": null,
+    "duration_ms": null,
+    "timing_method": null,
+    "timing_scope": null,
+    "exit_code": null
+  },
+  "usage": {
+    "capture_status": "not_collected",
+    "input_tokens": null,
+    "cached_input_tokens": null,
+    "output_tokens": null,
+    "reasoning_output_tokens": null,
+    "scope": null,
+    "evidence_source": null,
+    "reason": null
+  },
+  "capture": {
+    "response": {
+      "path": "response.txt",
+      "status": "not_collected",
+      "method": null,
+      "scope": "final_assistant_message",
+      "reason": null
+    },
+    "stderr": {
+      "path": "errors.log",
+      "status": "not_collected",
+      "method": null,
+      "reason": null
+    },
+    "events": {
+      "path": null,
+      "status": "not_collected",
+      "method": null,
+      "reason": null
+    }
+  },
+  "compliance": {
+    "status": "not_checked",
+    "observed_capability_usage": null,
+    "evidence_source": null
+  },
+  "artifact_validation": {
+    "status": "not_checked",
+    "record_path": null
+  }
+}
