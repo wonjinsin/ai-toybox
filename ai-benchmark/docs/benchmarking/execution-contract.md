@@ -16,7 +16,7 @@ Status: Contract under development; preparation implemented, live execution unsu
 
 The operator selects one experiment input. A deterministic launcher would validate it, prepare the allowed environment, invoke the selected CLI, and collect evidence. It would perform no model inference, task solving, artifact repair, or undeclared retries. Deterministic input preparation does not guarantee identical model outputs on repeated runs.
 
-Direct CLI commands remain possible, but the operator would need to perform the same configuration and capture steps manually. A small configuration-driven preparer uses Python provisionally; see [ADR 0008](../adr/0008-use-a-stdlib-cli-preparation-tool.md). This does not establish the safety or fairness of a direct CLI invocation.
+Direct CLI commands remain possible, but the operator would need to perform the same configuration and capture steps manually. The configuration-driven preparer uses Go as selected in [ADR 0009](../adr/0009-use-go-for-the-cli-tool.md). This does not establish the safety or fairness of a direct CLI invocation.
 
 ## Input Template
 

@@ -2,11 +2,13 @@
 
 Date: 2026-09-26
 
-Status: Proposed (provisional implementation; language choice awaits confirmation).
+Status: Rejected. Replaced by [ADR 0009](0009-use-go-for-the-cli-tool.md) on 2026-09-28.
 
 ## Context
 
 The user requested progress on prestructured, explicitly configured CLI benchmark runs. Actual model, effort, and capability selections remain open. The installed CLI's strict isolation controls have not been verified.
+
+The Python implementation was provisional. This proposal was never accepted; the user selected Go instead. The original proposal below is retained as decision history.
 
 ## Proposed Decision
 
