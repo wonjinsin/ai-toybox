@@ -1,28 +1,11 @@
 {
-  "format_version": "0.1",
-  "status": "draft",
-  "experiment_id": null,
-  "task": {
-    "id": null,
-    "prompt_path": null,
-    "prompt_version": null,
-    "prompt_sha256": null
-  },
-  "cli": {
-    "name": "codex",
-    "required_version": null,
-    "mode": "non_interactive"
-  },
+  "task_id": null,
+  "prompt": "prompt.md",
+  "prompt_version": null,
   "model": null,
   "effort": null,
-  "capabilities": {
-    "skills": null,
-    "tools": null,
-    "mcp_servers": null,
-    "agents": null
-  },
-  "artifact": {
-    "delivery": null
-  },
-  "isolation_profile": null
+  "skills": null,
+  "tools": null,
+  "mcp_servers": null,
+  "agents": null
 }

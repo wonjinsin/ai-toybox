@@ -4,6 +4,10 @@ Date: 2026-09-28
 
 Status: Accepted
 
+Scope update: [ADR 0010](0010-simplify-the-go-runner.md) supersedes the command,
+experiment-input compatibility, and generic collector portions of this decision.
+The Go language choice and run-record format remain in effect.
+
 ## Context
 
 The first CLI preparer was implemented in Python while its language choice remained provisional in [ADR 0008](0008-use-a-stdlib-cli-preparation-tool.md). The user explicitly selected Go when answering the language question.
