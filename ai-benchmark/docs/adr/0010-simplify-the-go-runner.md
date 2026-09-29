@@ -37,7 +37,9 @@ benchmark archives are migrated.
 The simplified tool currently records inputs only. Codex execution remains
 blocked for every combination because complete capability enforcement has not
 been verified. There is no runnable model-only adapter, unsafe fallback, or API
-integration. Selecting an API instead of the CLI remains a user decision.
+integration. [ADR 0011](0011-retain-codex-cli-with-enforced-capability-boundaries.md)
+subsequently records the user's choice to retain Codex CLI and keep execution
+blocked until restrictions are verified.
 
 Model/effort choices, the final benchmark prompt, capability combinations,
 artifact delivery, comparison UI, and evaluation remain undecided.

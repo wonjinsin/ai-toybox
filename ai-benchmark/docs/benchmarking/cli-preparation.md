@@ -55,8 +55,9 @@ is copied; these archives are not portable replay packages.
 
 Exit **0** is help; **2** is invalid input or a filesystem error. There is
 currently no successful live execution path. The binary does not call Codex,
-an API, or a model. A future execution path requires verified restrictions;
-switching to an API requires a separate user decision.
+an API, or a model. [ADR 0011](../adr/0011-retain-codex-cli-with-enforced-capability-boundaries.md)
+retains Codex CLI as the intended interface. Live execution stays blocked until
+the selected capability restrictions are verified.
 
 ## Development
 

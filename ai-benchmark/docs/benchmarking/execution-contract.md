@@ -2,6 +2,10 @@
 
 Status: strict capability conditions retained; live execution unsupported.
 
+[ADR 0011](../adr/0011-retain-codex-cli-with-enforced-capability-boundaries.md)
+records the user's decision to keep Codex CLI and block execution until the
+selected capability restrictions are verified.
+
 ## Current Workflow
 
 One command reads an experiment file, validates the explicit declarations, and
