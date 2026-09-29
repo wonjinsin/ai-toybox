@@ -46,6 +46,6 @@ artifact delivery, comparison UI, and evaluation remain undecided.
 
 ## Supporting Material
 
-- [Usage](../benchmarking/cli-preparation.md)
+- [Usage](../../README.md)
 - [Execution boundary](../benchmarking/execution-contract.md)
 - [Record format](../benchmarking/run-record-format.md)

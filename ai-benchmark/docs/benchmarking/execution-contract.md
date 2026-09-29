@@ -10,7 +10,7 @@ selected capability restrictions are verified.
 
 One command reads an experiment file, validates the explicit declarations, and
 copies the prompt and configuration into a new archive. It computes both hashes
-and records the unsupported execution condition. See the [usage guide](cli-preparation.md).
+and records the unsupported execution condition. See the [README](../../README.md).
 
 The archive preserves the requested model, effort, prompt version, and separate
 Skills/Tools/MCP/Agents lists. It does not claim that any request was sent or that

@@ -30,5 +30,5 @@ This decision applies to the CLI tool. The comparison UI stack, generated artifa
 
 ## Supporting Material
 
-- [CLI preparation guide](../benchmarking/cli-preparation.md)
+- [Usage guide](../../README.md)
 - [Execution contract](../benchmarking/execution-contract.md)

@@ -26,5 +26,5 @@ The implementation uses Python 3.9-compatible code and requires no runtime packa
 
 ## Supporting Material
 
-- [CLI preparation guide](../benchmarking/cli-preparation.md)
+- [Usage guide](../../README.md)
 - [Execution contract](../benchmarking/execution-contract.md)
