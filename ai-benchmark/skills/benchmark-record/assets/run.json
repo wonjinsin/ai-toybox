@@ -1,0 +1,10 @@
+{
+  "format_version": "2.0",
+  "status": "running",
+  "model": null,
+  "effort": null,
+  "duration_ms": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": []
+}

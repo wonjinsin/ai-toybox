@@ -1,11 +1,3 @@
-# Shared Task Prompt Draft: Small 3D Solar System
-
-Status: Draft for review. Do not submit this document as a benchmark prompt.
-
-The task text below contains the requirements accepted in ADRs 0003 through 0005. Before freezing an executable prompt, agree the exact Three.js release and delivery, artifact submission format, and concrete execution conditions. The final prompt will include those agreed constraints and exclude these review notes.
-
-## Proposed Task Text
-
 Create an HTML-based interactive 3D solar system using Three.js.
 
 Requirements:
