@@ -1,6 +1,7 @@
 ---
 name: benchmark-record
-description: "Use when a user asks to run the fixed Solar System benchmark in Codex, Claude Code, or another agent environment, including an invocation with no additional task text."
+description: "Use when the user explicitly invokes benchmark-record to run the fixed Solar System benchmark."
+disable-model-invocation: true
 ---
 
 # Run the Solar System Benchmark
@@ -9,6 +10,10 @@ One invocation builds the [fixed task](assets/solar-system-prompt.md), saves its
 small record, and answers the user. Finish recording before the final reply;
 never require a second collection request. This skill only runs the benchmark;
 analysis and comparison are outside its scope.
+
+Use only skills explicitly invoked in the same user request. Do not load or
+invoke another skill for implementation, verification, or recording merely
+because it seems relevant. Use ordinary host tools instead.
 
 Read [the record format](references/record-format.md) and use
 [the template](assets/run.json). Resolve resources relative to this file.

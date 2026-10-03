@@ -31,6 +31,12 @@ copies the fixed prompt, implements the task, performs available checks, and
 saves the record before answering. Use a fresh conversation for each attempt
 when practical. You can name a different output root in the same request.
 
+Only skills explicitly selected in the current request are used for a benchmark
+run. Selecting `$benchmark-record` or `/benchmark-record` selects that skill
+alone; task similarity does not authorize other skills. An unselected skill is
+not run automatically. Host instructions with higher priority may still require
+another skill, so check the agent's disclosure when comparing runs.
+
 If skill discovery is unavailable, ask the agent to read
 `skills/benchmark-record/SKILL.md` and run the benchmark. Reopen the project or
 start a new session if an existing session has not picked up the skill.

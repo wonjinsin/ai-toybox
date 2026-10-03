@@ -1,6 +1,7 @@
 ---
 name: benchmark-record
-description: "Use when a user asks to run the fixed Solar System benchmark in Codex, Claude Code, or another agent environment, including an invocation with no additional task text."
+description: "Use when the user explicitly invokes benchmark-record to run the fixed Solar System benchmark."
+disable-model-invocation: true
 ---
 
 Read and follow [the shared skill](../../../skills/benchmark-record/SKILL.md).
