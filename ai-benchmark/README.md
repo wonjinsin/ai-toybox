@@ -32,11 +32,25 @@ copies the fixed prompt, implements the task, performs available checks, and
 saves the record before answering. Use a fresh conversation for each attempt
 when practical. You can name a different output root in the same request.
 
-Only skills explicitly selected in the current request are used for a benchmark
-run. Selecting `$benchmark-record` or `/benchmark-record` selects that skill
-alone; task similarity does not authorize other skills. An unselected skill is
-not run automatically. Host instructions with higher priority may still require
-another skill, so check the agent's disclosure when comparing runs.
+During benchmark execution and recording, select only skills explicitly invoked
+in the current request. `$benchmark-record` or `/benchmark-record` selects that
+skill alone unless other skills are also selected. Quoted examples or discussion
+do not select a skill. Reading the entrypoint, shared skill, and bundled resources
+counts as using the same skill.
+
+Instructions already injected and active through the host or hooks continue to
+apply, including after resume or compaction. They do not authorize automatic
+routing to additional skills, dependencies, or follow-up workflows. Delegated
+benchmark work follows the same restriction and uses ordinary host tools.
+
+Hook injection alone does not give an instruction higher priority. Higher-priority
+host requirements may still require additional skills. The agent records their
+names and reasons in `run.json.notes`, separately from known active injected skill
+instructions, and discloses required additions in the final reply. Check these
+notes when comparing runs; they do not establish full environment isolation.
+The restriction applies to benchmark work; ordinary repository investigation and
+maintenance keep normal host skill selection. `benchmark-record` itself is never
+selected automatically.
 
 If skill discovery is unavailable, ask the agent to read
 `skills/benchmark-record/SKILL.md` and run the benchmark. Reopen the project or
@@ -67,8 +81,8 @@ The [record template](skills/benchmark-record/assets/run.json) keeps:
 - Model and effort, when known.
 - Input and output token totals, when available for the measured work.
 - Elapsed implementation and verification time in milliseconds.
-- A format version, execution status and a few short notes for sources, missing
-  values, verification limits or failure.
+- A format version, execution status and a few short notes for skill context,
+  sources, missing values, verification limits or failure.
 
 There are no response copies, session/turn identifiers, hashes, transcript or
 evidence archives, cache/reasoning breakdowns, or previous-record backups.

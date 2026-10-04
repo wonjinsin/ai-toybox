@@ -11,9 +11,23 @@ small record, and answers the user. Finish recording before the final reply;
 never require a second collection request. This skill only runs the benchmark;
 analysis and comparison are outside its scope.
 
-Use only skills explicitly invoked in the same user request. Do not load or
-invoke another skill for implementation, verification, or recording merely
-because it seems relevant. Use ordinary host tools instead.
+During this benchmark invocation, select only skills explicitly invoked in the
+same user request. An explicit request to read this skill and run it also selects
+`benchmark-record`; quoted examples or discussion do not select other skills.
+The discovery entrypoint, this shared skill, and bundled resources are one skill.
+
+Continue applying instructions already injected and active through the host or
+hooks, including after resume or compaction. Their presence does not authorize
+additional skills through automatic routing, dependencies, or follow-up workflows.
+Do not load or invoke another skill merely because it seems relevant to
+implementation, verification, or recording. Use ordinary host tools and pass the
+same restriction to delegated benchmark work.
+
+Follow actual instruction priority; hook injection alone does not give an
+instruction higher priority. Obey higher-priority host requirements for additional
+skills. Record known active injected skill instructions separately from required
+additions and their reasons in `run.json.notes`, following the record format.
+Disclose required additions in the final reply; do not claim an isolated run.
 
 Read [the record format](references/record-format.md) and use
 [the template](assets/run.json). Resolve resources relative to this file.

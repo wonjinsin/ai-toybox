@@ -38,12 +38,30 @@ illustrative model name.
 | `model`, `effort` | Known host settings or the user's explicit selection. Unknown values stay null; note a user-declared value when it was not observed. |
 | `duration_ms` | Nonnegative elapsed milliseconds for implementation and its checks. |
 | `input_tokens`, `output_tokens` | Nonnegative integer totals for that same work interval, or null when unavailable. |
-| `notes` | A few short notes for measurement sources/gaps, verification limits or failure. Do not add nested audit data or copy logs. |
+| `notes` | A few short notes for skill context, measurement sources/gaps, verification limits or failure. Do not add nested audit data or copy logs. |
 
 Do not add fields, hashes, response snapshots, cache/reasoning breakdowns, session
 identifiers, evidence archives or manifest backups. The template is the complete
 record. Missing measurements remain null, never zero or an estimate, and do not
 require another user request.
+
+## Skill context notes
+
+Before finalizing the record, identify known active skill instructions injected
+by the host or hooks separately from additional skills required by higher-priority
+host instructions. Include the name and reason for each required addition, and
+disclose those additions in the final reply. Update these notes if requirements
+change during the run, including after resume or compaction.
+
+Keep the information in existing `notes` strings, for example:
+
+- `Injected skill instructions: using-harness-flow, caveman (SessionStart).`
+- `Additional required skill: example-skill (host requires it for verification).`
+
+Record only observed or explicitly supplied context. Do not scan unrelated
+histories, collect hook logs, or invent an injected skill list. Missing visibility
+does not establish that no other instructions were active; do not claim isolation.
+These notes do not authorize additional skills or change the measurement boundary.
 
 ## Measurement boundary
 
