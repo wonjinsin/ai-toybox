@@ -32,6 +32,11 @@ must use the same workflow without provider-specific collectors.
   Use normalized host/model/effort names and a Korea-time invocation timestamp
   (`YYYYMMDD-HHmmss`), with numbered suffixes for collisions. Unknown name
   components use `unknown`; JSON retains original known settings or null.
+- Resolve model and effort automatically before naming a run. Prefer current-run
+  observations, then explicit user declarations, then host configuration. Allow
+  configuration-derived values when runtime metadata is unavailable, recording
+  their source and unverified overrides in existing notes. Resolve each field
+  independently; use unknown only after available sources have been checked.
 - Use ordinary host tools and available scoped usage. Missing or ambiguous
   measurements stay null with a short reason. Finalize the record anyway;
   unknown metrics must not require another user action.

@@ -72,9 +72,21 @@ The run ID is the invocation-start time in Korea (`Asia/Seoul`), formatted as
 `-02`, then `-03`, without overwriting it.
 
 Name components use lowercase; spaces and path separators become hyphens.
-Unknown model/effort values appear as `unknown` in the name and null in JSON.
-JSON preserves known settings as originally reported. See the complete
+The skill automatically checks current-run metadata, explicit user selections,
+and the current host's configuration before naming the run. It resolves model
+and effort separately. When runtime verification is unavailable, it can use
+configuration-derived values and labels their source and unverified overrides
+in `notes`. Only unresolved fields appear as `unknown` in the name and null in
+JSON. JSON preserves selected identifiers or aliases as originally reported;
+aliases are not guessed into exact model versions. See
+[automatic settings resolution](skills/benchmark-record/references/settings-resolution.md)
+and the complete
 [directory naming rules](skills/benchmark-record/references/record-format.md#run-directory).
+
+Codex checks `model` and `model_reasoning_effort` in applicable configuration
+when runtime metadata is missing. Claude Code also checks its active effort
+environment and model/effort configuration, including user, project and local
+settings. Neither path launches another model or requires a second user request.
 
 The [record template](skills/benchmark-record/assets/run.json) keeps:
 

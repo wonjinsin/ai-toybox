@@ -12,8 +12,11 @@ Create one child named `<agent>-<model>-<effort>-<run-id>` for each invocation.
 
 - `agent`: the actual host, such as `codex` or `claude-code`; do not infer it
   from the model or the discovery entrypoint. Use `unknown` if unavailable.
-- `model`, `effort`: the known settings used for the record. Use `unknown` for
-  missing values in the directory name and null in JSON; never guess settings.
+- `model`, `effort`: the values selected by
+  [automatic settings resolution](settings-resolution.md). Check current-run
+  sources and host configuration before using `unknown` in the directory name
+  and null in JSON. Configuration-derived values are allowed when runtime
+  verification is unavailable; note their source and that limitation, never guess.
 - Normalize these three name components to lowercase. Replace runs of characters
   outside `a-z`, `0-9`, `.` and `-` with `-`, collapse repeated hyphens, and trim
   leading/trailing dots and hyphens. Use `unknown` if empty. Preserve original
@@ -35,7 +38,7 @@ illustrative model name.
 | --- | --- |
 | `format_version` | `2.0`; distinguishes these work-interval metrics from older whole-turn records. |
 | `status` | `running`, `completed`, `failed` or `interrupted`. Completion means the attempt finished, not that every requirement was verified. |
-| `model`, `effort` | Known host settings or the user's explicit selection. Unknown values stay null; note a user-declared value when it was not observed. |
+| `model`, `effort` | Current-run values, user-declared selections, or configuration-derived values, in that priority order. Resolve each separately; name its source and verification limits in notes. Unresolved values stay null. |
 | `duration_ms` | Nonnegative elapsed milliseconds for implementation and its checks. |
 | `input_tokens`, `output_tokens` | Nonnegative integer totals for that same work interval, or null when unavailable. |
 | `notes` | A few short notes for skill context, measurement sources/gaps, verification limits or failure. Do not add nested audit data or copy logs. |

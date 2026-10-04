@@ -36,12 +36,18 @@ collector script, hook, or background process is needed.
 
 ## Run
 
-1. Create `runs/<agent>-<model>-<effort>-<run-id>/` under the project root using
+1. Read the real invocation-start clock, then automatically
+   [resolve model and effort](references/settings-resolution.md) before reserving
+   a directory. Inspect available current-run sources and the current host's
+   configuration; missing injected metadata alone is not a reason to stop lookup.
+   Resolve each field independently and retain short source notes. Create
+   `runs/<agent>-<model>-<effort>-<run-id>/` under the project root using
    the [directory naming rules](references/record-format.md#run-directory).
    Use a requested output root when supplied. Never overwrite another run.
    Copy the bundled task exactly to `prompt.md`.
    Use it without requesting another prompt or substituting an unrelated task.
-   Save an initial `run.json` with status `running` and the known model/effort.
+   Save an initial `run.json` with status `running`, the resolved model/effort,
+   and their source notes. Keep these notes in the final record.
 2. Immediately before implementation, read a real clock. If trustworthy usage
    counters for the current execution are already accessible, capture a matching
    baseline. Keep measurement observations only as working data; do not create
