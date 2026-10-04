@@ -7,7 +7,8 @@ One invocation completes the workflow; there is no follow-up collection step.
 The [fixed prompt](skills/benchmark-record/assets/solar-system-prompt.md) requires
 one sun and exactly three planets in a Three.js scene, automatic orbits, distinct
 planet sizes/colors/speeds, pause/resume, and a global speed control that preserves
-relative orbital speeds.
+relative orbital speeds. The saved `output/index.html` must also run when opened
+directly in a browser without starting a server or running a build step to view it.
 
 ## Run
 
@@ -46,7 +47,7 @@ start a new session if an existing session has not picked up the skill.
 ```text
 runs/<agent>-<model>-<effort>-<run-id>/
   prompt.md           # Exact fixed task
-  output/index.html   # Solar System; local resources stay in output/
+  output/index.html   # Open directly in a browser; local resources stay in output/
   run.json            # Minimal settings and measurements
 ```
 
@@ -72,14 +73,17 @@ The [record template](skills/benchmark-record/assets/run.json) keeps:
 There are no response copies, session/turn identifiers, hashes, transcript or
 evidence archives, cache/reasoning breakdowns, or previous-record backups.
 The prompt and HTML are the retained task and result. Runs and local experiments
-are ignored by Git; existing archives remain unchanged.
+are ignored by Git; existing archives remain unchanged. Earlier runs retain their
+original prompts and may require a server, so compare them separately from runs
+using the current prompt.
 
 ## Measurement Boundary
 
 Measurement starts immediately before implementation and ends after its checks.
 Record processing and the final user-facing reply are outside that interval.
 Time includes the model's implementation work, tools and verification, not only
-API latency. The task does not pin a Three.js version or delivery method.
+API latency. The task does not pin a Three.js version; delivery must work via
+`file://`.
 
 The agent uses normal clock and host inspection tools. It uses scoped final
 usage or matching cumulative counter differences when available. Input totals

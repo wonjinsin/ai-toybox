@@ -7,5 +7,6 @@ Requirements:
 3. Give the three planets different sizes, colors, and orbital speeds.
 4. Provide a pause/resume button that stops and resumes the planets' orbital motion.
 5. Provide a global speed control that changes all orbital speeds while preserving their relative differences.
+6. Make `output/index.html` run when opened directly in a browser as a `file://` page, without starting a server or running a build step to view it. Use `file://`-compatible scripts and assets; do not rely on local ES module scripts/imports or `fetch()` or XHR for local files.
 
 The intended experience is a simple scene whose automatic motion and two controls make its behavior easy to observe.

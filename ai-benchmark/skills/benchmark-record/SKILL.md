@@ -33,8 +33,11 @@ collector script, hook, or background process is needed.
    baseline. Keep measurement observations only as working data; do not create
    extra transcript or evidence archives. Unavailable usage must not block work.
 3. Build the fixed Solar System and save its entrypoint as `output/index.html`,
-   with local resources under `output/`. Perform the checks available in the
-   current environment. Do not claim browser behavior was verified from code alone.
+   with local resources under `output/`. When a browser is available, open the
+   HTML via `file://` and check automatic motion, pause/resume, and speed control
+   without starting a server. Otherwise, inspect scripts and assets for `file://`
+   compatibility and missing local files, then note the browser verification
+   gap. Do not claim browser behavior was verified from code alone.
 4. Immediately after implementation and its checks finish, capture the end clock
    and any matching usage endpoint. This closes the measured work interval.
    Determine the available duration and input/output tokens using the record
