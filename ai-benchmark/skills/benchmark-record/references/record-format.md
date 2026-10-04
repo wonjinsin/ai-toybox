@@ -87,9 +87,15 @@ reply. Include retries and child usage only when attributable without double
 counting. If a model request spans both work and recording and cannot be split,
 or updates arrive too late, leave affected totals null instead of estimating.
 
+Automatically look for a current-session source using
+[usage resolution](usage-resolution.md), including the host's existing local
+session file when current-run counters are not injected. Read-only JSON parsing
+with ordinary tools is allowed; no maintained collector or provider adapter is
+required. Do not search unrelated histories or retain transcripts.
+
 Normalize input to include cache reads/writes and output to include reasoning
 when the source reports those categories. Add disjoint categories once; do not
-add subsets already included in a total. Unknown accounting means null. Consult
-only a known current-execution source; do not search unrelated histories or build
-a provider-specific parser. If the source is inaccessible, finalize with nulls
-and a brief note. State the source/calculation briefly in notes for known tokens.
+add subsets already included in a total. Unknown accounting means null. If the
+source is inaccessible or its work boundary cannot be established, finalize with
+nulls and a brief note. State the source/calculation briefly in notes for known
+tokens, without retaining source paths or session/request identifiers.

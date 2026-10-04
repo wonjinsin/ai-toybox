@@ -37,18 +37,28 @@ must use the same workflow without provider-specific collectors.
   configuration-derived values when runtime metadata is unavailable, recording
   their source and unverified overrides in existing notes. Resolve each field
   independently; use unknown only after available sources have been checked.
-- Use ordinary host tools and available scoped usage. Missing or ambiguous
-  measurements stay null with a short reason. Finalize the record anyway;
-  unknown metrics must not require another user action.
+- Resolve usage automatically with ordinary read-only host tools. Prefer scoped
+  host/API usage, then the existing local file for the observed current session:
+  Codex rollouts or Claude Code transcripts. Filename discovery must match an
+  exact current identity; never select the newest or a project-neighbor session.
+  The Claude discovery entrypoint passes native session context to the shared
+  skill, with current tool-environment identity available as another source.
+- Capture matching work boundaries, deduplicate final requests, and normalize
+  cache/thinking accounting per host. Inline JSON inspection is allowed without
+  maintaining a provider collector. A bounded read-back may recover delayed
+  boundary usage; recording/final-reply usage remains excluded. Missing identity,
+  unsupported accounting, or ambiguous boundaries leave affected metrics null
+  with a short reason. Finalize anyway; no further user action is required.
 - Preserve existing archives. Their older measurement boundaries are different;
   do not silently rewrite them as format `2.0`.
 
 ## Consequences
 
 The user invokes only execution. There is no maintained collector script,
-provider adapter, model launcher or background service. New hosts may expose no
-usable work-interval token counters; automatic recording does not guarantee all
-metrics are available. An abrupt process termination can leave a running record.
+provider adapter, model launcher or background service. Hosts may expose no
+readable current-session file or usable work-interval usage; automatic lookup
+does not guarantee all metrics are available on every version. An abrupt process
+termination can leave a running record.
 
 A completed attempt is not proof of fully working browser behavior. The record
 notes unavailable verification. Model, tools, context and dependency choices can

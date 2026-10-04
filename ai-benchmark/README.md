@@ -111,13 +111,25 @@ Time includes the model's implementation work, tools and verification, not only
 API latency. The task does not pin a Three.js version; delivery must work via
 `file://`.
 
-The agent uses normal clock and host inspection tools. It uses scoped final
-usage or matching cumulative counter differences when available. Input totals
-include cache categories and output totals include reasoning when the source
-reports them, without double counting. No maintained provider parser is needed.
+The agent uses normal clock and host inspection tools. It automatically checks
+current-run usage and existing current-session files, following
+[usage resolution](skills/benchmark-record/references/usage-resolution.md).
+Codex can use App Server usage or its current rollout; Claude Code can use its
+current session transcript. Current runtime identity selects the file; the agent
+never substitutes the newest session or another conversation from the project.
+The Claude discovery entrypoint also passes its native session substitution to
+the shared skill for hosts that do not expose a session ID in the tool environment.
 
-If the host exposes no exact usage for this interval, the affected values are
-`null` with a brief reason. The skill still finishes the record and replies;
+It uses scoped final request usage or matching cumulative counter differences.
+Input totals include cache categories and output totals include reasoning,
+without double counting. Claude's repeated response rows are deduplicated;
+status-line context-window values are not cumulative spend. A small read-only
+inline JSON query is allowed; no maintained provider parser or new hook is needed.
+
+If current-session identity, final usage, or exact interval boundaries cannot be
+established after lookup, the affected values are `null` with a brief reason.
+Existing log access does not guarantee exact accounting on every host version.
+The skill still finishes the record and replies;
 it does not ask you to collect measurements later or estimate missing numbers.
 A finished implementation can have status `completed` with unknown token counts.
 That status does not claim every browser requirement has been verified.
@@ -135,10 +147,11 @@ record because there is no background service to finalize it.
 
 These are ordinary files containing discovery metadata and a relative link to
 [the shared skill](skills/benchmark-record/SKILL.md). Resources resolve from the
-shared skill directory. There are no symlinks or duplicated workflow rules.
+shared skill directory. The Claude entrypoint includes current-session context;
+workflow rules remain in the shared skill. There are no symlinks.
 
 For another project or a personal installation, copy the complete
-`skills/benchmark-record/` folder, including its assets and reference, into the
+`skills/benchmark-record/` folder, including its assets and references, into the
 host's skill directory. Do not copy only a discovery entrypoint. The official
 [Codex guide](https://learn.chatgpt.com/docs/build-skills) and
 [Claude Code guide](https://code.claude.com/docs/en/skills) describe discovery

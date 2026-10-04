@@ -34,6 +34,9 @@ Read [the record format](references/record-format.md) and use
 Use the current model and normal host tools; no separate model launcher,
 collector script, hook, or background process is needed.
 
+Claude Code session context, when substituted by its native skill loader:
+`${CLAUDE_SESSION_ID}`. An unexpanded placeholder is not a session identifier.
+
 ## Run
 
 1. Read the real invocation-start clock, then automatically
@@ -47,11 +50,13 @@ collector script, hook, or background process is needed.
    Copy the bundled task exactly to `prompt.md`.
    Use it without requesting another prompt or substituting an unrelated task.
    Save an initial `run.json` with status `running`, the resolved model/effort,
-   and their source notes. Keep these notes in the final record.
-2. Immediately before implementation, read a real clock. If trustworthy usage
-   counters for the current execution are already accessible, capture a matching
-   baseline. Keep measurement observations only as working data; do not create
-   extra transcript or evidence archives. Unavailable usage must not block work.
+   and their source notes. Keep these notes in the final record. Automatically
+   [resolve a current-session usage source](references/usage-resolution.md);
+   missing injected counters alone is not a reason to leave tokens unknown.
+2. Immediately before implementation, read a real clock and capture a matching
+   usage baseline from the resolved source. Follow the usage reference's boundary
+   rules; keep observations only as working data, without transcript or evidence
+   archives. Unavailable usage must not block work.
 3. Build the fixed Solar System and save its entrypoint as `output/index.html`,
    with local resources under `output/`. When a browser is available, open the
    HTML via `file://` and check automatic motion, pause/resume, and speed control
@@ -59,9 +64,9 @@ collector script, hook, or background process is needed.
    compatibility and missing local files, then note the browser verification
    gap. Do not claim browser behavior was verified from code alone.
 4. Immediately after implementation and its checks finish, capture the end clock
-   and any matching usage endpoint. This closes the measured work interval.
-   Determine the available duration and input/output tokens using the record
-   format. Do not extend the interval through record processing or the final reply.
+   and the matching usage endpoint. This closes the measured work interval.
+   Resolve input/output totals using the usage reference and the record format.
+   Do not extend the interval through record processing or the final reply.
    Missing or unscoped metrics stay `null` with a short explanation.
 5. Save the final `run.json` in this same invocation. Use status `completed` when
    the implementation attempt finishes, or `failed` when it cannot finish.
