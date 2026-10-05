@@ -129,12 +129,22 @@ without double counting. Claude's repeated response rows are deduplicated;
 status-line context-window values are not cumulative spend. A small read-only
 inline JSON query is allowed; no maintained provider parser or new hook is needed.
 
+For delegated work, the agent retains child identities at dispatch and checks
+only usage sources linked to that work, including resumed work and descendants.
+It uses a proven inclusive interval counter once, deduplicates complete linked
+request usage, or combines proven disjoint counter deltas and final-request sums.
+Missing counts in a delegation tool result alone do not end lookup. See
+[delegated usage collection](skills/benchmark-record/references/usage-resolution.md#delegated-work).
+
 If current-session identity, final usage, or exact interval boundaries cannot be
 established after lookup, the affected values are `null` with a brief reason.
 Existing log access does not guarantee exact accounting on every host version.
 The skill still finishes the record and replies;
 it does not ask you to collect measurements later or estimate missing numbers.
 A finished implementation can have status `completed` with unknown token counts.
+If full delegated totals remain unknown, valid parent interval counts are kept
+in `notes`, explicitly labeled partial with the missing coverage; the token
+fields continue to represent full work totals, never parent-only substitutes.
 That status does not claim every browser requirement has been verified.
 
 An observed failure is saved as `failed`; an observed interruption as

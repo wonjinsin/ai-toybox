@@ -49,6 +49,14 @@ must use the same workflow without provider-specific collectors.
   boundary usage; recording/final-reply usage remains excluded. Missing identity,
   unsupported accounting, or ambiguous boundaries leave affected metrics null
   with a short reason. Finalize anyway; no further user action is required.
+- For delegated work, retain linked identities and boundaries in working memory
+  at dispatch. Check existing linked child sources before declaring usage missing.
+  Use a proven inclusive interval total once, deduplicate complete linked final
+  requests, or combine proven disjoint counter deltas and final-request sums.
+  Include resumed work and descendants without copied history or duplicate
+  accounting. If full coverage is unknown,
+  keep affected totals null and retain valid parent interval counts in a concise
+  partial note; do not add schema fields or per-child breakdowns.
 - Preserve existing archives. Their older measurement boundaries are different;
   do not silently rewrite them as format `2.0`.
 

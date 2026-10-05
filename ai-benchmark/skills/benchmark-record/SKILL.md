@@ -64,11 +64,16 @@ Claude Code session context, when substituted by its native skill loader:
    without starting a server. Otherwise, inspect scripts and assets for `file://`
    compatibility and missing local files, then note the browser verification
    gap. Do not claim browser behavior was verified from code alone.
+   When delegating, retain linked child identities and work boundaries, and
+   finish delegated checks before stopping. Follow
+   [delegated usage collection](references/usage-resolution.md#delegated-work).
 4. Immediately after implementation and its checks finish, capture the end clock
    and matching usage endpoint, closing the measured work interval.
    Resolve input/output totals using the usage reference and record format.
    Exclude record processing and the final reply from the interval.
    Missing or unscoped metrics stay `null` with a short explanation.
+   Preserve valid parent interval counts as explicitly partial notes when full
+   delegated totals remain unknown.
 5. Save the final `run.json` in this same invocation. Use status `completed` when
    the implementation attempt finishes, or `failed` when it cannot finish.
    Finalize finished attempts even with missing metrics.

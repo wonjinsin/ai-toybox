@@ -40,7 +40,7 @@ illustrative model name.
 | `model`, `effort` | Current-run values, user-declared selections, or configuration-derived values, in that priority order. Resolve each separately; name its source and verification limits in notes. Unresolved values stay null. |
 | `duration_ms` | Nonnegative elapsed milliseconds for implementation and its checks. |
 | `input_tokens`, `output_tokens` | Nonnegative integer totals for that same work interval, or null when unavailable. |
-| `notes` | A few short notes for skill context, measurement sources/gaps, verification limits or failure. Do not add nested audit data or copy logs. |
+| `notes` | A few short notes for skill context, measurement sources/gaps, valid partial parent interval counts when full totals are unknown, verification limits or failure. Do not add nested audit data or copy logs. |
 
 Do not add fields, hashes, response snapshots, cache/reasoning breakdowns, session
 identifiers, evidence archives or manifest backups. The template is the complete
@@ -88,7 +88,17 @@ use a session total, context-window occupancy, partial streaming value or text
 length. Deduplicate requests and exclude prior work, recording and the final
 reply. Include retries and child usage only when attributable without double
 counting. If a model request spans both work and recording and cannot be split,
-or updates arrive too late, leave affected totals null instead of estimating.
+or final usage/cutoff remains unproven after the allowed read-back, leave affected
+totals null instead of estimating.
+
+For delegated work, follow
+[linked-source collection and coverage checks](usage-resolution.md#delegated-work).
+A proven inclusive interval counter needs no separate child log. Otherwise,
+deduplicate complete linked request usage or combine proven disjoint interval
+amounts from counter deltas and final-request sums. If full coverage cannot be
+established, keep affected totals null and preserve valid
+parent interval counts in `notes`, explicitly labeled partial with the gap;
+they are not full benchmark totals. Do not retain per-child breakdowns or IDs.
 
 Automatically look for a current-session source using
 [usage resolution](usage-resolution.md), including the host's existing local
