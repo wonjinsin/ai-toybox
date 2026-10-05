@@ -1,10 +1,9 @@
 # Resolve Input and Output Tokens Automatically
 
-Find a usage source during setup, before the measured work starts. Use ordinary
-read-only host tools, including a small inline Python or jq query when needed.
-Do not ask the user to collect tokens, launch another model/app server, install
-a hook, or add a maintained collector. Settings describe model selection; they
-cannot supply token usage. Missing injected usage alone does not end lookup.
+Find usage during setup, before measurement, with ordinary read-only host tools
+(inline Python or jq queries allowed). Do not ask the user to collect tokens,
+launch another model/app server, install a hook, or add a maintained collector.
+Settings cannot supply usage. Missing injected usage alone does not end lookup.
 
 ## Source selection and scope
 
@@ -19,11 +18,11 @@ cannot supply token usage. Missing injected usage alone does not end lookup.
    limits, cost conversions, or a different session's usage.
 
 Discover filenames only for the exact current identifier. Never choose a file
-because it is newest, is the only file, or shares the working directory. Do not
-open unrelated transcripts to find a match. Confirm identity inside the selected
-file and its applicable project/workspace; multiple unexplained matches or
-conflicting identity sources are unusable. An explicitly observed current path
-can support a moved workspace when runtime metadata explains the difference.
+because it is newest, the only file, or shares the working directory. Do not open
+unrelated transcripts to find a match. Confirm identity inside the file and its
+applicable project/workspace. Unexplained multiple matches or conflicting
+identities are unusable. An explicitly observed current path can support a moved
+workspace when runtime metadata explains the difference.
 
 Inspect only identity, boundary/completion metadata, and usage. Do not print
 message text, tool arguments, credentials, whole environments, or whole logs.

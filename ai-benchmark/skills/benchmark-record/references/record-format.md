@@ -1,9 +1,8 @@
 # Minimal Solar System Record
 
-Use [run.json](../assets/run.json), format `2.0`. One run directory contains the
-exact bundled `prompt.md`, `output/index.html` with any local resources, and
-`run.json`. The directory name identifies the attempt. Existing records are not
-migrated or overwritten.
+Use [run.json](../assets/run.json), format `2.0`. Each attempt's directory contains
+the exact bundled `prompt.md`, `output/index.html` with local resources, and
+`run.json`. Never migrate or overwrite existing records.
 
 ## Run directory
 
@@ -50,21 +49,25 @@ require another user request.
 
 ## Skill context notes
 
-Before finalizing the record, identify known active skill instructions injected
-by the host or hooks separately from additional skills required by higher-priority
-host instructions. Include the name and reason for each required addition, and
-disclose those additions in the final reply. Update these notes if requirements
-change during the run, including after resume or compaction.
+Before finalizing, record extra skills only when actually applied: user-selected
+extras or unavoidable higher-priority host requirements. Name each extra and its
+reason; distinguish mandatory injected instructions from newly required skill
+loads. Disclose unavoidable exceptions in the final reply. Update notes when
+requirements change, including after resume or compaction.
+If an unselected skill was already applied in this invocation, retain a brief
+deviation note; later suppression does not erase earlier application.
 
-Keep the information in existing `notes` strings, for example:
+Use existing `notes` strings, for example:
 
-- `Injected skill instructions: using-harness-flow, caveman (SessionStart).`
-- `Additional required skill: example-skill (host requires it for verification).`
+- `Additional user-selected skill: example-skill (explicitly requested).`
+- `Unavoidable injected skill: example-skill (higher-priority host instruction requires application).`
+- `Additional required skill: example-skill (higher-priority host instruction requires verification).`
 
-Record only observed or explicitly supplied context. Do not scan unrelated
-histories, collect hook logs, or invent an injected skill list. Missing visibility
-does not establish that no other instructions were active; do not claim isolation.
-These notes do not authorize additional skills or change the measurement boundary.
+Do not record suppressed skills as active merely because they were injected, or
+add boilerplate notes for them. Use only observed or explicitly supplied context;
+never scan unrelated histories, collect hook logs, or invent a skill list. Skill
+suppression or incomplete visibility does not establish isolation. Notes neither
+authorize additional skills nor change measurement boundaries.
 
 ## Measurement boundary
 

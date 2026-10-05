@@ -32,22 +32,25 @@ copies the fixed prompt, implements the task, performs available checks, and
 saves the record before answering. Use a fresh conversation for each attempt
 when practical. You can name a different output root in the same request.
 
-During benchmark execution and recording, select only skills explicitly invoked
-in the current request. `$benchmark-record` or `/benchmark-record` selects that
+During benchmark execution and recording, select and apply only skills explicitly
+invoked in the current request. `$benchmark-record` or `/benchmark-record` selects that
 skill alone unless other skills are also selected. Quoted examples or discussion
 do not select a skill. Reading the entrypoint, shared skill, and bundled resources
 counts as using the same skill.
 
-Instructions already injected and active through the host or hooks continue to
-apply, including after resume or compaction. They do not authorize automatic
-routing to additional skills, dependencies, or follow-up workflows. Delegated
-benchmark work follows the same restriction and uses ordinary host tools.
+Unselected skills are not applied, even when their instructions were already
+injected by the host or hooks. This restriction survives resume and compaction;
+prior activation, automatic routing, dependencies, and follow-up workflows do
+not authorize another skill. Delegated work follows the same restriction and
+uses ordinary host tools.
 
-Hook injection alone does not give an instruction higher priority. Higher-priority
-host requirements may still require additional skills. The agent records their
-names and reasons in `run.json.notes`, separately from known active injected skill
-instructions, and discloses required additions in the final reply. Check these
-notes when comparing runs; they do not establish full environment isolation.
+Injection alone grants no higher priority. An unselected skill may still apply
+when a higher-priority host instruction requires it; project rules cannot override
+that instruction. The agent records actually applied extras and their reasons in
+`run.json.notes`, distinguishing mandatory injected instructions from newly required
+skill loads, and discloses unavoidable exceptions in the final reply. Suppressed
+skills are not announced as active or given boilerplate notes. These restrictions
+and notes do not establish full environment isolation.
 The restriction applies to benchmark work; ordinary repository investigation and
 maintenance keep normal host skill selection. `benchmark-record` itself is never
 selected automatically.

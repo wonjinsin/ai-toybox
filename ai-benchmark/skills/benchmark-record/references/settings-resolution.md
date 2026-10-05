@@ -1,7 +1,7 @@
 # Resolve Model and Effort Automatically
 
-Do this during setup, before directory creation and the measured work interval.
-Use ordinary read-only host tools. Do not ask the user to collect settings, switch
+Resolve during setup, before directory creation and measurement, using ordinary
+read-only host tools. Do not ask the user to collect settings, switch
 models, start another agent session, install hooks, or launch a new app server.
 
 ## Selection and provenance
@@ -12,18 +12,18 @@ Resolve `model` and `effort` separately, in this order:
    already-connected session API, or a documented active-runtime environment
    variable. A generic identity such as "GPT-6" is a family, not an exact runtime
    model identifier; continue looking for a more specific source.
-2. An explicit selection the user declares for this invocation. Record that it
-   is user-declared when runtime verification is unavailable. A declaration does
-   not change the host settings and does not override an observed runtime value.
+2. The user's explicit selection for this invocation. Label it user-declared when
+   runtime verification is unavailable. It neither changes host settings nor
+   overrides an observed runtime value.
 3. The current host's applicable configuration, inspected automatically as below.
    Use a valid configuration-derived value even when active turn overrides cannot
    be inspected. Label it as configuration-derived, not runtime-verified.
 4. `null` in JSON and `unknown` in the name only for a field with no usable value
    after these checks. State the short reason in `notes` and continue the run.
 
-Use one or two concise `notes` entries to name each value's source and any
-unverified overrides. Keep the existing JSON schema; no provenance fields,
-configuration copies, session identifiers, or extra evidence files are needed.
+Name each value's source and unverified overrides in one or two concise `notes`.
+Keep the schema; no provenance fields, configuration copies, session identifiers,
+or extra evidence files are needed.
 
 Prefer a TOML or JSON parser. If none is available, inspect only exact scalar
 keys with their section/scope context; an ambiguous structure is not a usable
@@ -67,16 +67,13 @@ Example with no runtime metadata and only readable user defaults:
 
 ```json
 {
-  "model": "gpt-6.1-sol",
-  "effort": "high",
-  "notes": [
-    "Model and effort from Codex user config (configuration-derived); active overrides were not verified."
-  ]
+  "model": "gpt-6.1-sol", "effort": "high",
+  "notes": ["Model and effort from Codex user config (configuration-derived); active overrides were not verified."]
 }
 ```
 
-The directory prefix is `codex-gpt-6.1-sol-high-`; input/output token availability
-does not affect settings resolution. Existing run directories are never renamed.
+Prefix: `codex-gpt-6.1-sol-high-`. Token availability does not affect settings
+resolution; never rename existing run directories.
 
 ## Claude Code
 
@@ -106,13 +103,12 @@ does not affect settings resolution. Existing run directories are never renamed.
   If startup, managed, or session-only choices are inaccessible, still use the
   best available configured values and name the unverified sources in `notes`.
 
-Example: `ANTHROPIC_MODEL=sonnet`, `CLAUDE_CODE_EFFORT_LEVEL=high`, and active
-`CLAUDE_EFFORT=medium`, with no exact model metadata:
+Example without exact model metadata: `ANTHROPIC_MODEL=sonnet`,
+`CLAUDE_CODE_EFFORT_LEVEL=high`, active `CLAUDE_EFFORT=medium`:
 
 ```json
 {
-  "model": "sonnet",
-  "effort": "medium",
+  "model": "sonnet", "effort": "medium",
   "notes": [
     "Model from ANTHROPIC_MODEL (configuration-derived alias); exact runtime model and session/startup overrides were not verified.",
     "Effort from current Bash CLAUDE_EFFORT (runtime-observed)."
@@ -120,8 +116,8 @@ Example: `ANTHROPIC_MODEL=sonnet`, `CLAUDE_CODE_EFFORT_LEVEL=high`, and active
 }
 ```
 
-The directory prefix is `claude-code-sonnet-medium-`; a saved user or project
-effort does not replace the observed active effort.
+Prefix: `claude-code-sonnet-medium-`. Saved user/project effort never replaces
+observed active effort.
 
 ## Sources
 
