@@ -8,7 +8,8 @@ Status: Accepted
 
 The user wants one invocation to implement the fixed Solar System task and
 finish recording automatically. The retained information should be limited to
-the prompt, HTML result, model/effort, input/output tokens and elapsed time.
+the prompt, HTML result, session identity, model/effort, input/output tokens and
+elapsed time.
 Analysis is out of scope for the current project. Both Codex and Claude Code
 must use the same workflow without provider-specific collectors.
 
@@ -25,9 +26,13 @@ must use the same workflow without provider-specific collectors.
   final user-facing reply are excluded. This allows automatic finalization in
   the same invocation without post-response hooks.
 - Store only `prompt.md`, `output/index.html` with local resources, and a minimal
-  `run.json`. Format `2.0` holds model, effort, duration and input/output totals,
-  plus version, execution status and concise notes. Omit response copies,
-  detailed usage breakdowns, session identifiers, evidence archives and backups.
+  `run.json`. Format `2.1` adds the invoking `session_id` to the `2.0` fields:
+  model, effort, duration, input/output totals, version, execution status and
+  concise notes. Omit response copies,
+  detailed usage breakdowns, child/turn identifiers, evidence archives and backups.
+  Resolve the exact current session/thread identity independently of usage
+  availability; use null with a reason if unverified. Resume retains the original
+  session ID, with a note if the current session changes.
 - Group attempts under `runs/<agent>-<model>-<effort>-<run-id>/` by default.
   Use normalized host/model/effort names and a Korea-time invocation timestamp
   (`YYYYMMDD-HHmmss`), with numbered suffixes for collisions. Unknown name
@@ -58,7 +63,7 @@ must use the same workflow without provider-specific collectors.
   keep affected totals null and retain valid parent interval counts in a concise
   partial note; do not add schema fields or per-child breakdowns.
 - Preserve existing archives. Their older measurement boundaries are different;
-  do not silently rewrite them as format `2.0`.
+  do not silently rewrite them into the current format.
 
 ## Consequences
 

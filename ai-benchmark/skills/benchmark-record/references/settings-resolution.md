@@ -18,7 +18,9 @@ Resolve `model` and `effort` separately, in order:
 4. If still unresolved, null in JSON and `unknown` in names; note why and continue.
 
 In one or two short notes, name sources/unverified overrides. Keep the schema;
-no provenance fields, config copies, session IDs or extra evidence files are needed.
+no extra provenance fields, config copies or evidence files are needed. Resolve
+`session_id` separately per the [record format](record-format.md#session-identity),
+never from settings configuration.
 
 Prefer TOML/JSON parsers. If none is available, inspect exact scalar keys with
 section/scope context. Ambiguous structure is unusable. No broad search mixing unrelated/inactive

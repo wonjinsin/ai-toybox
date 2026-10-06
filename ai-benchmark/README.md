@@ -94,12 +94,19 @@ settings. Neither path launches another model or requires a second user request.
 The [record template](skills/benchmark-record/assets/run.json) keeps:
 
 - Model and effort, when known.
+- The current invoking session/thread ID as `session_id`, when verified.
 - Input and output token totals, when available for the measured work.
 - Elapsed implementation and verification time in milliseconds.
 - A format version, execution status and a few short notes for skill context,
   sources, missing values, verification limits or failure.
 
-There are no response copies, session/turn identifiers, hashes, transcript or
+Format `2.1` adds `session_id` to `2.0`. Codex records the current thread ID;
+Claude Code records the current session ID. Unavailable or unverified identities
+stay null with a short reason in `notes`, independently of token availability.
+Resuming the same attempt preserves its original session ID. See
+[session identity](skills/benchmark-record/references/record-format.md#session-identity).
+
+There are no response copies, child/turn identifiers, hashes, transcript or
 evidence archives, cache/reasoning breakdowns, or previous-record backups.
 The prompt and HTML are the retained task and result. Runs and local experiments
 are ignored by Git; existing archives remain unchanged. Earlier runs retain their

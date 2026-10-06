@@ -33,8 +33,9 @@ delegated sections only if delegating. Skip authoring sources. Resolve resources
 relative to this file. Claude native `${CLAUDE_SESSION_ID}` is an identifier only
 when substituted.
 
-1. **Set up.** Read the invocation-start clock; locate the current-session usage
-   source, resolve model/effort from runtime before configuration, and prepare a
+1. **Set up.** Read the invocation-start clock; resolve and record `session_id`
+   per the record format, locate the current-session usage source, resolve
+   model/effort from runtime before configuration, and prepare a
    permitted browser check. Reserve `runs/<agent>-<model>-<effort>-<run-id>/` under
    the project/requested output root per naming rules, never overwriting. Copy
    the fixed task exactly to `prompt.md`; do not request/substitute another prompt.
@@ -56,7 +57,8 @@ when substituted.
    notes and any interruption/resume. Finished attempts are `completed` even with
    missing metrics; `failed` if the attempt cannot finish. Follow record retention limits; observations
    remain working data.
-6. **Read back and reply.** Verify JSON, exact prompt, output path and known metrics.
+6. **Read back and reply.** Verify JSON, `session_id`, exact prompt, output path
+   and known metrics.
    Reply with HTML/record paths, available timing/tokens and important verification
    gaps, outside measurement.
 

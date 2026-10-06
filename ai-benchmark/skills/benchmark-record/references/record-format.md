@@ -1,6 +1,6 @@
 # Minimal Solar System Record
 
-Use [run.json](../assets/run.json), format `2.0`. Each attempt contains exact bundled
+Use [run.json](../assets/run.json), format `2.1`. Each attempt contains exact bundled
 `prompt.md`, `output/index.html` with local resources, and `run.json`.
 Never migrate or overwrite existing records.
 
@@ -26,16 +26,34 @@ Under the project root's `runs/` or requested output root, exclusively create
 
 | Field | Meaning |
 | --- | --- |
-| `format_version` | `2.0`, work-interval rather than older whole-turn metrics. |
+| `format_version` | `2.1`, adds `session_id` to the `2.0` work-interval format. |
 | `status` | `running`, `completed`, `failed`, `interrupted`. Completion means finished, not every requirement verified. |
+| `session_id` | Exact current invoking session/thread ID as a nonempty string, or null if unverified/unavailable with a reason in notes. |
 | `model`, `effort` | Runtime, user-declared, then configuration-derived values, resolved separately with source/limits in notes; unresolved fields null. |
 | `duration_ms` | Nonnegative implementation/check elapsed milliseconds. |
 | `input_tokens`, `output_tokens` | Nonnegative integer totals for the same interval, or null if unavailable. |
 | `notes` | A few short skill-context/source/gap/failure notes, including explicitly partial parent interval counts when full totals are unknown. No nested audit data/log copies. |
 
 The template is the complete schema. No extra fields, hashes, response snapshots,
-cache/reasoning or per-child breakdowns, session IDs, evidence archives or manifest
+cache/reasoning or per-child breakdowns, child/turn IDs, evidence archives or manifest
 backups. Missing metrics stay null, never zero/estimates; no second request needed.
+
+## Session identity
+
+During setup, use the current-host identity sources and validation rules in
+[usage resolution](usage-resolution.md). For Codex, record the current thread ID
+from `CODEX_THREAD_ID` or concrete current-turn metadata, never a generic MCP
+`sessionId`. For Claude Code, use the current `CLAUDE_CODE_SESSION_ID`, substituted
+`${CLAUDE_SESSION_ID}` or explicit current-session metadata; reject stale inherited
+values and unexpanded placeholders. Other hosts require an explicit current-session ID.
+Never infer an ID from configuration, cwd, the run directory or the newest log.
+
+Record the validated identity unchanged even if the usage file, token counts or
+measurement boundaries are unavailable. Add a short source note. If identity is
+missing, invalid or conflicting, leave `session_id` null with a short reason and
+continue. Record the invoking parent session, not delegated child sessions.
+When resuming the same attempt, retain its original `session_id`; if the current
+session changes, note the change without replacing the original identity.
 
 ## Skill context notes
 
