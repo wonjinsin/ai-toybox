@@ -23,3 +23,18 @@ Do not announce suppressed skills as active or add boilerplate notes for them.
 Do not invoke `benchmark-record` automatically when it is not explicitly selected.
 Outside benchmark execution and recording, this policy does not restrict normal
 host skill selection for repository investigation or maintenance.
+
+## Browser verification
+
+- Prefer Playwright for browser verification when available and permitted.
+- Choose a permitted verification method from documented browser capabilities
+  before navigation. For local HTML, prefer the actual file:// entrypoint.
+- If file:// is unsupported but loopback HTTP is permitted, verify through a
+  temporary server bound to 127.0.0.1, serving only the output directory.
+  Stop it after checks. Keep the artifact directly runnable without a server.
+- Record HTTP interaction checks separately from file:// compatibility checks;
+  HTTP success does not prove direct-file execution.
+- Check rendering, required interactions, and browser console errors.
+- Do not report browser verification as complete based on code inspection.
+- If an active host policy blocks access, report the limitation.
+  Do not switch tools to circumvent that denial.

@@ -1,127 +1,84 @@
 # Resolve Model and Effort Automatically
 
-Resolve during setup, before directory creation and measurement, using ordinary
-read-only host tools. Do not ask the user to collect settings, switch
-models, start another agent session, install hooks, or launch a new app server.
+During setup, before directory creation/measurement, resolve with ordinary
+read-only host tools. Do not ask users to collect settings, switch models, start
+another agent session, install hooks or launch an app server.
 
 ## Selection and provenance
 
-Resolve `model` and `effort` separately, in this order:
+Resolve `model` and `effort` separately, in order:
 
-1. A concrete value exposed for the current execution by host metadata, an
-   already-connected session API, or a documented active-runtime environment
-   variable. A generic identity such as "GPT-6" is a family, not an exact runtime
-   model identifier; continue looking for a more specific source.
-2. The user's explicit selection for this invocation. Label it user-declared when
-   runtime verification is unavailable. It neither changes host settings nor
-   overrides an observed runtime value.
-3. The current host's applicable configuration, inspected automatically as below.
-   Use a valid configuration-derived value even when active turn overrides cannot
-   be inspected. Label it as configuration-derived, not runtime-verified.
-4. `null` in JSON and `unknown` in the name only for a field with no usable value
-   after these checks. State the short reason in `notes` and continue the run.
+1. Concrete current-execution host metadata, connected session API or documented
+   active-runtime environment variable. Family labels such as "GPT-6" are not
+   exact model IDs; continue looking.
+2. Explicit user selection for this invocation, labeled user-declared if runtime
+   verification is unavailable. It does not change settings or override runtime.
+3. Automatically inspected applicable host configuration, labeled
+   configuration-derived. Use valid values even if active overrides are inaccessible.
+4. If still unresolved, null in JSON and `unknown` in names; note why and continue.
 
-Name each value's source and unverified overrides in one or two concise `notes`.
-Keep the schema; no provenance fields, configuration copies, session identifiers,
-or extra evidence files are needed.
+In one or two short notes, name sources/unverified overrides. Keep the schema;
+no provenance fields, config copies, session IDs or extra evidence files are needed.
 
-Prefer a TOML or JSON parser. If none is available, inspect only exact scalar
-keys with their section/scope context; an ambiguous structure is not a usable
-source. Do not derive settings from a broad text search that mixes unrelated
-keys or inactive scopes. Never dump whole configuration files, process environments,
-credentials, or transcripts. Do not search unrelated sessions or histories.
-Missing, malformed, unreadable, or unsupported sources must be noted briefly;
-continue to other available sources rather than failing the benchmark.
+Prefer TOML/JSON parsers. If none is available, inspect exact scalar keys with
+section/scope context. Ambiguous structure is unusable. No broad search mixing unrelated/inactive
+keys, whole config/environment/credential/transcript dumps, or unrelated sessions/histories.
+Briefly note missing, malformed, unreadable or unsupported sources; try others
+without failing the benchmark.
 
-Preserve a configured model identifier or named alias exactly in JSON. If only an
-alias is available, note that its exact runtime model is unresolved; do not map
-it to a guessed version. Empty values and reset/default selectors such as model
-`default` or effort `auto` are not concrete values. Resolve their actual value
-from a current-run source if available; otherwise leave that field unknown and
-note the unresolved selector. Never infer effort from a model name, thinking
-budget, account tier, or built-in default.
+Preserve configured identifiers/aliases exactly in JSON; note unresolved exact
+runtime models, never guess versions. Empty/reset/default selectors (model
+`default`, effort `auto`) are not concrete: resolve from current-run sources or
+leave unknown and note the unresolved selector. Never infer effort from model, thinking budget,
+account tier or built-in defaults. Token availability does not affect settings;
+never rename existing run directories.
 
 ## Codex
 
-- Prefer concrete current-turn metadata. An already-connected App Server
-  `config/read` can supply configuration after layering; it is still a
-  configuration source, not proof that a turn has no override.
-- Otherwise parse `config.toml` under the current `CODEX_HOME`, or
-  `~/.codex/config.toml` when `CODEX_HOME` is unset. Read `model` and
-  `model_reasoning_effort`. Inspect applicable trusted project
-  `.codex/config.toml` layers from the project root toward the current directory,
-  with the closest layer taking precedence over user configuration.
-- Honor an active profile, startup overrides, and managed constraints when the
-  current host exposes them. Follow the installed host's configuration layering;
-  do not select a profile merely because a profile section exists. Inactive or
-  untrusted project configuration must not override an applicable value.
-- For fields still unset, check exposed cloud-managed configuration defaults,
-  then the installed host's readable system configuration (on Unix,
-  `/etc/codex/config.toml`). These are below user configuration; they are distinct
-  from enforced managed constraints. Do not replace a higher-priority reset
-  selector with a lower-priority value or guess an unexposed built-in default.
-- When only user or project files can be read, use their best available values
-  and note that active profile, startup, or turn overrides were not verified.
-
-Example with no runtime metadata and only readable user defaults:
-
-```json
-{
-  "model": "gpt-6.1-sol", "effort": "high",
-  "notes": ["Model and effort from Codex user config (configuration-derived); active overrides were not verified."]
-}
-```
-
-Prefix: `codex-gpt-6.1-sol-high-`. Token availability does not affect settings
-resolution; never rename existing run directories.
+- Prefer current-turn metadata. Connected App Server `config/read` supplies layered
+  configuration, not proof of absent overrides. Locate the validated current
+  rollout per usage resolution before TOML fallback; read active/latest
+  `turn_context.payload.model` and `.effort` even if initial environment metadata
+  lacked them. Never use another session's settings.
+- Otherwise parse `model`/`model_reasoning_effort` in current `CODEX_HOME/config.toml`,
+  or `~/.codex/config.toml` when unset. Inspect applicable trusted project
+  `.codex/config.toml` layers from project root toward cwd; closest overrides user.
+- Honor exposed active profiles, startup overrides, managed constraints and host
+  layering. Profile existence does not activate it; inactive/untrusted scopes
+  cannot override applicable values.
+- For unset fields, check exposed cloud-managed defaults, then readable host system
+  configuration (`/etc/codex/config.toml` on Unix). Both are below user settings,
+  distinct from enforced constraints. Never replace a higher-priority reset with
+  a lower value or guess unexposed built-in defaults.
+- If only user/project files are readable, use their best values and note unverified
+  active-profile, startup and turn overrides.
 
 ## Claude Code
 
-- Prefer concrete current-execution model metadata. For effort, inspect only
-  `CLAUDE_EFFORT` in the current Bash tool environment when present: Claude Code
-  exposes the active effort there when the model supports it. Treat that snapshot
-  as runtime-observed; it wins over configured effort candidates.
-- For configuration-derived model selection, inspect a known current-session
-  `/model` choice or startup `--model` value, then `ANTHROPIC_MODEL`, then the
-  applicable settings `model`. `ANTHROPIC_DEFAULT_MODEL` is a fallback only when
-  no settings file sets `model`. Keep aliases such as `sonnet` verbatim and note
-  that the exact runtime model was not verified.
-- For configuration-derived effort, `CLAUDE_CODE_EFFORT_LEVEL` takes precedence
-  over a known `--effort` or `/effort` choice and saved effort settings. Read
-  applicable per-model `modelSettings` and `effortLevel` entries; respect the
-  installed host's model-specific applicability and any exposed `maxEffortLevel`
-  cap. Do not flatten an inactive model's entry into the active model's effort.
-  If applicability cannot be established, note the gap and skip that candidate.
-- Read user `settings.json` under `CLAUDE_CONFIG_DIR`, or `~/.claude` when unset,
-  and project `.claude/settings.json` and `.claude/settings.local.json`. For
-  scalar settings keys, precedence is managed settings, known startup
-  `--settings`, project local, shared project, then user settings. Include only
-  managed/startup sources exposed for this execution, and honor any known
-  `--setting-sources` restriction. Current-session choices and environment
-  overrides follow the field-specific rules above, not a generic merge order.
-- Query only the named model/effort/location variables and relevant JSON keys.
-  If startup, managed, or session-only choices are inaccessible, still use the
-  best available configured values and name the unverified sources in `notes`.
-
-Example without exact model metadata: `ANTHROPIC_MODEL=sonnet`,
-`CLAUDE_CODE_EFFORT_LEVEL=high`, active `CLAUDE_EFFORT=medium`:
-
-```json
-{
-  "model": "sonnet", "effort": "medium",
-  "notes": [
-    "Model from ANTHROPIC_MODEL (configuration-derived alias); exact runtime model and session/startup overrides were not verified.",
-    "Effort from current Bash CLAUDE_EFFORT (runtime-observed)."
-  ]
-}
-```
-
-Prefix: `claude-code-sonnet-medium-`. Saved user/project effort never replaces
-observed active effort.
+- Prefer concrete current-execution model metadata. Read only `CLAUDE_EFFORT` for
+  runtime effort in current Bash when present; it exposes active supported-model
+  effort, is runtime-observed and overrides configured candidates.
+- Configured model precedence: known current `/model` or startup `--model`, then
+  `ANTHROPIC_MODEL`, then applicable settings `model`. `ANTHROPIC_DEFAULT_MODEL`
+  applies only if no settings file sets model. Preserve aliases such as `sonnet`
+  and note unresolved exact runtime models.
+- Configured effort: `CLAUDE_CODE_EFFORT_LEVEL` overrides known `--effort`/`/effort`
+  and saved settings. Read applicable per-model `modelSettings`/`effortLevel` and
+  respect exposed `maxEffortLevel` caps; skip uncertain applicability with a note. Never use
+  inactive-model entries for the active model.
+- Read user `settings.json` under `CLAUDE_CONFIG_DIR` or `~/.claude` when unset,
+  plus project `.claude/settings.json` and `.claude/settings.local.json`.
+  Scalar precedence: managed, known startup `--settings`, project local, shared
+  project, user. Include only exposed managed/startup sources; honor known
+  `--setting-sources` restrictions. Session/environment overrides follow the
+  field-specific rules above, not a generic merge.
+- Query only named model/effort/location variables and relevant JSON keys. If
+  startup, managed or session-only choices are inaccessible, use best configured
+  values and note gaps. Saved effort never replaces observed active effort.
 
 ## Sources
 
-These are authoring references, not required network requests during a run:
+Authoring references only, not required runtime network requests:
 
 - [Codex configuration and precedence](https://learn.chatgpt.com/docs/config-file/config-basic)
 - [Codex App Server configuration RPC](https://learn.chatgpt.com/docs/app-server)

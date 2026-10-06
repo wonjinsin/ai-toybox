@@ -1,247 +1,199 @@
-# Resolve Input and Output Tokens Automatically
+# Resolve Input and Output Tokens
 
-Find usage during setup, before measurement, with ordinary read-only host tools
-(inline Python or jq queries allowed). Do not ask the user to collect tokens,
-launch another model/app server, install a hook, or add a maintained collector.
-Settings cannot supply usage. Missing injected usage alone does not end lookup.
+Locate an existing current-session source during setup, using read-only host
+tools. No new model/app server, hook or maintained collector. Read only identity,
+runtime settings, request boundaries/completion and usage; never print or retain
+transcripts, arguments, credentials or whole environments.
 
 ## Source selection and scope
 
-1. Prefer final request usage or cumulative counters already exposed for the
-   current execution by host metadata or an already-connected session API.
-2. Otherwise locate the host's existing current-session file as described below.
-   Use an observed current thread/session identifier or an explicit runtime path.
-   Validate the identifier before using it in a filename pattern; do not treat
-   unresolved placeholders, path separators, or wildcard characters as an ID.
-3. If neither source can be identified/read, continue with null token fields and
-   a short reason. Do not substitute configured values, user estimates, account
-   limits, cost conversions, or a different session's usage.
+Prefer current-run final usage or an already-connected cumulative usage API.
+Otherwise use the host's exact current identity or explicit runtime file path.
+Validate identity, project and source scope before reading counts. Reject
+unresolved placeholders, path separators/wildcards in IDs, conflicting matches
+or unsupported accounting. Never select a newest/neighbor file, infer identity
+from cwd, or substitute another conversation's usage. A moved workspace needs
+runtime evidence linking it to this session.
 
-Discover filenames only for the exact current identifier or a validated linked
-child identifier from [delegated work](#delegated-work). Never choose a file
-because it is newest, the only file, or shares the working directory. Do not open
-unrelated transcripts to find a match. Confirm identity inside the file and its
-applicable project/workspace. Unexplained multiple matches or conflicting
-identities are unusable. An explicitly observed current path can support a moved
-workspace when runtime metadata explains the difference.
-
-Inspect only identity, boundary/completion metadata, and usage. Do not print
-message text, tool arguments, credentials, whole environments, or whole logs.
-Keep file positions, request identities, and snapshots in working memory only;
-the run retains no transcripts, usage archives, or session/request identifiers.
-Missing, malformed, unreadable, or unsupported sources require a short note;
-try another available current-run source without failing the implementation.
+Try another available current-run source after a failed lookup. Missing injected
+counters, failed commands and unavailable sources are different conditions.
+Use null when current-run sources or trustworthy scoped counts remain unavailable;
+name the actual lookup, schema, cutoff or coverage failure.
+Metrics do not block implementation or finalization.
 
 ## Capture comparable boundaries
 
-- Use separate tool calls for setup/start, implementation/checks, and stop.
-  The start call captures the clock and baseline only; do not also implement in
-  that request. Start counting after the completed model request that issued it.
-  The stop call captures the clock and endpoint only; defer record processing and
-  final-reply composition until afterward. Include the completed work request
-  that issued the stop call. A request that also does recording cannot be split.
-- At each boundary, retain a source cursor and enough request/completion metadata
-  to establish which completed requests the snapshot covers. A latest counter
-  that omits the request issuing that boundary call is a stale snapshot.
-- If final usage for a boundary or delegated work request is flushed after the
-  tool returns, allow one read-back per selected source before finalization.
-  Recover only final usage
-  tied to that boundary request or delegated requests proven completed within the
-  original work interval; freeze the endpoint at the original stop. Never take
-  a newer session total that includes the read-back, recording or later child work.
-  If finality or the exact cutoff remains unprovable, affected totals stay null.
-- Subtract comparable cumulative snapshots from the same session, counter scope,
-  and accounting scheme, or sum deduplicated final requests wholly after the
-  baseline through the stop request. A valid delta is nonnegative; never clamp a
-  reset/decrease to zero. Include billed retries and attributable child requests
-  once. If known child/retry usage is missing, do not label parent-only usage as
-  the full work total. Unknown coverage makes the affected total null.
-- Resolve input and output independently. Require nonnegative integers, excluding
-  booleans. Missing/invalid usage is not zero. Ignore an incomplete trailing JSONL
-  line until the read-back; malformed usage in the measured range leaves affected
-  totals unknown. Preserve genuinely observed zero usage.
+- Use separate calls for start, work/checks and stop. Start captures only clock
+  and usage; count after the completed request issuing start. Stop captures
+  only clock and usage; include the completed work request issuing stop.
+  Recording/read-back/reply requests are excluded. A mixed request cannot be split.
+- Retain source position and completed request identity at each boundary.
+  Confirm the counter includes that boundary request; a latest snapshot alone
+  does not establish the cutoff. Log/file timestamps alone are insufficient.
+- If final usage flushes after the tool returns, allow one read-back per selected
+  source. Recover final usage tied to that boundary or linked delegated requests
+  completed within the original interval. Freeze the original stop clock/cutoff;
+  do not include later recording, read-back or descendant work.
+- Subtract comparable cumulative counters from the same source/scope/accounting,
+  or sum deduplicated final requests after start through stop. Include billed
+  retries and linked work once. Require complete coverage; unknown finality,
+  overlap or cutoff leaves affected totals null.
+  Calculate and serialize totals in code from the identified boundary records,
+  never mental arithmetic or manually transcribed totals.
+- Resolve input/output independently as nonnegative integers, excluding booleans.
+  Unknown/invalid values are not zero; preserve genuine zeros. Never clamp a
+  counter reset or estimate from time, price, text, context occupancy or streaming.
+  Ignore an incomplete trailing JSONL line until read-back; malformed measured
+  usage leaves affected totals unknown.
+- Normalize disjoint input cache categories and output reasoning exactly once.
+  Do not add subsets already included in totals. Unknown accounting leaves the
+  affected field null. A session total without a baseline is not interval usage.
 
-These are request-accounting boundaries within the
-[work interval](record-format.md#measurement-boundary). A log timestamp or file
-modification time alone does not establish a request's start, finality, or scope.
-Time remains the original stop clock minus start clock; a read-back does not
-extend it. An available session total without a matching baseline is not enough.
-
-## Delegated work
-
-Do not stop lookup merely because the delegation tool omits token counts. Check
-the existing linked usage sources below before declaring child usage unavailable.
-
-1. At dispatch, retain the returned child handle, concrete thread/agent identity
-   or transcript path, its parent relationship, and the delegated work boundary
-   in working memory. A display name or opaque handle is not necessarily a file
-   identifier; require an observed mapping. Track resumed work and descendants
-   the same way; ask delegates to return identity/source metadata already exposed
-   to them, without loading another skill or collecting transcripts.
-2. Locate only that child's existing source using the host guidance below.
-   Validate identities and the dispatch relationship; shared cwd, timestamps or
-   copied parent history alone do not establish a link. Inspect only structured
-   identity, delegation/completion and usage metadata, never prompts or arguments.
-3. Capture a baseline before sending work to an existing child, then its endpoint
-   after completion. For a new or forked child, prefer final requests attributable
-   to this dispatch; do not count copied history or assume its counter starts at
-   zero. Include resumed requests, retries and descendants once. Finish delegated
-   implementation/checks before the original stop; the bounded read-back may
-   recover final usage but must not extend the interval or add later child work.
-4. Establish coverage from the actual source's documented accounting scope or
-   complete request identities. A parent/thread label or equality of token values
-   alone does not prove whether child usage is included. Choose one calculation:
-   - An interval counter proven to include all measured parent and descendant
-     requests is sufficient; use it once even if separate child logs are absent.
-   - Otherwise sum final requests from the linked sources, deduplicating copies
-     across sources by stable provider request/response identity. Namespace IDs
-     that are only locally unique. Conflicting final copies make the affected
-     field unknown. Prove that the union covers every measured request.
-   - Combine parent and descendant interval amounts only when their scopes are
-     proven disjoint and cover the measured work. Each amount may be a comparable
-     counter delta or a deduplicated final-request sum; mixing those sources is
-     allowed when their boundaries and accounting match. Never add a descendant
-     again when an ancestor amount already covers it.
-5. If coverage remains incomplete or overlap cannot be resolved, keep only the
-   affected total null. Preserve independently valid parent interval counts in
-   one concise note, explicitly labeled partial with the coverage gap. Do not
-   present partial counts as the full total or discard a known output merely
-   because input accounting is unknown. Follow [provenance](#record-provenance).
-
-No delegated requests means no child-coverage requirement. Do not require child
-files for a proven inclusive source, or infer zero usage from a missing child file.
+Duration remains original stop minus start. Consistent clocks from separate
+processes are valid; a short observed interval is not grounds to discard it.
+On resume, preserve/recover the original boundaries from this source, including
+interruption time; never silently restart measurement for the same attempt.
 
 ## Codex
 
-- Prefer an already-connected App Server's `thread/tokenUsage/updated` for the
-  current thread. Its `tokenUsage.total` is cumulative;
-  `tokenUsage.last` is one request, not the whole work interval. Use
-  `inputTokens` and `outputTokens` from matching snapshots, with the boundary
-  checks above. Do not start `codex app-server` or `codex exec` to obtain usage.
-- Otherwise read only `CODEX_THREAD_ID` and `CODEX_HOME` from the current tool
-  environment. Use the host's concrete current thread identity when available;
-  `CODEX_THREAD_ID` is a fallback exposed by supported local hosts. Locate a
-  matching rollout filename under `<CODEX_HOME>/sessions/`, or
-  `~/.codex/sessions/` when unset. Confirm the `session_meta` payload's `id` and
-  applicable `cwd`; no identifier means no filename-based session lookup.
-- When the installed rollout exposes `type: "token_usage_record"`, use
-  `payload.usage.input_tokens` and `.output_tokens` for final request usage,
-  keyed by `payload.response_id`, or comparable
-  `payload.thread_token_usage.input_tokens` and `.output_tokens` snapshots.
-  Confirm `payload.thread_id` matches the current thread.
-  `payload.turn_token_usage` has a different scope; do not mix it with thread
-  totals. Duplicate records for one response count once.
-- Older rollouts may expose `type: "event_msg"` with
-  `payload.type: "token_count"`. The cumulative values are
-  `payload.info.total_token_usage.input_tokens` and `.output_tokens`;
-  `last_token_usage` is not cumulative. Repeated counter notifications do not
-  represent new requests. A missing/null `info` is unavailable, not zero.
-  Verify that both snapshots include their boundary requests: these events may
-  be written after tool output. If event ordering cannot prove the cutoff, do
-  not subtract whichever two counters happen to be latest.
-- Codex `input_tokens`/`inputTokens` already includes cached input, and
-  `output_tokens`/`outputTokens` already includes reasoning. Do not add
-  `cached_input_tokens`, `cache_write_input_tokens`, `reasoning_output_tokens`,
-  or their camelCase breakdowns again. Use a different provider accounting
-  scheme only when its source explicitly establishes disjoint categories.
-- Retain child thread IDs from dispatch results or already-exposed App Server
-  `collabToolCall` metadata (`senderThreadId`, `newThreadId`, `receiverThreadId`).
-  Match the sender to the delegating thread and the child to this work. Use the
-  child's existing usage notifications or exact-ID rollout lookup and validation
-  described above. If the connected API already supports experimental
-  `parentThreadId` or `ancestorThreadId` filters, use them separately to resolve
-  linked descendants and include supported subagent source kinds. Do not enable
-  features or start a server for collection. Inspect the installed schema, not
-  guessed fields. Thread-scoped notifications alone do not prove descendant coverage.
+1. Read identity separately from settings parsing, with shell built-ins or Python
+   `os`; a failed `tomllib` import does not prove missing environment variables:
 
-The rollout layouts are host-version dependent. Inspect the actual selected
-file's usage structure; an unsupported layout is not permission to guess fields.
+   ```sh
+   python3 -c 'import os,json; print(json.dumps({k:os.environ.get(k) for k in ("CODEX_THREAD_ID","CODEX_HOME")}))'
+   ```
+
+   Prefer the concrete current thread identity. On Node REPL hosts,
+   `nodeRepl.requestMeta.threadId` or parsed `x-codex-turn-metadata.thread_id`
+   can supply it; generic MCP `sessionId` is not a Codex thread ID.
+2. Prefer an already-connected `thread/tokenUsage/updated` API: `tokenUsage.total`
+   is cumulative, `last` is one request. Use comparable `inputTokens/outputTokens`.
+3. Otherwise search `<CODEX_HOME>/sessions/`, or `~/.codex/sessions/` when unset.
+   Actual names contain a timestamp prefix: `rollout-<timestamp>-<id>.jsonl`.
+   With validated ID `id` and directory `sessions`, discover exact-ID candidates:
+
+   ```sh
+   rg --files --hidden "$sessions" -g "*$id*.jsonl"
+   ```
+
+   Confirm `session_meta.payload.id` and applicable `cwd`; no ID means no
+   filename lookup. An unreadable environment permits the default directory
+   only as a candidate, not proof of active CODEX_HOME.
+4. For `type: token_usage_record`, validate `payload.thread_id`. Use final
+   `payload.usage.input_tokens/output_tokens` keyed by `response_id`, or
+   comparable `payload.thread_token_usage` snapshots. `turn_token_usage` has
+   different scope; never mix it with thread totals. Duplicate responses count once.
+   Capture clock, matching snapshot and issuing `response_id` together. When the
+   selected rollout shows boundary-call → final-usage → matching-tool-output
+   ordering, validate that linkage; otherwise use exposed request linkage and
+   shared finality/read-back rules. A byte cursor captured
+   inside the tool may already include the issuing request. Never choose the first
+   request after that cursor, or a later lookup request, as the boundary.
+   Freeze each boundary's `response_id`. A read-back selects those IDs, never the
+   newest row, which may include the read-back request itself. In one read-back,
+   retrieve both IDs from the full validated source, not a recent tail. Omitted
+   tool output is not missing source usage. Calculate in code:
+
+   ```python
+   by_response = {}
+   for row in validated_rows:
+       if row.get('type') != 'token_usage_record':
+           continue
+       p = row['payload']
+       if p['thread_id'] == current_thread_id and p['response_id'] in (start_response_id, stop_response_id):
+           assert p['response_id'] not in by_response or by_response[p['response_id']] == p
+           by_response[p['response_id']] = p
+   start = by_response[start_response_id]['thread_token_usage']
+   stop = by_response[stop_response_id]['thread_token_usage']
+   totals = {k: stop[k] - start[k] for k in ('input_tokens', 'output_tokens')}
+   ```
+
+   Here `validated_rows` supplies final records from the selected source;
+   require nonnegative integer deltas before saving. Missing boundary IDs remain
+   null only after this exact lookup fails.
+5. Older `event_msg` / `payload.type: token_count` uses
+   `payload.info.total_token_usage`; `last_token_usage` is not cumulative.
+   Repeated notifications are not requests and missing `info` is not zero.
+   Confirm boundary-request inclusion even when events follow tool output.
+6. Codex input already includes cached input; output includes reasoning.
+   Do not add cache/reasoning breakdowns again. Inspect actual host layout;
+   unsupported schemas justify null, not guessed fields or a new app server.
 
 ## Claude Code
 
-- Read `CLAUDE_CODE_SESSION_ID` from the current Bash/PowerShell tool environment,
-  where supported, along with `CLAUDE_CONFIG_DIR`. Do not rely on an MCP server's
-  inherited session ID after resume; it can retain a startup identity.
-- A natively loaded Claude skill can also provide the prompt substitution
-  `${CLAUDE_SESSION_ID}`. The project discovery entrypoint passes this expanded
-  value into the shared workflow. A reference read from disk is not substituted;
-  a literal placeholder is unusable. This substitution is not a Bash variable.
-  Direct file reads can still use `CLAUDE_CODE_SESSION_ID`. An already-exposed
-  hook/status-line `session_id` and `transcript_path` are other identity sources;
-  do not install or reconfigure those features to obtain them.
-- Prefer an explicit current `transcript_path`. Otherwise find the exact
-  `<session-id>.jsonl` filename beneath `<CLAUDE_CONFIG_DIR>/projects/`, or
-  `~/.claude/projects/` when unset. Directory names can be customized; do not
-  assume the current path's punctuation-to-hyphen encoding. Confirm relevant
-  records' `sessionId` and project metadata. Do not traverse child-agent files
-  unless their relationship to this measured work is established.
-- For `type: "assistant"` records, inspect `message.usage` and completed request
-  identity. Deduplicate by `requestId` plus `message.id` when both exist, or by
-  `message.id` when it alone identifies the response. One response can occupy
-  several transcript rows; sum responses, not rows. Use its confirmed final
-  usage snapshot, not partial streaming counts or the sum of copies. If copies
-  differ and the final snapshot cannot be identified, affected totals stay null.
-  A non-null `message.stop_reason` can support completion, but a null value or
-  the presence of a `usage` object alone does not prove finality. Use documented
-  host completion/tool ordering when available; otherwise note the gap.
-- Normalize each final response as:
+- Read `CLAUDE_CODE_SESSION_ID` and `CLAUDE_CONFIG_DIR` from the current shell.
+  An MCP server's inherited ID may be stale after resume. Native skill
+  substitution `${CLAUDE_SESSION_ID}` or exposed hook/status-line session/path
+  metadata also works; literal unexpanded placeholders do not.
+- Prefer an explicit current `transcript_path`. Otherwise discover the exact
+  `<id>.jsonl` below `<CLAUDE_CONFIG_DIR>/projects/` or `~/.claude/projects/`.
+  Directory names vary; do not derive them from cwd punctuation. Validate
+  `sessionId` and workspace; do not traverse unrelated agent files.
+- Use completed `type: assistant` rows' `message.usage`. Deduplicate by
+  `requestId` plus `message.id`, or `message.id` when sufficient. One response
+  may span several rows. Use its identified final snapshot, not streaming or
+  summed copies. Conflicting copies require proven finality; a non-null
+  `stop_reason` helps, but a usage object alone does not prove completion.
+- Claude input is `input_tokens + cache_creation_input_tokens +
+  cache_read_input_tokens`. These are disjoint. Output is `output_tokens`,
+  already including thinking. Do not also add nested cache durations or thinking
+  text. Missing cache categories mean zero only when the schema establishes it.
+- Status-line context-window totals/current usage, /cost, limits and a headless
+  result from another session are not work-interval spend.
 
-  ```text
-  input = input_tokens + cache_creation_input_tokens + cache_read_input_tokens
-  output = output_tokens
-  ```
+## Delegated work
 
-  These three Claude input categories are disjoint. Do not also add the nested
-  `cache_creation` duration breakdown. Thinking is included in `output_tokens`;
-  do not add thinking text or `output_tokens_details.thinking_tokens` again.
-  Missing cache fields can mean zero only when the source's documented schema
-  establishes that convention; unknown accounting leaves input null even when
-  output is known. Reject inconsistent or placeholder usage rather than repairing
-  it with guesses.
-- Do not subtract status-line `context_window.total_input_tokens`,
-  `total_output_tokens`, `current_usage`, or context percentages. Despite the
-  names, these describe current context/latest-response usage, not cumulative
-  session spend. `/cost` dollars, account rate limits, and a headless result
-  obtained by launching another session are not work-interval usage sources.
-- Retain the agent ID from the dispatch result. Prefer an already-exposed
-  `agent_transcript_path` linked to that dispatch; existing SubagentStop metadata
-  can supply `session_id`, `agent_id` and that path. Do not install a hook. For a
-  confirmed parent transcript and agent ID, look for the exact
-  `<session-id>/subagents/agent-<agent-id>.jsonl` beneath its project directory.
-  Validate the parent/session and agent relationship in available metadata;
-  `sessionId` alone does not distinguish parent and child response rows. Apply
-  the same finality, input normalization and request deduplication to child rows.
-  If this host uses a different layout, use an explicit linked path or note the
-  unsupported layout; never scan neighboring agents.
+Read this section only when delegating. Retain dispatch identities, source
+mapping, parent relationship and work boundaries in memory; apply the same rules
+to resumed work and descendants. Display names, shared cwd/timestamps or copied
+history do not prove linkage. Missing delegation-tool counters does not end lookup.
+
+Use only linked existing child sources. Existing children need a pre-dispatch
+baseline; new/forked children need requests attributable to this dispatch, not
+copied history or assumed-zero counters. Finish all delegated checks before stop.
+
+Choose one proven complete calculation: an inclusive interval counter once;
+deduplicated final parent/child request union; or disjoint interval amounts and
+final-request sums. Stable provider request IDs deduplicate cross-source copies;
+namespace locally unique IDs. Conflicting final copies, unknown inclusion or
+coverage leave affected full totals null. Parent/thread labels or equal counts
+alone do not prove inclusion. No delegates means no child-coverage requirement.
+
+### Codex delegated usage
+
+Retain returned child thread IDs or exposed `collabToolCall` sender/new/receiver
+thread IDs. Validate dispatch linkage, then use exact-ID rollout lookup above.
+An already-connected API may support `parentThreadId/ancestorThreadId` filters;
+do not enable features or start a server. Thread-scoped notifications alone do
+not establish descendant coverage.
+
+### Claude Code delegated usage
+
+Prefer a dispatch-linked `agent_transcript_path`, including existing exposed
+SubagentStop metadata; do not install hooks. Otherwise discover the exact
+`<session-id>/subagents/agent-<agent-id>.jsonl`. Validate both parent session and
+agent relationship; `sessionId` alone cannot distinguish parent/child copies.
+Use the same finality, normalization and deduplication rules.
 
 ## Record provenance
 
-Keep the schema unchanged. Use one short note for successful collection, such as
-`Tokens from Codex current-session final request usage; deduplicated work requests;
-cache and reasoning already included.` or
-`Tokens from Claude Code current-session final response usage; cache input added
-once; duplicate response rows excluded.` If only one field is known, record it
-and explain the other field's gap. If collection fails, name the actual missing
-identity, permission, schema, finality, or boundary; do not merely say that the
-prompt lacked token metadata. Finalize the record in the same invocation.
+Keep the fixed schema. One short note names the source, scope and calculation,
+for example: `Tokens from current Codex final work requests; deduplicated;
+cache/reasoning already included.` On failure, name identity, permission, schema,
+finality, boundary or coverage failure, not merely absent prompt metadata.
+Finalize in this invocation even with null metrics.
 
-When totals are unknown but parent interval counts are valid, retain a note such
-as `Partial parent work usage: input=1823140, output=9819; full totals unknown
-because child usage and parent inclusion could not be verified after linked-source
-lookup.` Include only known fields; never substitute zero for an unknown one.
-This is a diagnostic partial measurement, not a total or a detailed breakdown.
-Successful delegated collection instead names its coverage and calculation, such
-as `Tokens from linked parent/child final requests; complete work coverage;
-duplicate response copies excluded.` Keep identities and paths out of notes.
+If parent interval counts are valid but full linked coverage is unknown, keep
+known fields in one note, explicitly partial: `Partial parent work usage:
+input=123, output=45; full totals unknown because linked child usage unavailable.`
+Never present partial as full totals or replace missing fields with zero.
+Successful delegated notes name complete coverage/calculation. Keep identities
+and source paths out of the saved record.
 
 ## Sources
 
-These are authoring references, not required network requests during a run:
-
-- [Codex App Server usage notifications](https://learn.chatgpt.com/docs/app-server)
-- [Claude Code session environment](https://code.claude.com/docs/en/env-vars)
-- [Claude Code skill session substitution](https://code.claude.com/docs/en/skills#available-string-substitutions)
-- [Claude Code transcript identity](https://code.claude.com/docs/en/hooks)
-- [Claude Code status-line context counters](https://code.claude.com/docs/en/statusline#context-window-fields)
-- [Claude input usage and caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance)
-- [Claude thinking output accounting](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost)
+Authoring references only, not runtime network requests:
+[Codex App Server](https://learn.chatgpt.com/docs/app-server),
+[Claude session environment](https://code.claude.com/docs/en/env-vars),
+[Claude hooks](https://code.claude.com/docs/en/hooks),
+[Claude cache accounting](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).

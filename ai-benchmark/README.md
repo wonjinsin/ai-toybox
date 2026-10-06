@@ -106,6 +106,19 @@ are ignored by Git; existing archives remain unchanged. Earlier runs retain thei
 original prompts and may require a server, so compare them separately from runs
 using the current prompt.
 
+Browser setup checks ordinary shell Node Playwright with installed Chrome before
+connected browser tools. If permitted, a temporary `playwright-core` runtime
+outside `output/` supplies missing packages; no browser installation or security
+changes are needed. Node REPL import failures do not establish shell unavailability.
+Checks use a permitted method selected before navigation: direct
+`file://` when supported, or a temporary loopback HTTP server serving only
+`output/` when HTTP is permitted and direct-file navigation is unsupported.
+The artifact must still run directly without a server. HTTP interaction checks
+and static `file://` compatibility checks are recorded separately; they do not
+prove direct-file execution. An explicit security denial stops that action,
+without switching tools or protocols to bypass it. See
+[browser verification](skills/benchmark-record/references/browser-verification.md).
+
 ## Measurement Boundary
 
 Measurement starts immediately before implementation and ends after its checks.
@@ -147,9 +160,10 @@ in `notes`, explicitly labeled partial with the missing coverage; the token
 fields continue to represent full work totals, never parent-only substitutes.
 That status does not claim every browser requirement has been verified.
 
-An observed failure is saved as `failed`; an observed interruption as
-`interrupted`. An abrupt process termination can leave an initial `running`
-record because there is no background service to finalize it.
+An observed failure is saved as `failed`. An interrupted, unfinished attempt is
+`interrupted`; when the same attempt resumes and finishes, it is `completed`
+with an interruption note and original measurement bounds. An abrupt process
+termination can leave `running` because no background service finalizes it.
 
 ## Shared Skill Setup
 

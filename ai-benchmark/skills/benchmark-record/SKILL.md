@@ -6,84 +6,61 @@ disable-model-invocation: true
 
 # Run the Solar System Benchmark
 
-Build the [fixed task](assets/solar-system-prompt.md), save its small record, and
-reply in one invocation. Finish recording before replying; never require a second
-collection request. Analysis and comparison are out of scope.
+Build the [fixed task](assets/solar-system-prompt.md) and finalize its record before
+replying in this invocation. No second collection request, analysis or comparison.
 
-Select and apply only skills explicitly invoked in the same user request. A request
-to read this skill and run it also selects `benchmark-record`; quoted examples or
-discussion do not select other skills.
-The discovery entrypoint, this shared skill, and bundled resources are one skill.
+## Skill selection
 
-Do not apply unselected skills, even if already injected by the host or hooks.
-Keep this restriction after resume or compaction; prior activation, automatic
-routing, dependencies, and follow-up workflows do not authorize another skill.
-Do not load or invoke another skill merely because it seems relevant to
-implementation, verification, or recording. Use ordinary host tools and pass the
-same restriction to delegated benchmark work.
-
-Follow actual instruction priority; hook injection alone grants no higher priority.
-Apply an unselected skill only when a higher-priority host instruction requires it.
-Record actually applied extras and reasons in `run.json.notes`, following the
-record format; distinguish mandatory injected instructions from newly required
-skill loads. Disclose unavoidable exceptions in the final reply; do not claim
-isolation. Do not announce suppressed skills as active or add boilerplate notes
-for them.
-
-Read [the record format](references/record-format.md) and use
-[the template](assets/run.json). Resolve resources relative to this file.
-Use the current model and normal host tools; no separate model launcher,
-collector script, hook, or background process is needed.
-
-Claude Code session context, when substituted by its native skill loader:
-`${CLAUDE_SESSION_ID}`. An unexpanded placeholder is not a session identifier.
+Apply only skills explicitly selected in the current request. A request to read and run
+this skill selects it; quotes/discussion do not. Discovery, shared skill and bundled
+resources are one skill. Injection, prior activation, resume/compaction, routing,
+dependencies and follow-up workflows do not authorize extras. Only higher-priority
+host requirements override this; injection alone grants no higher priority. Pass this
+policy to delegates. Follow the [skill context rules](references/record-format.md#skill-context-notes)
+for actually applied extras, reasons and injected-versus-required distinctions;
+disclose unavoidable exceptions in the reply. Never claim isolation or announce
+suppressed skills as active/add boilerplate notes for them.
 
 ## Run
 
-1. Read the real invocation-start clock, then automatically
-   [resolve model and effort](references/settings-resolution.md) before reserving
-   a directory. Inspect available current-run sources and the current host's
-   configuration; missing injected metadata alone is not a reason to stop lookup.
-   Resolve fields independently and retain short source notes. Create
-   `runs/<agent>-<model>-<effort>-<run-id>/` under the project root using
-   the [directory naming rules](references/record-format.md#run-directory).
-   Honor a requested output root. Never overwrite another run.
-   Copy the bundled task exactly to `prompt.md`; do not request another prompt
-   or substitute an unrelated task.
-   Save an initial `run.json` with status `running`, the resolved model/effort,
-   and source notes; retain them in the final record. Automatically
-   [resolve a current-session usage source](references/usage-resolution.md);
-   missing injected counters alone is not a reason to leave tokens unknown.
-2. Immediately before implementation, read a real clock and capture a matching
-   usage baseline from the resolved source. Follow the usage reference's boundary
-   rules; keep observations as working data only, without transcript or evidence
-   archives. Unavailable usage must not block work.
-3. Build the fixed Solar System and save its entrypoint as `output/index.html`,
-   with local resources under `output/`. When a browser is available, open the
-   HTML via `file://` and check automatic motion, pause/resume, and speed control
-   without starting a server. Otherwise, inspect scripts and assets for `file://`
-   compatibility and missing local files, then note the browser verification
-   gap. Do not claim browser behavior was verified from code alone.
-   When delegating, retain linked child identities and work boundaries, and
-   finish delegated checks before stopping. Follow
-   [delegated usage collection](references/usage-resolution.md#delegated-work).
-4. Immediately after implementation and its checks finish, capture the end clock
-   and matching usage endpoint, closing the measured work interval.
-   Resolve input/output totals using the usage reference and record format.
-   Exclude record processing and the final reply from the interval.
-   Missing or unscoped metrics stay `null` with a short explanation.
-   Preserve valid parent interval counts as explicitly partial notes when full
-   delegated totals remain unknown.
-5. Save the final `run.json` in this same invocation. Use status `completed` when
-   the implementation attempt finishes, or `failed` when it cannot finish.
-   Finalize finished attempts even with missing metrics.
-   Keep the fixed schema and concise notes; do not save a response copy, transcript,
-   evidence directory, session/turn identifiers or previous-manifest backup.
-6. Read back the JSON and verify the prompt copy, output path and known metrics.
-   Reply directly with the HTML and record paths, available timing/tokens and any
-   important verification gap. The brief final reply is outside the measurements.
+Use the current model and ordinary host tools, without a separate model launcher,
+collector, hook or persistent background service. Browser startup/temporary servers
+follow [browser verification](references/browser-verification.md).
+Read the [record format](references/record-format.md) and use its [template](assets/run.json).
+For [settings](references/settings-resolution.md) and [usage](references/usage-resolution.md),
+read shared setup/selection, boundary/provenance and current-host sections only;
+delegated sections only if delegating. Skip authoring sources. Resolve resources
+relative to this file. Claude native `${CLAUDE_SESSION_ID}` is an identifier only
+when substituted.
 
-On a recoverable failure or observed interruption, finalize the available record
-as `failed` or `interrupted` and explain it. An abrupt termination may leave the
-initial `running` record. If files cannot be saved, report that explicitly.
-Do not fabricate an artifact, measurement or successful write.
+1. **Set up.** Read the invocation-start clock; locate the current-session usage
+   source, resolve model/effort from runtime before configuration, and prepare a
+   permitted browser check. Reserve `runs/<agent>-<model>-<effort>-<run-id>/` under
+   the project/requested output root per naming rules, never overwriting. Copy
+   the fixed task exactly to `prompt.md`; do not request/substitute another prompt.
+   Save `run.json` as `running` with settings/source notes. Missing injected
+   counters does not end lookup.
+2. **Start measurement.** Immediately before implementation, capture a real clock
+   and matching usage baseline with its issuing request identity in a separate
+   boundary call per the usage reference. Unavailable usage must not block work.
+3. **Build and check.** Save `output/index.html` and local resources under `output/`.
+   Follow browser verification and record method/gaps; preserve server-free `file://`
+   execution. Before delegating, read [delegated work](references/usage-resolution.md#delegated-work)
+   and its current-host subsection. Finish delegated work/checks before stopping.
+4. **Stop measurement.** Immediately after implementation/checks, capture the
+   end clock and matching usage endpoint with its issuing request identity in a
+   separate boundary call. Exclude record processing and the reply. Resolve
+   interval input/output totals per the references; missing/unscoped metrics
+   stay `null` with a short reason.
+5. **Finalize.** Save final `run.json` now with the fixed schema, settings/source
+   notes and any interruption/resume. Finished attempts are `completed` even with
+   missing metrics; `failed` if the attempt cannot finish. Follow record retention limits; observations
+   remain working data.
+6. **Read back and reply.** Verify JSON, exact prompt, output path and known metrics.
+   Reply with HTML/record paths, available timing/tokens and important verification
+   gaps, outside measurement.
+
+Use `interrupted` only for unfinished interrupted attempts. Resume the same attempt
+and original measurement bounds; finished work is `completed`, unprovable metrics
+null. Recoverable failures are `failed`; abrupt termination may leave `running`.
+Report write failures; never fabricate artifacts or measurements.
