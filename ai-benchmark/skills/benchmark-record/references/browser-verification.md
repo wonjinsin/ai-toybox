@@ -1,40 +1,31 @@
 # Verify the Local HTML
 
-Choose a permitted method during setup, before navigation, using ordinary host
-tools. The saved artifact must run directly as `file://`, without a server/build.
+Choose a permitted Aside navigation method during setup, before navigation.
+The saved artifact must run directly as `file://`, without a server/build.
 
 ## Select a browser
 
-On shell-capable hosts with installed Chrome, prefer shell Node and Playwright
-before connected browser tools. Node REPL import errors do not prove shell packages unavailable;
-empty inventory or PATH lookup alone does not prove Chrome absent. On macOS, check
-`/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`;
-`channel: 'chrome'` also locates standard platform installations.
-Check documented protocol support before choosing navigation.
+Use only connected Aside MCP when its direct `repl` tool is available. Use the
+current model to drive the installed Aside browser through that tool; never use
+Aside `exec` or a natural-language CLI task, which launches another model session.
+Read the tool's current documentation before navigation. Create a new tab for
+the benchmark and close only tabs created for this attempt. Do not attach to
+unrelated user tabs, read browsing memory, or change account/profile settings.
+Use the documented snapshot, locator, screenshot and event APIs to check the
+artifact. Check the documented API and navigation capabilities, including `file://`;
+record actual capability and verification gaps.
+`Cannot navigate to a file URL without local file access.` is an access denial,
+not unsupported protocol support. Stop that access and report the missing
+permission; do not switch protocols, tools or settings to bypass it.
 
-If shell Playwright is missing/incompatible and installation is permitted, prepare
-a temporary runtime outside `output/` during setup:
+Install/register Aside outside benchmark attempts. Do not install it or add MCP
+configuration during a measured run. If Aside is unavailable or cannot perform a
+required check, perform the remaining permitted checks and record the reason and
+verification gaps. Do not switch to another browser or install another browser
+automation runtime. A security denial still stops that action, as specified below.
 
-```sh
-benchmark_runtime=$(mktemp -d)
-npm install --prefix "$benchmark_runtime" --ignore-scripts --no-audit --no-fund playwright-core@1.63.0
-```
-
-Use shell Node `require()` on its absolute `node_modules/playwright-core` path,
-not virtual Node REPL imports. Launch installed Chrome:
-
-```js
-const browser = await chromium.launch({ channel: 'chrome', headless: true, chromiumSandbox: true });
-try {
-  const page = await browser.newPage();
-  await page.goto(pathToFileURL(absoluteIndexPath).href);
-  // Check the actual scene and controls here.
-} finally { await browser.close(); }
-```
-
-No new browser installation, existing user profile, raw CDP, insecure flags or
-security-setting changes. Follow connected tools' documented initialization and
-navigation capabilities.
+No new browser installation, raw CDP, insecure flags or security-setting changes.
+Follow Aside's documented initialization and navigation capabilities.
 
 ## Check and record
 

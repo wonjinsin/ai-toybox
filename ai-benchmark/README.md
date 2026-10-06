@@ -106,10 +106,20 @@ are ignored by Git; existing archives remain unchanged. Earlier runs retain thei
 original prompts and may require a server, so compare them separately from runs
 using the current prompt.
 
-Browser setup checks ordinary shell Node Playwright with installed Chrome before
-connected browser tools. If permitted, a temporary `playwright-core` runtime
-outside `output/` supplies missing packages; no browser installation or security
-changes are needed. Node REPL import failures do not establish shell unavailability.
+Browser verification uses only connected Aside MCP's direct `repl` tool. The current model
+controls the browser; Aside `exec` and natural-language CLI tasks must not launch
+another model session. Install the [Aside CLI](https://docs.aside.com/help/developers)
+and register MCP before running a benchmark. For Codex:
+
+```sh
+codex mcp add aside -- /absolute/path/to/aside mcp --host local
+```
+
+Start a new Codex session to load the registered tools. Use a new benchmark tab
+and close only tabs created by the attempt. Do not access unrelated tabs or memory.
+If Aside is unavailable or cannot perform a required check, perform the remaining
+permitted checks and record the reason and browser verification gaps. Do not
+switch to another browser or install another browser automation runtime.
 Checks use a permitted method selected before navigation: direct
 `file://` when supported, or a temporary loopback HTTP server serving only
 `output/` when HTTP is permitted and direct-file navigation is unsupported.

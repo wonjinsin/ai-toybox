@@ -26,7 +26,9 @@ host skill selection for repository investigation or maintenance.
 
 ## Browser verification
 
-- Prefer Playwright for browser verification when available and permitted.
+- Use only connected Aside MCP's direct REPL for browser verification when
+  available and permitted. If unavailable, perform static checks and report the
+  browser verification gap.
 - Choose a permitted verification method from documented browser capabilities
   before navigation. For local HTML, prefer the actual file:// entrypoint.
 - If file:// is unsupported but loopback HTTP is permitted, verify through a
