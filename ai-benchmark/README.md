@@ -164,7 +164,7 @@ only usage sources linked to that work, including resumed work and descendants.
 It uses a proven inclusive interval counter once, deduplicates complete linked
 request usage, or combines proven disjoint counter deltas and final-request sums.
 Missing counts in a delegation tool result alone do not end lookup. See
-[delegated usage collection](skills/benchmark-record/references/usage-resolution.md#delegated-work).
+[delegated usage collection](skills/benchmark-record/references/delegated-usage.md).
 
 If current-session identity, final usage, or exact interval boundaries cannot be
 established after lookup, the affected values are `null` with a brief reason.
@@ -182,6 +182,14 @@ An observed failure is saved as `failed`. An interrupted, unfinished attempt is
 with an interruption note and original measurement bounds. An abrupt process
 termination can leave `running` because no background service finalizes it.
 
+### Validating skill changes
+
+For runtime regression comparisons, create new attempts using the current `2.1` template,
+the identical fixed task, matching host/model/effort, and the same permitted Aside verification method.
+Check all task requirements and its acceptance scenario, and compare scoped measurements only when their boundaries and coverage are proven.
+Historical `2.0` records or Playwright observations do not establish equivalence under the current schema and browser policy; preserve them unchanged.
+Fresh-context instruction evaluations and static checks are narrower evidence, not substitutes for an observed browser run.
+
 ## Shared Skill Setup
 
 | Host | Project entrypoint |
@@ -193,6 +201,16 @@ These are ordinary files containing discovery metadata and a relative link to
 [the shared skill](skills/benchmark-record/SKILL.md). Resources resolve from the
 shared skill directory. The Claude entrypoint includes current-session context;
 workflow rules remain in the shared skill. There are no symlinks.
+
+### Skill document layout
+
+The shared `SKILL.md` contains the workflow; references separate the detailed rules by role.
+Read the shared [record format](skills/benchmark-record/references/record-format.md),
+[settings](skills/benchmark-record/references/settings-resolution.md), [usage](skills/benchmark-record/references/usage-resolution.md)
+and [browser verification](skills/benchmark-record/references/browser-verification.md), then only the current host's
+[Codex](skills/benchmark-record/references/codex.md) or [Claude Code](skills/benchmark-record/references/claude-code.md) document.
+Read Shared procedure and the current-host section of [delegated usage](skills/benchmark-record/references/delegated-usage.md) only when delegating.
+The fixed task, record schema, settings precedence and token calculations are unchanged; authoring Sources are not runtime inputs.
 
 For another project or a personal installation, copy the complete
 `skills/benchmark-record/` folder, including its assets and references, into the

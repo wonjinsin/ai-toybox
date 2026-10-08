@@ -37,11 +37,12 @@ Follow Aside's documented initialization and navigation capabilities.
 3. If no permitted method starts, perform static checks and name the actual
    startup/access failure in notes and the reply.
 
-Check visible rendering, exactly three planets, automatic motion, pause/resume,
-global speed changes preserving relative speeds, and console/page errors.
+Use all Requirements and the Acceptance scenario in the [fixed task](../assets/solar-system-prompt.md)
+as the verification checklist. Run the scenario in order, then cover remaining
+requirements, including both specified viewport sizes; the scenario alone is not exhaustive.
 Observe motion across frames and control actions; labels or code inspection do not prove behavior.
-Check missing local assets, ES modules/imports and local `fetch()`/XHR.
-Record actual method and gaps.
+Check visible rendering, console/page errors, missing local assets, ES modules/imports
+and local `fetch()`/XHR. Record the actual method, gaps and any unexecuted requirements/scenario steps.
 
 An explicit security denial stops that action. Do not switch protocol, tools,
 browser surface or settings to achieve it. Unavailable bindings and unsupported

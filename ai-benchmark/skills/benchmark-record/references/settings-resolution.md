@@ -35,48 +35,9 @@ leave unknown and note the unresolved selector. Never infer effort from model, t
 account tier or built-in defaults. Token availability does not affect settings;
 never rename existing run directories.
 
-## Codex
+## Host settings
 
-- Prefer current-turn metadata. Connected App Server `config/read` supplies layered
-  configuration, not proof of absent overrides. Locate the validated current
-  rollout per usage resolution before TOML fallback; read active/latest
-  `turn_context.payload.model` and `.effort` even if initial environment metadata
-  lacked them. Never use another session's settings.
-- Otherwise parse `model`/`model_reasoning_effort` in current `CODEX_HOME/config.toml`,
-  or `~/.codex/config.toml` when unset. Inspect applicable trusted project
-  `.codex/config.toml` layers from project root toward cwd; closest overrides user.
-- Honor exposed active profiles, startup overrides, managed constraints and host
-  layering. Profile existence does not activate it; inactive/untrusted scopes
-  cannot override applicable values.
-- For unset fields, check exposed cloud-managed defaults, then readable host system
-  configuration (`/etc/codex/config.toml` on Unix). Both are below user settings,
-  distinct from enforced constraints. Never replace a higher-priority reset with
-  a lower value or guess unexposed built-in defaults.
-- If only user/project files are readable, use their best values and note unverified
-  active-profile, startup and turn overrides.
-
-## Claude Code
-
-- Prefer concrete current-execution model metadata. Read only `CLAUDE_EFFORT` for
-  runtime effort in current Bash when present; it exposes active supported-model
-  effort, is runtime-observed and overrides configured candidates.
-- Configured model precedence: known current `/model` or startup `--model`, then
-  `ANTHROPIC_MODEL`, then applicable settings `model`. `ANTHROPIC_DEFAULT_MODEL`
-  applies only if no settings file sets model. Preserve aliases such as `sonnet`
-  and note unresolved exact runtime models.
-- Configured effort: `CLAUDE_CODE_EFFORT_LEVEL` overrides known `--effort`/`/effort`
-  and saved settings. Read applicable per-model `modelSettings`/`effortLevel` and
-  respect exposed `maxEffortLevel` caps; skip uncertain applicability with a note. Never use
-  inactive-model entries for the active model.
-- Read user `settings.json` under `CLAUDE_CONFIG_DIR` or `~/.claude` when unset,
-  plus project `.claude/settings.json` and `.claude/settings.local.json`.
-  Scalar precedence: managed, known startup `--settings`, project local, shared
-  project, user. Include only exposed managed/startup sources; honor known
-  `--setting-sources` restrictions. Session/environment overrides follow the
-  field-specific rules above, not a generic merge.
-- Query only named model/effort/location variables and relevant JSON keys. If
-  startup, managed or session-only choices are inaccessible, use best configured
-  values and note gaps. Saved effort never replaces observed active effort.
+Read only the current host's document: [Codex](codex.md#settings) or [Claude Code](claude-code.md#settings).
 
 ## Sources
 

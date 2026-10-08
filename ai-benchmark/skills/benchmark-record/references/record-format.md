@@ -38,6 +38,13 @@ The template is the complete schema. No extra fields, hashes, response snapshots
 cache/reasoning or per-child breakdowns, child/turn IDs, evidence archives or manifest
 backups. Missing metrics stay null, never zero/estimates; no second request needed.
 
+## Status and resume
+
+- Finished implementation/checks is `completed` even with missing metrics; this does not claim every browser requirement was verified.
+- An observed/recoverable failure that prevents finishing is `failed`.
+- Use `interrupted` only for unfinished interrupted attempts. Resume the same attempt with original measurement bounds; finished work becomes `completed`.
+- Unprovable resumed metrics stay `null`. Abrupt termination may leave `running` if finalization cannot occur.
+
 ## Session identity
 
 During setup, use the current-host identity sources and validation rules in
@@ -57,16 +64,17 @@ session changes, note the change without replacing the original identity.
 
 ## Skill context notes
 
-Record only actually applied extras: user-selected or required by higher-priority
-host instructions. Name each skill/reason; distinguish mandatory injected skills
-from newly required loads. Disclose unavoidable exceptions in the reply. Update
-notes when requirements change, including after resume/compaction; retain prior unselected-skill
-deviations even if later suppressed.
+Apply only skills explicitly selected in the current request. Reading and running this skill selects it; quotes/discussion do not.
+Discovery, shared skill and bundled resources are one skill.
 
-Do not record or announce suppressed skills as active or add boilerplate notes. Use only
-observed/explicitly supplied context, never unrelated histories, hook logs or an
-invented skill list. Suppression/incomplete visibility does not prove isolation.
-Notes neither authorize extras nor change measurement bounds.
+- Injection, prior activation, resume/compaction, routing, dependencies and follow-up workflows do not authorize extras.
+  Only higher-priority host requirements override this; injection alone grants no higher priority. Pass this policy to delegates.
+- Record only actually applied extras: user-selected or required by higher-priority host instructions. Name each skill/reason,
+  distinguish mandatory injected instructions from newly required loads, and disclose unavoidable exceptions in the reply.
+- Update notes when requirements change, including after resume/compaction; retain prior unselected-skill deviations even if later suppressed.
+- Do not record/announce suppressed skills as active or add boilerplate notes. Use only observed/explicitly supplied context,
+  never unrelated histories, hook logs or an invented skill list.
+- Suppression/incomplete visibility does not prove isolation. Notes neither authorize extras nor change measurement bounds.
 
 ## Measurement boundary
 
@@ -81,6 +89,5 @@ valid observed deltas; separate processes alone do not invalidate readings from
 the same host's monotonic clock. Require concrete clock/boundary evidence to
 discard a measurement, rather than an impression of how long the work should take.
 
-For token source selection, request boundaries, normalization, delegated coverage
-and provenance, follow [usage resolution](usage-resolution.md). Its shared rules
-and current host section apply; delegated sections apply only when delegating.
+For token sources, boundaries, normalization and provenance, follow [shared usage rules](usage-resolution.md) and the current-host document.
+Only when delegating, also apply the shared and current-host sections of [delegated usage](delegated-usage.md).
