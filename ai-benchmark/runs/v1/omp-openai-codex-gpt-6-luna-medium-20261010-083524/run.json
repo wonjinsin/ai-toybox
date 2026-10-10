@@ -1,0 +1,16 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a124f2-a229-72dd-920c-a1666d9a8aa9",
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "medium",
+  "duration_ms": 121604,
+  "input_tokens": 382270,
+  "output_tokens": 12705,
+  "notes": [
+    "Runtime verified from this invocation's omp session metadata: model_change, thinking_level_change, session_init.resolvedModel, and assistant provider/model; session header cwd matches project and parentSession links to dispatch parent.",
+    "Tokens from current omp session per-assistant-message usage; excluded start-boundary request, included stop-boundary request; cacheRead/cacheWrite added once to input, reasoning included in output.",
+    "Aside direct REPL unavailable. Static artifact/prompt checks and Node deterministic orbit-state smoke passed; no actual browser rendering, interaction, console, viewport or file:// verification. Two mocked DOM/Three.js smoke attempts stopped in incomplete harness setup before app behavior was exercised.",
+    "Only benchmark-record applied; no extra skills."
+  ]
+}

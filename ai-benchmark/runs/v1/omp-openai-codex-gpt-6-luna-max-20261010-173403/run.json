@@ -1,0 +1,16 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a124f2-a238-71fc-99a6-ffcf681de20d",
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "max",
+  "duration_ms": 367211,
+  "input_tokens": 2122312,
+  "output_tokens": 35898,
+  "notes": [
+    "Runtime model/effort and session ID verified from current OMP session model_change, thinking_level_change, session_init, assistant metadata, and session header.",
+    "Tokens from 21 complete current-session assistant responses delimited by start/stop response IDs; input includes disjoint cache categories, output includes reasoning; usage categories cross-check and no model_usage records were found.",
+    "Aside direct REPL unavailable; no browser rendering, interactions, console, viewport, or actual file:// execution checked. Static checks and non-browser mock runtime smoke passed; CDN loading remains unverified.",
+    "Corrected a smoke fixture's 30-second angle to 205.8° and the initial prompt-copy ending before stop; final smoke and byte comparison passed."
+  ]
+}

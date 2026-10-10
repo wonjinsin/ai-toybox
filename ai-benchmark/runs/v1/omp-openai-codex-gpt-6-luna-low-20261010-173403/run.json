@@ -1,0 +1,15 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a124f2-a225-73dc-a5e3-bd953808ee5a",
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "low",
+  "duration_ms": 99240,
+  "input_tokens": 342676,
+  "output_tokens": 12050,
+  "notes": [
+    "Runtime settings verified from this session's model_change, thinking_level_change and session_init metadata; host is omp.",
+    "Tokens from this session's usage records in the measured interval; summed input plus cacheRead/cacheWrite and output, with reasoning included in output. Eight records covered the interval boundaries.",
+    "Aside direct REPL is unavailable here. A mocked non-browser runtime smoke and static checks passed; real browser rendering/interactions, console, both viewport sizes, and direct file:// navigation were not verified. Three.js loads from jsDelivr, requiring network access."
+  ]
+}

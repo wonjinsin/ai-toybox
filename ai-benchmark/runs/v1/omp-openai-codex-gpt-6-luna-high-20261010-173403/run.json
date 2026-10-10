@@ -1,0 +1,16 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a124f2-a22b-75f2-98ec-b0ceda79f528",
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "high",
+  "duration_ms": 219519,
+  "input_tokens": 867978,
+  "output_tokens": 18264,
+  "notes": [
+    "Runtime settings: current OMP session model_change, assistant provider/model, resolved session_init and thinking_level_change; effort high.",
+    "Usage: 19 current-session assistant requests from start baseline through stop request; input includes input/cacheRead/cacheWrite once, output counted once (reasoning is included).",
+    "Aside direct REPL unavailable. Node VM smoke with DOM/Three stubs and static checks passed; actual rendering, interaction, console, viewport, and file:// browser checks were unavailable. Three.js is loaded by a classic CDN script, so opening requires network access.",
+    "Mandatory host skill load: using-harness-flow was read; its explicit subagent-stop excluded applying its workflow."
+  ]
+}

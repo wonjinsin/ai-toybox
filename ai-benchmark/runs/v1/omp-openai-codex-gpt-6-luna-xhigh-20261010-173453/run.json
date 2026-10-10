@@ -1,0 +1,15 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a124f2-a22e-748a-9abd-c0c1fb818df5",
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "xhigh",
+  "duration_ms": 555719,
+  "input_tokens": 688852,
+  "output_tokens": 31469,
+  "notes": [
+    "Runtime model/effort verified from the invoking omp session JSONL: model_change=openai-codex/gpt-6-luna; thinking_level_change=xhigh; session_init.resolvedModel=openai-codex/gpt-6-luna:xhigh; assistant provider/model=openai-codex/gpt-6-luna. session_id is the same session header id.",
+    "Aside direct REPL unavailable. Non-browser Node VM smoke passed with mocked DOM/Three.js; live rendering, console, interaction, viewport, and file:// behavior remain unverified. Three.js loads from a classic CDN script and requires network access.",
+    "Tokens from this session's assistant-message usage records across the measured interval (10 boundary-inclusive requests); input sums input plus disjoint cacheRead/cacheWrite once, output uses output without adding reasoning again."
+  ]
+}

@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080d18">
+  <title>Solar Observatory — Orbital Lab</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f3f5fb;
+      --muted: #919bad;
+      --quiet: #667185;
+      --line: rgba(183, 198, 225, .12);
+      --panel: rgba(15, 22, 37, .91);
+      --panel-light: rgba(22, 31, 50, .78);
+      --cyan: #70ddf4;
+      --gold: #ffc777;
+      --green: #83e0bd;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      color: var(--ink);
+      background: radial-gradient(ellipse at 46% 30%, #121d32 0%, #0a1020 48%, #070b14 100%);
+    }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    .shell {
+      width: 100%; height: 100vh; height: 100dvh;
+      display: grid; grid-template-rows: 66px minmax(0, 1fr) 126px;
+      gap: 13px; padding: 0 22px 17px;
+    }
+    .topbar { display: flex; align-items: center; justify-content: space-between; min-width: 0; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      width: 38px; height: 38px; display: grid; place-items: center; flex: none;
+      border: 1px solid rgba(255, 199, 119, .32); border-radius: 12px;
+      color: var(--gold); background: linear-gradient(145deg, rgba(255, 199, 119, .16), rgba(112, 221, 244, .06));
+      box-shadow: inset 0 0 20px rgba(255, 199, 119, .06);
+    }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-copy { min-width: 0; }
+    .brand-copy strong { display: block; font-size: 14px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+    .brand-copy span { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+    .top-meta { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px rgba(131, 224, 189, .8); }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 284px; min-height: 0; gap: 13px; }
+    .scene-panel {
+      position: relative; min-width: 0; min-height: 0; overflow: hidden; isolation: isolate;
+      border: 1px solid rgba(178, 194, 223, .13); border-radius: 18px;
+      background: radial-gradient(ellipse at 52% 42%, rgba(28, 43, 69, .45), rgba(7, 11, 20, .92) 68%);
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .24), inset 0 1px rgba(255,255,255,.025);
+    }
+    #sceneCanvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; outline: none; }
+    #sceneCanvas:active { cursor: grabbing; }
+    .scene-topline { position: absolute; inset: 17px 18px auto; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+    .scene-label { color: #dbe4f2; font-size: 10px; font-weight: 650; letter-spacing: .17em; text-transform: uppercase; text-shadow: 0 1px 9px #000; }
+    .scene-hint { color: rgba(202, 213, 231, .65); font-size: 10px; letter-spacing: .04em; text-align: right; text-shadow: 0 1px 9px #000; }
+    .scene-status {
+      position: absolute; left: 17px; bottom: 16px; z-index: 2; display: flex; align-items: center; gap: 8px;
+      padding: 8px 11px; border: 1px solid rgba(183, 198, 225, .13); border-radius: 999px;
+      color: #c9d3e5; background: rgba(8, 13, 23, .64); backdrop-filter: blur(12px);
+      font-size: 10px; letter-spacing: .04em; pointer-events: none;
+    }
+    .scene-status .live-dot { width: 6px; height: 6px; }
+    .sidebar {
+      display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: 12px;
+      padding: 17px 15px; border: 1px solid var(--line); border-radius: 18px;
+      background: linear-gradient(165deg, rgba(18, 27, 44, .96), rgba(11, 17, 29, .95));
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .19);
+    }
+    .selection-block { min-width: 0; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .section-heading span:first-child { color: #bbc8dc; font-size: 10px; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+    .count-tag { color: var(--quiet); font-size: 10px; letter-spacing: .04em; }
+    .planet-list { display: grid; gap: 7px; }
+    .planet-option {
+      width: 100%; min-height: 50px; display: grid; grid-template-columns: 31px minmax(0, 1fr) 15px; align-items: center; gap: 10px;
+      padding: 7px 10px; border: 1px solid transparent; border-radius: 11px; text-align: left;
+      background: rgba(255, 255, 255, .025); cursor: pointer; transition: background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    .planet-option:hover { background: rgba(255,255,255,.065); border-color: rgba(183,198,225,.13); transform: translateY(-1px); }
+    .planet-option[aria-pressed="true"] { background: rgba(112, 221, 244, .09); border-color: rgba(112, 221, 244, .31); }
+    .planet-glyph { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 10px; font-weight: 700; }
+    .planet-option-copy { min-width: 0; }
+    .planet-option-copy strong { display: block; overflow: hidden; color: #e6ebf3; font-size: 12px; font-weight: 570; text-overflow: ellipsis; white-space: nowrap; }
+    .planet-option-copy small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; letter-spacing: .04em; }
+    .option-check { width: 6px; height: 6px; border: 1px solid #58657a; border-radius: 50%; }
+    .planet-option[aria-pressed="true"] .option-check { border-color: var(--cyan); background: var(--cyan); box-shadow: 0 0 8px rgba(112,221,244,.7); }
+    .detail-card {
+      margin-top: auto; padding: 14px; border: 1px solid rgba(183, 198, 225, .1); border-radius: 13px;
+      background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+    }
+    .detail-kicker { color: var(--quiet); font-size: 9px; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+    .detail-title { display: flex; align-items: center; gap: 8px; margin: 7px 0 11px; }
+    .detail-title strong { font-size: 16px; font-weight: 620; letter-spacing: -.02em; }
+    .detail-orb { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 12px currentColor; }
+    .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .metric { min-width: 0; padding: 8px 9px; border-radius: 8px; background: rgba(4, 8, 15, .36); }
+    .metric span { display: block; color: var(--quiet); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; }
+    .metric strong { display: block; margin-top: 4px; color: #e7ecf5; font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 560; white-space: nowrap; }
+    .camera-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; }
+    .quiet-button, .primary-button {
+      min-height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 0 10px; border: 1px solid rgba(183,198,225,.16); border-radius: 9px;
+      background: rgba(255,255,255,.035); color: #c4cfdf; font-size: 10px; font-weight: 600; cursor: pointer;
+      transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+    }
+    .quiet-button:hover { background: rgba(255,255,255,.08); color: white; border-color: rgba(183,198,225,.3); }
+    .quiet-button:active, .primary-button:active { transform: translateY(1px); }
+    .quiet-button[aria-pressed="true"] { border-color: rgba(112,221,244,.38); background: rgba(112,221,244,.11); color: var(--cyan); }
+    .primary-button { min-height: 44px; padding: 0 17px; border-color: rgba(255,199,119,.45); background: linear-gradient(135deg, rgba(255,199,119,.19), rgba(255,153,94,.1)); color: #ffe2b4; font-size: 11px; }
+    .primary-button:hover { border-color: rgba(255,199,119,.72); background: rgba(255,199,119,.22); }
+    button:focus-visible, input:focus-visible, #sceneCanvas:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+    .transport {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 22px;
+      min-width: 0; padding: 17px 20px; border: 1px solid var(--line); border-radius: 16px;
+      background: linear-gradient(135deg, rgba(17, 25, 41, .97), rgba(11, 17, 29, .97));
+      box-shadow: 0 14px 40px rgba(0, 0, 0, .2);
+    }
+    .time-block { min-width: 0; }
+    .control-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+    .control-label { color: #aab7ca; font-size: 9px; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+    .time-readout { color: #f3f5fb; font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 620; }
+    .time-readout small { color: var(--muted); font-size: 9px; font-weight: 500; }
+    input[type="range"] { display: block; width: 100%; height: 18px; margin: 0; appearance: none; background: transparent; cursor: pointer; touch-action: pan-x; }
+    input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 5px; background: linear-gradient(90deg, rgba(112,221,244,.78), rgba(112,221,244,.18)); }
+    input[type="range"]::-moz-range-track { height: 3px; border-radius: 5px; background: linear-gradient(90deg, rgba(112,221,244,.78), rgba(112,221,244,.18)); }
+    input[type="range"]::-webkit-slider-thumb { width: 13px; height: 13px; margin-top: -5px; appearance: none; border: 2px solid #09111c; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgba(112,221,244,.17), 0 0 13px rgba(112,221,244,.45); }
+    input[type="range"]::-moz-range-thumb { width: 10px; height: 10px; border: 2px solid #09111c; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px rgba(112,221,244,.17), 0 0 13px rgba(112,221,244,.45); }
+    .time-ends { display: flex; justify-content: space-between; margin-top: 4px; color: var(--quiet); font-size: 8px; font-variant-numeric: tabular-nums; }
+    .playback-block { display: flex; align-items: center; gap: 17px; }
+    .play-button { width: 45px; height: 45px; flex: none; display: grid; place-items: center; padding: 0; border-radius: 50%; }
+    .play-button svg { width: 15px; height: 15px; }
+    .speed-block { width: 164px; }
+    .speed-block .control-head { margin-bottom: 6px; }
+    .speed-readout { color: var(--gold); font-size: 11px; font-variant-numeric: tabular-nums; font-weight: 650; }
+    #speedSlider::-webkit-slider-runnable-track { background: linear-gradient(90deg, rgba(255,199,119,.85), rgba(255,199,119,.18)); }
+    #speedSlider::-moz-range-track { background: linear-gradient(90deg, rgba(255,199,119,.85), rgba(255,199,119,.18)); }
+    #speedSlider::-webkit-slider-thumb { background: var(--gold); box-shadow: 0 0 0 3px rgba(255,199,119,.14), 0 0 13px rgba(255,199,119,.4); }
+    #speedSlider::-moz-range-thumb { background: var(--gold); box-shadow: 0 0 0 3px rgba(255,199,119,.14), 0 0 13px rgba(255,199,119,.4); }
+    .speed-ends { display: flex; justify-content: space-between; margin-top: 2px; color: var(--quiet); font-size: 8px; }
+    .error-notice {
+      position: absolute; inset: 50% auto auto 50%; z-index: 3; width: min(400px, calc(100% - 36px));
+      padding: 20px; transform: translate(-50%, -50%); border: 1px solid rgba(255,177,133,.35); border-radius: 14px;
+      background: rgba(20, 19, 24, .92); color: #f8d2bc; text-align: center; font-size: 12px; line-height: 1.6;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; grid-template-rows: 62px minmax(0, 1fr) 126px; gap: 10px; padding: 0 14px 13px; }
+      .workspace { grid-template-columns: minmax(0, 1fr) 258px; gap: 10px; }
+      .sidebar { padding: 14px 12px; }
+      .transport { padding: 15px 16px; gap: 15px; }
+      .speed-block { width: 145px; }
+    }
+    @media (max-width: 650px) {
+      html, body { overflow: hidden; }
+      .shell { grid-template-rows: 54px minmax(0, 1fr) auto; gap: 8px; padding: 0 9px max(9px, env(safe-area-inset-bottom)); }
+      .brand { gap: 9px; }
+      .brand-mark { width: 32px; height: 32px; border-radius: 10px; }
+      .brand-mark svg { width: 20px; height: 20px; }
+      .brand-copy strong { font-size: 11px; letter-spacing: .1em; }
+      .brand-copy span { margin-top: 2px; font-size: 8px; }
+      .top-meta { gap: 6px; font-size: 8px; letter-spacing: .04em; }
+      .workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(140px, 1fr) auto; gap: 7px; }
+      .scene-panel { border-radius: 14px; }
+      .scene-topline { inset: 12px 12px auto; }
+      .scene-label { font-size: 8px; }
+      .scene-hint { max-width: 140px; font-size: 8px; }
+      .scene-status { left: 10px; bottom: 9px; padding: 6px 9px; font-size: 8px; }
+      .sidebar {
+        display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .92fr); align-items: stretch; gap: 8px;
+        min-height: 145px; padding: 9px; border-radius: 13px;
+      }
+      .selection-block { display: flex; flex-direction: column; min-height: 0; }
+      .section-heading { margin: 0 0 6px; }
+      .section-heading span:first-child { font-size: 8px; letter-spacing: .11em; }
+      .count-tag { font-size: 8px; }
+      .planet-list { grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 4px; min-height: 0; flex: 1; }
+      .planet-option { min-height: 0; grid-template-columns: 23px minmax(0, 1fr) 8px; gap: 7px; padding: 3px 6px; border-radius: 8px; }
+      .planet-glyph { width: 21px; height: 21px; font-size: 8px; }
+      .planet-option-copy strong { font-size: 9px; }
+      .planet-option-copy small { margin-top: 1px; font-size: 7px; }
+      .detail-card { display: flex; flex-direction: column; justify-content: center; min-width: 0; margin: 0; padding: 8px; border-radius: 9px; }
+      .detail-kicker { font-size: 7px; letter-spacing: .1em; }
+      .detail-title { gap: 5px; margin: 4px 0 6px; }
+      .detail-title strong { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+      .detail-orb { width: 7px; height: 7px; flex: none; }
+      .metrics { gap: 4px; }
+      .metric { padding: 5px 6px; border-radius: 6px; }
+      .metric span { font-size: 6px; letter-spacing: .08em; }
+      .metric strong { margin-top: 3px; font-size: 9px; }
+      .camera-actions { gap: 4px; margin-top: 6px; }
+      .quiet-button { min-height: 27px; gap: 3px; padding: 0 5px; border-radius: 7px; font-size: 7px; }
+      .transport { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; gap: 6px; padding: 9px 11px; border-radius: 13px; }
+      .control-head { margin-bottom: 5px; }
+      .control-label { font-size: 8px; letter-spacing: .12em; }
+      .time-readout { font-size: 10px; }
+      .time-readout small { font-size: 8px; }
+      input[type="range"] { height: 16px; }
+      .time-ends { margin-top: 1px; font-size: 7px; }
+      .playback-block { justify-content: space-between; gap: 10px; }
+      .play-button { width: 36px; height: 36px; }
+      .play-button svg { width: 12px; height: 12px; }
+      .speed-block { width: min(190px, calc(100% - 54px)); }
+      .speed-block .control-head { margin-bottom: 2px; }
+      .speed-readout { font-size: 9px; }
+      .speed-ends { font-size: 7px; }
+    }
+    @media (max-height: 700px) and (min-width: 651px) {
+      .shell { grid-template-rows: 56px minmax(0, 1fr) 112px; gap: 9px; padding-bottom: 10px; }
+      .sidebar { padding-top: 11px; padding-bottom: 11px; }
+      .transport { padding-top: 12px; padding-bottom: 12px; }
+      .planet-option { min-height: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="3.1" fill="currentColor"/>
+            <ellipse cx="12" cy="12" rx="9.4" ry="4.1" stroke="currentColor" stroke-width="1.2" transform="rotate(-28 12 12)"/>
+            <circle cx="19.2" cy="7.1" r="1.2" fill="#70ddf4"/>
+          </svg>
+        </div>
+        <div class="brand-copy"><strong>Solar Observatory</strong><span>Orbital mechanics lab</span></div>
+      </div>
+      <div class="top-meta"><span class="live-dot" aria-hidden="true"></span><span id="topStatus">Simulation live</span></div>
+    </header>
+
+    <section class="workspace" aria-label="Solar system observation workspace">
+      <section class="scene-panel" aria-label="Interactive three-dimensional solar system">
+        <canvas id="sceneCanvas" tabindex="0" aria-label="Solar system scene. Drag to orbit the camera, scroll to zoom, click a planet to select it."></canvas>
+        <div class="scene-topline" aria-hidden="true">
+          <span class="scene-label">Heliocentric view <span style="color:#738198">/ 3 bodies</span></span>
+          <span class="scene-hint">Drag to orbit&nbsp; · &nbsp;Scroll to zoom</span>
+        </div>
+        <div class="scene-status"><span class="live-dot" aria-hidden="true"></span><span id="statusText">Orbiting automatically · global speed 1×</span></div>
+        <div id="errorNotice" class="error-notice hidden" role="alert"></div>
+      </section>
+
+      <aside class="sidebar" aria-label="Planet selection and information">
+        <section class="selection-block">
+          <div class="section-heading"><span>Orbital bodies</span><span class="count-tag">03 objects</span></div>
+          <div class="planet-list" id="planetList" aria-label="Select a planet">
+            <button class="planet-option" type="button" data-planet="0" aria-pressed="true">
+              <span class="planet-glyph" style="color:#70ddf4">A</span><span class="planet-option-copy"><strong>Astra</strong><small>INNER ORBIT · 12 SEC</small></span><span class="option-check" aria-hidden="true"></span>
+            </button>
+            <button class="planet-option" type="button" data-planet="1" aria-pressed="false">
+              <span class="planet-glyph" style="color:#ff8d79">C</span><span class="planet-option-copy"><strong>Cinder</strong><small>MID ORBIT · 24 SEC</small></span><span class="option-check" aria-hidden="true"></span>
+            </button>
+            <button class="planet-option" type="button" data-planet="2" aria-pressed="false">
+              <span class="planet-glyph" style="color:#b9a0ff">N</span><span class="planet-option-copy"><strong>Nereid</strong><small>OUTER ORBIT · 48 SEC</small></span><span class="option-check" aria-hidden="true"></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="detail-card" aria-live="polite" aria-label="Selected planet information">
+          <div class="detail-kicker">Selected body</div>
+          <div class="detail-title"><span class="detail-orb" id="detailOrb" style="color:#70ddf4;background:#70ddf4"></span><strong id="selectedName">Astra</strong></div>
+          <div class="metrics">
+            <div class="metric"><span>Orbital period</span><strong id="periodValue">12 s</strong></div>
+            <div class="metric"><span>Orbital angle</span><strong id="angleValue">20.0°</strong></div>
+          </div>
+          <div class="camera-actions">
+            <button class="quiet-button" id="trackingToggle" type="button" aria-pressed="false" aria-label="Track selected planet">◎&nbsp; Track selected</button>
+            <button class="quiet-button" id="overviewButton" type="button" aria-label="Return camera to full-system overview">⌖&nbsp; Overview</button>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="transport" aria-label="Simulation controls">
+      <div class="time-block">
+        <div class="control-head"><label class="control-label" for="timeSlider">Simulation time</label><div class="time-readout"><span id="timeReadout">0.0</span> <small>sec</small></div></div>
+        <input id="timeSlider" type="range" min="0" max="120" step="0.1" value="0" aria-label="Seek simulation time from 0 to 120 seconds">
+        <div class="time-ends"><span>00:00</span><span>02:00</span></div>
+      </div>
+      <div class="playback-block">
+        <button class="primary-button play-button" id="playButton" type="button" aria-label="Pause simulation" title="Pause / resume">
+          <svg id="playIcon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9M11 3.5v9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="speed-block">
+          <div class="control-head"><label class="control-label" for="speedSlider">Global speed</label><span class="speed-readout" id="speedReadout">1×</span></div>
+          <input id="speedSlider" type="range" min="0.25" max="4" step="0.25" value="1" aria-label="Global simulation speed from 0.25 to 4 times">
+          <div class="speed-ends"><span>0.25×</span><span>4×</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script>
+    (() => {
+      'use strict';
+
+      const $ = (id) => document.getElementById(id);
+      const canvas = $('sceneCanvas');
+      const errorNotice = $('errorNotice');
+      const ui = {
+        status: $('statusText'), topStatus: $('topStatus'), time: $('timeReadout'), timeSlider: $('timeSlider'),
+        speed: $('speedReadout'), speedSlider: $('speedSlider'), playButton: $('playButton'), playIcon: $('playIcon'),
+        name: $('selectedName'), period: $('periodValue'), angle: $('angleValue'), detailOrb: $('detailOrb'),
+        tracking: $('trackingToggle'), overview: $('overviewButton'), planetButtons: Array.from(document.querySelectorAll('.planet-option'))
+      };
+
+      if (!window.THREE) {
+        errorNotice.textContent = 'The Three.js rendering library could not be loaded. Connect to the network and reopen this file to view the 3D system.';
+        errorNotice.classList.remove('hidden');
+        ui.status.textContent = '3D renderer unavailable';
+        ui.topStatus.textContent = 'Renderer unavailable';
+        return;
+      }
+
+      const THREE = window.THREE;
+      const TAU = Math.PI * 2;
+      const LIMIT = 120;
+      const orbitData = [
+        { name: 'Astra', color: '#70ddf4', period: 12, radius: 0.52, orbit: 5.1, phase: 20 * Math.PI / 180, roughness: 0.42 },
+        { name: 'Cinder', color: '#ff8d79', period: 24, radius: 0.76, orbit: 8.1, phase: 142 * Math.PI / 180, roughness: 0.61 },
+        { name: 'Nereid', color: '#b9a0ff', period: 48, radius: 0.98, orbit: 11.2, phase: 258 * Math.PI / 180, roughness: 0.48 }
+      ];
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x070c17);
+      const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 180);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      scene.add(new THREE.AmbientLight(0x8295bd, 0.63));
+      const sunlight = new THREE.PointLight(0xffce8b, 145, 90, 1.65);
+      sunlight.position.set(0, 0, 0);
+      scene.add(sunlight);
+      const fill = new THREE.DirectionalLight(0x8da9ff, 1.2);
+      fill.position.set(-8, 11, 7);
+      scene.add(fill);
+
+      const sun = new THREE.Mesh(
+        new THREE.SphereGeometry(1.45, 56, 40),
+        new THREE.MeshStandardMaterial({ color: 0xffc56c, emissive: 0xff8d35, emissiveIntensity: 1.55, roughness: 0.66, metalness: 0 })
+      );
+      sun.name = 'Sun';
+      scene.add(sun);
+      const sunAura = new THREE.Mesh(
+        new THREE.SphereGeometry(1.72, 40, 28),
+        new THREE.MeshBasicMaterial({ color: 0xffad59, transparent: true, opacity: 0.075, side: THREE.BackSide, depthWrite: false })
+      );
+      sun.add(sunAura);
+
+      const starVertices = [];
+      let seed = 9341;
+      const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+      for (let i = 0; i < 420; i++) {
+        const radius = 34 + random() * 48;
+        const theta = random() * TAU;
+        const y = (random() * 2 - 1) * 30;
+        starVertices.push(Math.cos(theta) * radius, y, Math.sin(theta) * radius);
+      }
+      const starGeometry = new THREE.BufferGeometry();
+      starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+      const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({ color: 0xc3d5ff, size: 0.115, transparent: true, opacity: 0.8, sizeAttenuation: true }));
+      scene.add(stars);
+
+      const planets = orbitData.map((data, index) => {
+        const orbitPoints = [];
+        for (let i = 0; i < 160; i++) {
+          const angle = i / 160 * TAU;
+          orbitPoints.push(new THREE.Vector3(Math.cos(angle) * data.orbit, 0, Math.sin(angle) * data.orbit));
+        }
+        const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+        const orbitLine = new THREE.LineLoop(orbitGeometry, new THREE.LineBasicMaterial({ color: data.color, transparent: true, opacity: 0.2, depthWrite: false }));
+        scene.add(orbitLine);
+        const mesh = new THREE.Mesh(
+          new THREE.SphereGeometry(data.radius, 48, 32),
+          new THREE.MeshStandardMaterial({ color: data.color, roughness: data.roughness, metalness: 0.08, emissive: data.color, emissiveIntensity: 0.045 })
+        );
+        mesh.name = data.name;
+        mesh.userData.planetIndex = index;
+        scene.add(mesh);
+        const selectionRing = new THREE.Mesh(
+          new THREE.TorusGeometry(data.radius * 1.55, 0.035, 8, 56),
+          new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.94 })
+        );
+        selectionRing.rotation.x = Math.PI / 2;
+        selectionRing.visible = false;
+        mesh.add(selectionRing);
+        return { ...data, mesh, selectionRing, angle: data.phase };
+      });
+
+      const target = new THREE.Vector3(0, 0, 0);
+      const cameraState = { azimuth: 0.52, elevation: 0.38, distance: 25.5 };
+      let simTime = 0;
+      let speed = 1;
+      let playing = true;
+      let tracking = false;
+      let selectedIndex = 0;
+      let lastFrame = performance.now();
+      let disposed = false;
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
+
+      function setCameraTarget() {
+        if (tracking) target.copy(planets[selectedIndex].mesh.position);
+        else target.set(0, 0, 0);
+        const horizontal = cameraState.distance * Math.cos(cameraState.elevation);
+        camera.position.set(
+          target.x + horizontal * Math.sin(cameraState.azimuth),
+          target.y + cameraState.distance * Math.sin(cameraState.elevation),
+          target.z + horizontal * Math.cos(cameraState.azimuth)
+        );
+        camera.lookAt(target);
+      }
+
+      function formatTime(value) { return Number(value).toFixed(1); }
+
+      function updateReadouts() {
+        ui.time.textContent = formatTime(simTime);
+        ui.timeSlider.value = String(simTime);
+        ui.speed.textContent = `${Number(speed).toFixed(2).replace(/0+$/, '').replace(/\.$/, '')}×`;
+        const selected = planets[selectedIndex];
+        const degrees = ((selected.angle * 180 / Math.PI) % 360 + 360) % 360;
+        ui.angle.textContent = `${degrees.toFixed(1)}°`;
+        ui.name.textContent = selected.name;
+        ui.period.textContent = `${selected.period} s`;
+        ui.detailOrb.style.color = selected.color;
+        ui.detailOrb.style.background = selected.color;
+      }
+
+      function updatePlanets() {
+        for (const planet of planets) {
+          planet.angle = planet.phase + TAU * simTime / planet.period;
+          planet.mesh.position.set(Math.cos(planet.angle) * planet.orbit, 0, Math.sin(planet.angle) * planet.orbit);
+          planet.mesh.rotation.y = planet.angle * 0.32;
+        }
+        for (let i = 0; i < planets.length; i++) planets[i].selectionRing.visible = i === selectedIndex;
+        updateReadouts();
+        setCameraTarget();
+      }
+
+      function updatePlaybackUI() {
+        if (playing) {
+          ui.playButton.setAttribute('aria-label', 'Pause simulation');
+          ui.playIcon.innerHTML = '<path d="M5 3.5v9M11 3.5v9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>';
+          ui.status.textContent = `Orbiting automatically · global speed ${speed}×`;
+          ui.topStatus.textContent = 'Simulation live';
+        } else {
+          ui.playButton.setAttribute('aria-label', 'Resume simulation');
+          ui.playIcon.innerHTML = '<path d="M5.1 3.2v9.6L12.8 8 5.1 3.2Z" fill="currentColor"/>';
+          ui.status.textContent = simTime >= LIMIT ? 'Simulation complete · seek to continue' : `Paused at ${formatTime(simTime)} simulation seconds`;
+          ui.topStatus.textContent = simTime >= LIMIT ? 'Range complete' : 'Simulation paused';
+        }
+      }
+
+      function selectPlanet(index) {
+        if (!Number.isInteger(index) || index < 0 || index >= planets.length) return;
+        selectedIndex = index;
+        for (let i = 0; i < ui.planetButtons.length; i++) ui.planetButtons[i].setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        updatePlanets();
+      }
+
+      for (const button of ui.planetButtons) button.addEventListener('click', () => selectPlanet(Number(button.dataset.planet)));
+      ui.tracking.addEventListener('click', () => {
+        tracking = !tracking;
+        ui.tracking.setAttribute('aria-pressed', tracking ? 'true' : 'false');
+        ui.tracking.innerHTML = tracking ? '◎&nbsp; Tracking' : '◎&nbsp; Track selected';
+        updatePlanets();
+      });
+      ui.overview.addEventListener('click', () => { tracking = false; ui.tracking.setAttribute('aria-pressed', 'false'); ui.tracking.innerHTML = '◎&nbsp; Track selected'; updatePlanets(); });
+      ui.playButton.addEventListener('click', () => {
+        if (playing) {
+          playing = false;
+        } else if (simTime < LIMIT) {
+          playing = true;
+          lastFrame = performance.now();
+        }
+        updatePlaybackUI();
+      });
+      ui.timeSlider.addEventListener('input', () => {
+        simTime = Math.min(LIMIT, Math.max(0, Number(ui.timeSlider.value)));
+        playing = false;
+        lastFrame = performance.now();
+        updatePlanets();
+        updatePlaybackUI();
+      });
+      ui.speedSlider.addEventListener('input', () => {
+        speed = Math.min(4, Math.max(0.25, Number(ui.speedSlider.value)));
+        updateReadouts();
+        updatePlaybackUI();
+      });
+
+      let pointer = null;
+      const raycaster = new THREE.Raycaster();
+      const ndc = new THREE.Vector2();
+      canvas.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, lastY: event.clientY, moved: false };
+        canvas.setPointerCapture(event.pointerId);
+      });
+      canvas.addEventListener('pointermove', (event) => {
+        if (!pointer || event.pointerId !== pointer.id) return;
+        const dx = event.clientX - pointer.lastX;
+        const dy = event.clientY - pointer.lastY;
+        if (Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) > 5) pointer.moved = true;
+        if (pointer.moved) {
+          cameraState.azimuth -= dx * 0.008;
+          cameraState.elevation = Math.max(-0.08, Math.min(1.28, cameraState.elevation + dy * 0.006));
+          setCameraTarget();
+        }
+        pointer.lastX = event.clientX;
+        pointer.lastY = event.clientY;
+      });
+      function finishPointer(event) {
+        if (!pointer || event.pointerId !== pointer.id) return;
+        const click = !pointer.moved;
+        pointer = null;
+        if (!click) return;
+        const rect = canvas.getBoundingClientRect();
+        ndc.x = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1;
+        ndc.y = -((event.clientY - rect.top) / Math.max(1, rect.height)) * 2 + 1;
+        raycaster.setFromCamera(ndc, camera);
+        const hit = raycaster.intersectObjects(planets.map((planet) => planet.mesh), false)[0];
+        if (hit && Number.isInteger(hit.object.userData.planetIndex)) selectPlanet(hit.object.userData.planetIndex);
+      }
+      canvas.addEventListener('pointerup', finishPointer);
+      canvas.addEventListener('pointercancel', () => { pointer = null; });
+      canvas.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        cameraState.distance = Math.max(9, Math.min(45, cameraState.distance * Math.exp(event.deltaY * 0.001)));
+        setCameraTarget();
+      }, { passive: false });
+
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(resize).observe(canvas.parentElement);
+      else window.addEventListener('resize', resize);
+      resize();
+      updatePlanets();
+      updatePlaybackUI();
+
+      function frame(now) {
+        if (disposed) return;
+        const elapsed = Math.max(0, (now - lastFrame) / 1000);
+        lastFrame = now;
+        if (playing) {
+          simTime = Math.min(LIMIT, simTime + elapsed * speed);
+          if (simTime >= LIMIT) {
+            simTime = LIMIT;
+            playing = false;
+            updatePlaybackUI();
+          }
+          updatePlanets();
+        }
+        sun.rotation.y += elapsed * 0.08;
+        renderer.render(scene, camera);
+        window.requestAnimationFrame(frame);
+      }
+      window.requestAnimationFrame(frame);
+      window.addEventListener('pagehide', () => { disposed = true; renderer.dispose(); }, { once: true });
+    })();
+  </script>
+</body>
+</html>
