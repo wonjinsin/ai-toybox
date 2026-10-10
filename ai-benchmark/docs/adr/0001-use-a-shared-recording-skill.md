@@ -33,7 +33,7 @@ must use the same workflow without provider-specific collectors.
   Resolve the exact current session/thread identity independently of usage
   availability; use null with a reason if unverified. Resume retains the original
   session ID, with a note if the current session changes.
-- Group attempts under `runs/<agent>-<model>-<effort>-<run-id>/` by default.
+- Group attempts under `runs/v1/<agent>-<model>-<effort>-<run-id>/` by default.
   Use normalized host/model/effort names and a Korea-time invocation timestamp
   (`YYYYMMDD-HHmmss`), with numbered suffixes for collisions. Unknown name
   components use `unknown`; JSON retains original known settings or null.

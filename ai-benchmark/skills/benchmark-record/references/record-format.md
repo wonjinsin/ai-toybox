@@ -6,7 +6,7 @@ Never migrate or overwrite existing records.
 
 ## Run directory
 
-Under the project root's `runs/` or requested output root, exclusively create
+Under the project root's `runs/v1/` or requested output root, exclusively create
 `<agent>-<model>-<effort>-<run-id>` for each invocation:
 
 - `agent`: actual host (`codex`, `claude-code`, etc.), never inferred from model or

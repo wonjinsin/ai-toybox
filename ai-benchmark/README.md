@@ -62,19 +62,18 @@ start a new session if an existing session has not picked up the skill.
 ## Saved Files
 
 ```text
-runs/<agent>-<model>-<effort>-<run-id>/
+runs/v1/<agent>-<model>-<effort>-<run-id>/
   prompt.md           # Exact fixed task
   output/index.html   # Open directly in a browser; local resources stay in output/
   run.json            # Minimal settings and measurements
 ```
 
-기존 벤치마크 결과는 [`runs/v1/`](runs/v1/)에 보관하고 Git으로 추적합니다.
-새 실행의 기본 저장 경로는 위의 `runs/` 형식을 유지합니다.
+Benchmark results are stored under [`runs/v1/`](runs/v1/) and tracked in Git.
 
 The agent component identifies the host, such as `codex` or `claude-code`.
 The run ID is the invocation-start time in Korea (`Asia/Seoul`), formatted as
 `YYYYMMDD-HHmmss`. For example, an illustrative model named `model-a` could create
-`runs/codex-model-a-high-20261002-153000/`. If that path exists, the next run uses
+`runs/v1/codex-model-a-high-20261002-153000/`. If that path exists, the next run uses
 `-02`, then `-03`, without overwriting it.
 
 Name components use lowercase; spaces and path separators become hyphens.

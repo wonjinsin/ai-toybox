@@ -24,7 +24,7 @@ Pass the skill selection policy to delegates. Skip other-host sections and autho
 
 1. Set up
    - Read the invocation-start clock; resolve the current session ID, usage source and model/effort, preferring runtime settings.
-   - Prepare a permitted browser check and reserve a new directory under default `runs/` or the requested output root. Never overwrite existing results.
+   - Prepare a permitted browser check and reserve a new directory under default `runs/v1/` or the requested output root. Never overwrite existing results.
    - Copy the fixed task exactly to `prompt.md`; do not request/substitute another task. Save `run.json` as `running` with settings/source notes.
 
 2. Start measurement
