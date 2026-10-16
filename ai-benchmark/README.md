@@ -10,6 +10,48 @@ planet sizes/colors/speeds, pause/resume, and a global speed control that preser
 relative orbital speeds. The saved `output/index.html` must also run when opened
 directly in a browser without starting a server or running a build step to view it.
 
+## Browse the Results
+
+Open [`index.html`](index.html) in a browser to explore the saved runs. The gallery
+has a model sidebar, searchable run list, score/status filters, score or date
+sorting, and a detail view with the generated HTML, review, original prompt,
+duration, token counts, and recording notes. Detail links can be bookmarked.
+
+The gallery is a generated snapshot, not a live directory listing. After adding
+or updating runs or reviews, regenerate it from the repository root with Node.js
+22 or newer:
+
+```sh
+node scripts/build-gallery.mjs
+```
+
+The builder scans every direct run directory under `runs/v1` and writes only the
+root `index.html`. It does not run a benchmark, calculate scores, or modify the
+saved runs. Incomplete or malformed records remain visible with missing-data
+notices. Missing scores are **unscored**, not zero; recorded zero scores remain
+eligible for score filtering and sorting.
+
+The gallery embeds its data, CSS, and JavaScript, so viewing does not require a
+server, build tool, package installation, or CDN. Keep `index.html` alongside
+`runs/v1`: result previews use the original relative artifact paths. The same
+layout can be hosted on a static site. Model selection and run details use URL
+hashes, so hosting requires no route rewrites. External dependencies inside an
+individual generated result may still require internet access.
+
+Only the selected result runs in a sandboxed iframe, without same-origin access
+to the gallery. Use **결과물 새 탭 열기** if the artifact needs features restricted by
+the sandbox. Merely displaying an artifact does not verify its benchmark score.
+Actual browser rendering, iframe interactions, console errors, and direct-file
+compatibility must be checked with the permitted Aside direct REPL; Node/DOM
+checks do not establish those results.
+
+Gallery source lives in `gallery/`; update those files rather than editing the
+generated `index.html`. Run the builder regression checks with:
+
+```sh
+node --test tests/gallery.test.mjs
+```
+
 ## Run
 
 Open this checkout as a project and select the model and effort in your host.
