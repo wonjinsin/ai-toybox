@@ -38,8 +38,14 @@ async function openRegularFile(root, segments) {
   if (!info.isFile()) throw fileError('EACCES', 'Expected a regular file');
   const handle = await open(target, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
   try {
-    const opened = await handle.stat();
-    if (!opened.isFile()) throw fileError('EACCES', 'Expected a regular file');
+    const opened = await handle.stat({ bigint: true });
+    const checked = await boundedPath(root, segments);
+    // O_NOFOLLOW covers only the final component. An ancestor can change while opening.
+    if (!opened.isFile() || opened.dev !== info.dev || opened.ino !== info.ino ||
+        opened.dev !== checked.info.dev || opened.ino !== checked.info.ino ||
+        await realpath(target) !== target) {
+      throw fileError('EACCES', 'The file path changed while opening');
+    }
     return { handle, info: opened };
   } catch (error) {
     await handle.close();

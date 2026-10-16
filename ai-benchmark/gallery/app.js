@@ -6,6 +6,8 @@
   let hasData = false;
   let lastSuccess = null;
   let detailView = null;
+  let disconnected = false;
+  let connectedPreview = null;
   const fileGuidance = '실시간 갤러리는 로컬 서버가 필요합니다. 프로젝트 폴더에서 node scripts/serve-gallery.mjs 를 실행한 뒤 http://localhost:4173 을 여세요.';
   let loadError = location.protocol === 'file:' ? fileGuidance : null;
   const activeSections = new Map();
@@ -407,6 +409,7 @@
   async function poll() {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
+    const previewAtStart = detailView?.panel.querySelector('iframe') ?? null;
     try {
       const response = await fetch('/api/runs', { cache: 'no-store', signal: controller.signal });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -421,9 +424,20 @@
           hasData = true;
           render();
         }
+        const frame = detailView?.panel.querySelector('iframe') ?? null;
+        // Sandboxed network-error documents cannot be inspected. Retry previews opened
+        // during unconfirmed connectivity, but keep an established preview running.
+        if (disconnected && frame && frame === previewAtStart && frame !== connectedPreview) {
+          renderSection();
+          connectedPreview = null;
+        } else {
+          connectedPreview = frame === previewAtStart ? frame : null;
+        }
+        disconnected = false;
         connection('live', '로컬 파일을 자동으로 확인합니다. 확인이 끝난 뒤 2초마다 갱신합니다.');
       });
     } catch (error) {
+      disconnected = true;
       const reason = error.name === 'AbortError' ? '5초 안에 응답하지 않았습니다.' : error.message;
       const message = `${hasData ? '마지막으로 읽은 기록을 표시하고 있습니다.' : '실행 기록을 불러오지 못했습니다.'} ${reason} 자동으로 다시 연결합니다.`;
       preservePlace(() => {

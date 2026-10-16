@@ -27,16 +27,16 @@ gallery/template.html.
 
 Blocked by: none.
 
-- [ ] Extract and adapt collection reading from the existing builder, preserving
+- [x] Extract and adapt collection reading from the existing builder, preserving
   model/effort/score semantics and per-run warnings.
-- [ ] Expose GET /api/runs with revision, checkedAt, and the run list; absent
+- [x] Expose GET /api/runs with revision, checkedAt, and the run list; absent
   collection is empty and collection read errors are non-success responses.
-- [ ] Serve a data-free application shell and its existing styles/script from a
+- [x] Serve a data-free application shell and its existing styles/script from a
   loopback-only HTTP service. Default port is 4173; support --port and --root.
-- [ ] The page fetches data on first load and reports loading/failure accurately.
-- [ ] An API request after file additions, edits, or removals returns current
+- [x] The page fetches data on first load and reports loading/failure accurately.
+- [x] An API request after file additions, edits, or removals returns current
   values with no rebuild or restart.
-- [ ] Delete the old builder and template; the root HTML is source, not generated
+- [x] Delete the old builder and template; the root HTML is source, not generated
   data. Replace snapshot-specific tests rather than retaining obsolete assertions.
 
 ## Task 2: Reflect live changes without losing the user's place
@@ -48,17 +48,17 @@ Touches: gallery/app.js, index.html, gallery/styles.css, tests/gallery.test.mjs.
 
 Blocked by: Task 1.
 
-- [ ] Fetch immediately, then schedule a single next poll two seconds after each
+- [x] Fetch immediately, then schedule a single next poll two seconds after each
   completion. Abort a stalled request after five seconds.
-- [ ] Show connection state and last successful check. Keep last good data visibly
+- [x] Show connection state and last successful check. Keep last good data visibly
   stale on failures; recover without a user reload.
-- [ ] Apply changed revisions without resetting model/run selection, query, sort,
+- [x] Apply changed revisions without resetting model/run selection, query, sort,
   score filter, detail section, keyboard focus, or scroll.
-- [ ] Skip DOM replacement when data is unchanged. A missing selected model keeps
+- [x] Skip DOM replacement during healthy polling when data is unchanged. A missing selected model keeps
   an identifiable zero-count selection.
-- [ ] Selected-run deletion shows a missing state; restoration recovers the same
+- [x] Selected-run deletion shows a missing state; restoration recovers the same
   selected run and detail section.
-- [ ] Malformed records recover after repair, and zero remains scored.
+- [x] Malformed records recover after repair, and zero remains scored.
 
 ## Task 3: Update only the artifact that actually changed
 
@@ -70,14 +70,14 @@ tests/gallery.test.mjs.
 
 Blocked by: Task 2.
 
-- [ ] Compute artifactRevision from the sorted regular output-file tree, including
+- [x] Compute artifactRevision from the sorted regular output-file tree, including
   relative names, sizes and high-resolution modification/change timestamps.
-- [ ] Root-relative revisioned artifact links preserve the original asset tree.
-- [ ] Keep the same iframe DOM node during metadata/review updates when the
+- [x] Root-relative revisioned artifact links preserve the original asset tree.
+- [x] Keep the same iframe DOM node during metadata/review updates when the
   artifact revision is unchanged. Reload only the selected changed output.
-- [ ] Changes to supporting assets, entrypoint creation/removal, and switching
+- [x] Changes to supporting assets, entrypoint creation/removal, and switching
   runs have the expected preview behavior.
-- [ ] Treat artifact documents as untrusted in embedded and new-tab contexts;
+- [x] Treat artifact documents as untrusted in embedded and new-tab contexts;
   supporting output assets remain accessible to the sandbox.
 
 ## Task 4: Bound the local server and validate real changes
@@ -85,20 +85,21 @@ Blocked by: Task 2.
 Delivers: The live service reads only its intended data and remains truthful
 through concurrent writes, failure, and recovery.
 
-Touches: scripts/serve-gallery.mjs, gallery/data.mjs, tests/gallery.test.mjs.
+Touches: scripts/serve-gallery.mjs, gallery/data.mjs, tests/gallery.test.mjs,
+tests/gallery-path-race.test.mjs.
 
 Blocked by: Task 3.
 
-- [ ] Allow GET/HEAD only; unknown routes and non-output run files are not exposed.
-- [ ] Reject traversal, symlink escapes, and non-loopback Host values; avoid
+- [x] Allow GET/HEAD only; unknown routes and non-output run files are not exposed.
+- [x] Reject traversal, symlink escapes, and non-loopback Host values; avoid
   granting cross-origin access to the collection API.
-- [ ] Send no-store headers for data and served content, and sandbox output
+- [x] Send no-store headers for data and served content, and sandbox output
   documents. Do not mutate any source records.
-- [ ] HTTP integration tests use a temporary root and an ephemeral port, exercise
+- [x] HTTP integration tests use a temporary root and an ephemeral port, exercise
   an actual running server, and leave no fixture files or listeners behind.
-- [ ] Smoke the real CLI and actual repository collection. Use a temporary
+- [x] Smoke the real CLI and actual repository collection. Use a temporary
   collection for add/edit/delete/repair and output-change scenarios.
-- [ ] Use Aside direct REPL for actual HTTP UI interaction and visual checks when
+- [x] Use Aside direct REPL for actual HTTP UI interaction and visual checks when
   permitted; report any access boundary precisely rather than substituting tools.
 
 ## Task 5: Document, review, and deliver the single live workflow
@@ -110,15 +111,15 @@ Touches: README.md, affected source/tests from review findings.
 
 Blocked by: Task 4.
 
-- [ ] Replace snapshot/rebuild instructions with the live startup command, URL,
+- [x] Replace snapshot/rebuild instructions with the live startup command, URL,
   data-root/port overrides, polling/failure behavior, and direct-file limitation.
-- [ ] Directly opening the application file shows server-start guidance rather
+- [x] Directly opening the application file shows server-start guidance rather
   than old data; standalone benchmark result delivery is unchanged.
-- [ ] Run the complete relevant test suite and JavaScript syntax checks after
+- [x] Run the complete relevant test suite and JavaScript syntax checks after
   integration. Confirm the already-open browser observes actual file mutations.
-- [ ] Review the final diff in separate Standards and Spec axes. Reproduce and
+- [x] Review the final diff in separate Standards and Spec axes. Reproduce and
   fix justified findings, then rerun the affected behavior.
-- [ ] Commit only this feature's source, docs, and tests. Preserve user run changes.
+- [x] Commit only this feature's source, docs, and tests. Preserve user run changes.
 
 ## Coverage
 

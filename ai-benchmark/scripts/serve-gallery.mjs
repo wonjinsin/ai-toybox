@@ -143,7 +143,7 @@ export function createGalleryServer({ root = sourceRoot } = {}) {
       let info;
       ({ handle, info } = await openOutputFile(dataRoot, segments[2], segments.slice(4)));
       response.setHeader('Content-Type', types.get(path.extname(segments.at(-1)).toLowerCase()) ?? 'application/octet-stream');
-      response.setHeader('Content-Length', info.size);
+      response.setHeader('Content-Length', String(info.size));
       response.setHeader('Access-Control-Allow-Origin', '*');
       response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
       response.setHeader('Content-Security-Policy', 'sandbox allow-scripts allow-forms allow-modals allow-pointer-lock allow-popups allow-downloads');

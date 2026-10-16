@@ -39,6 +39,9 @@ The keyboard skip link does not change the selected model or run.
 
 Metadata or review updates do not restart an unchanged preview. Changes to the
 selected output HTML or its supporting files reload that preview automatically.
+After reconnection, a preview opened since the last confirmed connection can
+reload once even if the collection is unchanged. An established preview keeps
+running through the outage.
 Incomplete and malformed records remain visible with warnings and recover after
 repair. Missing scores are **unscored**, not zero; numeric zero remains a valid
 score, and review status is always displayed. The gallery never evaluates or
@@ -66,7 +69,7 @@ The application source is `index.html` and `gallery/`; there is no snapshot
 builder. Run the live HTTP/filesystem regression suite with:
 
 ```sh
-node --test tests/gallery.test.mjs
+node --test tests/gallery*.test.mjs
 ```
 
 ## Run

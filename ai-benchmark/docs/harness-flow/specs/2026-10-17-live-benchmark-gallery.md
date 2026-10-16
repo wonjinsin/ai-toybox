@@ -38,8 +38,8 @@ check time. No persistent stale cache substitutes for a live read.
 
 Background refresh preserves the selected model, selected run, search text,
 sort order, review filter, active detail section, keyboard focus, and scroll
-position. An unchanged collection does not rebuild the visible DOM. A deleted
-selected run shows an explicit missing-run state without silently changing the
+position. During healthy polling, an unchanged collection does not rebuild the
+visible DOM. A deleted selected run shows an explicit missing-run state without silently changing the
 URL; restoration makes that selection usable again. A selected model with no
 remaining runs remains identifiable with an empty result list. User-initiated
 navigation and the keyboard skip link retain the navigation fixes already made.
@@ -62,6 +62,9 @@ measurements remain unknown. Missing scores are unscored, while zero is a valid
 score. Show review status independently of whether the total is numeric.
 Collection/network failures preserve the last successful view with an explicit
 stale/disconnected indication; first-load failures show a clear failure state.
+After a detected outage, recover previews opened since the last confirmed
+connection even when the collection revision is unchanged. Such unconfirmed
+previews may reload once; an established, unchanged preview must keep running.
 
 ### R6. Keep the explorer's existing behavior
 
