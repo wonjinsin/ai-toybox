@@ -16,6 +16,8 @@ Open [`index.html`](index.html) in a browser to explore the saved runs. The gall
 has a model sidebar, searchable run list, score/status filters, score or date
 sorting, and a detail view with the generated HTML, review, original prompt,
 duration, token counts, and recording notes. Detail links can be bookmarked.
+Model/run navigation brings the main content into view; the keyboard skip link
+moves focus to that content without changing the selected model or run.
 
 The gallery is a generated snapshot, not a live directory listing. After adding
 or updating runs or reviews, regenerate it from the repository root with Node.js
@@ -29,7 +31,8 @@ The builder scans every direct run directory under `runs/v1` and writes only the
 root `index.html`. It does not run a benchmark, calculate scores, or modify the
 saved runs. Incomplete or malformed records remain visible with missing-data
 notices. Missing scores are **unscored**, not zero; recorded zero scores remain
-eligible for score filtering and sorting.
+eligible for score filtering and sorting. Review status remains visible beside
+numeric scores as well as unscored results.
 
 The gallery embeds its data, CSS, and JavaScript, so viewing does not require a
 server, build tool, package installation, or CDN. Keep `index.html` alongside

@@ -61,7 +61,7 @@
     const wrapper = element('div', className);
     const value = score(run);
     wrapper.append(element('span', `score${value === null ? ' unscored' : ''}`, value === null ? '미채점' : number.format(value)));
-    wrapper.append(element('span', 'score-caption', value === null ? reviewLabel(run) : '/ 100 POINTS'));
+    wrapper.append(element('span', 'score-caption', value === null ? reviewLabel(run) : `/ 100 · ${reviewLabel(run)}`));
     return wrapper;
   }
 
@@ -306,12 +306,21 @@
     }
   }
 
+  function focusMain() {
+    $('main').focus({ preventScroll: true });
+    $('main').scrollIntoView({ block: 'start' });
+  }
+
+  document.querySelector('.skip-link').addEventListener('click', event => {
+    event.preventDefault();
+    focusMain();
+  });
   $('search').addEventListener('input', renderList);
   $('review-filter').addEventListener('change', renderList);
   $('sort').addEventListener('change', renderList);
   window.addEventListener('hashchange', () => {
     render();
-    $('main').focus({ preventScroll: true });
+    focusMain();
   });
   $('generated-at').textContent = `마지막 수집 ${date(data.generatedAt)} KST · 갱신: node scripts/build-gallery.mjs`;
   render();
