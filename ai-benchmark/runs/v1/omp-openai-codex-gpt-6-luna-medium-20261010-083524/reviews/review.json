@@ -1,0 +1,206 @@
+{
+  "format_version": "1.0",
+  "rubric_version": "solar-system-1.0",
+  "reviewed_at": "2026-10-16T22:57:00+09:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6.1-sol",
+    "effort": null
+  },
+  "status": "partial",
+  "requirements_verdict": "unverified",
+  "verification": {
+    "browser_method": "none",
+    "direct_file": "unverified",
+    "viewports": []
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": null
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": null
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": null
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:21,25-28 defines one sun, three planet records with distinct radii/colors, circular x/z geometry, and periods 12/24/48. Lines 34-35 derive angles and positions from fixed phases and time. Rendered body counts, visible distinctions, motion and measured periods were not observed. The initialization risk noted below further prevents inferring execution success from these definitions."
+    },
+    {
+      "id": "S2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:22 initializes time=0, speed=1 and playing=true; line 23 calls renderLoop() without an argument, whereas line 39 expects now and immediately advances time. Static arithmetic suggests non-finite initial timing, but the actual initial display and subsequent motion were not observed in a browser. This is a suspected runtime defect, not an observed S2 failure."
+    },
+    {
+      "id": "S3",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:30 toggles playing; line 39 advances orbital time only when playing. Selection and camera handlers are separate. No pause/resume interaction, frozen rendered positions, jump-free continuation, or paused selection/camera use was observed."
+    },
+    {
+      "id": "S4",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:16 offers 0.25, 0.5, 1, 2 and 4 speed options. Line 30 changes speed only; line 39 multiplies elapsed time by speed. No 0.25x/2x/4x rate measurements or paused speed-change preservation/resumption were observed."
+    },
+    {
+      "id": "S5",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:16 sets a 0-120 time range. Line 30 sets time, pauses and calls position/info/target updates; lines 34-35 use fixed phases and absolute time. Immediate rendered seek results and repeat-seek determinism at 30 seconds were not observed."
+    },
+    {
+      "id": "S6",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:39 clamps time to 120 and sets playing=false at the boundary; line 30 permits earlier seeks. Boundary stopping, absence of wrapping/overshoot, and resumption from an earlier seek were not exercised."
+    },
+    {
+      "id": "T1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:28-33 constructs mesh hit targets and labeled list buttons sharing selectPlanet(), with selected list styling and visible ring/halo flags. No actual scene/list selection, highlight or paused interaction was observed."
+    },
+    {
+      "id": "T2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:34 uses the same phase/time/period angle expression as placement in line 35 and updates the name, period and angle DOM fields. No displayed telemetry was compared with rendered positions during playback or seeking."
+    },
+    {
+      "id": "T3",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:32 switches selected and updates tracking; lines 36-37 update the target. Line 36 interpolates the target by 0.24 rather than copying it, including after seeks, which is a static immediacy risk only. Moving-planet centering, seek response and coordinated selection switching without state changes were not observed."
+    },
+    {
+      "id": "T4",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:37 resets target and camera for overview without assigning selected, time, speed or playing. Whether the full system is visible and those states are preserved under actual interaction was not observed."
+    },
+    {
+      "id": "U1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:23 attaches OrbitControls to the renderer canvas, enables damping and configures distance/polar limits; line 39 updates controls each frame. Orbit/zoom in overview/tracking and playing/paused states were not exercised."
+    },
+    {
+      "id": "U2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:30 confines pointer picking to the renderer canvas and requires pointerup displacement below five pixels; UI listeners are on separate elements. Actual drag/click separation and list/slider/button isolation from camera and scene input were not exercised."
+    },
+    {
+      "id": "U3",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:14-16,29,33,37-38 defines control labels, playback aria-label updates, selected list state and tracking text. Discoverability and visible feedback across actual states were not observed, so no qualitative rating is assigned."
+    },
+    {
+      "id": "V1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "No rendered scene or selected-object appearance was observed. Source colors, lighting, glow and rings do not establish actual contrast, readability or whether effects obscure observation."
+    },
+    {
+      "id": "V2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "No visible typography, spacing, color hierarchy or panel composition was observed. CSS definitions alone do not justify a qualitative presentation rating."
+    },
+    {
+      "id": "L1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:8 defines fixed panels, full-window stage and constrained bottom-panel width. No 1440x900 CSS-pixel viewport was opened; scene/control usability, scrolling and occlusion remain unverified."
+    },
+    {
+      "id": "L2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:8 includes max-width 700px/390px and max-height 620px media queries. No 390x844 CSS-pixel viewport or mobile selection/tracking/seeking/speed/playback interaction was exercised; responsive CSS is not proof of usability."
+    },
+    {
+      "id": "D1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "The actual output/index.html was not opened as a file:// page because the permitted connected Aside direct REPL is unavailable. Working rendering and controls without a server/build remain unverified; static compatibility is recorded separately as D2."
+    },
+    {
+      "id": "D2",
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Inspected the complete output/ inventory and all 44 lines of output/index.html, including long lines in full. The only output file is index.html. Its only external script references (lines 17-18) are HTTPS CDN URLs for Three.js r128 and OrbitControls, used as classic scripts. Styles and application JavaScript are inline; line 27 generates a canvas texture locally. There are no referenced local assets, local ES module imports, fetch/XHR calls or server-only paths. All referenced-local-resource conditions are satisfied statically; CDN availability and execution are not asserted."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "No browser execution occurred, so console/page errors and required resource loading were not observed. External CDN availability and the suspected initialization issue are not converted into an observed console/resource failure."
+    }
+  ],
+  "total_score": null,
+  "coverage": {
+    "passed": 1,
+    "failed": 0,
+    "unverified": 19
+  },
+  "notes": [
+    "The saved prompt matches all 11 requirements and the eight-step acceptance scenario supported by solar-system-1.0; run completion metadata was not used as quality evidence.",
+    "Connected Aside MCP direct REPL is unavailable in this host. No browser, HTTP server, substitute runtime, mock DOM, build, test, linter, formatter, dependency installation or artifact execution was used. No viewport, console, network loading or direct-file interaction was observed.",
+    "Reviewer model is known from this worker session. Reviewer effort is null because an authoritative current effort value is unavailable; generator and parent identities were not substituted.",
+    "Applied benchmark-review. The required using-harness-flow skill was read and its explicit subagent exclusion applied; no additional skill workflow was applied. Parent-authorized parallelism is limited to independently assigned runs; this worker dispatched no other reviewer.",
+    "Static source risk, not a confirmed runtime failure: output/index.html:23 calls renderLoop() without a timestamp, while line 39 immediately computes (now-last)/1000 and stores now in last. With playing initially true (line 22), ordinary JavaScript arithmetic implies non-finite delta/time before the next animation callback, and no later callback repairs that state. Browser impact remains unverified; no affected runtime check was scored from this inference.",
+    "Additional static risk, not a confirmed runtime failure: updateCameraTarget() at line 36 uses a 0.24 interpolation, including from the seek handler at line 30 and selection handler at line 32. This is not an exact immediate target assignment, but rendered centering and practical settling behavior were not observed.",
+    "Every browser-dependent check remains unverified, including grouped checks whose constants or handlers exist in source. The eight acceptance steps were not executed; no timing or position tolerances were applied to nonexistent observations.",
+    "No review-created tab or server required cleanup. Source hashes were retained only in working memory; the review is limited to the two named report files."
+  ]
+}

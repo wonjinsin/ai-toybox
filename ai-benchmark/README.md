@@ -59,6 +59,40 @@ If skill discovery is unavailable, ask the agent to read
 `skills/benchmark-record/SKILL.md` and run the benchmark. Reopen the project or
 start a new session if an existing session has not picked up the skill.
 
+## Review a Saved Run
+
+Use the separate [review skill](skills/benchmark-review/SKILL.md) with one explicit
+run directory. These are chat messages:
+
+```text
+$benchmark-review runs/v1/<agent>-<model>-<effort>-<run-id>
+```
+
+In Claude Code, use `/benchmark-review` with the same directory argument.
+If discovery is unavailable, ask the agent to read
+`skills/benchmark-review/SKILL.md` and review that directory.
+The review does not invoke the generation skill, repair the artifact, or change
+`prompt.md`, `run.json` or `output/`.
+
+It saves only `reviews/review.json` and `reviews/review.md` inside the run.
+Re-review replaces those two files with the latest assessment; there are no
+timestamp subdirectories, retained screenshots, evidence archives or backups.
+Unrelated existing files are preserved.
+
+The [fixed rubric](skills/benchmark-review/references/rubric.md) uses six categories:
+simulation/time correctness (25), selection/tracking consistency (20), controls
+and interaction (15), visual quality (15), responsive usability (15), and delivery
+stability (10). Each category is scored from 0 to 5, with a weighted total out of
+100. Review the saved prompt; incompatible historical tasks receive a blocked,
+unscored review rather than newer requirements applied retroactively.
+
+Checks distinguish pass, fail and unverified. Any unverified check leaves its
+category and the total unscored; verified failures are still reported separately.
+HTTP execution cannot verify direct-file delivery. Aside's direct REPL is the only
+permitted browser tool; when unavailable, the review records static findings and
+the missing runtime/visual evidence without inventing scores. Generation time,
+tokens and model identity do not affect quality scores.
+
 ## Saved Files
 
 ```text
@@ -66,6 +100,9 @@ runs/v1/<agent>-<model>-<effort>-<run-id>/
   prompt.md           # Exact fixed task
   output/index.html   # Open directly in a browser; local resources stay in output/
   run.json            # Minimal settings and measurements
+  reviews/            # Added only by benchmark-review; latest review replaces these files
+    review.json       # Structured scores, checks and verification limits
+    review.md         # Human-readable findings and reproduction steps
 ```
 
 Benchmark results are stored under [`runs/v1/`](runs/v1/) and tracked in Git.
@@ -196,13 +233,13 @@ Fresh-context instruction evaluations and static checks are narrower evidence, n
 
 | Host | Project entrypoint |
 | --- | --- |
-| Codex | `.agents/skills/benchmark-record/SKILL.md` |
-| Claude Code | `.claude/skills/benchmark-record/SKILL.md` |
+| Codex | `.agents/skills/benchmark-record/SKILL.md`, `.agents/skills/benchmark-review/SKILL.md` |
+| Claude Code | `.claude/skills/benchmark-record/SKILL.md`, `.claude/skills/benchmark-review/SKILL.md` |
 
 These are ordinary files containing discovery metadata and a relative link to
-[the shared skill](skills/benchmark-record/SKILL.md). Resources resolve from the
-shared skill directory. The Claude entrypoint includes current-session context;
-workflow rules remain in the shared skill. There are no symlinks.
+the corresponding shared skill under `skills/`. Resources resolve from that
+shared skill directory. The Claude recording entrypoint includes current-session
+context; workflow rules remain in shared skills. There are no symlinks.
 
 ### Skill document layout
 
@@ -214,16 +251,21 @@ and [browser verification](skills/benchmark-record/references/browser-verificati
 Read Shared procedure and the current-host section of [delegated usage](skills/benchmark-record/references/delegated-usage.md) only when delegating.
 The fixed task, record schema, settings precedence and token calculations are unchanged; authoring Sources are not runtime inputs.
 
+The review skill separates its workflow, scoring rubric, browser checks and
+record format. Its versioned JSON template is independent of `run.json`; adding
+a review does not migrate generation records or change their measurement bounds.
+
 For another project or a personal installation, copy the complete
-`skills/benchmark-record/` folder, including its assets and references, into the
-host's skill directory. Do not copy only a discovery entrypoint. The official
+`skills/benchmark-record/` or `skills/benchmark-review/` folder, including its assets
+and references, into the host's skill directory. Do not copy only a discovery entrypoint. The official
 [Codex guide](https://learn.chatgpt.com/docs/build-skills) and
 [Claude Code guide](https://code.claude.com/docs/en/skills) describe discovery
 locations and invocation.
 
-This project currently provides only execution and automatic minimal recording.
-Analysis and comparison are not included. It does not switch models, launch a
-second model, install hooks, or run a separate benchmark CLI.
+This project provides execution with automatic minimal recording and a separately
+invoked, single-run review. Batch ranking and cross-run comparison are not included.
+Neither skill switches models, launches a second model, installs hooks, or runs
+a separate benchmark CLI.
 
 - [Current architecture](docs/adr/0001-use-a-shared-recording-skill.md)
 - [Record fields and accounting](skills/benchmark-record/references/record-format.md)

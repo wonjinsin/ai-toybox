@@ -1,0 +1,25 @@
+{
+  "format_version": "1.0",
+  "rubric_version": "solar-system-1.0",
+  "reviewed_at": null,
+  "reviewer": { "model": null, "effort": null },
+  "status": "partial",
+  "requirements_verdict": "unverified",
+  "verification": {
+    "browser_method": "none",
+    "direct_file": "unverified",
+    "viewports": []
+  },
+  "categories": [
+    { "id": "simulation", "weight": 25, "score": null },
+    { "id": "selection", "weight": 20, "score": null },
+    { "id": "usability", "weight": 15, "score": null },
+    { "id": "visual", "weight": 15, "score": null },
+    { "id": "responsive", "weight": 15, "score": null },
+    { "id": "delivery", "weight": 10, "score": null }
+  ],
+  "checks": [],
+  "total_score": null,
+  "coverage": { "passed": 0, "failed": 0, "unverified": 20 },
+  "notes": []
+}

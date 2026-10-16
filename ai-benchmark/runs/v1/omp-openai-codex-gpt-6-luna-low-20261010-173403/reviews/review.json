@@ -1,0 +1,206 @@
+{
+  "format_version": "1.0",
+  "rubric_version": "solar-system-1.0",
+  "reviewed_at": "2026-10-16T13:57:01+00:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6.1-sol",
+    "effort": null
+  },
+  "status": "partial",
+  "requirements_verdict": "unverified",
+  "verification": {
+    "browser_method": "none",
+    "direct_file": "unverified",
+    "viewports": []
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": null
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": null
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": null
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:23,27,34-35 defines one sun and three planets with distinct sizes/colors, periods 12/24/48, and circular position calculations. No rendered motion, visible differentiation, or measured periods were observed; constants alone do not verify S1."
+    },
+    {
+      "id": "S2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:24 initializes time=0, speed=1, playing=true; lines 37,39 schedule animation. Initial browser state and subsequent motion were not observed."
+    },
+    {
+      "id": "S3",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:39 gates time advancement on playing; line 41 toggles playback and resets the frame clock. Actual freeze/resume continuity and paused selection/camera use were not exercised."
+    },
+    {
+      "id": "S4",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:18 provides a 0.25-4 speed range; lines 39,41 apply speed to elapsed time and change speed without assigning time. No measured 0.25x/2x/4x playback, continuity, or paused-speed-resume behavior was observed."
+    },
+    {
+      "id": "S5",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:27 derives positions from time with fixed zero phases; line 41 clamps seek to 0-120, pauses, and calls renderState. Immediate displayed updates and repeated 30-second rendered positions were not observed."
+    },
+    {
+      "id": "S6",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:39 clamps playback to 120 and sets playing=false; line 41 permits earlier seeking and subsequent playback. Boundary stopping and resumption from an earlier seek were not exercised."
+    },
+    {
+      "id": "T1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:33,36,41 routes list clicks and canvas raycast hits through choose; line 32 changes selected emissive intensity. Scene/list selection, visible highlights, and paused selection were not observed."
+    },
+    {
+      "id": "T2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:27,32-33 computes displayed angle from the same time/period formula used for positions and sets selected name/period. Agreement with rendered position and live updates were not observed."
+    },
+    {
+      "id": "T3",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:29-33,41 defines selected-body targets and tracking controls. Static risk, not a confirmed runtime defect: seek calls renderState, which uses syncCamera(false) with lerp factor .14 rather than snapping; immediate tracking alignment after a large seek requires browser observation. Moving centering and selection-switch invariants were not exercised."
+    },
+    {
+      "id": "T4",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:41 clears tracking and synchronizes the target without assigning selection/time/speed/playing. Static risk, not a confirmed runtime defect: overview retains camera distance/yaw/pitch, so full-system framing after close zoom needs observation. No overview transition or state preservation was observed."
+    },
+    {
+      "id": "U1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:28,41 supplies camera orbit and wheel zoom with pitch/distance limits. Orbit/zoom usability in overview/tracking and playing/paused states was not exercised."
+    },
+    {
+      "id": "U2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:41 attaches scene pointer/wheel handlers to the canvas and suppresses pointerup selection after movement exceeding 5 CSS pixels. Real drag/click separation and list/slider/button isolation were not exercised."
+    },
+    {
+      "id": "U3",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:15-18,36,40-41 supplies labeled controls, readouts, pressed states, and playback/tracking feedback. No rendered interface or interaction feedback was observed; qualitative anchor rating is unavailable."
+    },
+    {
+      "id": "V1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:8,34-35 defines scene backgrounds, stars, orbit rings, emissive bodies, and glows. Actual scene readability and selected-object contrast were not observed; no visual rating is supported."
+    },
+    {
+      "id": "V2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:8-10 defines typography, panels, spacing, and responsive styling. No rendered hierarchy, legibility, or consistency was observed; no visual rating is supported."
+    },
+    {
+      "id": "L1",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:8 defines the desktop grid and controls. The 1440x900 CSS-pixel viewport was not opened or exercised; scrolling, blocking, and primary-control usability remain unverified."
+    },
+    {
+      "id": "L2",
+      "status": "unverified",
+      "rating": null,
+      "method": "static",
+      "evidence": "output/index.html:9-10 defines mobile layouts at 760 and 390 CSS pixels. The 390x844 viewport and its selection/tracking/seek/speed/playback controls were not exercised; CSS presence is not usability evidence."
+    },
+    {
+      "id": "D1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "No file:// navigation occurred because the required connected Aside MCP direct repl is unavailable. Working scene and controls without server/build are unverified; D2 static compatibility is not D1 proof."
+    },
+    {
+      "id": "D2",
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Inspected every output resource: output/ contains only index.html. Its sole external resource is the classic script https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js at line 20; styles, application code, and geometry are inline. No referenced local assets, local ES-module imports, local fetch/XHR, or server-only paths were found. CDN use is permitted; network success was not tested."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "No browser execution occurred, so console/page errors and required-resource loading were not observed. Static risk, not a confirmed loading defect: line 25 constructs THREE.Vector3 before the missing-THREE guard in init at line 34. No CDN failure or resulting exception was observed."
+    }
+  ],
+  "total_score": null,
+  "coverage": {
+    "passed": 1,
+    "failed": 0,
+    "unverified": 19
+  },
+  "notes": [
+    "The saved prompt is compatible with solar-system-1.0: all 11 requirements and the eight-step acceptance scenario match the supported task.",
+    "Reviewer model is taken from this worker's provided runtime identity; current reviewer effort is not exposed and remains null. Generator identity, effort, status, and prior verification claims were not used as review evidence.",
+    "The required connected Aside MCP direct repl is unavailable in this host. No alternate browser, CDP, mock DOM, HTTP runtime, model session, server, build, test, lint, formatter, dependency installation, or source modification was used.",
+    "Acceptance scenario steps 1-8 were all unexecuted. No browser timing measurements or numeric tolerances were established; no visual or runtime score is inferred from source.",
+    "Host-required using-harness-flow was read and its subagent-stop rule applied. benchmark-review and its rubric, verification, format, and JSON template were applied; no additional workflow was used.",
+    "Static risks in T3, T4, and D3 are observation targets, not confirmed runtime failures or deductions.",
+    "Output paths were checked for symlink/escape and regular-file safety. Source preservation baselines are held only in working memory. Only reviews/review.json and reviews/review.md are written.",
+    "No browser tab, session, or temporary server was created; no such cleanup was required."
+  ]
+}

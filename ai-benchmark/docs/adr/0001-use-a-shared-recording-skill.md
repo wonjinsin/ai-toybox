@@ -10,8 +10,9 @@ The user wants one invocation to implement the fixed Solar System task and
 finish recording automatically. The retained information should be limited to
 the prompt, HTML result, session identity, model/effort, input/output tokens and
 elapsed time.
-Analysis is out of scope for the current project. Both Codex and Claude Code
-must use the same workflow without provider-specific collectors.
+Analysis was outside the original recording scope; the review extension below
+adds a separately invoked assessment. Both Codex and Claude Code use the same
+workflow without provider-specific collectors.
 
 ## Decision
 
@@ -20,7 +21,7 @@ must use the same workflow without provider-specific collectors.
   `SKILL.md` that directs the agent to the shared instructions.
 - A run invocation performs the task, verifies what it can, saves the final
   record, and replies. There is no operation selector or separate collection
-  request. Analysis and comparison are not implemented.
+  request. Analysis and comparison are not implemented by the recording skill.
 - Measure implementation and its verification. Capture the start immediately
   before that work and the end immediately afterward. Record processing and the
   final user-facing reply are excluded. This allows automatic finalization in
@@ -65,10 +66,28 @@ must use the same workflow without provider-specific collectors.
 - Preserve existing archives. Their older measurement boundaries are different;
   do not silently rewrite them into the current format.
 
+## Review extension (2026-10-16)
+
+- Add a separate, explicitly invoked `benchmark-review` shared skill with Codex
+  and Claude Code discovery entrypoints. It accepts one existing run directory
+  and never invokes generation or repairs the saved artifact.
+- Preserve the original prompt, output and `run.json`. The recording schema and
+  measurement boundaries above remain unchanged.
+- Save only `reviews/review.json` and `reviews/review.md` in that directory.
+  Re-review replaces those two files; do not retain timestamp directories,
+  screenshots, evidence archives or previous-review backups.
+- Use a versioned six-category rubric and the saved prompt. Incompatible tasks
+  receive an unscored, blocked review. Missing evidence remains unverified;
+  incomplete categories and totals stay null, while confirmed mandatory failures
+  are reported independently.
+- Keep browser restrictions unchanged: Aside direct REPL only, direct-file and
+  HTTP verification separate, no bypass of explicit access denials. Generation
+  status and prior reviews are not fresh verification evidence.
+
 ## Consequences
 
-The user invokes only execution. There is no maintained collector script,
-provider adapter, model launcher or background service. Hosts may expose no
+Generation and review are invoked separately. There is no maintained collector
+script, provider adapter, model launcher or background service. Hosts may expose no
 readable current-session file or usable work-interval usage; automatic lookup
 does not guarantee all metrics are available on every version. An abrupt process
 termination can leave a running record.
@@ -82,3 +101,4 @@ vary; the project does not enforce an isolated model-only benchmark.
 - [Usage](../../README.md)
 - [Execution skill](../../skills/benchmark-record/SKILL.md)
 - [Minimal record format](../../skills/benchmark-record/references/record-format.md)
+- [Review skill](../../skills/benchmark-review/SKILL.md)
