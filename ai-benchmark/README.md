@@ -10,46 +10,60 @@ planet sizes/colors/speeds, pause/resume, and a global speed control that preser
 relative orbital speeds. The saved `output/index.html` must also run when opened
 directly in a browser without starting a server or running a build step to view it.
 
-## Browse the Results
+## Browse the Live Results
 
-Open [`index.html`](index.html) in a browser to explore the saved runs. The gallery
-has a model sidebar, searchable run list, score/status filters, score or date
-sorting, and a detail view with the generated HTML, review, original prompt,
-duration, token counts, and recording notes. Detail links can be bookmarked.
-Model/run navigation brings the main content into view; the keyboard skip link
-moves focus to that content without changing the selected model or run.
-
-The gallery is a generated snapshot, not a live directory listing. After adding
-or updating runs or reviews, regenerate it from the repository root with Node.js
-22 or newer:
+Start the read-only gallery from the repository root with Node.js 22 or newer:
 
 ```sh
-node scripts/build-gallery.mjs
+node scripts/serve-gallery.mjs
 ```
 
-The builder scans every direct run directory under `runs/v1` and writes only the
-root `index.html`. It does not run a benchmark, calculate scores, or modify the
-saved runs. Incomplete or malformed records remain visible with missing-data
-notices. Missing scores are **unscored**, not zero; recorded zero scores remain
-eligible for score filtering and sorting. Review status remains visible beside
-numeric scores as well as unscored results.
+Open **http://127.0.0.1:4173/**. No package installation, build, database, or
+generated catalog is required. Opening the application `index.html` directly
+shows startup guidance; the live gallery requires this server.
 
-The gallery embeds its data, CSS, and JavaScript, so viewing does not require a
-server, build tool, package installation, or CDN. Keep `index.html` alongside
-`runs/v1`: result previews use the original relative artifact paths. The same
-layout can be hosted on a static site. Model selection and run details use URL
-hashes, so hosting requires no route rewrites. External dependencies inside an
-individual generated result may still require internet access.
+The server reads the current `runs/v1` collection, including uncommitted files.
+The page checks immediately and then two seconds after each completed request.
+New runs, deletions, status changes, prompts, and review scores update without
+rebuilding, restarting, or reloading the page. Inactive browser tabs may be
+throttled. A request taking longer than five seconds is treated as a connection
+failure; scheduled checks continue. The connection banner marks retained data
+as stale, and the footer shows the last successful check.
 
-Only the selected result runs in a sandboxed iframe, without same-origin access
-to the gallery. Use **결과물 새 탭 열기** if the artifact needs features restricted by
-the sandbox. Merely displaying an artifact does not verify its benchmark score.
-Actual browser rendering, iframe interactions, console errors, and direct-file
-compatibility must be checked with the permitted Aside direct REPL; Node/DOM
-checks do not establish those results.
+The explorer keeps model navigation, search, latest/score sorting, score-state
+filters, bookmarkable details, original prompts, review findings, duration,
+tokens, and recording notes. Background updates preserve selection, filters,
+the active detail section, keyboard focus, and scroll position. A deleted
+selected run shows a missing-run message and recovers automatically if restored.
+The keyboard skip link does not change the selected model or run.
 
-Gallery source lives in `gallery/`; update those files rather than editing the
-generated `index.html`. Run the builder regression checks with:
+Metadata or review updates do not restart an unchanged preview. Changes to the
+selected output HTML or its supporting files reload that preview automatically.
+Incomplete and malformed records remain visible with warnings and recover after
+repair. Missing scores are **unscored**, not zero; numeric zero remains a valid
+score, and review status is always displayed. The gallery never evaluates or
+modifies benchmark records, reviews, or artifacts.
+
+The server binds only to loopback and exposes the application, collection API,
+and regular files inside each run's `output/` directory. It does not serve
+directory listings, raw repository/configuration files, or symlinked paths.
+Output documents are sandboxed without gallery-origin access, including when
+opened with **결과물 새 탭 열기**. Original relative output assets remain loadable;
+an artifact's external CDN dependencies may still require internet access.
+
+To use another port or an isolated data root (whose collection is `runs/v1`):
+
+```sh
+node scripts/serve-gallery.mjs --port 4174 --root /absolute/data-root
+```
+
+Application assets always come from this checkout. Stop the server with Ctrl+C.
+Standalone benchmark artifacts retain their own direct-file delivery contract;
+successful HTTP gallery previews do not establish their `file://` compatibility.
+Actual browser verification uses only Aside's direct MCP REPL.
+
+The application source is `index.html` and `gallery/`; there is no snapshot
+builder. Run the live HTTP/filesystem regression suite with:
 
 ```sh
 node --test tests/gallery.test.mjs

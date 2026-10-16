@@ -1,13 +1,22 @@
 (() => {
   'use strict';
 
-  const data = JSON.parse(document.getElementById('gallery-data').textContent);
-  const runs = data.runs;
+  let runs = [];
+  let revision = null;
+  let hasData = false;
+  let lastSuccess = null;
+  let detailView = null;
+  const fileGuidance = '실시간 갤러리는 로컬 서버가 필요합니다. 프로젝트 폴더에서 node scripts/serve-gallery.mjs 를 실행한 뒤 http://localhost:4173 을 여세요.';
+  let loadError = location.protocol === 'file:' ? fileGuidance : null;
+  const activeSections = new Map();
   const $ = id => document.getElementById(id);
   const number = new Intl.NumberFormat('ko-KR');
   const dateFormat = new Intl.DateTimeFormat('ko-KR', {
     timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', hour12: false,
+  });
+  const checkTimeFormat = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul', dateStyle: 'short', timeStyle: 'medium', hour12: false,
   });
   const categoryNames = {
     simulation: '시뮬레이션 · 시간', selection: '선택 · 추적', usability: '조작 · 상호작용',
@@ -16,7 +25,7 @@
   const statuses = { completed: '생성 완료', running: '생성 중', failed: '생성 실패', blocked: '진행 불가', unknown: '상태 미확인' };
   const reviewStatuses = { completed: '평가 완료', partial: '부분 평가', blocked: '평가 불가' };
   const checkStatuses = { pass: '통과', fail: '실패', unverified: '미검증' };
-  const models = [...new Set(runs.map(run => run.model ?? ''))].sort();
+  const sections = [['preview', '결과물'], ['review', '점수 · 평가'], ['prompt', '사용한 프롬프트'], ['record', '실행 기록']];
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -66,29 +75,46 @@
   }
 
   function renderModels(selected) {
+    const models = [...new Set(runs.map(run => run.model ?? ''))].sort();
     $('model-count').textContent = String(models.length).padStart(2, '0');
+    if (selected !== null && !models.includes(selected)) models.push(selected);
+    const existing = new Map([...$('models').children].map(button => [button.dataset.focusKey, button]));
     const buttons = [null, ...models].map(model => {
-      const button = element('button', 'model-button');
-      button.type = 'button';
+      const key = `model:${routeUrl(model)}`;
+      let button = existing.get(key);
+      if (!button) {
+        button = element('button', 'model-button');
+        button.type = 'button';
+        button.dataset.focusKey = key;
+        button.addEventListener('click', () => {
+          $('search').value = '';
+          $('review-filter').value = 'all';
+          const url = routeUrl(model);
+          if (location.hash === url || (!location.hash && url === '#')) render();
+          else location.hash = url;
+        });
+      }
       button.setAttribute('aria-pressed', String(model === selected));
-      button.append(element('span', 'model-symbol', model === null ? '▦' : '◈'));
       const name = element('span', 'model-name', model === null ? '모든 모델' : model || '모델 미확인');
       if (model?.includes('/')) {
         name.textContent = model.split('/').at(-1);
         name.append(element('small', '', model.slice(0, model.lastIndexOf('/'))));
       }
       button.title = model === null ? '모든 모델' : model || '모델 미확인';
-      button.append(name, element('span', 'model-count', model === null ? runs.length : runs.filter(run => (run.model ?? '') === model).length));
-      button.addEventListener('click', () => {
-        $('search').value = '';
-        $('review-filter').value = 'all';
-        const url = routeUrl(model);
-        if (location.hash === url || (!location.hash && url === '#')) render();
-        else location.hash = url;
-      });
+      button.replaceChildren(element('span', 'model-symbol', model === null ? '▦' : '◈'), name, element('span', 'model-count', model === null ? runs.length : runs.filter(run => (run.model ?? '') === model).length));
       return button;
     });
-    $('models').replaceChildren(...buttons);
+    reconcileChildren($('models'), buttons);
+  }
+
+  function reconcileChildren(parent, children) {
+    const retained = new Set(children);
+    for (const child of [...parent.children]) {
+      if (!retained.has(child)) child.remove();
+    }
+    children.forEach((child, index) => {
+      if (parent.children[index] !== child) parent.insertBefore(child, parent.children[index] ?? null);
+    });
   }
 
   function renderStats(selectedRuns) {
@@ -126,11 +152,14 @@
     }
     $('result-count').textContent = `${visible.length}개`;
     if (!visible.length) {
-      $('run-list').replaceChildren(element('div', 'empty', runs.length ? '조건에 맞는 실행이 없습니다. 검색어나 평가 필터를 변경해 주세요.' : '아직 저장된 실행이 없습니다. runs/v1에 실행을 추가한 뒤 갤러리를 다시 생성해 주세요.'));
+      $('run-list').replaceChildren(element('div', 'empty', !hasData ? loadError ?? '로컬 실행 기록에 연결하는 중입니다.' : runs.length ? '조건에 맞는 실행이 없습니다. 검색어나 평가 필터를 변경해 주세요.' : '아직 저장된 실행이 없습니다. runs/v1에 실행을 추가하면 자동으로 표시됩니다.'));
       return;
     }
-    $('run-list').replaceChildren(...visible.map((run, index) => {
-      const card = element('a', 'run-card');
+    const existing = new Map([...$('run-list').children].map(card => [card.dataset.focusKey, card]));
+    const cards = visible.map((run, index) => {
+      const key = `run:${run.id}`;
+      const card = existing.get(key) ?? element('a', 'run-card');
+      card.dataset.focusKey = key;
       card.href = routeUrl(model, run.id);
       card.setAttribute('aria-label', `${run.model ?? '모델 미확인'}, ${run.effort ?? 'effort 미확인'}, ${date(run.createdAt)}, ${score(run) === null ? '미채점' : `${score(run)}점`}, 상세 보기`);
       const info = element('div');
@@ -142,9 +171,10 @@
       const status = element('div', 'run-status');
       status.append(element('span', `status-pill ${Object.hasOwn(statuses, run.status) ? run.status : 'unknown'}`, statuses[run.status] ?? run.status));
       status.append(element('span', 'run-review', run.issues.length ? '기록 확인 필요' : run.artifactUrl ? '결과물 보기 가능' : '결과물 없음'));
-      card.append(element('span', 'run-number', String(index + 1).padStart(2, '0')), info, status, scoreBlock(run), element('span', 'open-arrow', '↗'));
+      card.replaceChildren(element('span', 'run-number', String(index + 1).padStart(2, '0')), info, status, scoreBlock(run), element('span', 'open-arrow', '↗'));
       return card;
-    }));
+    });
+    reconcileChildren($('run-list'), cards);
   }
 
   function metrics(run) {
@@ -162,7 +192,7 @@
 
   function preview(run, panel) {
     if (!run.artifactUrl) {
-      panel.append(element('div', 'empty', '아직 output/index.html 결과물이 없습니다. 생성이 끝난 뒤 갤러리를 다시 생성해 주세요.'));
+      panel.append(element('div', 'empty', '아직 output/index.html 결과물이 없습니다. 생성이 끝나면 자동으로 표시됩니다.'));
       return;
     }
     const toolbar = element('div', 'preview-toolbar');
@@ -170,6 +200,7 @@
     open.href = run.artifactUrl;
     open.target = '_blank';
     open.rel = 'noopener noreferrer';
+    open.dataset.focusKey = 'open-artifact';
     toolbar.append(element('span', '', 'output / index.html'), open);
     const frame = element('iframe', 'preview-frame');
     frame.title = `${run.model ?? '모델 미확인'} / ${run.effort ?? '미확인'} 생성 결과물`;
@@ -227,60 +258,87 @@
     }
     if (run.reviewMarkdown) {
       const details = element('details');
+      details.dataset.focusKey = 'review-original';
       details.append(element('summary', '', '평가 원문 보기'), element('pre', 'text-panel', run.reviewMarkdown));
       panel.append(details);
     }
   }
 
   function renderDetail(run, selectedModel) {
-    const detail = $('detail');
-    const back = element('a', 'back-button', '← 실행 목록으로');
-    back.href = routeUrl(selectedModel);
-    const heading = element('div', 'page-heading detail-heading');
+    if (!detailView || detailView.id !== run.id) {
+      const back = element('a', 'back-button', '← 실행 목록으로');
+      back.dataset.focusKey = 'back-to-runs';
+      const heading = element('div', 'page-heading detail-heading');
+      const measurements = element('div');
+      const notice = element('div', 'notice');
+      const tabs = element('div', 'detail-tabs');
+      tabs.setAttribute('role', 'group');
+      tabs.setAttribute('aria-label', '상세 내용 선택');
+      const panel = element('div');
+      panel.id = 'detail-panel';
+      detailView = { id: run.id, run: null, back, heading, measurements, notice, tabs, panel, section: activeSections.get(run.id) ?? 'preview' };
+      for (const [key, label] of sections) {
+        const button = element('button', '', label);
+        button.type = 'button';
+        button.dataset.section = key;
+        button.dataset.focusKey = `section:${key}`;
+        button.setAttribute('aria-controls', 'detail-panel');
+        button.addEventListener('click', () => {
+          if (detailView.section === key) return;
+          detailView.section = key;
+          activeSections.set(run.id, key);
+          renderSection();
+        });
+        tabs.append(button);
+      }
+      $('detail').replaceChildren(back, heading, measurements, notice, tabs, panel);
+    }
+    const view = detailView;
+    view.back.href = routeUrl(selectedModel);
+    const previous = view.run;
+    if (previous && JSON.stringify(previous) === JSON.stringify(run)) return;
+    view.run = run;
     const titleGroup = element('div');
     const title = element('h1', '', run.model ?? '모델 미확인');
     title.id = 'detail-title';
-    const subtitle = element('p', 'description', `${run.agent ?? '호스트 미확인'} · ${run.effort ?? 'effort 미확인'} · ${date(run.createdAt)} KST`);
-    titleGroup.append(element('p', 'eyebrow', 'RUN DETAIL / SOLAR SYSTEM'), title, subtitle, element('p', 'run-meta', run.id));
-    heading.append(titleGroup, scoreBlock(run, 'detail-score'));
-    const tabs = element('div', 'detail-tabs');
-    tabs.setAttribute('role', 'group');
-    tabs.setAttribute('aria-label', '상세 내용 선택');
-    const panel = element('div');
-    panel.id = 'detail-panel';
-    detail.replaceChildren(back, heading, metrics(run));
-    if (run.issues.length) detail.append(element('div', 'notice', `일부 기록을 읽지 못했습니다.\n${run.issues.join('\n')}`));
-    detail.append(tabs, panel);
-    const sections = [['preview', '결과물'], ['review', '점수 · 평가'], ['prompt', '사용한 프롬프트'], ['record', '실행 기록']];
-    function showSection(key) {
-      for (const button of tabs.children) button.setAttribute('aria-pressed', String(button.dataset.section === key));
-      panel.replaceChildren();
-      if (key === 'preview') preview(run, panel);
-      if (key === 'review') reviewPanel(run, panel);
-      if (key === 'prompt') panel.append(element('pre', 'text-panel', run.prompt ?? '저장된 prompt.md가 없습니다.'));
-      if (key === 'record') {
-        panel.append(element('h2', '', '설정·측정 출처와 실행 참고 사항'));
-        if (run.notes.length) {
-          const notes = element('ul', 'record-notes');
-          notes.append(...run.notes.map(note => element('li', '', note)));
-          panel.append(notes);
-        } else panel.append(element('p', 'review-summary', '저장된 참고 사항이 없습니다.'));
-        panel.append(element('pre', 'text-panel', JSON.stringify({
-          id: run.id, model: run.model, effort: run.effort, agent: run.agent, status: run.status,
-          created_at: run.createdAt, duration_ms: run.durationMs,
-          input_tokens: run.inputTokens, output_tokens: run.outputTokens,
-        }, null, 2)));
-      }
+    titleGroup.append(element('p', 'eyebrow', 'RUN DETAIL / SOLAR SYSTEM'), title,
+      element('p', 'description', `${run.agent ?? '호스트 미확인'} · ${run.effort ?? 'effort 미확인'} · ${date(run.createdAt)} KST`),
+      element('p', 'run-meta', run.id));
+    view.heading.replaceChildren(titleGroup, scoreBlock(run, 'detail-score'));
+    view.measurements.replaceChildren(metrics(run));
+    view.notice.hidden = !run.issues.length;
+    view.notice.textContent = run.issues.length ? `일부 기록을 읽지 못했습니다.\n${run.issues.join('\n')}` : '';
+    if (view.section === 'preview' && previous &&
+        previous.artifactRevision === run.artifactRevision && Boolean(previous.artifactUrl) === Boolean(run.artifactUrl)) {
+      const frame = view.panel.querySelector('iframe');
+      if (frame) frame.title = `${run.model ?? '모델 미확인'} / ${run.effort ?? '미확인'} 생성 결과물`;
+      const open = view.panel.querySelector('.action-link');
+      if (open) open.href = run.artifactUrl;
+    } else {
+      renderSection();
     }
-    for (const [key, label] of sections) {
-      const button = element('button', '', label);
-      button.type = 'button';
-      button.dataset.section = key;
-      button.setAttribute('aria-controls', 'detail-panel');
-      button.addEventListener('click', () => showSection(key));
-      tabs.append(button);
+  }
+
+  function renderSection() {
+    const { run, panel, tabs, section } = detailView;
+    for (const button of tabs.children) button.setAttribute('aria-pressed', String(button.dataset.section === section));
+    panel.replaceChildren();
+    if (section === 'preview') preview(run, panel);
+    if (section === 'review') reviewPanel(run, panel);
+    if (section === 'prompt') panel.append(element('pre', 'text-panel', run.prompt ?? '저장된 prompt.md가 없습니다.'));
+    if (section === 'record') {
+      panel.append(element('h2', '', '설정·측정 출처와 실행 참고 사항'));
+      if (run.notes.length) {
+        const notes = element('ul', 'record-notes');
+        notes.append(...run.notes.map(note => element('li', '', note)));
+        panel.append(notes);
+      } else panel.append(element('p', 'review-summary', '저장된 참고 사항이 없습니다.'));
+      panel.append(element('pre', 'text-panel', JSON.stringify({
+        id: run.id, model: run.model, effort: run.effort, agent: run.agent, status: run.status,
+        created_at: run.createdAt, duration_ms: run.durationMs,
+        input_tokens: run.inputTokens, output_tokens: run.outputTokens,
+      }, null, 2)));
     }
-    showSection('preview');
   }
 
   function render() {
@@ -293,16 +351,91 @@
       document.title = `${run.model ?? '모델 미확인'} · ${run.effort ?? '미확인'} | AI Benchmark`;
       renderDetail(run, selected.model);
     } else if (selected.run) {
+      detailView = null;
       const back = element('a', 'action-link', '실행 목록으로');
       back.href = routeUrl(selected.model);
-      const title = element('h1', '', '실행을 찾을 수 없습니다');
+      back.dataset.focusKey = 'back-to-runs';
+      const title = element('h1', '', hasData ? '실행을 찾을 수 없습니다' : loadError ? '실행 기록을 불러올 수 없습니다' : '실행 기록에 연결하는 중입니다');
       title.id = 'detail-title';
-      $('detail').replaceChildren(title, element('p', 'description', '실행 ID를 확인하거나 갤러리를 다시 생성해 주세요.'), back);
+      $('detail').replaceChildren(title, element('p', 'description', hasData ? '선택한 실행이 삭제되었거나 아직 없습니다. 같은 ID의 기록이 돌아오면 자동으로 표시됩니다.' : loadError ?? '로컬 서버에서 실행 기록을 불러오고 있습니다.'), back);
       document.title = '실행 없음 | AI Benchmark';
     } else {
+      detailView = null;
       $('detail').replaceChildren();
       document.title = 'AI Benchmark · Run Explorer';
       renderList();
+    }
+  }
+
+  function preservePlace(update) {
+    const active = document.activeElement;
+    const focusKey = active?.dataset.focusKey ?? active?.closest('[data-focus-key]')?.dataset.focusKey;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const scrollNodes = [...document.querySelectorAll('.sidebar, #models, .detail-tabs, .text-panel')];
+    const scrolls = scrollNodes.map(node => [node.scrollLeft, node.scrollTop]);
+    const expandedReview = $('detail').querySelector('details')?.open;
+    update();
+    if (expandedReview) {
+      const details = $('detail').querySelector('details');
+      if (details) details.open = true;
+    }
+    if (active && document.activeElement !== active) {
+      const replacement = active.isConnected ? active : [...document.querySelectorAll('[data-focus-key]')].find(node => node.dataset.focusKey === focusKey);
+      const target = replacement?.tagName === 'DETAILS' ? replacement.querySelector('summary') : replacement;
+      (target ?? $('main')).focus({ preventScroll: true });
+    }
+    [...document.querySelectorAll('.sidebar, #models, .detail-tabs, .text-panel')].forEach((node, index) => {
+      if (scrolls[index]) {
+        node.scrollLeft = scrolls[index][0];
+        node.scrollTop = scrolls[index][1];
+      }
+    });
+    window.scrollTo(scrollX, scrollY);
+  }
+
+  function connection(state, message) {
+    $('connection').dataset.state = state;
+    const labels = { connecting: '연결 중 · CONNECTING', live: '실시간 · LIVE', stale: '연결 끊김 · STALE', error: '연결 오류 · ERROR' };
+    const label = labels[state];
+    if ($('connection-state').textContent !== label) $('connection-state').textContent = label;
+    if ($('connection-message').textContent !== message) $('connection-message').textContent = message;
+    const success = lastSuccess ? `마지막 성공 ${checkTimeFormat.format(new Date(lastSuccess))} KST` : '아직 성공한 확인이 없습니다.';
+    if ($('last-success').textContent !== success) $('last-success').textContent = success;
+  }
+
+  async function poll() {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    try {
+      const response = await fetch('/api/runs', { cache: 'no-store', signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (typeof data.revision !== 'string' || !Array.isArray(data.runs)) throw new Error('실행 목록 응답을 읽을 수 없습니다.');
+      lastSuccess = data.checkedAt;
+      loadError = null;
+      preservePlace(() => {
+        if (!hasData || revision !== data.revision) {
+          runs = data.runs;
+          revision = data.revision;
+          hasData = true;
+          render();
+        }
+        connection('live', '로컬 파일을 자동으로 확인합니다. 확인이 끝난 뒤 2초마다 갱신합니다.');
+      });
+    } catch (error) {
+      const reason = error.name === 'AbortError' ? '5초 안에 응답하지 않았습니다.' : error.message;
+      const message = `${hasData ? '마지막으로 읽은 기록을 표시하고 있습니다.' : '실행 기록을 불러오지 못했습니다.'} ${reason} 자동으로 다시 연결합니다.`;
+      preservePlace(() => {
+        if (!hasData && loadError !== message) {
+          loadError = message;
+          render();
+        }
+        connection(hasData ? 'stale' : 'error', message);
+      });
+    } finally {
+      clearTimeout(timeout);
+      setTimeout(poll, 2000);
     }
   }
 
@@ -322,6 +455,11 @@
     render();
     focusMain();
   });
-  $('generated-at').textContent = `마지막 수집 ${date(data.generatedAt)} KST · 갱신: node scripts/build-gallery.mjs`;
   render();
+  if (location.protocol === 'file:') {
+    connection('error', fileGuidance);
+  } else {
+    connection('connecting', '로컬 실행 기록을 불러오고 있습니다.');
+    poll();
+  }
 })();
