@@ -124,7 +124,14 @@ async function collectArtifact(root, prefix, issues) {
             await visit(child);
           } else if (info.isFile()) {
             const name = child.join('/');
-            files.push([name, String(info.size), String(info.mtimeNs), String(info.ctimeNs)]);
+            const { handle } = await openRegularFile(root, childSegments);
+            try {
+              const digest = createHash('sha256');
+              for await (const chunk of handle.createReadStream({ autoClose: false })) digest.update(chunk);
+              files.push([name, digest.digest('hex')]);
+            } finally {
+              await handle.close();
+            }
             if (name === 'index.html') hasEntrypoint = true;
           } else {
             issues.push(`${childSegments.join('/')}: not a regular file`);
@@ -142,7 +149,7 @@ async function collectArtifact(root, prefix, issues) {
   files.sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
   const artifactRevision = hash(files);
   const artifactUrl = hasEntrypoint
-    ? `/runs/v1/${encodeURIComponent(prefix[2])}/output/index.html?v=${artifactRevision}`
+    ? `runs/v1/${encodeURIComponent(prefix[2])}/output/index.html?v=${artifactRevision}`
     : null;
   return { artifactRevision, artifactUrl };
 }

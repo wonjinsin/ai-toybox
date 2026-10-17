@@ -3,13 +3,14 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
-import { collectRuns, collectionRevision, openOutputFile } from '../gallery/data.mjs';
+import { openOutputFile } from '../gallery/data.mjs';
 
 const sourceRoot = fileURLToPath(new URL('../', import.meta.url));
 const appRoutes = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
   ['/index.html', ['index.html', 'text/html; charset=utf-8']],
   ['/gallery/app.js', ['gallery/app.js', 'text/javascript; charset=utf-8']],
+  ['/gallery/data.js', ['gallery/data.js', 'text/javascript; charset=utf-8']],
   ['/gallery/styles.css', ['gallery/styles.css', 'text/css; charset=utf-8']],
 ]);
 const types = new Map([
@@ -59,13 +60,6 @@ function loopbackHost(host) {
   }
 }
 
-function sameOrigin(request) {
-  const origin = request.headers.origin;
-  const site = request.headers['sec-fetch-site'];
-  if (site && site !== 'same-origin' && site !== 'none') return false;
-  return origin === undefined || origin === new URL(`http://${request.headers.host}`).origin;
-}
-
 function requestSegments(url) {
   if (!url.startsWith('/') || url.startsWith('//')) throw new Error('Invalid request path');
   const pathname = url.split('?')[0];
@@ -103,30 +97,11 @@ export function createGalleryServer({ root = sourceRoot } = {}) {
       return;
     }
     const route = `/${segments.join('/')}`;
-    if (route === '/api/runs') {
-      if (!sameOrigin(request)) {
-        send(request, response, 403, 'The collection API is same-origin only.\n');
-        return;
-      }
-      try {
-        const runs = await collectRuns(dataRoot);
-        send(request, response, 200, JSON.stringify({
-          revision: collectionRevision(runs),
-          checkedAt: new Date().toISOString(),
-          runs,
-        }), 'application/json; charset=utf-8');
-      } catch (error) {
-        send(request, response, 500, JSON.stringify({
-          error: `Unable to read the run collection (${error.code ?? 'read error'}).`,
-        }), 'application/json; charset=utf-8');
-      }
-      return;
-    }
 
     const app = appRoutes.get(route);
     if (app) {
       try {
-        const bytes = await readFile(path.join(sourceRoot, app[0]));
+        const bytes = await readFile(path.join(dataRoot, app[0]));
         send(request, response, 200, bytes, app[1]);
       } catch {
         send(request, response, 500, 'Unable to read the gallery application.\n');

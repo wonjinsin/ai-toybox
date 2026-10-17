@@ -1,24 +1,18 @@
 (() => {
   'use strict';
 
-  let runs = [];
-  let revision = null;
-  let hasData = false;
-  let lastSuccess = null;
+  const snapshot = globalThis.BENCHMARK_GALLERY;
+  const hasData = Boolean(snapshot && typeof snapshot.revision === 'string' && Array.isArray(snapshot.runs));
+  const runs = hasData ? snapshot.runs : [];
+  const generateGuidance = 'ai-benchmark 폴더에서 node scripts/generate-gallery.mjs 를 실행한 뒤 이 페이지를 새로고침하세요.';
+  const loadError = `gallery/data.js 데이터를 불러올 수 없습니다. ${generateGuidance}`;
   let detailView = null;
-  let disconnected = false;
-  let connectedPreview = null;
-  const fileGuidance = '실시간 갤러리는 로컬 서버가 필요합니다. 프로젝트 폴더에서 node scripts/serve-gallery.mjs 를 실행한 뒤 http://localhost:4173 을 여세요.';
-  let loadError = location.protocol === 'file:' ? fileGuidance : null;
   const activeSections = new Map();
   const $ = id => document.getElementById(id);
   const number = new Intl.NumberFormat('ko-KR');
   const dateFormat = new Intl.DateTimeFormat('ko-KR', {
     timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', hour12: false,
-  });
-  const checkTimeFormat = new Intl.DateTimeFormat('ko-KR', {
-    timeZone: 'Asia/Seoul', dateStyle: 'short', timeStyle: 'medium', hour12: false,
   });
   const categoryNames = {
     simulation: '시뮬레이션 · 시간', selection: '선택 · 추적', usability: '조작 · 상호작용',
@@ -154,7 +148,7 @@
     }
     $('result-count').textContent = `${visible.length}개`;
     if (!visible.length) {
-      $('run-list').replaceChildren(element('div', 'empty', !hasData ? loadError ?? '로컬 실행 기록에 연결하는 중입니다.' : runs.length ? '조건에 맞는 실행이 없습니다. 검색어나 평가 필터를 변경해 주세요.' : '아직 저장된 실행이 없습니다. runs/v1에 실행을 추가하면 자동으로 표시됩니다.'));
+      $('run-list').replaceChildren(element('div', 'empty', !hasData ? loadError : runs.length ? '조건에 맞는 실행이 없습니다. 검색어나 평가 필터를 변경해 주세요.' : `아직 저장된 실행이 없습니다. runs/v1에 실행을 추가하고 ${generateGuidance}`));
       return;
     }
     const existing = new Map([...$('run-list').children].map(card => [card.dataset.focusKey, card]));
@@ -194,7 +188,7 @@
 
   function preview(run, panel) {
     if (!run.artifactUrl) {
-      panel.append(element('div', 'empty', '아직 output/index.html 결과물이 없습니다. 생성이 끝나면 자동으로 표시됩니다.'));
+      panel.append(element('div', 'empty', `이 스냅샷에는 output/index.html 결과물이 없습니다. 결과물을 저장한 뒤 ${generateGuidance}`));
       return;
     }
     const toolbar = element('div', 'preview-toolbar');
@@ -267,39 +261,38 @@
   }
 
   function renderDetail(run, selectedModel) {
-    if (!detailView || detailView.id !== run.id) {
-      const back = element('a', 'back-button', '← 실행 목록으로');
-      back.dataset.focusKey = 'back-to-runs';
-      const heading = element('div', 'page-heading detail-heading');
-      const measurements = element('div');
-      const notice = element('div', 'notice');
-      const tabs = element('div', 'detail-tabs');
-      tabs.setAttribute('role', 'group');
-      tabs.setAttribute('aria-label', '상세 내용 선택');
-      const panel = element('div');
-      panel.id = 'detail-panel';
-      detailView = { id: run.id, run: null, back, heading, measurements, notice, tabs, panel, section: activeSections.get(run.id) ?? 'preview' };
-      for (const [key, label] of sections) {
-        const button = element('button', '', label);
-        button.type = 'button';
-        button.dataset.section = key;
-        button.dataset.focusKey = `section:${key}`;
-        button.setAttribute('aria-controls', 'detail-panel');
-        button.addEventListener('click', () => {
-          if (detailView.section === key) return;
-          detailView.section = key;
-          activeSections.set(run.id, key);
-          renderSection();
-        });
-        tabs.append(button);
-      }
-      $('detail').replaceChildren(back, heading, measurements, notice, tabs, panel);
+    if (detailView?.run === run) {
+      detailView.back.href = routeUrl(selectedModel);
+      return;
     }
+    const back = element('a', 'back-button', '← 실행 목록으로');
+    back.dataset.focusKey = 'back-to-runs';
+    const heading = element('div', 'page-heading detail-heading');
+    const measurements = element('div');
+    const notice = element('div', 'notice');
+    const tabs = element('div', 'detail-tabs');
+    tabs.setAttribute('role', 'group');
+    tabs.setAttribute('aria-label', '상세 내용 선택');
+    const panel = element('div');
+    panel.id = 'detail-panel';
+    detailView = { run, back, heading, measurements, notice, tabs, panel, section: activeSections.get(run.id) ?? 'preview' };
+    for (const [key, label] of sections) {
+      const button = element('button', '', label);
+      button.type = 'button';
+      button.dataset.section = key;
+      button.dataset.focusKey = `section:${key}`;
+      button.setAttribute('aria-controls', 'detail-panel');
+      button.addEventListener('click', () => {
+        if (detailView.section === key) return;
+        detailView.section = key;
+        activeSections.set(run.id, key);
+        renderSection();
+      });
+      tabs.append(button);
+    }
+    $('detail').replaceChildren(back, heading, measurements, notice, tabs, panel);
     const view = detailView;
     view.back.href = routeUrl(selectedModel);
-    const previous = view.run;
-    if (previous && JSON.stringify(previous) === JSON.stringify(run)) return;
-    view.run = run;
     const titleGroup = element('div');
     const title = element('h1', '', run.model ?? '모델 미확인');
     title.id = 'detail-title';
@@ -310,15 +303,7 @@
     view.measurements.replaceChildren(metrics(run));
     view.notice.hidden = !run.issues.length;
     view.notice.textContent = run.issues.length ? `일부 기록을 읽지 못했습니다.\n${run.issues.join('\n')}` : '';
-    if (view.section === 'preview' && previous &&
-        previous.artifactRevision === run.artifactRevision && Boolean(previous.artifactUrl) === Boolean(run.artifactUrl)) {
-      const frame = view.panel.querySelector('iframe');
-      if (frame) frame.title = `${run.model ?? '모델 미확인'} / ${run.effort ?? '미확인'} 생성 결과물`;
-      const open = view.panel.querySelector('.action-link');
-      if (open) open.href = run.artifactUrl;
-    } else {
-      renderSection();
-    }
+    renderSection();
   }
 
   function renderSection() {
@@ -357,99 +342,15 @@
       const back = element('a', 'action-link', '실행 목록으로');
       back.href = routeUrl(selected.model);
       back.dataset.focusKey = 'back-to-runs';
-      const title = element('h1', '', hasData ? '실행을 찾을 수 없습니다' : loadError ? '실행 기록을 불러올 수 없습니다' : '실행 기록에 연결하는 중입니다');
+      const title = element('h1', '', hasData ? '실행을 찾을 수 없습니다' : '실행 기록을 불러올 수 없습니다');
       title.id = 'detail-title';
-      $('detail').replaceChildren(title, element('p', 'description', hasData ? '선택한 실행이 삭제되었거나 아직 없습니다. 같은 ID의 기록이 돌아오면 자동으로 표시됩니다.' : loadError ?? '로컬 서버에서 실행 기록을 불러오고 있습니다.'), back);
+      $('detail').replaceChildren(title, element('p', 'description', hasData ? `선택한 실행이 이 스냅샷에 없습니다. 저장된 실행을 추가하거나 변경했다면 ${generateGuidance}` : loadError), back);
       document.title = '실행 없음 | AI Benchmark';
     } else {
       detailView = null;
       $('detail').replaceChildren();
       document.title = 'AI Benchmark · Run Explorer';
       renderList();
-    }
-  }
-
-  function preservePlace(update) {
-    const active = document.activeElement;
-    const focusKey = active?.dataset.focusKey ?? active?.closest('[data-focus-key]')?.dataset.focusKey;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-    const scrollNodes = [...document.querySelectorAll('.sidebar, #models, .detail-tabs, .text-panel')];
-    const scrolls = scrollNodes.map(node => [node.scrollLeft, node.scrollTop]);
-    const expandedReview = $('detail').querySelector('details')?.open;
-    update();
-    if (expandedReview) {
-      const details = $('detail').querySelector('details');
-      if (details) details.open = true;
-    }
-    if (active && document.activeElement !== active) {
-      const replacement = active.isConnected ? active : [...document.querySelectorAll('[data-focus-key]')].find(node => node.dataset.focusKey === focusKey);
-      const target = replacement?.tagName === 'DETAILS' ? replacement.querySelector('summary') : replacement;
-      (target ?? $('main')).focus({ preventScroll: true });
-    }
-    [...document.querySelectorAll('.sidebar, #models, .detail-tabs, .text-panel')].forEach((node, index) => {
-      if (scrolls[index]) {
-        node.scrollLeft = scrolls[index][0];
-        node.scrollTop = scrolls[index][1];
-      }
-    });
-    window.scrollTo(scrollX, scrollY);
-  }
-
-  function connection(state, message) {
-    $('connection').dataset.state = state;
-    const labels = { connecting: '연결 중 · CONNECTING', live: '실시간 · LIVE', stale: '연결 끊김 · STALE', error: '연결 오류 · ERROR' };
-    const label = labels[state];
-    if ($('connection-state').textContent !== label) $('connection-state').textContent = label;
-    if ($('connection-message').textContent !== message) $('connection-message').textContent = message;
-    const success = lastSuccess ? `마지막 성공 ${checkTimeFormat.format(new Date(lastSuccess))} KST` : '아직 성공한 확인이 없습니다.';
-    if ($('last-success').textContent !== success) $('last-success').textContent = success;
-  }
-
-  async function poll() {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-    const previewAtStart = detailView?.panel.querySelector('iframe') ?? null;
-    try {
-      const response = await fetch('/api/runs', { cache: 'no-store', signal: controller.signal });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json();
-      if (typeof data.revision !== 'string' || !Array.isArray(data.runs)) throw new Error('실행 목록 응답을 읽을 수 없습니다.');
-      lastSuccess = data.checkedAt;
-      loadError = null;
-      preservePlace(() => {
-        if (!hasData || revision !== data.revision) {
-          runs = data.runs;
-          revision = data.revision;
-          hasData = true;
-          render();
-        }
-        const frame = detailView?.panel.querySelector('iframe') ?? null;
-        // Sandboxed network-error documents cannot be inspected. Retry previews opened
-        // during unconfirmed connectivity, but keep an established preview running.
-        if (disconnected && frame && frame === previewAtStart && frame !== connectedPreview) {
-          renderSection();
-          connectedPreview = null;
-        } else {
-          connectedPreview = frame === previewAtStart ? frame : null;
-        }
-        disconnected = false;
-        connection('live', '로컬 파일을 자동으로 확인합니다. 확인이 끝난 뒤 2초마다 갱신합니다.');
-      });
-    } catch (error) {
-      disconnected = true;
-      const reason = error.name === 'AbortError' ? '5초 안에 응답하지 않았습니다.' : error.message;
-      const message = `${hasData ? '마지막으로 읽은 기록을 표시하고 있습니다.' : '실행 기록을 불러오지 못했습니다.'} ${reason} 자동으로 다시 연결합니다.`;
-      preservePlace(() => {
-        if (!hasData && loadError !== message) {
-          loadError = message;
-          render();
-        }
-        connection(hasData ? 'stale' : 'error', message);
-      });
-    } finally {
-      clearTimeout(timeout);
-      setTimeout(poll, 2000);
     }
   }
 
@@ -470,10 +371,10 @@
     focusMain();
   });
   render();
-  if (location.protocol === 'file:') {
-    connection('error', fileGuidance);
-  } else {
-    connection('connecting', '로컬 실행 기록을 불러오고 있습니다.');
-    poll();
-  }
+  $('connection').dataset.state = hasData ? 'snapshot' : 'error';
+  $('connection-state').textContent = hasData ? '정적 스냅샷 · SNAPSHOT' : '데이터 없음 · NO DATA';
+  $('connection-message').textContent = hasData
+    ? '저장된 스냅샷을 표시합니다. 변경된 기록은 데이터 재생성 후 새로고침하면 반영됩니다.'
+    : loadError;
+  $('snapshot-revision').textContent = hasData ? `스냅샷 ${snapshot.revision.slice(0, 12)}` : '스냅샷 데이터 없음';
 })();

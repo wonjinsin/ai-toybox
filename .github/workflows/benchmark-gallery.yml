@@ -1,0 +1,79 @@
+name: Benchmark gallery
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'ai-benchmark/**'
+      - '.github/workflows/benchmark-gallery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: benchmark-gallery-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test gallery and Git hooks
+        run: node --test ai-benchmark/tests/gallery*.test.mjs
+      - name: Generate gallery data
+        run: node ai-benchmark/scripts/generate-gallery.mjs
+      - name: Prepare public files
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { copyFile, cp, lstat, mkdir, readdir } from 'node:fs/promises';
+          import path from 'node:path';
+          const source = 'ai-benchmark';
+          const destination = '_site';
+          await mkdir(path.join(destination, 'gallery'), { recursive: true });
+          for (const file of ['index.html', 'gallery/app.js', 'gallery/styles.css', 'gallery/data.js']) {
+            await copyFile(path.join(source, file), path.join(destination, file));
+          }
+          const runs = path.join(source, 'runs/v1');
+          const entries = await readdir(runs, { withFileTypes: true }).catch(error => {
+            if (error.code === 'ENOENT') return [];
+            throw error;
+          });
+          for (const entry of entries) {
+            if (!entry.isDirectory()) continue;
+            const output = path.join(runs, entry.name, 'output');
+            let info;
+            try {
+              info = await lstat(output);
+            } catch (error) {
+              if (error.code === 'ENOENT') continue;
+              throw error;
+            }
+            if (!info.isDirectory()) continue;
+            const target = path.join(destination, 'runs/v1', entry.name, 'output');
+            await mkdir(path.dirname(target), { recursive: true });
+            await cp(output, target, { recursive: true, dereference: false });
+          }
+          NODE
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy gallery
+        id: deployment
+        uses: actions/deploy-pages@v4

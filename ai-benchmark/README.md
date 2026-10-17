@@ -10,67 +10,126 @@ planet sizes/colors/speeds, pause/resume, and a global speed control that preser
 relative orbital speeds. The saved `output/index.html` must also run when opened
 directly in a browser without starting a server or running a build step to view it.
 
-## Browse the Live Results
+## Browse the static results
 
-Start the read-only gallery from the repository root with Node.js 22 or newer:
+Open this folder's `index.html` directly in a browser, or open the published
+GitHub Pages site. The gallery loads `gallery/data.js` as a classic script.
+It does not call an API, use local module imports, or require a server to read
+the catalog. Application assets and output links use relative paths, including
+when the site is hosted below a repository path.
 
-```sh
-node scripts/serve-gallery.mjs
-```
+The explorer keeps model navigation, search, latest and score sorting,
+score-state filters, bookmarkable details, prompts, review findings, duration,
+tokens, recording notes, and output previews. Missing scores are **unscored**,
+not zero. Numeric zero remains a valid score. Incomplete or malformed metadata
+appears with warnings. The gallery does not evaluate or modify saved runs.
 
-Open **http://127.0.0.1:4173/**. No package installation, build, database, or
-generated catalog is required. Opening the application `index.html` directly
-shows startup guidance; the live gallery requires this server.
+### Refresh the local catalog
 
-The server reads the current `runs/v1` collection, including uncommitted files.
-The page checks immediately and then two seconds after each completed request.
-New runs, deletions, status changes, prompts, and review scores update without
-rebuilding, restarting, or reloading the page. Inactive browser tabs may be
-throttled. A request taking longer than five seconds is treated as a connection
-failure; scheduled checks continue. The connection banner marks retained data
-as stale, and the footer shows the last successful check.
-
-The explorer keeps model navigation, search, latest/score sorting, score-state
-filters, bookmarkable details, original prompts, review findings, duration,
-tokens, and recording notes. Background updates preserve selection, filters,
-the active detail section, keyboard focus, and scroll position. A deleted
-selected run shows a missing-run message and recovers automatically if restored.
-The keyboard skip link does not change the selected model or run.
-
-Metadata or review updates do not restart an unchanged preview. Changes to the
-selected output HTML or its supporting files reload that preview automatically.
-After reconnection, a preview opened since the last confirmed connection can
-reload once even if the collection is unchanged. An established preview keeps
-running through the outage.
-Incomplete and malformed records remain visible with warnings and recover after
-repair. Missing scores are **unscored**, not zero; numeric zero remains a valid
-score, and review status is always displayed. The gallery never evaluates or
-modifies benchmark records, reviews, or artifacts.
-
-The server binds only to loopback and exposes the application, collection API,
-and regular files inside each run's `output/` directory. It does not serve
-directory listings, raw repository/configuration files, or symlinked paths.
-Output documents are sandboxed without gallery-origin access, including when
-opened with **결과물 새 탭 열기**. Original relative output assets remain loadable;
-an artifact's external CDN dependencies may still require internet access.
-
-To use another port or an isolated data root (whose collection is `runs/v1`):
+Run these commands from `ai-benchmark` with Node.js 22 or newer:
 
 ```sh
-node scripts/serve-gallery.mjs --port 4174 --root /absolute/data-root
+node scripts/generate-gallery.mjs
 ```
 
-Application assets always come from this checkout. Stop the server with Ctrl+C.
-Standalone benchmark artifacts retain their own direct-file delivery contract;
-successful HTTP gallery previews do not establish their `file://` compatibility.
-Actual browser verification uses only Aside's direct MCP REPL.
+Reload the page after generation. This command reads the working tree,
+including uncommitted records and reviews, and replaces only `gallery/data.js`.
+The snapshot has no generation timestamp. Its revision and artifact revisions
+depend on content, so unchanged input produces identical output.
+Live file detection and automatic preview refresh are no longer supported.
 
-The application source is `index.html` and `gallery/`; there is no snapshot
-builder. Run the live HTTP/filesystem regression suite with:
+To read another collection or write the snapshot elsewhere, use:
+
+```sh
+node scripts/generate-gallery.mjs --root /absolute/ai-benchmark --output /absolute/data.js
+```
+
+For optional HTTP preview, run:
+
+```sh
+node scripts/serve-gallery.mjs --port 4173
+```
+
+Open **http://127.0.0.1:4173/**. The server serves saved static files and output
+assets, not `/api/runs`. Its `--root DIRECTORY` option selects the complete site
+directory, including application assets and the generated catalog. It binds
+only to loopback. Stop it with Ctrl+C.
+
+### Install the commit hook
+
+The Git root is the parent `ai-toybox` repository. From `ai-benchmark`, run:
+
+```sh
+node scripts/install-gallery-hooks.mjs
+```
+
+The installer changes only this repository's local `core.hooksPath`. It creates
+private hooks inside the Git common directory and preserves the previous hook
+chain, including the shared `~/.git_template/hooks` hooks. It does not edit
+shared hooks or global Git configuration. Repeating installation retains the
+original chain and refreshes the installed driver. Reinstall after changing
+the hook implementation.
+
+When staged paths under `ai-benchmark/` change, pre-commit runs the previous
+pre-commit hook first, then builds a temporary tree from the effective Git
+index. It runs the **staged generator and collector**, not their unstaged
+working-tree versions. Partially staged records, staged deletions, and an
+alternate `GIT_INDEX_FILE` therefore produce the catalog for that commit.
+Untracked files and unstaged review edits do not enter the snapshot.
+
+After successful generation, the hook updates **only**
+`ai-benchmark/gallery/data.js` in the index. It leaves working-tree files
+unchanged, including the local catalog. The staged catalog can therefore differ
+from the catalog used by your current local preview. Generation failures stop
+the commit without installing a new catalog in the index. Unrelated commits
+skip generation, and deleting the entire project does not recreate it.
+
+The hook rejects unresolved index entries, symlinks, and submodules inside
+`ai-benchmark` rather than reading outside the staged tree. The installer does
+not support bare repositories or worktree-specific `core.hooksPath` overrides.
+The hook never pushes or deploys.
+
+### Publish with GitHub Actions
+
+The workflow is at the Git root,
+`../.github/workflows/benchmark-gallery.yml`. After a push to `master` changes
+`ai-benchmark/**` or that workflow, Actions runs the regression suite, generates
+the catalog from the checked-out commit, and deploys the static site with the
+official GitHub Pages actions. A manual workflow dispatch is also available.
+Set the repository's **Settings → Pages → Build and deployment → Source** to
+**GitHub Actions** before the first deployment.
+
+The upload contains only `index.html`, the browser assets in `gallery/`, and
+each run's `output/` files. Raw record files, repository configuration, tests,
+and skills are not uploaded. Prompts, reviews, notes, and normalized run fields
+are included in the public catalog because the gallery displays them.
+
+Embedded output previews retain their iframe sandbox without same-origin
+access. A standalone output opened in a new tab on Pages does not receive the
+local preview server's sandbox response header. Only publish trusted artifacts.
+External CDN dependencies may still require internet access. The gallery does
+not rewrite benchmark outputs or repair their individual file compatibility.
+
+### Verify changes
+
+Run the regression suite from `ai-benchmark`:
 
 ```sh
 node --test tests/gallery*.test.mjs
 ```
+
+Hook regressions use temporary Git repositories and do not stage this checkout.
+They cover staged-only generation, partial staging, deletions, alternate
+indexes, failure handling, and existing-hook preservation.
+
+Browser verification uses Aside's direct MCP REPL. In the static migration
+check, Aside denied `file://` navigation because local file access was disabled.
+Direct-file runtime compatibility remains **unverified**. Separate HTTP checks
+used an output-only temporary site under `/ai-toybox/`. They exercised model
+navigation, search, filters, sorting, detail sections, preview playback, new-tab
+output links, keyboard navigation, zero versus unscored values, and missing-data
+guidance. The normal gallery path produced no captured console or page errors
+and no API requests. HTTP success does not establish `file://` compatibility.
 
 ## Run
 

@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>AI Benchmark · Run Explorer</title>
   <link rel="stylesheet" href="gallery/styles.css">
+  <script src="gallery/data.js" defer></script>
   <script src="gallery/app.js" defer></script>
 </head>
 <body>
@@ -15,14 +16,14 @@
       <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">a/b</span><span>AI Benchmark<small>RUN EXPLORER</small></span></a>
       <div class="sidebar-heading"><span>MODELS</span><span id="model-count"></span></div>
       <nav id="models" aria-label="모델 선택"></nav>
-      <div class="sidebar-footer">LOCAL COLLECTION<small>runs / v1</small><p>저장된 결과와 평가를 탐색합니다.<br>원본 실행 기록은 변경하지 않습니다.</p></div>
+      <div class="sidebar-footer">STATIC COLLECTION<small>runs / v1</small><p>저장된 결과와 평가를 탐색합니다.<br>원본 실행 기록은 변경하지 않습니다.</p></div>
     </aside>
     <main id="main" tabindex="-1">
       <header class="topbar"><span>WORKSPACE <span class="breadcrumb">/ &nbsp;Solar System</span></span><span class="version-tag">BENCHMARK V1</span></header>
       <div class="content">
-        <div id="connection" class="connection" data-state="connecting" role="status" aria-live="polite" aria-atomic="true">
-          <span id="connection-state" class="connection-state">연결 중 · CONNECTING</span>
-          <span id="connection-message" class="connection-message">로컬 실행 기록을 불러오고 있습니다.</span>
+        <div id="connection" class="connection" data-state="snapshot" role="status" aria-live="polite" aria-atomic="true">
+          <span id="connection-state" class="connection-state">정적 스냅샷 · SNAPSHOT</span>
+          <span id="connection-message" class="connection-message">저장된 갤러리 데이터를 표시합니다.</span>
         </div>
         <section id="collection" aria-labelledby="collection-title">
           <div class="page-heading"><div><p class="eyebrow">THE BENCHMARK COLLECTION</p><h1 id="collection-title">모든 실행 결과<span class="title-dot">.</span></h1><p id="collection-description" class="description">같은 과제, 다른 모델. 결과물을 직접 살펴보세요.</p></div><span class="task-label">Solar System / Three.js</span></div>
@@ -36,10 +37,10 @@
           <p class="score-note">미채점은 0점이 아닙니다. 평가가 없거나 검증이 완료되지 않은 실행은 점수를 표시하지 않습니다.</p>
         </section>
         <section id="detail" hidden aria-labelledby="detail-title"></section>
-        <footer class="page-footer"><span>AI BENCHMARK <span class="footer-divider">/</span> BUILT TO COMPARE</span><span id="last-success">아직 성공한 확인이 없습니다.</span></footer>
+        <footer class="page-footer"><span>AI BENCHMARK <span class="footer-divider">/</span> BUILT TO COMPARE</span><span id="snapshot-revision">정적 갤러리 스냅샷</span></footer>
       </div>
     </main>
   </div>
-  <noscript><p>실시간 갤러리에는 JavaScript와 로컬 서버가 필요합니다. 프로젝트 폴더에서 node scripts/serve-gallery.mjs 를 실행한 뒤 http://localhost:4173 을 여세요. 각 실행의 output/index.html은 직접 열 수 있습니다.</p></noscript>
+  <noscript><p>갤러리를 탐색하려면 JavaScript를 켜 주세요. 로컬 서버 없이 이 페이지를 직접 열 수 있습니다. 각 실행의 output/index.html도 직접 열 수 있습니다.</p></noscript>
 </body>
 </html>

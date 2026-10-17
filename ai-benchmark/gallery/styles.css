@@ -49,9 +49,9 @@ main { min-width: 0; }
 .connection-state { color: var(--muted); font-weight: 650; white-space: nowrap; }
 .connection-state::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 7px; }
 .connection-message { color: var(--muted); overflow-wrap: anywhere; }
-.connection[data-state="live"] .connection-state { color: #357c60; }
-.connection[data-state="stale"], .connection[data-state="error"] { background: #fffbef; border-color: #eee2bd; }
-.connection[data-state="stale"] .connection-state, .connection[data-state="error"] .connection-state { color: #85692d; }
+.connection[data-state="snapshot"] .connection-state { color: #357c60; }
+.connection[data-state="error"] { background: #fffbef; border-color: #eee2bd; }
+.connection[data-state="error"] .connection-state { color: #85692d; }
 .page-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 32px; }
 .eyebrow { color: var(--accent); letter-spacing: 2px; font-size: 10px; font-weight: 650; margin: 0 0 12px; }
 h1 { font-size: clamp(25px, 2.4vw, 36px); letter-spacing: -1.2px; line-height: 1.3; margin: 0; overflow-wrap: anywhere; }
