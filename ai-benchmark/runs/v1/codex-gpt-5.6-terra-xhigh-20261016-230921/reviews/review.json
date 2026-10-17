@@ -1,52 +1,196 @@
 {
-  "format_version": "1.0",
-  "rubric_version": "solar-system-1.0",
-  "reviewed_at": "2026-10-16T17:02:17Z",
-  "reviewer": { "model": null, "effort": null },
+  "format_version": "2.0",
+  "rubric_version": "solar-system-2.0",
+  "reviewed_at": "2026-10-17T07:32:58+00:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6-astra",
+    "effort": null
+  },
   "status": "blocked",
   "requirements_verdict": "unverified",
   "verification": {
     "browser_method": "none",
-    "direct_file": "unverified",
     "viewports": []
   },
   "categories": [
-    { "id": "simulation", "weight": 25, "score": null },
-    { "id": "selection", "weight": 20, "score": null },
-    { "id": "usability", "weight": 15, "score": null },
-    { "id": "visual", "weight": 15, "score": null },
-    { "id": "responsive", "weight": 15, "score": null },
-    { "id": "delivery", "weight": 10, "score": null }
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": null
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": null
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": null
+    }
   ],
   "checks": [
-    { "id": "S1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "S2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "S3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "S4", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "S5", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "S6", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "T1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "T2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "T3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "T4", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "U1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "U2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "U3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "V1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "V2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "L1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "L2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "D1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed: required D1 direct-file check for runs/v1/codex-gpt-5.6-terra-xhigh-20261016-230921/output/index.html could not be established. No confirmed permitted Aside direct-REPL file:// execution path was available from the common preflight." },
-    { "id": "D2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." },
-    { "id": "D3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required D1 direct-file capability." }
+    {
+      "id": "S1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "S2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "S3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "S4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "S5",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "S6",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "T1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "T2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "T3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "T4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "U1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "U2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "U3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "V1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "V2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "L1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "L2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "D2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Unverified: the previous attempt stopped at its shared browser-capability preflight before this artifact was evaluated. This policy migration supplies no new evidence for this check."
+    }
   ],
   "total_score": null,
-  "coverage": { "passed": 0, "failed": 0, "unverified": 20 },
+  "coverage": {
+    "passed": 0,
+    "failed": 0,
+    "unverified": 19
+  },
   "notes": [
-    "Blocked before artifact inspection: current Aside documentation did not establish a permitted direct-REPL file:// path for required D1. No target navigation was attempted and no current navigation error was observed. The current extension preference allow_file_access is UNSET, not false.",
-    "No browser execution occurred; no viewport was checked. All rubric checks and all eight acceptance-scenario actions remain unperformed. No artifact findings or scores were established.",
-    "Reviewer model and effort are null because this worker's identity and effort are not established from an allowed source. Parent performed the common prerequisite inspection; this report does not claim that identity.",
-    "The user authorized parallel handling. Applied benchmark-review skill. Mandatory host skills using-harness-flow and caveman were applied for session routing and response style; aside-browser was applied to consult current Aside capability guidance. No other skill workflow was applied.",
-    "No review-created tabs or servers were created. Parent owns source-integrity verification."
+    "User-requested policy migration at 2026-10-17T08:18:43.383221+00:00: format 2.0 / solar-system-2.0 removes direct-file execution and compatibility from review. Scores and coverage were recalculated from retained observations; no new artifact browser evaluation occurred. The observation timestamp and reviewer are unchanged.",
+    "The previous attempt stopped at the shared Aside capability preflight: typeof page.setViewportSize === 'undefined'; it did not try the now-documented iframe viewport method. This is retained historical evidence, not a new claim that viewport verification is impossible. This artifact has not been re-evaluated.",
+    "No browser execution or viewport interaction occurred for this artifact in the retained attempt. The eight-step acceptance scenario and all remaining 19 checks are unverified.",
+    "The original orchestrator identity and timestamp are retained; reviewer effort was not exposed and remains null.",
+    "Prior shared cleanup was confirmed. This migration created no artifact-review browser tabs, servers or captures. Source artifacts are unchanged.",
+    "Applied skills: using-harness-flow and caveman were mandatory developer-injected; brainstorming (read-only investigation) and aside-browser were loaded due host-mandatory routing/browser policy; Aside built-in aside guide was loaded for current-session capability inspection. Skill isolation was therefore not achieved."
   ]
 }

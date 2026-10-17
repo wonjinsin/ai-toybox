@@ -148,21 +148,21 @@ stability (10). Each category is scored from 0 to 5, with a weighted total out o
 100. Review the saved prompt; incompatible historical tasks receive a blocked,
 unscored review rather than newer requirements applied retroactively.
 
+Rubric `solar-system-2.0` has 19 checks. Direct-file execution and file-protocol
+compatibility are excluded from review, while the saved generation prompt stays
+unchanged. Delivery retains weight 10 and averages asset completeness (D2) and
+observed execution stability (D3); the former D1 check is removed.
+
 Checks distinguish pass, fail and unverified. Any unverified check leaves its
 category and the total unscored; verified failures are still reported separately.
-HTTP execution cannot verify direct-file delivery. Aside's direct REPL is the only
-permitted browser tool. The review selects its transport before navigation:
-use `file://` only with confirmed local-file support; otherwise use documented,
+Aside's direct REPL is the only permitted browser tool. Reviews use documented,
 host-permitted loopback HTTP serving only the unchanged `output/` directory.
-If file navigation reports missing local-file capability, continue over HTTP
-only when host file access and loopback serving are permitted. Do not probe
-undocumented file access. See the
-[browser preflight](skills/benchmark-review/references/verification.md)
-for the server command, port selection, access-denial boundaries and cleanup.
-HTTP reviews leave direct-file delivery unverified and therefore the total unscored.
-Outside this scoped transport fallback, a required inaccessible file, an explicit
-access/security denial, unavailable Aside or an unsupported required check stops
-evaluation immediately. Do not continue static inspection or score the artifact.
+Do not test `file://` or leave a review unscored for missing local-file access.
+See the [browser preflight](skills/benchmark-review/references/verification.md)
+for server setup, real CSS viewport fixtures, access-denial boundaries and cleanup.
+A required inaccessible file, an explicit access/security denial, unavailable
+Aside or an unsupported required check stops evaluation immediately. Do not
+continue static inspection or score the artifact.
 Clean up review-created resources and
 replace both review files with this attempt's `blocked` result: no scores, the
 exact blocker and unperformed checks. A new attempt replaces the previous review,

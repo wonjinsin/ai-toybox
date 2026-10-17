@@ -18,9 +18,9 @@ Do not invoke `benchmark-record` or launch another model to review the work.
 
 ## Stop on access or verification blockers
 
-First apply the [browser transport rules](references/verification.md):
-unavailable `file://` access alone permits the scoped HTTP fallback when documented
-and host-permitted. This exception never overrides an explicit access/security policy.
+Apply the [browser transport rules](references/verification.md): review the
+unchanged artifact over documented, host-permitted loopback HTTP. Direct-file
+execution and compatibility are outside review scope; do not test `file://`.
 
 Stop evaluation immediately if a required file cannot be accessed, any tool
 reports an access/security denial, or Aside's direct `repl` is unavailable or

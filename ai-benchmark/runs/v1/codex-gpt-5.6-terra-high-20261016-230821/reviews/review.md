@@ -1,26 +1,38 @@
-# Review: high-20261016-230821
+# Solar System Review
 
 ## Conclusion
 
-**Status:** blocked. **Mandatory-requirement verdict:** unverified. **Total:** Unscored. **Review time:** 2026-10-16T17:02:17Z (parent host UTC clock). Reviewer model and effort are unverified and recorded as null in the JSON.
+**Status:** blocked. **Mandatory-requirement verdict:** unverified. **Total:** Unscored.
+
+Observation timestamp: 2026-10-17T16:33:09+09:00. Reviewer: `openai-codex/gpt-6-astra`; effort was not exposed.
+This is a policy migration to format **2.0** / rubric **solar-system-2.0**, not a new browser review. The prior blocked status is retained; removing an excluded check does not verify the artifact.
 
 ## Scores
 
-| Category | Score | Weight | Reason |
-| --- | ---: | ---: | --- |
-| Simulation | Unverified | 25 | Checks S1–S6 were not performed. |
-| Selection | Unverified | 20 | Checks T1–T4 were not performed. |
-| Usability | Unverified | 15 | Checks U1–U3 were not performed. |
-| Visual | Unverified | 15 | Checks V1–V2 were not performed. |
-| Responsive | Unverified | 15 | Checks L1–L2 were not performed. |
-| Delivery | Unverified | 10 | Checks D1–D3 were not performed. |
+| Category | Score (0–5) | Weight | Reason |
+|---|---:|---:|---|
+| simulation | Unverified | 25 | No new verification evidence. |
+| selection | Unverified | 20 | No new verification evidence. |
+| usability | Unverified | 15 | No new verification evidence. |
+| visual | Unverified | 15 | No new verification evidence. |
+| responsive | Unverified | 15 | No new verification evidence. |
+| delivery | Unverified | 10 | No new verification evidence. |
 
 ## Findings
 
-No artifact findings were established. Evaluation stopped before artifact inspection or scoring; no defect or browser error is asserted.
+No confirmed artifact defects are recorded. The previous attempt stopped when `xd://mcp__aside_repl` exposed no `page.setViewportSize` method. That attempt did not use the now-documented fixed-size iframe method. The original blocker is historical context, not proof of a present limitation.
 
 ## Verification and limits
 
-No browser execution occurred. The common preflight did not establish a confirmed permitted Aside direct-REPL file:// path for runs/v1/codex-gpt-5.6-terra-high-20261016-230821/output/index.html and its scene/controls. Current stored preference allow_file_access is UNSET, not false. The target was not navigated to, and no current navigation error was observed. HTTP would not satisfy D1, so the stop rule precluded continuing via HTTP or static inspection. Direct-file result: unverified; browser method: none; viewports: none.
+- Browser method: none. No browser execution occurred for this artifact in the retained attempt or this migration.
+- Verified document viewports: none.
+- Coverage: **0 passed, 0 failed, 19 unverified**. All eight saved acceptance steps remain unexecuted for this artifact.
+- Remaining check IDs: S1–S6, T1–T4, U1–U3, V1–V2, L1–L2, D2–D3.
+- Direct-file execution and compatibility are outside review scope, not missing verification items. The generation prompt and source artifacts are unchanged.
 
-All 20 checks remain unverified. The saved eight-step acceptance scenario (automatic motion; selection/tracking; pause and seek 30; set 2x while paused; resume at twice real-time; select via list; return to overview; pause and seek 30 again), plus the remaining rubric checks, were not executed. No tabs or servers were created. Source-integrity and report validation are owned by the parent.
+- User-requested policy migration at 2026-10-17T08:18:43.383221+00:00: format 2.0 / solar-system-2.0 removes direct-file execution and compatibility from review. Scores and coverage were recalculated from retained observations; no new artifact browser evaluation occurred. The observation timestamp and reviewer are unchanged.
+- The previous attempt stopped at the shared Aside capability preflight: typeof page.setViewportSize === 'undefined'; it did not try the now-documented iframe viewport method. This is retained historical evidence, not a new claim that viewport verification is impossible. This artifact has not been re-evaluated.
+- No browser execution or viewport interaction occurred for this artifact in the retained attempt. The eight-step acceptance scenario and all remaining 19 checks are unverified.
+- The original orchestrator identity and timestamp are retained; reviewer effort was not exposed and remains null.
+- Prior shared cleanup was confirmed. This migration created no artifact-review browser tabs, servers or captures. Source artifacts are unchanged.
+- Applied skill context: using-harness-flow and caveman were mandatory developer-injected skills; brainstorming (read-only investigation) and aside-browser were newly loaded due host-mandatory routing/browser policy; Aside built-in aside guide was loaded for current-session capability inspection. Skill isolation was therefore not achieved.

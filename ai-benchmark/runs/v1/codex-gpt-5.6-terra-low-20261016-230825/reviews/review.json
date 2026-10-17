@@ -1,204 +1,202 @@
 {
-  "format_version": "1.0",
-  "rubric_version": "solar-system-1.0",
-  "reviewed_at": "2026-10-16T17:02:17Z",
+  "format_version": "2.0",
+  "rubric_version": "solar-system-2.0",
+  "reviewed_at": "2026-10-17T08:03:54.021981+00:00",
   "reviewer": {
-    "model": null,
+    "model": "openai-codex/gpt-6-astra",
     "effort": null
   },
-  "status": "blocked",
-  "requirements_verdict": "unverified",
+  "status": "complete",
+  "requirements_verdict": "fail",
   "verification": {
-    "browser_method": "none",
-    "direct_file": "unverified",
-    "viewports": []
+    "browser_method": "http",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ]
   },
   "categories": [
     {
       "id": "simulation",
       "weight": 25,
-      "score": null
+      "score": 5.0
     },
     {
       "id": "selection",
       "weight": 20,
-      "score": null
+      "score": 2.5
     },
     {
       "id": "usability",
       "weight": 15,
-      "score": null
+      "score": 1.0
     },
     {
       "id": "visual",
       "weight": 15,
-      "score": null
+      "score": 2.5
     },
     {
       "id": "responsive",
       "weight": 15,
-      "score": null
+      "score": 5.0
     },
     {
       "id": "delivery",
       "weight": 10,
-      "score": null
+      "score": 5.0
     }
   ],
   "checks": [
     {
       "id": "S1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Observed one sun and three differently sized/colored planets moving on projected circular tracks. At 1x, visible time advanced 1.02 s over 1.051 s. Native slider seeks to 0, 12, 24 and 48 s showed the inner orbit returning every 12 s, the middle orbit returning at 24 s, and the outer orbit returning at 48 s; the complete rendered canvas at 48 s matched time 0 byte-for-byte with the same camera and selection. Source periods agree with these observations."
     },
     {
       "id": "S2",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "A fresh reload showed 0.01 s, 1.00x and a Pause button; subsequent observations showed automatic motion of all three rendered planets. The small elapsed time after loading was not treated as a reset defect."
     },
     {
       "id": "S3",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Pause held time at 27.92 s and preserved the rendered canvas across a 0.532 s observation interval. Scene/list selection and camera orbit/zoom remained usable while paused. Resuming from a 30 s seek continued forward; the measured 2x interval advanced 2.05 simulation seconds over 1.0287 real seconds, without a reset."
     },
     {
       "id": "S4",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Actual slider drags and keyboard corrections selected 0.25x, 2x and 4x. Changing speed while paused preserved time and rendered pixels. Measured simulation/real advances were 0.24/1.0212 s at 0.25x, 2.05/1.0287 s at 2x, and 4.06/1.0154 s at 4x, within preselected absolute simulation-time tolerances of 0.06, 0.20 and 0.30 s. Selected orbital-angle advancement remained consistent with the common simulation time and period."
     },
     {
       "id": "S5",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Native seeking exercised 0, 10, 12, 24, 30, 48, 119 and 120 s. Seeking paused playback and updated visible time, angles and rendered positions. After intervening 2x playback, a different list selection and overview, seeking 30 s again reproduced the complete canvas exactly once the original Ceres selection was restored in the same 1440x900 document viewport and camera."
     },
     {
       "id": "S6",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Seek to 119 s, set 4x and resume: playback stopped at exactly 120 s with Resume displayed. A further 0.526 s observation still showed 120 s and identical orbital positions. Seeking to 10 s then resuming advanced to 12.87 s, confirming recovery before the boundary."
     },
     {
       "id": "T1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "At paused time 30 s, real scene clicks on the red, blue and purple planets selected Aurelia, Boreas and Ceres respectively and updated the same information/selection used by the labeled list. All three list buttons were also exercised at time 48 s. Selection highlighting was visibly rendered; scene selection and list selection remained usable while paused."
     },
     {
       "id": "T2",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "At time 30 s, selecting Aurelia/Boreas/Ceres displayed periods 12/24/48 s and angles 180.0/161.6/19.7 degrees, consistent with the fixed phases and rendered positions. At time 48 s the displayed angles were 0.0/71.6/154.7 degrees. Live Ceres information advanced with playback and changed immediately on seeking; the preselected angular tolerance was 0.25 degrees."
     },
     {
       "id": "T3",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Select Ceres in the scene and click Track selected planet. Expected: the planet remains near scene center and seek/list changes update the camera target. Observed: the label became Tracking Ceres but the planet remained far off-center, about (254,489) versus scene center (570,450) in the initial desktop observation. At paused time 30 s it remained around (704,391). Toggling tracking while paused left rendered pixels unchanged; selecting Boreas switched text/highlight but not the camera target. output/index.html:16,19,25 uses tracking only for UI state, not projection."
     },
     {
       "id": "T4",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "At paused time 12 s, select Ceres, zoom in with seven upward wheel actions and orbit toward the top-down view; Ceres moves below the visible scene. Enable tracking, then click Return to overview. Expected: the full system becomes visible while selection/time/speed/playback are preserved. Observed: Ceres remained offscreen and the outer orbit remained clipped; the button only changed the tracking label. Time 12 s, Ceres selection, 4x and paused state were preserved. output/index.html:25 does not reset camera orientation or zoom."
     },
     {
       "id": "U1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Actual drag and wheel input changed camera orientation and zoom in overview and tracking, while paused and playing. However, with Ceres selected and tracking enabled, orbit/zoom remained centered on the sun rather than the selected target. Expected: camera controls operate around the current selected tracking target. Observed: the sun remained the pivot while Ceres moved off-center or out of view. output/index.html:16,27 projects around the origin and changes only yaw/pitch/zoom."
     },
     {
       "id": "U2",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "At paused time 30 s with Ceres selected, drag the camera from (438,475) to (450,475) in twelve one-pixel movements. Expected: the selected planet stays Ceres. Observed: mouse release selected Aurelia, while time stayed 30 s. output/index.html:27 compares each incremental pointer movement against 4 pixels and replaces the reference point, so a slow accumulated drag is treated as a selection click. List, button and slider actions otherwise preserved the camera in the checked states."
     },
     {
       "id": "U3",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 3,
+      "method": "http",
+      "evidence": "Ordinary clear control feedback: labeled planet buttons, Pause/Resume text, a Tracking <name> label, visible speed/time values and a name/period/angle information panel made the controls discoverable. Camera-target and drag behavior defects are scored under their objective owners rather than deducted again here. Rating 3: clear and usable, not exceptional."
     },
     {
       "id": "V1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 3,
+      "method": "http",
+      "evidence": "Desktop and mobile screenshots showed distinguishable planet colors/sizes, visible orbit tracks and a white selection ring against a dark scene. Glow and small mobile bodies reduce detail, but the system remains readable. Rating 3: clear ordinary visual execution."
     },
     {
       "id": "V2",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "fail",
+      "rating": 2,
+      "method": "http",
+      "evidence": "At a verified 390x844 CSS document viewport, the scene bottom was y=520 while the information-panel top was y=464.1875. The resulting 55.8125-pixel overlap hid the panel heading and clipped the first instruction line in fresh mobile screenshots. Desktop typography and panel hierarchy were coherent, and primary controls remained usable, but this recurring mobile legibility problem warrants rating 2. output/index.html:6 combines a 520px stage minimum with a mobile first grid row of 55vh."
     },
     {
       "id": "L1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "In a fresh 1440x900 document viewport, clientWidth and scrollWidth both measured 1440. The full initial scene and primary controls were visible and usable. Scene/list selection, tracking, seek, speed, pause/resume and overview controls were exercised without panel occlusion; functional camera defects are recorded separately."
     },
     {
       "id": "L2",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
-    },
-    {
-      "id": "D1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed: common preflight could not establish a confirmed permitted Aside direct-REPL file:// path for runs/v1/codex-gpt-5.6-terra-low-20261016-230825/output/index.html and its scene/controls; no navigation was attempted."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "A fresh iframe document measured innerWidth=390 and innerHeight=844, with matching mobile media queries and clientWidth=scrollWidth=375 (a vertical scrollbar consumed 15px). Actual mobile list selection, tracking, pause, seek to 30 s, speed 2x, resume, another selection and overview were exercised. Vertical scrolling exposed lower controls; no horizontal scrolling or primary-control occlusion occurred. Header/instruction overlap is scored only in V2. Embedded desktop-browser input was used, not touch-device emulation."
     },
     {
       "id": "D2",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Inspected the complete output/index.html and output directory during the retained browser review. The artifact is a single inline HTML/CSS/JavaScript file with no referenced local or external assets. Serving the unchanged output directory over loopback HTTP loaded the scene and controls without a build or repository-root dependency."
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "The artifact rendered and its controls operated over the output-scoped loopback server. Direct REPL pageerror, console-error and requestfailed listeners reported empty event arrays during instrumented desktop/mobile checks. The inspected file has no external required resources. Harness-only locator/setup issues and a changed outer viewport were not counted as artifact errors."
     }
   ],
-  "total_score": null,
+  "total_score": 70.5,
   "coverage": {
-    "passed": 0,
-    "failed": 0,
-    "unverified": 20
+    "passed": 14,
+    "failed": 5,
+    "unverified": 0
   },
   "notes": [
-    "Review timestamp was supplied by the parent from the host UTC clock during final report validation.",
-    "Reviewer model and effort are null because this worker runtime identity and effort are not established; do not infer them from the generating run or parent.",
-    "Blocked before artifact inspection: connected Aside direct REPL capability documentation supports openTab(url) and HTTP but does not establish a permitted file:// path. Current stored Aside preference allow_file_access is UNSET, not false. No target navigation was attempted and no current navigation error was observed.",
-    "All 20 checks are unverified; no browser execution or artifact evaluation occurred. The eight-step acceptance scenario and all remaining checks were not performed. No browser tabs or temporary servers were created.",
-    "Applied skills: benchmark-review (explicitly selected, report format/rubric/stop rule); using-harness-flow (mandatory session routing, parent-applied context); caveman (mandatory chat style, parent-applied context); aside-browser (parent used it to inspect current Aside capability). No other skill workflow was used. Parallel handling was explicitly authorized.",
-    "Parent owns final source-integrity and report validation."
+    "User-requested policy migration at 2026-10-17T08:18:43.383221+00:00: format 2.0 / solar-system-2.0 removes direct-file execution and compatibility from review. Scores and coverage were recalculated from retained observations; no new artifact browser evaluation occurred. The observation timestamp and reviewer are unchanged.",
+    "The prior viewport-capability blocker is resolved for this attempt. Missing page.setViewportSize does not prevent a real CSS viewport: direct REPL opened review-only about:blank fixtures containing the unchanged HTTP artifact in fixed-size iframes. Both required inner dimensions and media-query behavior were measured; actual controls and transient screenshots were checked.",
+    "Viewport observations describe real embedded document viewports, not top-level mobile-window or touch-device emulation. All 19 current checks have evidence. Direct-file behavior is outside the current review scope and is not represented as a missing check.",
+    "All eight saved acceptance steps were executed. Tracking and overview requirements failed as described; deterministic seeking, pause/resume, selection information and speed behavior were observed. An earlier pixel comparison across a changed outer viewport was discarded; the stable same-viewport comparison passed exactly.",
+    "Preselected tolerances: absolute simulation-time error 0.12 s at 1x, 0.06 s at 0.25x, 0.20 s at 2x and 0.30 s at 4x; displayed orbital-angle error 0.25 degrees; repeat-seek rendered-pixel tolerance zero with identical camera, selection and document viewport.",
+    "The saved prompt explicitly requests Three.js, but output/index.html:11 uses CanvasRenderingContext2D and contains no Three.js dependency. This is an additional confirmed prompt-level implementation mismatch; no extra rubric check or arbitrary score deduction was invented.",
+    "Reviewer effort was not exposed by the host and remains null. Current reviewer identity comes from the host, not the generator run record.",
+    "Applied skill context: benchmark-review; developer-mandated using-harness-flow and caveman; host-routed systematic-debugging and aside-browser; confirmed-correction handoff loaded implement and test-driven-development; the shared verification-guide correction loaded writing-skills. Aside built-in guide material was used for capability inspection. Skill isolation was not achieved; benchmark-record was not invoked.",
+    "Cleanup confirmed: four review-created tabs were closed, the output-scoped server was stopped, and thirteen transient captures were removed. No screenshot/evidence files were retained. prompt.md, run.json and output/index.html remain unchanged; no other run was re-reviewed in this single-run attempt."
   ]
 }

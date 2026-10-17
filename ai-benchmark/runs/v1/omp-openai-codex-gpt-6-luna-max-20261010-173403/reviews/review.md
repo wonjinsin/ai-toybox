@@ -1,37 +1,38 @@
-# Review
+# Solar System Review
 
 ## Conclusion
 
-**Status:** Blocked  
-**Mandatory-requirement verdict:** Unverified  
-**Total:** Unscored  
-**Review time:** 2026-10-16T17:02:17Z (parent observed this time during report validation; no separate timestamp was obtained for this report)  
-**Reviewer:** Unknown (identity and effort not established)
+**Status:** blocked. **Mandatory-requirement verdict:** unverified. **Total:** Unscored.
 
-The common preflight did not establish a permitted Aside direct-REPL `file://` execution path required for D1. The stored extension preference `allow_file_access` is **UNSET**. No target navigation was attempted and no current navigation error was observed. Evaluation stopped before artifact inspection or scoring.
+Observation timestamp: 2026-10-17T16:32:55+09:00. Reviewer: `openai-codex/gpt-6-astra`; effort was not exposed.
+This is a policy migration to format **2.0** / rubric **solar-system-2.0**, not a new browser review. The prior blocked status is retained; removing an excluded check does not verify the artifact.
 
 ## Scores
 
-| Category | Score | Weight | Reason |
-| --- | --- | ---: | --- |
-| Simulation | Unverified | 25 | Checks not performed because the D1 prerequisite was not established. |
-| Selection | Unverified | 20 | Checks not performed because the D1 prerequisite was not established. |
-| Usability | Unverified | 15 | Checks not performed because the D1 prerequisite was not established. |
-| Visual | Unverified | 15 | Checks not performed because the D1 prerequisite was not established. |
-| Responsive | Unverified | 15 | Checks not performed because the D1 prerequisite was not established. |
-| Delivery | Unverified | 10 | D1 capability was not established; no static inspection was performed. |
+| Category | Score (0–5) | Weight | Reason |
+|---|---:|---:|---|
+| simulation | Unverified | 25 | No new verification evidence. |
+| selection | Unverified | 20 | No new verification evidence. |
+| usability | Unverified | 15 | No new verification evidence. |
+| visual | Unverified | 15 | No new verification evidence. |
+| responsive | Unverified | 15 | No new verification evidence. |
+| delivery | Unverified | 10 | No new verification evidence. |
 
 ## Findings
 
-No artifact findings were established. The artifact was not inspected, and no browser execution occurred; this is a verification blocker, not an observed application defect.
+No confirmed artifact defects are recorded. The previous attempt stopped when `xd://mcp__aside_repl` exposed no `page.setViewportSize` method. That attempt did not use the now-documented fixed-size iframe method. The original blocker is historical context, not proof of a present limitation.
 
 ## Verification and limits
 
-- Browser method: none; no browser execution occurred.
-- Direct-file D1: unverified. The required target `runs/v1/omp-openai-codex-gpt-6-luna-max-20261010-173403/output/index.html` was not opened because a permitted Aside direct-REPL `file://` execution path could not be established. No navigation was attempted.
-- Viewports: none checked.
-- Coverage: 0 passed, 0 failed, 20 unverified.
-- The eight saved acceptance-scenario actions (automatic motion; scene selection and tracking; pause and seek 30; set 2x while paused; resume at twice real-time; select another planet from the list; return to overview; pause and seek 30 again) were not performed. All other rubric checks were also unperformed.
-- No static artifact inspection was performed. No console, page, or resource errors/findings were observed.
-- No review-created tabs or temporary servers were started. Source integrity verification is owned by the parent run coordinator.
-- Parallel handling was authorized by the user. Applied skill context: benchmark-review; mandatory using-harness-flow for session routing; mandatory caveman for chat style; aside-browser for the required current Aside capability guidance. No other skill workflow was used.
+- Browser method: none. No browser execution occurred for this artifact in the retained attempt or this migration.
+- Verified document viewports: none.
+- Coverage: **0 passed, 0 failed, 19 unverified**. All eight saved acceptance steps remain unexecuted for this artifact.
+- Remaining check IDs: S1–S6, T1–T4, U1–U3, V1–V2, L1–L2, D2–D3.
+- Direct-file execution and compatibility are outside review scope, not missing verification items. The generation prompt and source artifacts are unchanged.
+
+- User-requested policy migration at 2026-10-17T08:18:43.383221+00:00: format 2.0 / solar-system-2.0 removes direct-file execution and compatibility from review. Scores and coverage were recalculated from retained observations; no new artifact browser evaluation occurred. The observation timestamp and reviewer are unchanged.
+- The previous attempt stopped at the shared Aside capability preflight: typeof page.setViewportSize === 'undefined'; it did not try the now-documented iframe viewport method. This is retained historical evidence, not a new claim that viewport verification is impossible. This artifact has not been re-evaluated.
+- No browser execution or viewport interaction occurred for this artifact in the retained attempt. The eight-step acceptance scenario and all remaining 19 checks are unverified.
+- The original orchestrator identity and timestamp are retained; reviewer effort was not exposed and remains null.
+- Prior shared cleanup was confirmed. This migration created no artifact-review browser tabs, servers or captures. Source artifacts are unchanged.
+- Mandatory using-harness-flow and caveman skills were injected; host-required brainstorming (read-only investigation) and aside-browser were loaded, and Aside's built-in aside guide was used for current-session capability inspection. Skill isolation was not achieved.

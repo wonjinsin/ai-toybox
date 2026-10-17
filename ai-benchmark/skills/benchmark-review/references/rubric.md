@@ -1,6 +1,6 @@
 # Solar System Review Rubric
 
-Rubric version: `solar-system-1.0`.
+Rubric version: `solar-system-2.0`.
 
 ## Supported task
 
@@ -13,6 +13,12 @@ tracking/overview; 0–120-second seeking; camera/input isolation; and usable
 scenario ending with a repeated seek to 30 seconds. Harmless wording changes are
 compatible; missing, added or changed behavioral requirements require a new
 rubric version. Do not score an older or different task with this rubric.
+
+Review scope excludes R6's direct-file/no-server execution requirement and
+file-protocol compatibility restrictions. Keep the saved prompt and generation
+contract unchanged, but do not test or score those conditions. Delivery scoring
+covers asset completeness and observed HTTP execution only. D1 is removed;
+remaining check IDs are unchanged.
 
 `R1`–`R11` below refer to those saved requirements. Each check has one scoring
 owner. A defect may explain several observations, but do not deduct arbitrary
@@ -77,18 +83,17 @@ independent acceptance condition is violated.
 
 ### delivery — Execution and delivery — 10 points
 
-- **D1 (R6):** Open the actual `output/index.html` via `file://` and observe a
-  working scene and controls without a server/build. HTTP success is not proof.
-- **D2 (R6):** Static inspection confirms all referenced local assets exist under
-  `output/`, with no local ES module imports, local fetch/XHR or server-only path
-  dependency. CDN use is allowed: server-free does not mean offline.
+- **D2 (R6, asset completeness only):** Static inspection confirms all referenced
+  local assets exist under `output/` and their paths resolve when that directory
+  is served as the HTTP root, without a build or repository-root dependency.
+  CDN use is allowed.
 - **D3 (quality):** During browser checks, no artifact-caused console/page errors
   or failed required resources prevent intended operation. Distinguish an
   environment/network restriction from a demonstrated artifact defect.
 
 ## Ratings and aggregation
 
-There are **20 checks**. Each must appear exactly once in the record, even if
+There are **19 checks**. Each must appear exactly once in the record, even if
 unverified. For objective checks (all except U3, V1 and V2), use rating `5` for
 `pass`, `0` for `fail`, and null for `unverified`. A grouped check passes only when
 all its clauses are observed satisfied. An observed violation makes it fail even
@@ -119,3 +124,5 @@ places, but calculate the total from check ratings, not rounded displays.
 `unverified` if any R-linked check is unverified, otherwise `pass`. A complete
 review can have a failed verdict. Visual polish cannot cancel a failed
 requirement. Coverage counts all checks by status; it is not a quality score.
+The verdict covers only the R-linked conditions in this rubric; it does not
+certify the excluded direct-file generation contract.

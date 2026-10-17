@@ -54,7 +54,7 @@ test('one running server reflects run creation, updates, invalidation, repair an
   const unchanged = await snapshot();
   assert.equal(unchanged.revision, first.revision);
 
-  await save('runs/v1/alpha/reviews/review.json', { status: 'completed', total_score: 0 });
+  await save('runs/v1/alpha/reviews/review.json', { status: 'complete', total_score: 0 });
   await save('runs/v1/alpha/run.json', { model: 'model-a', effort: 'high', status: 'completed', duration_ms: 3210 });
   const completed = await snapshot();
   assert.equal(completed.runs[0].review.total_score, 0);

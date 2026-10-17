@@ -25,7 +25,7 @@
     visual: '시각적 완성도', responsive: '반응형 사용성', delivery: '전달 안정성',
   };
   const statuses = { completed: '생성 완료', running: '생성 중', failed: '생성 실패', blocked: '진행 불가', unknown: '상태 미확인' };
-  const reviewStatuses = { completed: '평가 완료', partial: '부분 평가', blocked: '평가 불가' };
+  const reviewStatuses = { complete: '평가 완료', partial: '부분 평가', blocked: '평가 불가' };
   const checkStatuses = { pass: '통과', fail: '실패', unverified: '미검증' };
   const sections = [['preview', '결과물'], ['review', '점수 · 평가'], ['prompt', '사용한 프롬프트'], ['record', '실행 기록']];
 
@@ -222,7 +222,7 @@
     panel.append(element('p', 'review-summary', `${reviewLabel(run)} · 평가 모델: ${reviewer.model ?? '미확인'} · effort: ${reviewer.effort ?? '미확인'}\n평가 기준: ${review.rubric_version ?? '미기록'} · ${date(review.reviewed_at)} KST`));
     if (score(run) === null) panel.append(element('p', 'notice', '총점이 기록되지 않았습니다. 미검증 항목이나 평가 제한을 확인하세요. 미채점 항목은 0점으로 환산하지 않습니다.'));
     if (review.verification) {
-      panel.append(element('p', 'review-summary', `브라우저 검증: ${review.verification.browser_method ?? '미기록'} · 직접 파일 실행: ${review.verification.direct_file ?? '미기록'} · 요구사항 판정: ${review.requirements_verdict ?? '미기록'}`));
+      panel.append(element('p', 'review-summary', `브라우저 검증: ${review.verification.browser_method ?? '미기록'} · 요구사항 판정: ${review.requirements_verdict ?? '미기록'}`));
     }
     const categories = Array.isArray(review.categories) ? review.categories.filter(value => value && typeof value === 'object') : [];
     const grid = element('div', 'category-grid');

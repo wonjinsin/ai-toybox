@@ -1,13 +1,12 @@
 {
-  "format_version": "1.0",
-  "rubric_version": "solar-system-1.0",
+  "format_version": "2.0",
+  "rubric_version": "solar-system-2.0",
   "reviewed_at": null,
   "reviewer": { "model": null, "effort": null },
   "status": "partial",
   "requirements_verdict": "unverified",
   "verification": {
     "browser_method": "none",
-    "direct_file": "unverified",
     "viewports": []
   },
   "categories": [
@@ -20,6 +19,6 @@
   ],
   "checks": [],
   "total_score": null,
-  "coverage": { "passed": 0, "failed": 0, "unverified": 20 },
+  "coverage": { "passed": 0, "failed": 0, "unverified": 19 },
   "notes": []
 }
