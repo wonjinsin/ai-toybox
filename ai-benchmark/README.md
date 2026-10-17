@@ -4,11 +4,14 @@ Run one fixed Solar System task in Codex or Claude Code. The skill builds the
 HTML, automatically saves a small run record, and then replies with the result.
 One invocation completes the workflow; there is no follow-up collection step.
 
-The [fixed prompt](skills/benchmark-record/assets/solar-system-prompt.md) requires
-one sun and exactly three planets in a Three.js scene, automatic orbits, distinct
-planet sizes/colors/speeds, pause/resume, and a global speed control that preserves
-relative orbital speeds. The saved `output/index.html` must also run when opened
-directly in a browser without starting a server or running a build step to view it.
+The [fixed prompt](skills/benchmark-record/assets/solar-system-prompt.md) is task
+`solar-system-observatory-2`. It requires a real Three.js scene with one sun and
+three planets, deterministic playback and seeking, selection and camera tracking,
+and responsive controls. It also requires immutable observation snapshots,
+transactional JSON import/export, snapshot persistence, and keyboard access.
+The saved `output/index.html` must run directly in a browser without a server or
+build step. The [original task](skills/benchmark-record/assets/solar-system-prompt-v1.md)
+remains available only to interpret historical runs.
 
 ## Browse the static results
 
@@ -200,20 +203,34 @@ Re-review replaces those two files with the latest assessment; there are no
 timestamp subdirectories, retained screenshots, evidence archives or backups.
 Unrelated existing files are preserved.
 
-The [fixed rubric](skills/benchmark-review/references/rubric.md) uses six categories:
-simulation/time correctness (25), selection/tracking consistency (20), controls
-and interaction (15), visual quality (15), responsive usability (15), and delivery
-stability (10). Each category is scored from 0 to 5, with a weighted total out of
-100. Review the saved prompt; incompatible historical tasks receive a blocked,
-unscored review rather than newer requirements applied retroactively.
+The [versioned rubric](skills/benchmark-review/references/rubric.md) uses six
+categories: simulation/time correctness (25), selection/tracking consistency (20),
+controls and interaction (15), visual quality (15), responsive usability (15),
+and delivery stability (10). Category scores range from 0 to 5.
 
-Rubric `solar-system-2.0` has 19 checks. Direct-file execution and file-protocol
-compatibility are excluded from review, while the saved generation prompt stays
-unchanged. Delivery retains weight 10 and averages asset completeness (D2) and
-observed execution stability (D3); the former D1 check is removed.
+New task reviews use `solar-system-3.0` and review format `3.0`. They preserve the
+weighted result as `raw_total_score`. If a mandatory check fails, the published
+`total_score` is capped at **69**, with `score_cap` recording that policy.
+This threshold is a declared interpretation rule, not an empirically calibrated
+model ranking. A high raw score cannot override a failed requirement.
+
+Review the saved prompt before choosing a rubric. The original 11-requirement
+task still uses its frozen `solar-system-2.0` rubric and format `2.0`, without
+the new cap or requirements. Other tasks receive a blocked, unscored review.
+Existing runs and reviews are not migrated. Compare scores only within the same
+task and rubric version. The gallery displays rubric versions but does not
+prevent cross-version score sorting.
+
+Direct-file execution and file-protocol compatibility remain outside review
+scope. Generation still requires direct-file delivery. Review checks use HTTP
+and do not certify that excluded generation requirement.
 
 Checks distinguish pass, fail and unverified. Any unverified check leaves its
 category and the total unscored; verified failures are still reported separately.
+Both review formats require a concrete reviewer model, effort, and review
+timestamp before `status: complete` is accepted. Resolve them before browser
+work. If they remain unavailable, save a safe, unscored `blocked` attempt rather
+than claiming completion. A note cannot waive these required values.
 Aside's direct REPL is the only permitted browser tool. Reviews use documented,
 host-permitted loopback HTTP serving only the unchanged `output/` directory.
 Do not test `file://` or leave a review unscored for missing local-file access.
@@ -230,6 +247,19 @@ write is denied, report the actual saved/unsaved state without bypassing it.
 Past errors are historical context, not current observations. Generation time,
 tokens and model identity do not affect quality scores.
 
+Recompute a review's derived fields without modifying its file:
+
+```sh
+node skills/benchmark-review/scripts/score-review.mjs "<run>/reviews/review.json"
+```
+
+This command validates the scoring input and prints normalized JSON. It rejects
+complete reviews with missing required metadata, including older saved records.
+Existing files are not rewritten or grandfathered through validation. It does
+not execute the artifact or certify the reviewer's observations. See the
+[revision and calibration guide](docs/benchmark-v2.md) for the design choices,
+verification cases, and limits on interpreting new scores.
+
 ## Saved Files
 
 ```text
@@ -243,6 +273,8 @@ runs/v1/<agent>-<model>-<effort>-<run-id>/
 ```
 
 Benchmark results are stored under [`runs/v1/`](runs/v1/) and tracked in Git.
+Here `v1` identifies the storage layout, not the task version. The saved prompt
+identifies the task, and `review.json` identifies the scoring rubric.
 
 The agent component identifies the host, such as `codex` or `claude-code`.
 The run ID is the invocation-start time in Korea (`Asia/Seoul`), formatted as
@@ -255,9 +287,10 @@ The skill automatically checks current-run metadata, explicit user selections,
 and the current host's configuration before naming the run. It resolves model
 and effort separately. When runtime verification is unavailable, it can use
 configuration-derived values and labels their source and unverified overrides
-in `notes`. Only unresolved fields appear as `unknown` in the name and null in
-JSON. JSON preserves selected identifiers or aliases as originally reported;
-aliases are not guessed into exact model versions. See
+in `notes`. If model, effort, or current-session identity remains unresolved,
+stop setup before creating a new run. Do not put `unknown` into a completed
+record. JSON preserves known selected identifiers or aliases as originally
+reported; aliases are not guessed into exact model versions. See
 [automatic settings resolution](skills/benchmark-record/references/settings-resolution.md)
 and the complete
 [directory naming rules](skills/benchmark-record/references/record-format.md#run-directory).
@@ -269,18 +302,31 @@ settings. Neither path launches another model or requires a second user request.
 
 The [record template](skills/benchmark-record/assets/run.json) keeps:
 
-- Model and effort, when known.
-- The current invoking session/thread ID as `session_id`, when verified.
-- Input and output token totals, when available for the measured work.
+- Concrete model and effort with source information in notes.
+- The verified current invoking session/thread ID as `session_id`.
+- Complete input and output token totals for the measured work.
 - Elapsed implementation and verification time in milliseconds.
-- A format version, execution status and a few short notes for skill context,
-  sources, missing values, verification limits or failure.
+- A format version, execution status, and notes for sources, verification limits,
+  interruptions, or failure.
 
 Format `2.1` adds `session_id` to `2.0`. Codex records the current thread ID;
-Claude Code records the current session ID. Unavailable or unverified identities
-stay null with a short reason in `notes`, independently of token availability.
-Resuming the same attempt preserves its original session ID. See
-[session identity](skills/benchmark-record/references/record-format.md#session-identity).
+Claude Code records the current session ID. Missing identity prevents a new
+attempt from starting. Failed or interrupted attempts may retain null values
+with reasons, but `completed` requires all metadata and measurements.
+Resuming the same attempt preserves its original session ID and measurement
+bounds. See [session identity](skills/benchmark-record/references/record-format.md#session-identity).
+
+Validate a proposed or saved record without modifying it:
+
+```sh
+node skills/benchmark-record/scripts/validate-run.mjs "<run>/run.json"
+```
+
+The validator requires `session_id`, `model`, `effort`, `duration_ms`,
+`input_tokens`, and `output_tokens` for a completed run. It rejects missing
+values and placeholder strings, not genuine measured zero. It validates the
+record's structure, not the truth of its sources. The same gate applies to old
+saved records when explicitly validated; this policy does not rewrite them.
 
 There are no response copies, child/turn identifiers, hashes, transcript or
 evidence archives, cache/reasoning breakdowns, or previous-record backups.
@@ -330,7 +376,8 @@ bypass a denial, or install another browser runtime. Preserve existing artifacts
 mark an already-created, writable `run.json` as `failed`, never `completed`.
 If setup stopped before a run existed, create no run. Report the exact blocker,
 unperformed work and saved/unsaved state; do not retry a denied write. Missing
-optional metadata alone is not an access denial.
+required metadata or accounting is also a completion blocker, but is not itself
+an access denial. Exhaust other permitted sources before treating it as unavailable.
 
 ## Measurement Boundary
 
@@ -362,21 +409,24 @@ request usage, or combines proven disjoint counter deltas and final-request sums
 Missing counts in a delegation tool result alone do not end lookup. See
 [delegated usage collection](skills/benchmark-record/references/delegated-usage.md).
 
-If current-session identity, final usage, or exact interval boundaries cannot be
-established after lookup, the affected values are `null` with a brief reason.
-Existing log access does not guarantee exact accounting on every host version.
-The skill still finishes the record and replies;
-it does not ask you to collect measurements later or estimate missing numbers.
-A finished implementation can have status `completed` with unknown token counts.
-If full delegated totals remain unknown, valid parent interval counts are kept
-in `notes`, explicitly labeled partial with the missing coverage; the token
-fields continue to represent full work totals, never parent-only substitutes.
-That status does not claim every browser requirement has been verified.
+If current-session identity or a usable usage source cannot be established during
+setup, stop before creating a new run. Verify that the source supports both token
+totals and the required interval boundaries; a context-window counter is not
+enough. An environment without reliable usage accounting cannot produce a
+completed benchmark record.
+
+If final usage, clock bounds, or full delegated coverage cannot be established
+after work starts, preserve the artifact and save the attempt as `failed`.
+Keep unknown values null with precise reasons. Valid partial parent counts may
+remain in notes but cannot replace full-work totals. Do not substitute estimates,
+zero, or another session's values, and do not claim completion because the HTML
+was built. The skill finalizes the failure and replies in the same invocation.
 
 An observed failure is saved as `failed`. An interrupted, unfinished attempt is
-`interrupted`; when the same attempt resumes and finishes, it is `completed`
-with an interruption note and original measurement bounds. An abrupt process
-termination can leave `running` because no background service finalizes it.
+`interrupted`. Resuming it retains the original measurement bounds and can reach
+`completed` only after implementation, verification, required metadata, and full
+measurements are established. An abrupt process termination can leave `running`
+because no background service finalizes it.
 
 ### Validating skill changes
 
@@ -406,7 +456,8 @@ Read the shared [record format](skills/benchmark-record/references/record-format
 and [browser verification](skills/benchmark-record/references/browser-verification.md), then only the current host's
 [Codex](skills/benchmark-record/references/codex.md) or [Claude Code](skills/benchmark-record/references/claude-code.md) document.
 Read Shared procedure and the current-host section of [delegated usage](skills/benchmark-record/references/delegated-usage.md) only when delegating.
-The fixed task, record schema, settings precedence and token calculations are unchanged; authoring Sources are not runtime inputs.
+The run record schema, settings precedence and token calculations are unchanged.
+The fixed task is versioned separately. Authoring Sources are not runtime inputs.
 
 The review skill separates its workflow, scoring rubric, browser checks and
 record format. Its versioned JSON template is independent of `run.json`; adding

@@ -18,9 +18,13 @@ runtime evidence linking it to this session.
 Try another available current-run source after a failed lookup only if no
 access/security denial occurred. A denial takes the
 [whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers),
-including during optional usage lookup. Otherwise, use null when trustworthy
-scoped counts remain unavailable; name the lookup, schema, cutoff or coverage
-failure. Missing counters alone do not block implementation or finalization.
+including during usage lookup. Missing injected counters alone do not establish
+that no source exists. Exhaust permitted current-session sources before deciding.
+Before reserving a fresh run, require a trustworthy source for both input and
+output with usable boundary/finality accounting and a reliable clock. Otherwise
+stop setup without a run. If an attempt exists and counts remain unprovable,
+keep affected fields null, name the lookup/schema/cutoff/coverage failure, and
+finalize `failed`, never `completed`.
 
 ## Capture comparable boundaries
 
@@ -41,7 +45,7 @@ failure. Missing counters alone do not block implementation or finalization.
   overlap or cutoff leaves affected totals null.
   Calculate and serialize totals in code from the identified boundary records,
   never mental arithmetic or manually transcribed totals.
-- Resolve input/output independently as nonnegative integers, excluding booleans.
+- Resolve input/output independently as nonnegative safe integers, excluding booleans.
   Unknown/invalid values are not zero; preserve genuine zeros. Never clamp a
   counter reset or estimate from time, price, text, context occupancy or streaming.
   Ignore an incomplete trailing JSONL line until read-back; malformed measured
@@ -50,10 +54,14 @@ failure. Missing counters alone do not block implementation or finalization.
   Do not add subsets already included in totals. Unknown accounting leaves the
   affected field null. A session total without a baseline is not interval usage.
 
-Duration remains original stop minus start. Consistent clocks from separate
-processes are valid; a short observed interval is not grounds to discard it.
+Duration remains original stop minus start and must be finite and nonnegative.
+Consistent clocks from separate processes are valid; a short observed interval
+is not grounds to discard it. Missing, reversed or unreliable bounds leave
+duration null and prevent successful completion.
 On resume, preserve/recover the original boundaries from this source, including
 interruption time; never silently restart measurement for the same attempt.
+Unfinished interrupted attempts remain `interrupted`. Finished resumed work
+requires all metadata and measurements to become `completed`; otherwise use `failed`.
 
 ## Host lookup
 
@@ -69,7 +77,11 @@ Keep the fixed schema. One short note names the source, scope and calculation,
 for example: `Tokens from current Codex final work requests; deduplicated;
 cache/reasoning already included.` On failure, name identity, permission, schema,
 finality, boundary or coverage failure, not merely absent prompt metadata.
-Finalize in this invocation even with null metrics.
+Finalize in this invocation even with null metrics, but use `failed` for missing
+final measurements. A note never waives a completed run's required values.
+Validate the saved record with the bundled
+[validator](record-format.md#validation-and-publication) before publication and
+again at read-back. The validator cannot prove source truth, bounds, or coverage.
 
 If parent interval counts are valid but full linked coverage is unknown, keep
 known fields in one note, explicitly partial: `Partial parent work usage:

@@ -2,6 +2,16 @@
 
 Apply [shared settings rules](settings-resolution.md) and [shared usage rules](usage-resolution.md) alongside this document.
 
+Before reserving a run or starting implementation, resolve concrete current
+identity, model and effort, a reliable clock, and a trustworthy usage source with
+usable boundary/finality accounting for both input and output. Exhaust permitted
+fallbacks; missing injected counters alone do not establish that no source exists.
+Unresolved setup requirements stop setup without a run. If an attempt already
+exists, preserve artifacts and finalize `failed` when final required values or
+coverage cannot be proven, retaining nulls with reasons. Unfinished interruptions
+remain `interrupted`. Follow the bundled
+[validation and publication gate](record-format.md#validation-and-publication).
+
 ## Settings
 
 - Prefer concrete current-execution model metadata. Read only `CLAUDE_EFFORT` for
@@ -46,4 +56,8 @@ Apply [shared settings rules](settings-resolution.md) and [shared usage rules](u
   text. Missing cache categories mean zero only when the schema establishes it.
 - Status-line context-window totals/current usage, /cost, limits and a headless
   result from another session are not work-interval spend.
+- Both normalized input and output totals must be nonnegative safe integers.
+  Unknown finality, boundaries or cache accounting leave affected values null
+  and require `failed`, never `completed`. Do not estimate or replace unknowns
+  with zero. Real measured zero remains valid.
 

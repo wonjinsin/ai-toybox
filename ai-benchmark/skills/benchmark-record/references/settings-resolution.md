@@ -15,7 +15,9 @@ Resolve `model` and `effort` separately, in order:
    verification is unavailable. It does not change settings or override runtime.
 3. Automatically inspected applicable host configuration, labeled
    configuration-derived. Use valid values even if active overrides are inaccessible.
-4. If still unresolved, null in JSON and `unknown` in names; note why and continue.
+4. If still unresolved, stop setup before directory creation or implementation.
+   If an attempt already exists, preserve its artifacts and record null with a
+   reason in notes. It cannot become `completed` without the missing value.
 
 In one or two short notes, name sources/unverified overrides. Keep the schema;
 no extra provenance fields, config copies or evidence files are needed. Resolve
@@ -25,17 +27,23 @@ never from settings configuration.
 Prefer TOML/JSON parsers. If none is available, inspect exact scalar keys with
 section/scope context. Ambiguous structure is unusable. No broad search mixing unrelated/inactive
 keys, whole config/environment/credential/transcript dumps, or unrelated sessions/histories.
-Briefly note missing, malformed or unsupported sources; try others without failing
-the benchmark. An access/security denial instead takes the
+Briefly note missing, malformed or unsupported sources and try permitted fallbacks.
+Unresolved required settings stop setup. An access/security denial takes the
 [whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers);
 do not treat denied access as merely missing metadata.
 
 Preserve configured identifiers/aliases exactly in JSON; note unresolved exact
 runtime models, never guess versions. Empty/reset/default selectors (model
 `default`, effort `auto`) are not concrete: resolve from current-run sources or
-leave unknown and note the unresolved selector. Never infer effort from model, thinking budget,
-account tier or built-in defaults. Token availability does not affect settings;
-never rename existing run directories.
+stop setup with the unresolved selector noted. Never infer effort from model,
+thinking budget, account tier or built-in defaults. Metadata placeholders
+`unknown`, `null`, `undefined`, `unavailable`, `n/a`, `default`, `auto`,
+`unspecified`, `unset`, `not available`, `not applicable`, `tbd`, `todo`, and
+`placeholder` are not concrete values, regardless of case or surrounding whitespace.
+Model `none` is not concrete. Effort `none` is valid only when sourced as an
+explicit no-reasoning selection, never as a substitute for unknown effort.
+Token availability does not affect settings resolution, but both settings and
+usage are required for success. Never rename existing run directories.
 
 ## Host settings
 

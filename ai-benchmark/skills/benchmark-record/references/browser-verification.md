@@ -60,12 +60,59 @@ Follow Aside's documented initialization and navigation capabilities.
    including failure, before measurement ends. If no permitted method is
    available, take the whole-attempt stop path; do not substitute static checks.
 
-Use all Requirements and the Acceptance scenario in the [fixed task](../assets/solar-system-prompt.md)
-as the verification checklist. Run the scenario in order, then cover remaining
-requirements, including both specified viewport sizes; the scenario alone is not exhaustive.
-Observe motion across frames and control actions; labels or code inspection do not prove behavior.
-Check visible rendering, console/page errors, missing local assets, ES modules/imports
-and local `fetch()`/XHR. Record the actual method, gaps and any unexecuted requirements/scenario steps.
+Use all requirements and acceptance sequences in the attempt's exact saved
+`prompt.md` as the verification checklist. For a fresh attempt, that is the
+[current fixed task](../assets/solar-system-prompt.md). A resumed historical
+attempt keeps its original task. Run the original eight-step scenario in order,
+then the additional sequences when present, then cover remaining requirements
+at both specified viewport sizes. The scenarios alone are not exhaustive.
+Observe motion across frames and control actions. Labels or code inspection do
+not prove behavior. Check visible rendering, console/page errors, missing local
+assets, ES modules/imports, and local `fetch()`/XHR. Record the actual method,
+gaps, and any unexecuted requirements or scenario steps.
+
+For `solar-system-observatory-2`, use these observable checks within the same
+browser workflow. Do not create a second verification framework or add fields
+to `run.json`.
+
+- Record actions, expected results, and observed results separately. Choose
+  readout, angle, position, and timing tolerances before measuring. Compare
+  paused states exactly where the displayed values permit it. During playback,
+  account for elapsed real time rather than treating normal motion as a state
+  mutation caused by import or capture.
+- Orbit and zoom the camera to inspect genuine 3D geometry and changing
+  perspective. Corroborate Three.js use with the loaded runtime or source.
+  Neither a `Three.js` label nor a dependency reference proves 3D behavior.
+- Inspect snapshot values before and after live state changes, including all
+  three captured angles. Restore from both playing and paused states. Confirm
+  paused playback, synchronized selection/information/target, null-selection
+  clearing, and repeatable standard framing after camera orbit/zoom.
+- Exercise capacity, deletion, and recapture. Compare exported JSON with the
+  visible list and ID mapping. Round-trip a valid list through the textarea,
+  including a fractional speed, a null overview selection, and a tracking entry.
+  Confirm that import alone does not restore an entry or reset live state.
+- For each invalid-input class in the prompt, preserve the previous export and
+  paused live state, import the bad input, observe the visible error, and compare
+  the list and scene again. Include a valid first entry followed by an invalid
+  entry, and an empty valid list. Checking only the error text cannot prove
+  transactional behavior.
+- Reload the same attempt-created page in the same browser storage context.
+  Check persistence after capture, deletion, and import separately. Confirm
+  that snapshots survive while live state restarts at requirement 2. Use
+  permitted storage inspection to corrupt only this artifact's snapshot data,
+  then reload and check the recovery notice and usable controls. Preserve the
+  valid export so it can be re-imported afterward. Do not clear unrelated
+  browser storage or change browser security settings to force an error.
+- If the permitted browser setup can expose unavailable storage or a write
+  failure, check the saving-unavailable notice and continued in-memory use.
+  Report any unexercised storage failure path honestly. Direct-file and HTTP
+  storage contexts are different. HTTP persistence does not prove `file://`
+  persistence. The existing whole-attempt stop rule still applies to any
+  unavailable required check or access/security denial.
+- Use actual keyboard events through the Aside REPL, not programmatic click
+  substitutes, for the DOM-control sequence at both viewport sizes. Inspect
+  accessible names, visible focus, Tab order, keyboard activation, range
+  changes, textarea editing, and absence of a focus trap or horizontal overflow.
 
 Access and verification blockers stop the entire attempt, not only navigation.
 An observed artifact defect remains a benchmark finding, not an infrastructure

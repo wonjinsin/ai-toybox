@@ -10,6 +10,12 @@ Use the current model and ordinary host tools to build the [fixed task](assets/s
 No second collection request, analysis/comparison, separate model launcher, collector, hook or persistent background service.
 Resolve resources relative to this file. Browser startup and temporary servers follow the verification rules below.
 
+The current task is `solar-system-observatory-2`, with 15 requirements. Its version
+identity comes from the exact prompt, not the `runs/v1/` directory name. Keep record
+format `2.1` and that storage root unchanged. The unversioned 11-requirement task is
+retained unchanged as [the historical prompt](assets/solar-system-prompt-v1.md).
+Do not rewrite saved prompts or rerun historical attempts during skill maintenance.
+
 ## Read first
 
 - [Record format](references/record-format.md): directory, session ID, skill selection, status/resume and retention. Use the [JSON template](assets/run.json).
@@ -43,19 +49,20 @@ Report the affected path/tool and operation, exact observed error (or missing
 capability), work/checks not performed, and saved/unsaved record state immediately.
 Distinguish current observations from earlier reported restrictions; never invent
 an error or reuse earlier results as fresh evidence. Resume only after the
-blocker is resolved. Merely absent optional metadata or token counters without
-an access denial still follows the existing null/unknown rules.
+blocker is resolved. Missing metadata or counters without a denial still require
+the setup and completion gates below. They are not optional successful-run fields.
 
 ## Workflow
 
 1. Set up
-   - Read the invocation-start clock; resolve the current session ID, usage source and model/effort, preferring runtime settings.
-   - Prepare a permitted browser check and reserve a new directory under default `runs/v1/` or the requested output root. Never overwrite existing results.
-   - Copy the fixed task exactly to `prompt.md`; do not request/substitute another task. Save `run.json` as `running` with settings/source notes.
+   - Read the invocation-start clock. Resolve the current session ID and concrete model/effort, preferring runtime settings. Locate a trustworthy current-session input/output usage source with usable boundary and finality accounting.
+   - Exhaust permitted fallback sources. If required setup information or a reliable clock remains unavailable, stop without reserving a directory or starting implementation. Do not fabricate values or install a collector.
+   - Prepare a permitted browser check, then reserve a new directory under default `runs/v1/` or the requested output root. Never overwrite existing results.
+   - For a fresh attempt, copy the current fixed task exactly to `prompt.md`, including its version line and JSON contract. Do not paraphrase, append instructions, or substitute another task. A resumed attempt keeps its original saved prompt and task version. Save `run.json` as `running` with settings/source notes.
 
 2. Start measurement
    - Immediately before implementation, capture a real clock, usage baseline and issuing request ID in a separate boundary call.
-   - Missing injected counters does not end lookup. Unavailable usage must not block work.
+   - Missing injected counters does not end lookup. If the start boundary cannot be proven, stop implementation and finalize the reserved attempt as `failed` with null affected measurements and reasons.
 
 3. Build and check
    - Save `output/index.html` and local resources under `output/`; preserve server-free `file://` execution.
@@ -63,12 +70,13 @@ an access denial still follows the existing null/unknown rules.
 
 4. Stop measurement
    - Immediately after implementation/checks, capture the end clock, matching usage endpoint and issuing request ID in a separate boundary call.
-   - Exclude recording/reply. Calculate same-interval token totals per the references; unprovable values stay `null` with a reason.
+   - Exclude recording/reply. Calculate same-interval token totals per the references. Unprovable values stay `null` with a reason and require `failed`, never `completed`.
 
 5. Finalize
-   - Save final `run.json` now with the fixed schema, settings/source and interruption/resume notes. Follow record status and retention rules.
+   - Save final `run.json` now with the fixed schema, settings/source and interruption/resume notes. Only finished, fully identified and measured attempts may be `completed`. Missing final counts, bounds, or full delegated coverage require `failed`; preserve artifacts. Unfinished interruptions retain the interruption rules.
+   - Before publishing any final record, run `node <skill-root>/scripts/validate-run.mjs <run.json>` and require success. The [validator contract](references/record-format.md#validation-and-publication) covers every status. Fix invalid structure without inventing missing facts.
    - Observations remain working data. Report write failures; never fabricate artifacts or measurements.
 
 6. Read back and reply
-   - Verify JSON, session ID, exact prompt, output path and known metrics.
-   - Reply with HTML/record paths, available timing/tokens and important verification gaps, outside measurement.
+   - Read back the saved record and rerun the validator on that file. Verify session ID, exact prompt, output path and measurement provenance. Validation proves structure, not truth or source coverage.
+   - Reply with status, HTML/record paths, measured timing/tokens and important verification gaps, outside measurement. Never report an incomplete record as successful.
