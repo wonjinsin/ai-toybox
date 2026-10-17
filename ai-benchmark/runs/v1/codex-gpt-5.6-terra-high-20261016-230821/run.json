@@ -1,0 +1,18 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a1450a-6325-7423-a34d-0cddb87a4e65",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "duration_ms": 189413,
+  "input_tokens": 194762,
+  "output_tokens": 6708,
+  "notes": [
+    "Selected gpt-5.6-terra/high; supervisor confirmed the exact session turn_context model=gpt-5.6-terra and effort=high, matching collaboration_mode settings. Generation initially overlooked this available runtime metadata.",
+    "Session ID from CODEX_THREAD_ID; matching Codex rollout metadata validated this project cwd.",
+    "Only benchmark-record was explicitly selected and its skill file loaded; no additional skill-file loads were observed. Fresh-session developer messages independently injected using-harness-flow and preactivated caveman, with caveman mandated for every response. using-harness-flow injection was present, but separate routing/application was not evidenced; this was not an isolated skill context.",
+    "Duration from comparable wall-clock boundary calls: 1792159821529 to 1792160010942 ms.",
+    "Tokens from validated current Codex cumulative thread records at captured start and stop response IDs; deduplicated subtraction, with cached input and reasoning already included.",
+    "Aside MCP direct REPL was available and its current documentation was read, but the selected Chrome binding rejected creation of the dedicated tab as unavailable. Static checks passed; file execution, rendering, interactions, console errors, motion, and both required viewport checks remain unverified."
+  ]
+}

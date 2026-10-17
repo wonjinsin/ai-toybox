@@ -5,6 +5,11 @@ The target directory contains one `reviews/` directory with `review.json` and
 `review.md`. These are the latest review, not a history. Replace only those two
 files on re-review; do not delete other existing user files.
 
+Each new attempt replaces the previous review, including a `blocked` attempt
+under the [stop rule](../SKILL.md#stop-on-access-or-verification-blockers).
+Save the current blocker instead of retaining old scores or continuing evaluation.
+An observed artifact defect is a review finding, not an infrastructure blocker.
+
 ## JSON fields
 
 - `format_version`: `1.0`.
@@ -12,7 +17,8 @@ files on re-review; do not delete other existing user files.
 - `reviewed_at`: actual ISO 8601 timestamp with timezone, or null with a note.
 - `reviewer`: current `model` and `effort`, each a known string or null with a note.
 - `status`: `complete` when all checks are verified; `partial` when some remain
-  unverified; `blocked` when the saved task is incompatible with the rubric.
+  unverified without a stop condition; `blocked` for an incompatible task,
+  invalid required inputs, or an access/verification blocker.
 - `requirements_verdict`: `pass`, `fail` or `unverified`, derived from the rubric.
 - `verification`: `browser_method` (`file`, `http`, `none`), `direct_file`
   (`pass`, `fail`, `unverified`), and `viewports` (only actually checked CSS-pixel
@@ -30,10 +36,15 @@ files on re-review; do not delete other existing user files.
 - `notes`: concise strings for missing metadata, prompt mismatch, environment
   limits, partial grouped-check coverage, applied skill context and cleanup gaps.
 
-For a blocked review, keep all checks unverified, all scores null, browser method
-`none`, direct-file `unverified` and viewports empty; explain the unsupported task
-in notes. Missing required input files or malformed run JSON are input errors:
-report them without replacing any existing review.
+For a blocked review, set all checks to `unverified` with null ratings, all scores
+to null, `requirements_verdict` and `direct_file` to `unverified`, and coverage to
+0 passed, 0 failed, 20 unverified. Record only this attempt's observed browser
+method and viewports, or `none` and an empty list if none were observed. Explain
+the blocker and unperformed checks in notes and Markdown; do not carry over old
+scores or findings. Missing required inputs or malformed run JSON also produce
+a blocked replacement when the target directory is resolved and output is safe.
+An unresolved target, unsafe output or denied write must instead be reported
+without bypassing the restriction or claiming the replacement succeeded.
 
 No generation token/time metrics, hashes, copied source, screenshots or historical
 reviews belong in this record. During a real review, source preservation can be

@@ -1,0 +1,204 @@
+{
+  "format_version": "1.0",
+  "rubric_version": "solar-system-1.0",
+  "reviewed_at": "2026-10-16T17:02:17Z",
+  "reviewer": {
+    "model": null,
+    "effort": null
+  },
+  "status": "blocked",
+  "requirements_verdict": "unverified",
+  "verification": {
+    "browser_method": "none",
+    "direct_file": "unverified",
+    "viewports": []
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": null
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": null
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": null
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": null
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "S2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "S3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "S4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "S5",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "S6",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "T1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "T2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "T3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "T4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "U1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "U2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "U3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "V1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "V2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "L1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "L2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "D1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed: common preflight could not establish a confirmed permitted Aside direct-REPL file:// path for runs/v1/codex-gpt-5.6-terra-max-20261016-230928/output/index.html and its scene/controls; no navigation was attempted."
+    },
+    {
+      "id": "D2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not performed because the common preflight could not establish required D1 direct-file capability; review stopped before artifact inspection or browser execution."
+    }
+  ],
+  "total_score": null,
+  "coverage": {
+    "passed": 0,
+    "failed": 0,
+    "unverified": 20
+  },
+  "notes": [
+    "Review timestamp was supplied by the parent from the host UTC clock during final report validation.",
+    "Reviewer model and effort are null because this worker runtime identity and effort are not established; do not infer them from the generating run or parent.",
+    "Blocked before artifact inspection: connected Aside direct REPL capability documentation supports openTab(url) and HTTP but does not establish a permitted file:// path. Current stored Aside preference allow_file_access is UNSET, not false. No target navigation was attempted and no current navigation error was observed.",
+    "All 20 checks are unverified; no browser execution or artifact evaluation occurred. The eight-step acceptance scenario and all remaining checks were not performed. No browser tabs or temporary servers were created.",
+    "Applied skills: benchmark-review (explicitly selected, report format/rubric/stop rule); using-harness-flow (mandatory session routing, parent-applied context); caveman (mandatory chat style, parent-applied context); aside-browser (parent used it to inspect current Aside capability). No other skill workflow was used. Parallel handling was explicitly authorized.",
+    "Parent owns final source-integrity and report validation."
+  ]
+}

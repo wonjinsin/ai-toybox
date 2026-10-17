@@ -24,6 +24,14 @@ Do not invoke `benchmark-record` automatically when it is not explicitly selecte
 Outside benchmark execution and recording, this policy does not restrict normal
 host skill selection for repository investigation or maintenance.
 
+## Aside integration setup
+
+- Installing the `aside-browser` skill and registering the Aside MCP server are
+  separate operations. Do not treat skill installation as MCP availability.
+- In omp, `/mcp list` and `/mcp reload` are interactive slash commands, not shell
+  commands. After an MCP configuration change, reload the current session and
+  confirm that the direct Aside `repl` tool is available before browser checks.
+
 ## Browser verification
 
 - Use only connected Aside MCP's direct REPL for browser verification when

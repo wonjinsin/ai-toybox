@@ -16,6 +16,32 @@ Resolve resources relative to this file. Read the [rubric](references/rubric.md)
 before evaluating; start from the [JSON template](assets/review.json).
 Do not invoke `benchmark-record` or launch another model to review the work.
 
+## Stop on access or verification blockers
+
+First apply the [browser transport rules](references/verification.md):
+unavailable `file://` access alone permits the scoped HTTP fallback when documented
+and host-permitted. This exception never overrides an explicit access/security policy.
+
+Stop evaluation immediately if a required file cannot be accessed, any tool
+reports an access/security denial, or Aside's direct `repl` is unavailable or
+cannot perform a required browser check. Do not continue static inspection or
+score the artifact, regardless of prior work or an existing review.
+
+Clean up review-created tabs/servers, then save this attempt's `blocked` result
+to both review files using the [review format](references/review-format.md).
+Replace any existing review and its scores; the files must describe the latest
+attempt, not the last successful one. Use the normal safe-output validation and
+read-back steps, without resuming artifact inspection. If the target is unresolved,
+the output path is unsafe or a write is denied, do not bypass it or retry denied
+access; report which files remain old, missing or newly saved.
+
+Report the affected path/tool and operation, exact observed error (or missing
+capability), checks not performed and saved/unsaved state immediately. Distinguish
+current observations from earlier reported restrictions; never invent an error
+or reuse earlier results as fresh evidence. Do not switch protocols/tools to bypass
+a denial or change permissions to continue evaluation. Resume evaluation only
+after the blocker is resolved.
+
 ## Workflow
 
 1. **Resolve the target.** Use the explicitly supplied run directory, not the
@@ -35,8 +61,8 @@ Do not invoke `benchmark-record` or launch another model to review the work.
    permitted browser method. Run the saved acceptance scenario in order, followed
    by the remaining rubric checks. Use actual UI controls, not state mutation or
    patched source. Screenshots may be inspected transiently but are not retained.
-   An unavailable browser leaves runtime and visual checks unverified; static
-   inspection and mocked DOM/Three.js execution do not prove browser behavior.
+   Static inspection and mocked DOM/Three.js execution do not prove browser
+   behavior; access or verification blockers take the stop path above.
 4. **Score independently.** Apply the fixed six categories and check IDs. Record
    actual evidence and reproduction steps for failures. Do not reuse an earlier
    score, favor a model/effort, reward token/time efficiency or penalize an

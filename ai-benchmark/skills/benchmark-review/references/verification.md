@@ -7,17 +7,48 @@ before navigation and choose a supported, permitted method. Do not use Aside
 `exec`, natural-language CLI tasks, another browser runtime, raw CDP or another
 model session. Do not install/register tools during a review.
 
-Prefer the real `output/index.html` via `file://`. If that protocol is unsupported
-and loopback HTTP is permitted, serve only unchanged `output/` temporarily on
-`127.0.0.1`. Record HTTP interaction results separately from direct-file status.
-Static compatibility is D2, not a substitute for D1. External CDN resources are
-permitted by the task; report actual loading failures and environment limits.
+Select the transport **before the first navigation**, from current capability
+documentation and verified environment constraints. Prefer the real
+`output/index.html` via `file://` only when local-file navigation is explicitly
+supported in the connected session. A generic `openTab(url)` API or access to
+session-scoped `fs` does not establish access to host files. Do not probe
+`file://` merely because its support is undocumented.
 
-An explicit access denial, including `Cannot navigate to a file URL without local
-file access.`, stops that access. Do not switch protocols/tools or change security
-settings to bypass it. If Aside is unavailable, continue static inspection and
-record all unsupported runtime/visual checks as unverified. Never infer rendering
-or interaction success from HTML, screenshots from previous reviews, or mocks.
+When local-file support is unavailable or unestablished, and loopback HTTP is
+documented and host-permitted, start with HTTP. If a supported file navigation
+fails because the browser lacks local-file capability, including
+`Cannot navigate to a file URL without local file access.`, record the exact
+operation/error and use this same HTTP path only when host file access and
+loopback HTTP are permitted. Do not infer an OS permission failure from that
+message alone. This fallback never overrides an explicit host/tool security policy.
+
+Serve only unchanged `output/` on `127.0.0.1`, not the repository root. Run a
+tracked host process:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1 --directory "<run>/output"
+```
+
+Replace `<run>/output` with the actual output directory (quote paths containing
+spaces); use `--directory output` when already in the run directory. Wait for
+startup, then use direct REPL `openTab("http://127.0.0.1:8765/index.html")`.
+If the port is occupied, choose another available port and use it in both places;
+do not stop an unrelated process. Retain the process handle/PID for cleanup.
+Do not use Aside `exec` to start the server.
+
+Record HTTP interaction results separately from direct-file status: HTTP success
+leaves D1 and `direct_file` unverified; static compatibility is D2. External CDN
+resources are permitted by the task; report actual loading failures separately.
+
+An explicit host/tool access or security-policy denial triggers the
+[whole-review stop rule](../SKILL.md#stop-on-access-or-verification-blockers),
+as does unavailable Aside or no permitted method for a required browser check.
+Do not retry denied access, change permissions or switch protocols/tools to bypass
+a denial. Do not fall back to static inspection; replace the previous review with
+the current blocked result. Report the exact operation and error, not an invented
+OS permission diagnosis. A past review's denial is historical context, not a fresh
+attempt on this target or proof of a current restriction. Never infer rendering or
+interaction success from HTML, screenshots from previous reviews, or mocks.
 
 Create a new review tab; do not inspect unrelated tabs or browsing memory. Close
 only that tab and stop the temporary server on every exit. Inspect screenshots

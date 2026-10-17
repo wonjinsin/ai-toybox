@@ -151,8 +151,24 @@ unscored review rather than newer requirements applied retroactively.
 Checks distinguish pass, fail and unverified. Any unverified check leaves its
 category and the total unscored; verified failures are still reported separately.
 HTTP execution cannot verify direct-file delivery. Aside's direct REPL is the only
-permitted browser tool; when unavailable, the review records static findings and
-the missing runtime/visual evidence without inventing scores. Generation time,
+permitted browser tool. The review selects its transport before navigation:
+use `file://` only with confirmed local-file support; otherwise use documented,
+host-permitted loopback HTTP serving only the unchanged `output/` directory.
+If file navigation reports missing local-file capability, continue over HTTP
+only when host file access and loopback serving are permitted. Do not probe
+undocumented file access. See the
+[browser preflight](skills/benchmark-review/references/verification.md)
+for the server command, port selection, access-denial boundaries and cleanup.
+HTTP reviews leave direct-file delivery unverified and therefore the total unscored.
+Outside this scoped transport fallback, a required inaccessible file, an explicit
+access/security denial, unavailable Aside or an unsupported required check stops
+evaluation immediately. Do not continue static inspection or score the artifact.
+Clean up review-created resources and
+replace both review files with this attempt's `blocked` result: no scores, the
+exact blocker and unperformed checks. A new attempt replaces the previous review,
+including a previously successful one. If the target or output is unsafe, or a
+write is denied, report the actual saved/unsaved state without bypassing it.
+Past errors are historical context, not current observations. Generation time,
 tokens and model identity do not affect quality scores.
 
 ## Saved Files
@@ -225,17 +241,37 @@ codex mcp add aside -- /absolute/path/to/aside mcp --host local
 
 Start a new Codex session to load the registered tools. Use a new benchmark tab
 and close only tabs created by the attempt. Do not access unrelated tabs or memory.
-If Aside is unavailable or cannot perform a required check, perform the remaining
-permitted checks and record the reason and browser verification gaps. Do not
-switch to another browser or install another browser automation runtime.
-Checks use a permitted method selected before navigation: direct
-`file://` when supported, or a temporary loopback HTTP server serving only
-`output/` when HTTP is permitted and direct-file navigation is unsupported.
-The artifact must still run directly without a server. HTTP interaction checks
-and static `file://` compatibility checks are recorded separately; they do not
-prove direct-file execution. An explicit security denial stops that action,
-without switching tools or protocols to bypass it. See
-[browser verification](skills/benchmark-record/references/browser-verification.md).
+Select the transport before navigation: use `file://` only with confirmed support.
+When local-file support is unavailable or unestablished, use documented,
+host-permitted loopback HTTP. A file navigation failure caused only by missing
+browser local-file capability permits the same fallback; it does not establish
+an OS permission failure.
+
+Serve only the actual run's unchanged `output/` directory as a tracked host process:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1 --directory "<run>/output"
+```
+
+Replace `<run>/output` with the real path, or use `output` from the run directory.
+Wait for startup, then open `http://127.0.0.1:8765/index.html` through Aside's
+direct REPL. If the port is occupied, use another available port in both the
+command and URL; do not stop unrelated processes. Stop the temporary server on
+every exit, including failure, before measurement ends.
+
+The artifact must still run directly without a server. Record HTTP interaction
+checks separately from static `file://` compatibility; neither proves direct-file
+execution. See [browser verification](skills/benchmark-record/references/browser-verification.md).
+
+This fallback never overrides an explicit host/tool security policy. If a required
+file is inaccessible, access is explicitly denied, Aside is unavailable or no
+permitted method can perform a required check, stop the entire attempt. Do not
+continue implementation or remaining/static checks, switch tools or protocols to
+bypass a denial, or install another browser runtime. Preserve existing artifacts;
+mark an already-created, writable `run.json` as `failed`, never `completed`.
+If setup stopped before a run existed, create no run. Report the exact blocker,
+unperformed work and saved/unsaved state; do not retry a denied write. Missing
+optional metadata alone is not an access denial.
 
 ## Measurement Boundary
 

@@ -1,206 +1,48 @@
 {
   "format_version": "1.0",
   "rubric_version": "solar-system-1.0",
-  "reviewed_at": "2026-10-16T13:57:23.284484+00:00",
-  "reviewer": {
-    "model": "openai-codex/gpt-6.1-sol",
-    "effort": null
-  },
-  "status": "partial",
+  "reviewed_at": "2026-10-16T17:02:17Z",
+  "reviewer": { "model": null, "effort": null },
+  "status": "blocked",
   "requirements_verdict": "unverified",
-  "verification": {
-    "browser_method": "none",
-    "direct_file": "unverified",
-    "viewports": []
-  },
+  "verification": { "browser_method": "none", "direct_file": "unverified", "viewports": [] },
   "categories": [
-    {
-      "id": "simulation",
-      "weight": 25,
-      "score": null
-    },
-    {
-      "id": "selection",
-      "weight": 20,
-      "score": null
-    },
-    {
-      "id": "usability",
-      "weight": 15,
-      "score": null
-    },
-    {
-      "id": "visual",
-      "weight": 15,
-      "score": null
-    },
-    {
-      "id": "responsive",
-      "weight": 15,
-      "score": null
-    },
-    {
-      "id": "delivery",
-      "weight": 10,
-      "score": null
-    }
+    { "id": "simulation", "weight": 25, "score": null },
+    { "id": "selection", "weight": 20, "score": null },
+    { "id": "usability", "weight": 15, "score": null },
+    { "id": "visual", "weight": 15, "score": null },
+    { "id": "responsive", "weight": 15, "score": null },
+    { "id": "delivery", "weight": 10, "score": null }
   ],
   "checks": [
-    {
-      "id": "S1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Source defines one sun and three planet entries with different radii/colors and periods 12/24/48 at output/index.html:325-353 and 374-398; circular positions use fixed phase plus TAU * simTime / period at 446-450. No browser observation establishes visible bodies, motion or measured periods."
-    },
-    {
-      "id": "S2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Source initializes simTime=0, speed=1 and playing=true at output/index.html:402-404, updates initial positions at 552, and schedules frames at 572. Initial rendered state and automatic subsequent motion were not observed."
-    },
-    {
-      "id": "S3",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Pause toggles playing; resume resets lastFrame at output/index.html:486-494, and orbital updates are gated by playing at 559-567. Freeze, continuous resume and paused selection/camera usability were not exercised."
-    },
-    {
-      "id": "S4",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "The speed range is 0.25-4 with step 0.25 at output/index.html:292; its handler changes speed and readouts at 502-505, while frames advance simTime by elapsed * speed at 560. Rates at 0.25x, 2x and 4x, position continuity and paused-speed behavior remain unobserved."
-    },
-    {
-      "id": "S5",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "The 0-120 seek input at output/index.html:283 sets simTime, pauses and updates planets/readouts/camera at 495-500. Fixed-phase position calculation is at 446-454. No actual seek or repeated 30-second comparison was executed."
-    },
-    {
-      "id": "S6",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "The frame loop clamps simTime to LIMIT=120 and stops playback at output/index.html:559-565; the play handler permits resume below the limit at 489-491. Boundary stopping, no wrapping and seek-earlier/resume were not observed."
-    },
-    {
-      "id": "T1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "List clicks call selectPlanet at output/index.html:478; raycast hits call the same function at 538-539. It updates list aria-pressed and planet selection-ring visibility through 471-475 and 452. Both selection routes and visible highlights, including paused use, were not exercised."
-    },
-    {
-      "id": "T2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Source derives selected name, period and normalized angle from the same planet record at output/index.html:433-443 and derives positions from that angle at 446-450. Information agreement with rendered positions during playback and seeking was not observed."
-    },
-    {
-      "id": "T3",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Tracking copies the selected mesh position into the camera target at output/index.html:419-428; seek and selection call updatePlanets at 475 and 499. Centering, immediate sought camera updates and coordinated selection switching without state changes require browser observation."
-    },
-    {
-      "id": "T4",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Overview clears tracking and calls updatePlanets at output/index.html:485; its source does not assign simulation time, speed, selection or playing. Static risk: it also leaves cameraState distance/orientation unchanged after zoom/orbit, so full-system framing is not established. No overview action was observed; this is not a confirmed runtime failure."
-    },
-    {
-      "id": "U1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Canvas pointermove implements orbit at output/index.html:516-527 and wheel implements zoom at 543-547, without a playing guard. Static risk: no touch-pinch zoom handler appears in the inspected source. Actual orbit/zoom in overview/tracking and playing/paused modes was not exercised."
-    },
-    {
-      "id": "U2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Canvas-local pointer handlers use a movement threshold and return without raycasting after a drag at output/index.html:511-539. Other controls are outside the canvas and have separate handlers at 478-505. Drag/click separation and absence of control-to-scene interference were not observed."
-    },
-    {
-      "id": "U3",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Markup labels time, speed, planet selection and camera controls at output/index.html:249-293; playback and tracking state text/ARIA are updated at 457-485. Without rendered interaction evidence no qualitative discoverability/feedback rating is justified."
-    },
-    {
-      "id": "V1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Source includes lighting, orbit lines and selection rings at output/index.html:340-398, but no rendered scene was inspected. Contrast, selected-object readability and effect visibility are unverified."
-    },
-    {
-      "id": "V2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "CSS defines typography, panel hierarchy and spacing at output/index.html:9-219, but no rendered interface was inspected. The rubric requires visible results, so legibility/coherence and a qualitative rating are unverified."
-    },
-    {
-      "id": "L1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Desktop grid rules are present at output/index.html:32-75 and 119-146. No 1440x900 CSS-pixel browser layout or control interaction was checked; lack of horizontal scrolling, occlusion and primary-control usability is unverified."
-    },
-    {
-      "id": "L2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Mobile rules at output/index.html:160-213 reorganize scene, sidebar and transport below 650 pixels. No 390x844 CSS-pixel layout or selection/tracking/seek/speed/pause interaction was checked; usability and occlusion remain unverified."
-    },
-    {
-      "id": "D1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "The actual output/index.html was not opened via file:// because connected Aside MCP direct REPL is unavailable. Source inspection and the D2 result do not prove direct-file execution."
-    },
-    {
-      "id": "D2",
-      "status": "pass",
-      "rating": 5,
-      "method": "static",
-      "evidence": "Inspected every output resource: output/index.html is the only file. Its only external resource reference is the classic HTTPS script https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js at line 299; CSS, JavaScript and SVG are inline. No local asset references, local ES modules/imports, fetch/XHR or server-only path dependencies are present. CDN use is permitted. This static pass does not establish CDN availability or runtime success."
-    },
-    {
-      "id": "D3",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "No browser execution occurred, so console/page errors, actual required-resource loading and their impact were not observed. The external CDN dependency was identified statically, not fetched or executed."
-    }
+    { "id": "S1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S4", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S5", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S6", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T4", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "U1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "U2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "U3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "V1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "V2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "L1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "L2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "D1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed: required target /Users/WonjinSin/Documents/project/ai-toybox/ai-benchmark/runs/v1/omp-openai-codex-gpt-6-luna-xhigh-20261010-173453/output/index.html was not opened. The common preflight could not establish a permitted Aside direct-REPL file:// execution path; no navigation was attempted." },
+    { "id": "D2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before static artifact inspection." },
+    { "id": "D3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; no browser execution occurred and no artifact errors were observed." }
   ],
   "total_score": null,
-  "coverage": {
-    "passed": 1,
-    "failed": 0,
-    "unverified": 19
-  },
+  "coverage": { "passed": 0, "failed": 0, "unverified": 20 },
   "notes": [
-    "The saved prompt is compatible with solar-system-1.0: all 11 requirements and all eight acceptance-scenario steps match the supported task.",
-    "Reviewer model is provided by the active workstation context. Current reviewer effort is not exposed and remains null; neither reviewer field is inferred from generator metadata.",
-    "Applied benchmark-review and its rubric, verification guide, format and template. Host-required using-harness-flow was read; its subagent-stop instruction applies, so no additional routed workflow was run.",
-    "The user-authorized parent dispatched one worker for this exact run as part of the parallel review. This worker invoked no other reviewer/model and reviewed no other run.",
-    "Connected Aside MCP direct REPL is unavailable. No browser, CDP, mock DOM, HTTP runtime, server, install, build, test or formatter was used. No viewports or runtime measurements were obtained; no numeric runtime tolerances were selected because no measurements were attempted.",
-    "All eight saved acceptance-scenario steps remain unexecuted. Static implementation observations are not passes for browser-dependent checks; the overview-framing and touch-zoom observations are suspected risks only, not demonstrated runtime defects.",
-    "All current output resources were read. Before/after source preservation hashes were held in working memory only. No original source or run metadata was modified.",
-    "No review-created tab or temporary server existed; no retained screenshots, evidence directories or cleanup gaps remain."
+    "Blocked before artifact inspection: current Aside direct REPL documentation did not establish a permitted local-file execution path. Stored extension preference allow_file_access is UNSET. No target navigation was attempted; no current navigation error was observed.",
+    "Reviewer identity and effort are unknown; they are not inferred from the generator or parent reviewer.",
+    "No browser execution, static inspection, or scoring occurred; no findings are established. No review-created tab or server was started.",
+    "The eight acceptance-scenario actions and all other checks remain unperformed.",
+    "Parallel review handling was authorized by the user. Applied skills: benchmark-review; mandatory using-harness-flow for session routing; mandatory caveman for chat style; aside-browser to consult the required current Aside capability guidance. No other skill workflow was used."
   ]
 }

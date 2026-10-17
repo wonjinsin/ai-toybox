@@ -1,205 +1,48 @@
 {
   "format_version": "1.0",
   "rubric_version": "solar-system-1.0",
-  "reviewed_at": "2026-10-16T22:58:25.182746+09:00",
-  "reviewer": {
-    "model": "openai-codex/gpt-6.1-sol",
-    "effort": null
-  },
-  "status": "partial",
+  "reviewed_at": "2026-10-16T17:02:17Z",
+  "reviewer": { "model": null, "effort": null },
+  "status": "blocked",
   "requirements_verdict": "unverified",
-  "verification": {
-    "browser_method": "none",
-    "direct_file": "unverified",
-    "viewports": []
-  },
+  "verification": { "browser_method": "none", "direct_file": "unverified", "viewports": [] },
   "categories": [
-    {
-      "id": "simulation",
-      "weight": 25,
-      "score": null
-    },
-    {
-      "id": "selection",
-      "weight": 20,
-      "score": null
-    },
-    {
-      "id": "usability",
-      "weight": 15,
-      "score": null
-    },
-    {
-      "id": "visual",
-      "weight": 15,
-      "score": null
-    },
-    {
-      "id": "responsive",
-      "weight": 15,
-      "score": null
-    },
-    {
-      "id": "delivery",
-      "weight": 10,
-      "score": null
-    }
+    { "id": "simulation", "weight": 25, "score": null },
+    { "id": "selection", "weight": 20, "score": null },
+    { "id": "usability", "weight": 15, "score": null },
+    { "id": "visual", "weight": 15, "score": null },
+    { "id": "responsive", "weight": 15, "score": null },
+    { "id": "delivery", "weight": 10, "score": null }
   ],
   "checks": [
-    {
-      "id": "S1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:6-10 defines three planets with different sizes/colors, periods 12/24/48 and fixed phases; :135-189 constructs the sun and planets; :304-314 computes circular positions. Rendered body count, appearance, motion and measured periods were not observed."
-    },
-    {
-      "id": "S2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:33-39 initializes time 0, speed 1 and playing true; :90-95 initializes positions and schedules animation. Initial visible state and subsequent motion were not observed."
-    },
-    {
-      "id": "S3",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:209-215 toggles playback; :362-378 advances positions only while playing and retains input handlers. Freeze, no-jump resume and paused camera/selection usability were not exercised."
-    },
-    {
-      "id": "S4",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html:208-211 declares a 0.25–4 speed slider; solar-system.js:225-227 changes speed without assigning time, and :366 multiplies the clock delta by speed. Actual 0.25x, 2x and 4x timing, position continuity and paused-speed behavior were not measured."
-    },
-    {
-      "id": "S5",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html:204 declares 0–120 seeking; solar-system.js:217-223 sets time, pauses and updates positions, target, camera and interface. Positions use a fixed-phase absolute-time formula (:304-314). Immediate visual seeking and repeated 30-second position equivalence were not observed."
-    },
-    {
-      "id": "S6",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:365-370 clamps playback to 120 and stops it; :212-213 permits resume below 120. Boundary playback and resume after an earlier seek were not exercised."
-    },
-    {
-      "id": "T1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html:173-176 contains three labeled planet buttons; solar-system.js:192-195 and :276-298 route list selection and raycast selection to the same selection/highlight update. Scene clicking, visible highlighting and paused selection were not exercised."
-    },
-    {
-      "id": "T2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:334-340 derives name, period and angle from the selected planet and the same orbitalAngle function used for mesh positions. Rendered position/information agreement and live playback/seek updates were not observed."
-    },
-    {
-      "id": "T3",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static risk: solar-system.js:365-373 updates the tracking target during playing frames but does not call updateCamera there; updateCamera is called in the non-playing tracking branch (:374-376). A target change alone does not update the camera position/look direction in this source. This is a suspected live-tracking defect, not a confirmed runtime failure. Selection (:286-297) and seeking (:217-223) explicitly update the camera. Moving-target centering, immediate seek framing and state-preserving target switching remain unverified."
-    },
-    {
-      "id": "T4",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:202-207 changes to overview, enforces a minimum camera distance and updates target/camera/interface without assigning simulation time, speed, playing or selection. Full-system visibility and preservation through actual controls were not observed."
-    },
-    {
-      "id": "U1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:239-257 implements pointer orbit and :270-273 implements wheel zoom, independent of playback state. Orbit/zoom in both modes while playing and paused were not exercised."
-    },
-    {
-      "id": "U2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: solar-system.js:230-236 binds camera/picking listeners only to the canvas; :249-263 uses a movement threshold to separate dragging from picking. index.html:32-43 declares separate pointer-event behavior for interface panels. Actual drag/click separation and control-input isolation were not exercised."
-    },
-    {
-      "id": "U3",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html:168-214 includes labeled selection, tracking, overview, time, speed and pause controls; solar-system.js:334-359 updates feedback labels and pressed state. No visible/interactive observation establishes discoverability or the qualitative scoring anchor."
-    },
-    {
-      "id": "V1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "Scene materials, lighting, halos and background are present in source, but no rendered scene was observed. Object readability, contrast and whether effects obscure observation remain unverified."
-    },
-    {
-      "id": "V2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html:8-147 defines typography, spacing, colors and panels. No rendered interface was observed, so visual hierarchy and legibility cannot be rated."
-    },
-    {
-      "id": "L1",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html defines fixed panels and a desktop transport layout, but the artifact was not opened at 1440x900 CSS pixels. Scene/control usability, scrolling and panel obstruction were not observed."
-    },
-    {
-      "id": "L2",
-      "status": "unverified",
-      "rating": null,
-      "method": "static",
-      "evidence": "Static: index.html:96-144 defines responsive panel/list/transport rules. No 390x844 CSS-pixel rendering or selection, tracking, seek, speed and pause/resume interaction occurred; mobile usability and overlap remain unverified."
-    },
-    {
-      "id": "D1",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "The actual output/index.html was not opened via file:// because the required connected Aside MCP direct REPL is unavailable. A working scene and controls without server/build were not observed."
-    },
-    {
-      "id": "D2",
-      "status": "pass",
-      "rating": 5,
-      "method": "static",
-      "evidence": "Inspected both complete output resources and dependency references. index.html:223 loads the permitted external classic Three.js script https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js; :224 loads ./solar-system.js, which exists under output/. No other local asset references, local ES module imports/scripts, local fetch/XHR, or server-only path dependencies were found. Geometries/materials are generated in JavaScript. This is static file-delivery compatibility only, not proof of CDN availability or execution."
-    },
-    {
-      "id": "D3",
-      "status": "unverified",
-      "rating": null,
-      "method": "none",
-      "evidence": "No browser execution occurred, so console/page errors and required-resource loading were not observed. External Three.js CDN loading and WebGL availability remain unverified; no artifact-caused runtime error is asserted."
-    }
+    { "id": "S1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S4", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S5", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "S6", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "T4", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "U1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "U2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "U3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "V1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "V2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "L1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "L2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before artifact inspection." },
+    { "id": "D1", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed: required target /Users/WonjinSin/Documents/project/ai-toybox/ai-benchmark/runs/v1/omp-openai-codex-gpt-6-luna-max-20261010-173403/output/index.html was not opened. The common preflight could not establish a permitted Aside direct-REPL file:// execution path; no navigation was attempted." },
+    { "id": "D2", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; evaluation stopped before static artifact inspection." },
+    { "id": "D3", "status": "unverified", "rating": null, "method": "none", "evidence": "Not performed because the common preflight could not establish the required permitted Aside direct-REPL file:// capability for D1; no browser execution occurred and no artifact errors were observed." }
   ],
   "total_score": null,
-  "coverage": {
-    "passed": 1,
-    "failed": 0,
-    "unverified": 19
-  },
+  "coverage": { "passed": 0, "failed": 0, "unverified": 20 },
   "notes": [
-    "The saved prompt was read in full and is compatible with solar-system-1.0: all 11 requirements and the eight-step acceptance scenario are present. The run record was parsed; generator claims and prior mock checks were not used as review evidence.",
-    "The reviewer model is explicitly known from this worker runtime. Reviewer effort is null because this worker has no authoritative current effort setting; it was not inferred from the target or parent.",
-    "The required connected Aside MCP direct REPL is unavailable in the host tool inventory. No alternate browser, CDP, mock DOM, HTTP runtime, server or browser session was used. No viewports were checked. No browser-dependent check was scored from source alone.",
-    "Acceptance steps 1–8 were all unexecuted. No runtime measurement tolerances were selected because no runtime measurements were attempted.",
-    "benchmark-review and its rubric, verification, format and JSON template were applied. The mandatory using-harness-flow skill was read and its dispatched-subagent stop rule applied; no extra workflow was applied. Parent-authorized one-worker-per-run parallelism was used; this worker launched no model or subagent.",
-    "Source-level tracking-camera update omission is recorded as a suspected risk under T3 only, not a demonstrated runtime defect or a failed mandatory check.",
-    "All source preservation hashes are held only in working memory; none are included in these reports. No source files were modified. No tabs or servers were created, so no cleanup was required."
+    "Blocked before artifact inspection: current Aside direct REPL documentation did not establish a permitted local-file execution path. Stored extension preference allow_file_access is UNSET. No target navigation was attempted; no current navigation error was observed.",
+    "Reviewer identity and effort are unknown; they are not inferred from the generator or parent reviewer.",
+    "No browser execution, static inspection, or scoring occurred; no findings are established. No review-created tab or server was started.",
+    "The eight acceptance-scenario actions and all other checks remain unperformed.",
+    "Parallel review handling was authorized by the user. Applied skills: benchmark-review; mandatory using-harness-flow for session routing; mandatory caveman for chat style; aside-browser to consult the required current Aside capability guidance. No other skill workflow was used."
   ]
 }

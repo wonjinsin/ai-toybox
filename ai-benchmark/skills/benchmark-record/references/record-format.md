@@ -27,7 +27,7 @@ Under the project root's `runs/v1/` or requested output root, exclusively create
 | Field | Meaning |
 | --- | --- |
 | `format_version` | `2.1`, adds `session_id` to the `2.0` work-interval format. |
-| `status` | `running`, `completed`, `failed`, `interrupted`. Completion means finished, not every requirement verified. |
+| `status` | `running`, `completed`, `failed`, `interrupted`. Access/verification blockers are `failed`, never a completed run with gaps. |
 | `session_id` | Exact current invoking session/thread ID as a nonempty string, or null if unverified/unavailable with a reason in notes. |
 | `model`, `effort` | Runtime, user-declared, then configuration-derived values, resolved separately with source/limits in notes; unresolved fields null. |
 | `duration_ms` | Nonnegative implementation/check elapsed milliseconds. |
@@ -40,8 +40,8 @@ backups. Missing metrics stay null, never zero/estimates; no second request need
 
 ## Status and resume
 
-- Finished implementation/checks is `completed` even with missing metrics; this does not claim every browser requirement was verified.
-- An observed/recoverable failure that prevents finishing is `failed`.
+- Finished implementation/checks is `completed` even with missing optional metrics, but never after an access/verification blocker.
+- An observed/recoverable failure that prevents finishing is `failed`; apply the [stop rule](../SKILL.md#stop-on-access-or-verification-blockers) for access/verification blockers.
 - Use `interrupted` only for unfinished interrupted attempts. Resume the same attempt with original measurement bounds; finished work becomes `completed`.
 - Unprovable resumed metrics stay `null`. Abrupt termination may leave `running` if finalization cannot occur.
 

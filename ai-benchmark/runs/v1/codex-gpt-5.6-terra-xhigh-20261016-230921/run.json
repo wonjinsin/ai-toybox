@@ -1,0 +1,17 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a1450a-6000-74b2-858d-3ab409f950f8",
+  "model": "gpt-5.6-terra",
+  "effort": "xhigh",
+  "duration_ms": 204142,
+  "input_tokens": 289325,
+  "output_tokens": 9411,
+  "notes": [
+    "Runtime model/effort from validated current Codex turn context; fallback config gpt-6-astra/high conflicted and was not used.",
+    "Session ID from CODEX_THREAD_ID, validated against current rollout session_meta and cwd.",
+    "benchmark-record was the only user-selected and file-loaded skill; no delegation or additional skill-file loads were observed. Exact-session developer messages also injected using-harness-flow and mandatory preactivated caveman context. Injection is recorded separately and does not by itself establish that either skill was applied.",
+    "Duration uses 2026-10-16T14:11:42.808+00:00 to 2026-10-16T14:15:06.950+00:00; tokens are comparable current Codex cumulative-thread deltas at frozen work boundaries, with cache/reasoning already included.",
+    "Aside direct REPL browser documentation was read, but its connected Chrome browser rejected creation of the benchmark tab as unavailable. Static checks passed for inline JavaScript syntax, required controls and periods, and no local ES module, fetch, or XHR usage; rendering, interactions, console, and both required viewports remain unverified."
+  ]
+}

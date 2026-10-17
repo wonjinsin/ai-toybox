@@ -25,8 +25,10 @@ never from settings configuration.
 Prefer TOML/JSON parsers. If none is available, inspect exact scalar keys with
 section/scope context. Ambiguous structure is unusable. No broad search mixing unrelated/inactive
 keys, whole config/environment/credential/transcript dumps, or unrelated sessions/histories.
-Briefly note missing, malformed, unreadable or unsupported sources; try others
-without failing the benchmark.
+Briefly note missing, malformed or unsupported sources; try others without failing
+the benchmark. An access/security denial instead takes the
+[whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers);
+do not treat denied access as merely missing metadata.
 
 Preserve configured identifiers/aliases exactly in JSON; note unresolved exact
 runtime models, never guess versions. Empty/reset/default selectors (model

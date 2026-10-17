@@ -20,6 +20,32 @@ Resolve resources relative to this file. Browser startup and temporary servers f
 Before delegating, also read the shared and current-host sections of [delegated usage](references/delegated-usage.md).
 Pass the skill selection policy to delegates. Skip other-host sections and authoring Sources.
 
+## Stop on access or verification blockers
+
+First apply the [browser transport rules](references/browser-verification.md):
+unavailable `file://` access alone permits the scoped HTTP fallback when documented
+and host-permitted. This exception never overrides an explicit access/security policy.
+
+Stop the entire attempt immediately if a required file cannot be accessed, any
+tool reports an access/security denial (including settings or usage lookup), or
+Aside's direct `repl` is unavailable or cannot perform a required browser check.
+Do not continue implementation, delegated work or remaining/static checks, retry
+denied access, switch protocols/tools to bypass a denial or change permissions.
+
+Only stop active work, clean up attempt-created tabs/servers, capture an end
+boundary if measurement started and permitted tools remain available, and mark
+an already-created `run.json` as `failed` if writable. Preserve existing artifacts;
+do not create a run just to record a setup blocker. Never mark this attempt
+`completed`. Do not retry a denied record write; report if the record remains
+`running`. Unprovable measurements stay null.
+
+Report the affected path/tool and operation, exact observed error (or missing
+capability), work/checks not performed, and saved/unsaved record state immediately.
+Distinguish current observations from earlier reported restrictions; never invent
+an error or reuse earlier results as fresh evidence. Resume only after the
+blocker is resolved. Merely absent optional metadata or token counters without
+an access denial still follows the existing null/unknown rules.
+
 ## Workflow
 
 1. Set up

@@ -1,0 +1,20 @@
+{
+  "format_version": "2.1",
+  "status": "completed",
+  "session_id": "01a1450a-6000-7a11-90e6-beae6afec769",
+  "model": "gpt-5.6-terra",
+  "effort": "max",
+  "duration_ms": 261741,
+  "input_tokens": 306894,
+  "output_tokens": 11448,
+  "notes": [
+    "Skill: benchmark-record (explicitly selected).",
+    "Fresh Codex developer context mandatorily injected the full using-harness-flow introduction and preactivated caveman response instructions. These were not additional skill-file loads; observed tool calls loaded only benchmark-record. Injection is documented separately from independently established skill application.",
+    "Model/effort verified from current Codex turn metadata as gpt-5.6-terra/max; readable config differs: gpt-6-astra/high.",
+    "Session ID validated from CODEX_THREAD_ID and current rollout session metadata.",
+    "Duration from wall-clock work boundaries; process-local monotonic values were not used.",
+    "Tokens from current Codex marker-linked thread_token_usage boundaries; cumulative deltas calculated in code; cache/reasoning already included.",
+    "Aside direct REPL had no browser bindings, so static checks only; rendering, interactions, console, and viewport checks unverified.",
+    "Three.js asset retrieval was blocked by host approval policy; native Canvas fallback used, so the Three.js-library requirement remains unsatisfied."
+  ]
+}

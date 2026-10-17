@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Observatory</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background:#050814; color:#edf3ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-width:320px; background:radial-gradient(circle at 50% 20%,#132650 0,#080d20 42%,#03050c 100%); }
+    #app { min-height:100vh; display:grid; grid-template-columns:280px minmax(0,1fr) 280px; grid-template-rows:1fr auto; gap:12px; padding:12px; }
+    .panel { background:rgba(9,15,35,.88); border:1px solid rgba(154,190,255,.22); border-radius:16px; box-shadow:0 18px 45px rgba(0,0,0,.3); backdrop-filter:blur(12px); }
+    aside { padding:18px; align-self:start; }
+    h1 { font-size:1.05rem; letter-spacing:.08em; text-transform:uppercase; margin:0 0 6px; }
+    .sub { color:#93a8c9; font-size:.78rem; margin:0 0 18px; }
+    h2 { font-size:.72rem; color:#9eb8e8; text-transform:uppercase; letter-spacing:.12em; margin:18px 0 9px; }
+    #scene-wrap { min-height:440px; position:relative; overflow:hidden; border-radius:16px; border:1px solid rgba(154,190,255,.22); background:radial-gradient(circle at 45% 50%,#101c45,#050713 70%); touch-action:none; }
+    canvas { display:block; width:100%; height:100%; cursor:grab; }
+    canvas.dragging { cursor:grabbing; }
+    #hud { position:absolute; inset:14px 14px auto; pointer-events:none; display:flex; justify-content:space-between; font-size:.8rem; color:#bbcef5; }
+    #mode { padding:5px 9px; border-radius:999px; background:rgba(8,15,34,.7); }
+    .planet-list { display:grid; gap:7px; }
+    button, input { font:inherit; }
+    button { width:100%; text-align:left; color:#eaf2ff; background:#101b38; border:1px solid #2a3e6b; border-radius:9px; padding:10px; cursor:pointer; }
+    button:hover, button:focus-visible { border-color:#8ab3ff; background:#152548; outline:none; }
+    .planet-btn.selected { border-color:var(--planet); box-shadow:inset 3px 0 0 var(--planet); }
+    .planet-btn span { color:#91a8d0; float:right; font-size:.75rem; }
+    .readout { display:grid; gap:7px; font-variant-numeric:tabular-nums; }
+    .readout div { display:flex; justify-content:space-between; gap:8px; padding-bottom:7px; border-bottom:1px solid rgba(150,180,240,.13); font-size:.86rem; }
+    .readout b { color:#9dbbff; font-weight:600; }
+    #controls { grid-column:1 / -1; padding:13px 18px; display:grid; grid-template-columns:auto minmax(180px,1fr) minmax(160px,1fr) auto; align-items:center; gap:14px; }
+    #controls button { width:auto; min-width:105px; text-align:center; }
+    label { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px; color:#b8c9eb; font-size:.82rem; white-space:nowrap; }
+    input[type=range] { width:100%; accent-color:#76a8ff; }
+    output { color:#fff; min-width:43px; text-align:right; font-variant-numeric:tabular-nums; }
+    .action { display:grid; gap:9px; }
+    .action button { text-align:center; }
+    #track { border-color:#496db0; }
+    #track.active { background:#264d91; border-color:#8ab7ff; }
+    .hint { color:#8ea4cb; font-size:.73rem; line-height:1.45; margin:14px 0 0; }
+    @media (max-width:800px) { #app { grid-template-columns:1fr; grid-template-rows:auto minmax(390px,50vh) auto auto; padding:8px; gap:8px; } aside { padding:13px; } #scene-wrap { grid-row:2; min-height:390px; } #app > aside:last-of-type { grid-row:3; } #controls { grid-row:4; grid-column:1; grid-template-columns:1fr; gap:10px; padding:12px; } #controls button { width:100%; } label { grid-template-columns:auto 1fr auto; } h2 { margin:12px 0 7px; } .hint { display:none; } }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <aside class="panel">
+      <h1>Solar Observatory</h1><p class="sub">Circular-orbit simulation</p>
+      <h2>Planets</h2><div id="planet-list" class="planet-list"></div>
+      <p class="hint">Drag to orbit the camera. Scroll or pinch to zoom. Click a planet to select it.</p>
+    </aside>
+    <section id="scene-wrap"><div id="hud"><span id="mode">Overview</span><span>Simulation time <b id="time-hud">0.0 s</b></span></div></section>
+    <aside class="panel">
+      <h2>Selected object</h2><div class="readout"><div><span>Name</span><b id="info-name">Mercury</b></div><div><span>Period</span><b id="info-period">12 s</b></div><div><span>Orbital angle</span><b id="info-angle">0.0°</b></div></div>
+      <h2>View</h2><div class="action"><button id="track" type="button">Track selected planet</button><button id="overview" type="button">Return to overview</button></div>
+    </aside>
+    <section id="controls" class="panel">
+      <button id="play" type="button">Pause</button>
+      <label for="time"><span>Time</span><input id="time" type="range" min="0" max="120" step="0.1" value="0"><output id="time-value">0.0 s</output></label>
+      <label for="speed"><span>Speed</span><input id="speed" type="range" min="0.25" max="4" step="0.25" value="1"><output id="speed-value">1×</output></label>
+      <span aria-label="Camera controls">Drag: orbit · Scroll: zoom</span>
+    </section>
+  </main>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+  (() => {
+    const data = [
+      { name:'Mercury', period:12, radius:4.1, size:.42, color:0x9aa5b1, phase:.25 },
+      { name:'Venus', period:24, radius:6.8, size:.72, color:0xf4b56b, phase:2.4 },
+      { name:'Azure', period:48, radius:9.8, size:.92, color:0x54a8ff, phase:4.55 }
+    ];
+    const el = id => document.getElementById(id);
+    const wrap = el('scene-wrap'), list = el('planet-list'), timeInput = el('time'), speedInput = el('speed');
+    let scene, camera, renderer, raycaster, pointer, sun, selected = 0, playing = true, tracking = false;
+    let simulationTime = 0, speed = 1, lastFrame = performance.now(), azimuth = -.5, elevation = .62, distance = 20;
+    let drag = null, moved = false;
+    const planets = [], target = new THREE.Vector3(), desiredTarget = new THREE.Vector3();
+
+    function init() {
+      scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x050713, .027);
+      camera = new THREE.PerspectiveCamera(47, 1, .1, 100); renderer = new THREE.WebGLRenderer({antialias:true});
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setClearColor(0x050713); wrap.appendChild(renderer.domElement);
+      raycaster = new THREE.Raycaster(); pointer = new THREE.Vector2();
+      scene.add(new THREE.AmbientLight(0x8ea8d7, .44)); const light = new THREE.PointLight(0xffd59b, 2.5, 38); scene.add(light);
+      sun = new THREE.Mesh(new THREE.SphereGeometry(1.28, 40, 28), new THREE.MeshBasicMaterial({color:0xffbd45})); scene.add(sun);
+      const glow = new THREE.Mesh(new THREE.SphereGeometry(1.52, 32, 20), new THREE.MeshBasicMaterial({color:0xff8a24, transparent:true, opacity:.16, blending:THREE.AdditiveBlending})); scene.add(glow);
+      data.forEach((d, i) => {
+        const ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(Array.from({length:129}, (_,n) => new THREE.Vector3(Math.cos(n/128*Math.PI*2)*d.radius, 0, Math.sin(n/128*Math.PI*2)*d.radius))), new THREE.LineBasicMaterial({color:0x315080, transparent:true, opacity:.55})); scene.add(ring);
+        const mesh = new THREE.Mesh(new THREE.SphereGeometry(d.size, 28, 18), new THREE.MeshStandardMaterial({color:d.color, roughness:.72, metalness:.05, emissive:0x000000})); mesh.userData.index=i; scene.add(mesh); planets.push(mesh);
+      });
+      for (let i=0;i<260;i++) { const v = new THREE.Vector3().randomDirection().multiplyScalar(25 + Math.random()*28); const star = new THREE.Mesh(new THREE.SphereGeometry(.018 + Math.random()*.028, 5, 5), new THREE.MeshBasicMaterial({color:0xc7dcff})); star.position.copy(v); scene.add(star); }
+      resize(); addUI(); select(0); requestAnimationFrame(frame);
+    }
+    function addUI() {
+      addEventListener('resize', resize);
+      renderer.domElement.addEventListener('pointerdown', e => { drag={x:e.clientX,y:e.clientY}; moved=false; renderer.domElement.setPointerCapture(e.pointerId); renderer.domElement.classList.add('dragging'); });
+      renderer.domElement.addEventListener('pointermove', e => { if (!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; if (Math.hypot(dx,dy)>4) moved=true; azimuth-=dx*.008; elevation=Math.max(-1.35,Math.min(1.35,elevation-dy*.008)); drag={x:e.clientX,y:e.clientY}; });
+      renderer.domElement.addEventListener('pointerup', e => { renderer.domElement.classList.remove('dragging'); if (!moved) pick(e); drag=null; });
+      renderer.domElement.addEventListener('wheel', e => { e.preventDefault(); distance=Math.max(5,Math.min(34,distance+e.deltaY*.012)); }, {passive:false});
+      renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), {passive:false});
+      el('play').onclick=() => { playing=!playing; el('play').textContent=playing?'Pause':'Resume'; };
+      timeInput.oninput=() => { simulationTime=Number(timeInput.value); playing=false; el('play').textContent='Resume'; updateUI(); };
+      speedInput.oninput=() => { speed=Number(speedInput.value); el('speed-value').textContent=speed+'×'; };
+      el('track').onclick=() => { tracking=true; el('track').classList.add('active'); el('mode').textContent='Tracking '+data[selected].name; };
+      el('overview').onclick=() => { tracking=false; el('track').classList.remove('active'); el('mode').textContent='Overview'; };
+      data.forEach((d,i) => { const b=document.createElement('button'); b.className='planet-btn'; b.style.setProperty('--planet','#'+d.color.toString(16).padStart(6,'0')); b.innerHTML=d.name+'<span>'+d.period+' s</span>'; b.onclick=()=>select(i); list.appendChild(b); });
+    }
+    function resize() { const w=wrap.clientWidth,h=wrap.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+    function angleFor(d) { return (d.phase + simulationTime / d.period * Math.PI * 2) % (Math.PI*2); }
+    function updatePlanets() { data.forEach((d,i) => { const a=angleFor(d), p=planets[i]; p.position.set(Math.cos(a)*d.radius, 0, Math.sin(a)*d.radius); const selectedNow=i===selected; p.material.emissive.setHex(selectedNow ? d.color : 0x000000); p.material.emissiveIntensity=selectedNow?.38:0; p.scale.setScalar(selectedNow?1.22:1); }); }
+    function updateUI() { const d=data[selected], a=(angleFor(d)*180/Math.PI+360)%360; el('info-name').textContent=d.name; el('info-period').textContent=d.period+' s'; el('info-angle').textContent=a.toFixed(1)+'°'; el('time-value').textContent=simulationTime.toFixed(1)+' s'; el('time-hud').textContent=simulationTime.toFixed(1)+' s'; timeInput.value=simulationTime; }
+    function select(i) { selected=i; updatePlanets(); updateUI(); Array.from(list.children).forEach((b,n)=>b.classList.toggle('selected',n===i)); if (tracking) el('mode').textContent='Tracking '+data[i].name; }
+    function pick(e) { const r=renderer.domElement.getBoundingClientRect(); pointer.x=(e.clientX-r.left)/r.width*2-1; pointer.y=-((e.clientY-r.top)/r.height)*2+1; raycaster.setFromCamera(pointer,camera); const hit=raycaster.intersectObjects(planets,false)[0]; if(hit) select(hit.object.userData.index); }
+    function frame(now) { const dt=Math.min(.1,(now-lastFrame)/1000); lastFrame=now; if(playing) { simulationTime=Math.min(120,simulationTime+dt*speed); if(simulationTime>=120) { playing=false; el('play').textContent='Resume'; } } updatePlanets(); updateUI(); desiredTarget.copy(tracking ? planets[selected].position : new THREE.Vector3()); target.lerp(desiredTarget, tracking ? .15 : 1); const flat=Math.cos(elevation)*distance; camera.position.set(target.x+Math.sin(azimuth)*flat, target.y+Math.sin(elevation)*distance, target.z+Math.cos(azimuth)*flat); camera.lookAt(target); renderer.render(scene,camera); requestAnimationFrame(frame); }
+    init();
+  })();
+  </script>
+</body>
+</html>

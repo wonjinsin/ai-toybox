@@ -15,11 +15,12 @@ or unsupported accounting. Never select a newest/neighbor file, infer identity
 from cwd, or substitute another conversation's usage. A moved workspace needs
 runtime evidence linking it to this session.
 
-Try another available current-run source after a failed lookup. Missing injected
-counters, failed commands and unavailable sources are different conditions.
-Use null when current-run sources or trustworthy scoped counts remain unavailable;
-name the actual lookup, schema, cutoff or coverage failure.
-Metrics do not block implementation or finalization.
+Try another available current-run source after a failed lookup only if no
+access/security denial occurred. A denial takes the
+[whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers),
+including during optional usage lookup. Otherwise, use null when trustworthy
+scoped counts remain unavailable; name the lookup, schema, cutoff or coverage
+failure. Missing counters alone do not block implementation or finalization.
 
 ## Capture comparable boundaries
 
