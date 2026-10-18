@@ -1,0 +1,1596 @@
+{
+  "audio": "experiments/similarity/reference/interview-first10m.wav",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.0,
+      "text": " Welcome, welcome, welcome to Armchair Expert."
+    },
+    {
+      "start": 3.0,
+      "end": 6.0,
+      "text": " I'm Dan Shepard and I'm joined by Mrs. Mouse."
+    },
+    {
+      "start": 6.0,
+      "end": 7.0,
+      "text": " Hi there."
+    },
+    {
+      "start": 7.0,
+      "end": 9.0,
+      "text": " The mightiest of the meese."
+    },
+    {
+      "start": 9.0,
+      "end": 10.0,
+      "text": " I'm here."
+    },
+    {
+      "start": 10.0,
+      "end": 11.0,
+      "text": " I'm mighty."
+    },
+    {
+      "start": 11.0,
+      "end": 12.0,
+      "text": " Wow."
+    },
+    {
+      "start": 12.0,
+      "end": 13.0,
+      "text": " Yeah."
+    },
+    {
+      "start": 13.0,
+      "end": 17.0,
+      "text": " I have to imagine many people have guessed about this episode"
+    },
+    {
+      "start": 17.0,
+      "end": 19.0,
+      "text": " because we've obviously been so excited for a while now."
+    },
+    {
+      "start": 19.0,
+      "end": 20.0,
+      "text": " We have."
+    },
+    {
+      "start": 20.0,
+      "end": 22.0,
+      "text": " Knowing and so excited that I was like,"
+    },
+    {
+      "start": 22.0,
+      "end": 24.0,
+      "text": " even though he said yes,"
+    },
+    {
+      "start": 24.0,
+      "end": 27.0,
+      "text": " I just feel like there'll be something that'll happen."
+    },
+    {
+      "start": 27.0,
+      "end": 28.0,
+      "text": " I know."
+    },
+    {
+      "start": 28.0,
+      "end": 29.0,
+      "text": " I'm still scared."
+    },
+    {
+      "start": 29.0,
+      "end": 33.0,
+      "text": " Yeah, I am too until it's been out for like even two weeks. Yes"
+    },
+    {
+      "start": 34.64,
+      "end": 40.64,
+      "text": " But yeah, the number one from when I sat down the notion of interviewing this person was absolutely implausible"
+    },
+    {
+      "start": 41.6,
+      "end": 49.54,
+      "text": " Hilarious. It was a joke. It was a funny joke. Yeah, but then Monty got Matt Damon and that maybe cracked a little ray of hope"
+    },
+    {
+      "start": 50.519999999999996,
+      "end": 52.519999999999996,
+      "text": " Dreams do come true"
+    },
+    {
+      "start": 52.52,
+      "end": 56.96,
+      "text": " Without further ado, my dream boyfriend, Brad Pitt,"
+    },
+    {
+      "start": 56.96,
+      "end": 61.32000000000001,
+      "text": " an Academy Award-winning actor, a producer, Fight Club 7."
+    },
+    {
+      "start": 61.32000000000001,
+      "end": 63.92,
+      "text": " I feel embarrassed even listing these."
+    },
+    {
+      "start": 63.92,
+      "end": 65.84,
+      "text": " Mr. and Mrs. Smith once upon a time in Hollywood"
+    },
+    {
+      "start": 65.84,
+      "end": 66.72,
+      "text": " and Glorious Pastors."
+    },
+    {
+      "start": 66.72,
+      "end": 69.04,
+      "text": " And the new most kick-ass movie of the summer"
+    },
+    {
+      "start": 69.04,
+      "end": 71.88,
+      "text": " I'm gonna declare is the most kick-ass movie"
+    },
+    {
+      "start": 71.88,
+      "end": 73.92,
+      "text": " of the whole summer and maybe the decade."
+    },
+    {
+      "start": 73.92,
+      "end": 76.88,
+      "text": " F1, hair-raising."
+    },
+    {
+      "start": 76.88,
+      "end": 79.5,
+      "text": " Fuckin' a point of view you've never gotten."
+    },
+    {
+      "start": 79.5,
+      "end": 82.4,
+      "text": " This is close to what it feels like to be in a race car."
+    },
+    {
+      "start": 82.4,
+      "end": 89.80000000000001,
+      "text": " It's incredible and he's fucking perfect. He's perfect. God we love him. We really do and he I mean as you'll hear"
+    },
+    {
+      "start": 89.80000000000001,
+      "end": 97.2,
+      "text": " He's just such a delight so kind gave us so much of his time. Yeah charm the fuck out of us really. Yeah"
+    },
+    {
+      "start": 97.64,
+      "end": 99.86000000000001,
+      "text": " Well get your spare"
+    },
+    {
+      "start": 100.52000000000001,
+      "end": 102.52000000000001,
+      "text": " Nope"
+    },
+    {
+      "start": 103.44,
+      "end": 107.24000000000001,
+      "text": " Don't say it please enjoy Brad Pitt"
+    },
+    {
+      "start": 112.4,
+      "end": 117.4,
+      "text": " He's an option that's fun."
+    },
+    {
+      "start": 117.4,
+      "end": 122.4,
+      "text": " He's an option that's fun."
+    },
+    {
+      "start": 122.4,
+      "end": 126.4,
+      "text": " He's an option that's fun."
+    },
+    {
+      "start": 126.4,
+      "end": 127.4,
+      "text": " Hi."
+    },
+    {
+      "start": 127.4,
+      "end": 128.4,
+      "text": " So nice to meet you."
+    },
+    {
+      "start": 128.4,
+      "end": 129.4,
+      "text": " You too."
+    },
+    {
+      "start": 129.4,
+      "end": 130.4,
+      "text": " Sorry, I got, I said."
+    },
+    {
+      "start": 130.4,
+      "end": 131.4,
+      "text": " No, you're good."
+    },
+    {
+      "start": 131.4,
+      "end": 132.4,
+      "text": " What'd you get?"
+    },
+    {
+      "start": 132.4,
+      "end": 133.4,
+      "text": " I tried this new thing here."
+    },
+    {
+      "start": 133.4,
+      "end": 135.4,
+      "text": " It's a blueberry latte."
+    },
+    {
+      "start": 135.4,
+      "end": 136.4,
+      "text": " Oh."
+    },
+    {
+      "start": 136.4,
+      "end": 137.4,
+      "text": " You all take a sip."
+    },
+    {
+      "start": 137.4,
+      "end": 139.4,
+      "text": " Oh, yeah, absolutely take a sip."
+    },
+    {
+      "start": 139.4,
+      "end": 140.4,
+      "text": " Thank you for offering."
+    },
+    {
+      "start": 140.4,
+      "end": 141.4,
+      "text": " Oh, yes."
+    },
+    {
+      "start": 141.4,
+      "end": 142.24,
+      "text": " Yes."
+    },
+    {
+      "start": 142.24,
+      "end": 143.06,
+      "text": " Is it nice?"
+    },
+    {
+      "start": 143.06,
+      "end": 144.96,
+      "text": " Blueberry's my favorite fake flavor."
+    },
+    {
+      "start": 144.96,
+      "end": 145.8,
+      "text": " You want in there?"
+    },
+    {
+      "start": 145.8,
+      "end": 146.64000000000001,
+      "text": " Take a little rip."
+    },
+    {
+      "start": 146.64000000000001,
+      "end": 148.48000000000002,
+      "text": " Not really, but I feel the pressure."
+    },
+    {
+      "start": 148.48000000000002,
+      "end": 149.44,
+      "text": " No, I will, I will."
+    },
+    {
+      "start": 149.44,
+      "end": 151.84,
+      "text": " I've put two nicotine products next to you"
+    },
+    {
+      "start": 151.84,
+      "end": 153.32,
+      "text": " in case you are wanting."
+    },
+    {
+      "start": 153.32,
+      "end": 154.36,
+      "text": " No, I'm done."
+    },
+    {
+      "start": 154.36,
+      "end": 155.20000000000002,
+      "text": " For how long?"
+    },
+    {
+      "start": 155.20000000000002,
+      "end": 156.04000000000002,
+      "text": " Just for you."
+    },
+    {
+      "start": 156.04000000000002,
+      "end": 156.88,
+      "text": " A couple years now?"
+    },
+    {
+      "start": 156.88,
+      "end": 157.72,
+      "text": " Zero nicotine."
+    },
+    {
+      "start": 157.72,
+      "end": 158.56,
+      "text": " None."
+    },
+    {
+      "start": 158.56,
+      "end": 159.4,
+      "text": " Why?"
+    },
+    {
+      "start": 159.4,
+      "end": 160.32,
+      "text": " I think 30 years of smoking,"
+    },
+    {
+      "start": 160.32,
+      "end": 161.68,
+      "text": " I've figured bad enough."
+    },
+    {
+      "start": 161.68,
+      "end": 162.52,
+      "text": " I've had enough."
+    },
+    {
+      "start": 162.52,
+      "end": 163.36,
+      "text": " Good for you."
+    },
+    {
+      "start": 163.36,
+      "end": 164.20000000000002,
+      "text": " I've had enough."
+    },
+    {
+      "start": 164.20000000000002,
+      "end": 167.16,
+      "text": " But nicotine is really good for your brain, is it?"
+    },
+    {
+      "start": 167.16,
+      "end": 169.0,
+      "text": " That's what he wants to say."
+    },
+    {
+      "start": 169.0,
+      "end": 171.0,
+      "text": " Listen, I got in reserves."
+    },
+    {
+      "start": 171.0,
+      "end": 172.92,
+      "text": " Yeah, you don't need any pick-me-ups."
+    },
+    {
+      "start": 172.92,
+      "end": 175.04,
+      "text": " Now is there any problem with advertisement?"
+    },
+    {
+      "start": 175.04,
+      "end": 175.88,
+      "text": " No, no, no."
+    },
+    {
+      "start": 175.88,
+      "end": 176.72,
+      "text": " You can do whatever you want."
+    },
+    {
+      "start": 176.72,
+      "end": 177.56,
+      "text": " We can advertise for..."
+    },
+    {
+      "start": 177.56,
+      "end": 180.64,
+      "text": " Those are just what we thought you might like."
+    },
+    {
+      "start": 180.64,
+      "end": 182.12,
+      "text": " We threw a lot of beverages at you."
+    },
+    {
+      "start": 182.12,
+      "end": 184.4,
+      "text": " But we're gonna ask you to hold the filet of fish"
+    },
+    {
+      "start": 184.4,
+      "end": 187.2,
+      "text": " at one point and say, God damn, this is good."
+    },
+    {
+      "start": 187.2,
+      "end": 188.92000000000002,
+      "text": " You don't have to say McDonald's."
+    },
+    {
+      "start": 188.92000000000002,
+      "end": 191.16,
+      "text": " I have no idea what this means, but..."
+    },
+    {
+      "start": 191.16,
+      "end": 193.6,
+      "text": " I'm doing a fucking ad for God's..."
+    },
+    {
+      "start": 193.6,
+      "end": 195.04,
+      "text": " Yeah, supporting."
+    },
+    {
+      "start": 195.04,
+      "end": 196.0,
+      "text": " Is that?"
+    },
+    {
+      "start": 196.0,
+      "end": 196.84,
+      "text": " Sure."
+    },
+    {
+      "start": 196.84,
+      "end": 197.68,
+      "text": " Wow."
+    },
+    {
+      "start": 197.68,
+      "end": 198.5,
+      "text": " Is that a waffle?"
+    },
+    {
+      "start": 198.5,
+      "end": 199.56,
+      "text": " What is that?"
+    },
+    {
+      "start": 199.56,
+      "end": 200.4,
+      "text": " What do we call that?"
+    },
+    {
+      "start": 200.4,
+      "end": 207.08,
+      "text": " Yeah, it looks fucking great. The blue is really nice. Okay. Not only is this God's true cashmere"
+    },
+    {
+      "start": 207.08,
+      "end": 210.32,
+      "text": " I'm pretty sure this is the one you gifted me. I've got a few now"
+    },
+    {
+      "start": 210.32,
+      "end": 215.1,
+      "text": " I was like, I think that's the one he sent. You know what I think he's doing? I think he's kind of like pining for another"
+    },
+    {
+      "start": 215.1,
+      "end": 217.1,
+      "text": " Oh, there's no question. I think he's like"
+    },
+    {
+      "start": 217.36,
+      "end": 224.1,
+      "text": " Trolling a little bit. I mean I'm not gonna rule out that I don't want one. She has some true. I do. I have some shorts"
+    },
+    {
+      "start": 224.44,
+      "end": 229.54000000000002,
+      "text": " Shorts of fun. They're so cute. Yeah green and white. Would you do a hoodie? I would do a hoodie even with long hair"
+    },
+    {
+      "start": 229.54,
+      "end": 231.78,
+      "text": " because sometimes women with long hair don't like to hoody."
+    },
+    {
+      "start": 231.78,
+      "end": 232.62,
+      "text": " Yeah, but I keep my hair up a lot."
+    },
+    {
+      "start": 232.62,
+      "end": 233.45999999999998,
+      "text": " You cut your hair off, right?"
+    },
+    {
+      "start": 233.45999999999998,
+      "end": 234.29999999999998,
+      "text": " For a free hoody?"
+    },
+    {
+      "start": 234.29999999999998,
+      "end": 235.14,
+      "text": " Yeah, yeah, yeah."
+    },
+    {
+      "start": 235.14,
+      "end": 236.22,
+      "text": " Okay, great, great."
+    },
+    {
+      "start": 236.22,
+      "end": 237.45999999999998,
+      "text": " For God's true?"
+    },
+    {
+      "start": 237.45999999999998,
+      "end": 238.29999999999998,
+      "text": " Or blanket?"
+    },
+    {
+      "start": 238.29999999999998,
+      "end": 239.14,
+      "text": " You guys do blankets?"
+    },
+    {
+      "start": 239.14,
+      "end": 240.7,
+      "text": " Oh yeah, we do cushy blankets."
+    },
+    {
+      "start": 240.7,
+      "end": 241.54,
+      "text": " Wow."
+    },
+    {
+      "start": 241.54,
+      "end": 242.38,
+      "text": " That sounds nice."
+    },
+    {
+      "start": 242.38,
+      "end": 244.66,
+      "text": " How did we come up with the name God's true cashmere?"
+    },
+    {
+      "start": 244.66,
+      "end": 248.42,
+      "text": " My dear friend, who is originally a holistic nurse,"
+    },
+    {
+      "start": 248.42,
+      "end": 250.45999999999998,
+      "text": " that I met around the time we met"
+    },
+    {
+      "start": 250.45999999999998,
+      "end": 251.73999999999998,
+      "text": " in your age of discovery."
+    },
+    {
+      "start": 251.73999999999998,
+      "end": 253.73999999999998,
+      "text": " In my age of discovery."
+    },
+    {
+      "start": 253.73999999999998,
+      "end": 256.18,
+      "text": " And I came in one day and she said,"
+    },
+    {
+      "start": 256.18,
+      "end": 257.74,
+      "text": " And I had a dream about you."
+    },
+    {
+      "start": 257.74,
+      "end": 261.28000000000003,
+      "text": " You said, I want more green in my life."
+    },
+    {
+      "start": 261.28000000000003,
+      "end": 265.42,
+      "text": " And I literally said that to someone the day before, just at a whim, I want more green"
+    },
+    {
+      "start": 265.42,
+      "end": 266.42,
+      "text": " in my life."
+    },
+    {
+      "start": 266.42,
+      "end": 270.58,
+      "text": " And so she made me a green shirt, this, super soft, super cash."
+    },
+    {
+      "start": 270.58,
+      "end": 271.66,
+      "text": " Her name is Sat Hedi."
+    },
+    {
+      "start": 271.66,
+      "end": 272.66,
+      "text": " It means God's truth."
+    },
+    {
+      "start": 272.66,
+      "end": 273.66,
+      "text": " Oh."
+    },
+    {
+      "start": 273.66,
+      "end": 275.26,
+      "text": " And she goes, what do you think of this?"
+    },
+    {
+      "start": 275.26,
+      "end": 278.02,
+      "text": " We started making them and we really liked them, then we started making them for our"
+    },
+    {
+      "start": 278.02,
+      "end": 281.54,
+      "text": " friends and we thought, all right, let's make a little side hustle and have some"
+    },
+    {
+      "start": 281.54,
+      "end": 282.54,
+      "text": " fun with it."
+    },
+    {
+      "start": 282.54,
+      "end": 283.54,
+      "text": " It's been a lot of fun."
+    },
+    {
+      "start": 283.54,
+      "end": 284.54,
+      "text": " So fun."
+    },
+    {
+      "start": 284.54,
+      "end": 285.54,
+      "text": " But yeah."
+    },
+    {
+      "start": 285.54,
+      "end": 287.8,
+      "text": " of God's true cashmere."
+    },
+    {
+      "start": 287.8,
+      "end": 289.5,
+      "text": " I went, it's bold."
+    },
+    {
+      "start": 289.5,
+      "end": 290.54,
+      "text": " Yeah, yeah, yeah."
+    },
+    {
+      "start": 290.54,
+      "end": 291.88,
+      "text": " It's memorable."
+    },
+    {
+      "start": 291.88,
+      "end": 293.02000000000004,
+      "text": " It sticks out."
+    },
+    {
+      "start": 293.02000000000004,
+      "end": 294.34000000000003,
+      "text": " Can't find a reason not to."
+    },
+    {
+      "start": 294.34000000000003,
+      "end": 296.26000000000005,
+      "text": " Might get a certain segment of the country mad,"
+    },
+    {
+      "start": 296.26000000000005,
+      "end": 297.54,
+      "text": " but hey, let's roll with it."
+    },
+    {
+      "start": 297.54,
+      "end": 299.78000000000003,
+      "text": " Well, I mean, everyone's got their own definition, right?"
+    },
+    {
+      "start": 299.78000000000003,
+      "end": 301.82000000000005,
+      "text": " Well, everyone thinks it's you,"
+    },
+    {
+      "start": 301.82000000000005,
+      "end": 304.82000000000005,
+      "text": " that you're God and it's your true cashmere."
+    },
+    {
+      "start": 304.82000000000005,
+      "end": 306.74,
+      "text": " That would be very worst."
+    },
+    {
+      "start": 306.74,
+      "end": 308.62,
+      "text": " I think people might think that."
+    },
+    {
+      "start": 308.62,
+      "end": 309.62,
+      "text": " I thought it."
+    },
+    {
+      "start": 309.62,
+      "end": 310.46000000000004,
+      "text": " No!"
+    },
+    {
+      "start": 310.46000000000004,
+      "end": 312.82000000000005,
+      "text": " In a good way, in a good, oh no."
+    },
+    {
+      "start": 312.82000000000005,
+      "end": 314.78000000000003,
+      "text": " I've really stepped in it already."
+    },
+    {
+      "start": 314.78000000000003,
+      "end": 316.14000000000004,
+      "text": " Wow."
+    },
+    {
+      "start": 316.14000000000004,
+      "end": 316.98,
+      "text": " I gotta go."
+    },
+    {
+      "start": 316.98,
+      "end": 319.46000000000004,
+      "text": " Yeah, Pitt, he's known for his ego."
+    },
+    {
+      "start": 319.46000000000004,
+      "end": 320.94000000000005,
+      "text": " No, you are not."
+    },
+    {
+      "start": 320.94000000000005,
+      "end": 322.74,
+      "text": " Okay, so on that topic,"
+    },
+    {
+      "start": 324.12,
+      "end": 325.54,
+      "text": " I like that there's no entry to this."
+    },
+    {
+      "start": 325.54,
+      "end": 327.02000000000004,
+      "text": " No, we get right in."
+    },
+    {
+      "start": 327.02000000000004,
+      "end": 327.86,
+      "text": " Don't you like that?"
+    },
+    {
+      "start": 327.86,
+      "end": 329.18,
+      "text": " Cause don't you think when you're acting,"
+    },
+    {
+      "start": 329.18,
+      "end": 331.14000000000004,
+      "text": " action is almost,"
+    },
+    {
+      "start": 331.14000000000004,
+      "end": 332.58000000000004,
+      "text": " and there have been famous directors"
+    },
+    {
+      "start": 332.58000000000004,
+      "end": 333.70000000000005,
+      "text": " who don't say action."
+    },
+    {
+      "start": 333.70000000000005,
+      "end": 335.3,
+      "text": " I asked on the last one, not to."
+    },
+    {
+      "start": 335.3,
+      "end": 336.14000000000004,
+      "text": " Okay, yeah."
+    },
+    {
+      "start": 336.14000000000004,
+      "end": 337.62,
+      "text": " Cause all of a sudden it's like, be great now."
+    },
+    {
+      "start": 337.62,
+      "end": 338.46000000000004,
+      "text": " Yes, go."
+    },
+    {
+      "start": 338.46000000000004,
+      "end": 339.3,
+      "text": " Jarring."
+    },
+    {
+      "start": 339.3,
+      "end": 340.78000000000003,
+      "text": " As opposed to like we're talking and we're hanging."
+    },
+    {
+      "start": 340.78000000000003,
+      "end": 342.70000000000005,
+      "text": " Given the way you and I met,"
+    },
+    {
+      "start": 342.70000000000005,
+      "end": 344.14000000000004,
+      "text": " does it make you nervous?"
+    },
+    {
+      "start": 344.14,
+      "end": 345.09999999999997,
+      "text": " That's what he means."
+    },
+    {
+      "start": 345.09999999999997,
+      "end": 345.94,
+      "text": " Of course."
+    },
+    {
+      "start": 345.94,
+      "end": 346.78,
+      "text": " Oh, he wishes."
+    },
+    {
+      "start": 346.78,
+      "end": 349.86,
+      "text": " That's hopefully where it ends."
+    },
+    {
+      "start": 349.86,
+      "end": 351.74,
+      "text": " You know, I've never had a gay experience"
+    },
+    {
+      "start": 351.74,
+      "end": 352.94,
+      "text": " that kind of missed that window,"
+    },
+    {
+      "start": 352.94,
+      "end": 355.82,
+      "text": " but if I did, yeah, it wouldn't be you."
+    },
+    {
+      "start": 355.82,
+      "end": 356.82,
+      "text": " Oh!"
+    },
+    {
+      "start": 356.82,
+      "end": 357.78,
+      "text": " Oh man, you had me."
+    },
+    {
+      "start": 357.78,
+      "end": 359.09999999999997,
+      "text": " I was like, wow, he's gonna say it."
+    },
+    {
+      "start": 359.09999999999997,
+      "end": 361.53999999999996,
+      "text": " I was like, Dax is going to die tonight."
+    },
+    {
+      "start": 361.53999999999996,
+      "end": 362.9,
+      "text": " 14th or 15th."
+    },
+    {
+      "start": 362.9,
+      "end": 363.74,
+      "text": " I don't want to brag,"
+    },
+    {
+      "start": 363.74,
+      "end": 365.7,
+      "text": " but you're gonna need to build up to me."
+    },
+    {
+      "start": 365.7,
+      "end": 368.03999999999996,
+      "text": " Oh boy."
+    },
+    {
+      "start": 368.03999999999996,
+      "end": 370.53999999999996,
+      "text": " I do recommend you start with some starters."
+    },
+    {
+      "start": 374.14,
+      "end": 375.58,
+      "text": " Okay, back to the real thing."
+    },
+    {
+      "start": 375.58,
+      "end": 377.38,
+      "text": " Given the context in which we met,"
+    },
+    {
+      "start": 377.38,
+      "end": 382.06,
+      "text": " which is like really heightened honesty and vulnerability,"
+    },
+    {
+      "start": 382.06,
+      "end": 385.46,
+      "text": " does it make you nervous to have to talk with me in public?"
+    },
+    {
+      "start": 385.46,
+      "end": 386.34,
+      "text": " No, not at all."
+    },
+    {
+      "start": 386.34,
+      "end": 387.21999999999997,
+      "text": " Quite at ease."
+    },
+    {
+      "start": 387.21999999999997,
+      "end": 388.06,
+      "text": " Oh, okay, great."
+    },
+    {
+      "start": 388.06,
+      "end": 389.26,
+      "text": " We can say men's group, right?"
+    },
+    {
+      "start": 389.26,
+      "end": 390.09999999999997,
+      "text": " I was gonna ask."
+    },
+    {
+      "start": 390.09999999999997,
+      "end": 391.62,
+      "text": " I say A.A., you're not supposed to, but I say it."
+    },
+    {
+      "start": 391.62,
+      "end": 392.46,
+      "text": " I said that."
+    },
+    {
+      "start": 392.46,
+      "end": 395.02,
+      "text": " I went on some New York Times interview"
+    },
+    {
+      "start": 395.02,
+      "end": 397.58,
+      "text": " and what an amazing thing this experience was for me."
+    },
+    {
+      "start": 397.58,
+      "end": 398.62,
+      "text": " It was a men's group."
+    },
+    {
+      "start": 398.62,
+      "end": 401.09999999999997,
+      "text": " It was A.A., it was when I first was getting sober."
+    },
+    {
+      "start": 401.09999999999997,
+      "end": 402.53999999999996,
+      "text": " I just thought it was just incredible."
+    },
+    {
+      "start": 402.54,
+      "end": 405.74,
+      "text": " men sharing their experiences, their foibles,"
+    },
+    {
+      "start": 405.74,
+      "end": 408.82,
+      "text": " their missteps, their wants, their aches,"
+    },
+    {
+      "start": 408.82,
+      "end": 410.06,
+      "text": " and a lot of humor with it."
+    },
+    {
+      "start": 410.06,
+      "end": 412.06,
+      "text": " I thought it was really special experience."
+    },
+    {
+      "start": 412.06,
+      "end": 413.46000000000004,
+      "text": " Coming from the Ozarks where we're like,"
+    },
+    {
+      "start": 413.46000000000004,
+      "end": 414.82000000000005,
+      "text": " everything's great, yeah."
+    },
+    {
+      "start": 414.82000000000005,
+      "end": 416.98,
+      "text": " And so I do this interview and I say this,"
+    },
+    {
+      "start": 416.98,
+      "end": 419.42,
+      "text": " and I got admonished by someone of the higher ups"
+    },
+    {
+      "start": 419.42,
+      "end": 421.3,
+      "text": " saying, it's anonymous."
+    },
+    {
+      "start": 421.3,
+      "end": 422.78000000000003,
+      "text": " How does that help anyone though?"
+    },
+    {
+      "start": 422.78000000000003,
+      "end": 424.24,
+      "text": " Not for you, that's what I said."
+    },
+    {
+      "start": 424.24,
+      "end": 426.58000000000004,
+      "text": " Here's the truth, there was a period of time"
+    },
+    {
+      "start": 426.58000000000004,
+      "end": 428.22,
+      "text": " where if you were known to be an alcoholic,"
+    },
+    {
+      "start": 428.22,
+      "end": 429.62,
+      "text": " you would be run under your neighborhood,"
+    },
+    {
+      "start": 429.62,
+      "end": 430.62,
+      "text": " you couldn't find employment."
+    },
+    {
+      "start": 430.62,
+      "end": 431.70000000000005,
+      "text": " There was a great reason for it,"
+    },
+    {
+      "start": 431.7,
+      "end": 434.02,
+      "text": " But even deeper than that is they didn't want"
+    },
+    {
+      "start": 434.02,
+      "end": 436.0,
+      "text": " alcoholics just showing up at their doorstep."
+    },
+    {
+      "start": 436.0,
+      "end": 437.52,
+      "text": " No one had a fucking solution"
+    },
+    {
+      "start": 437.52,
+      "end": 438.84,
+      "text": " and you would be kind of inviting"
+    },
+    {
+      "start": 438.84,
+      "end": 440.4,
+      "text": " just their town drunks to show up."
+    },
+    {
+      "start": 440.4,
+      "end": 442.88,
+      "text": " So a lot of reasons, my excuse,"
+    },
+    {
+      "start": 442.88,
+      "end": 445.59999999999997,
+      "text": " because I say it openly and I've gotten some criticisms,"
+    },
+    {
+      "start": 445.59999999999997,
+      "end": 447.8,
+      "text": " I've had a couple dozen, maybe more people"
+    },
+    {
+      "start": 447.8,
+      "end": 449.28,
+      "text": " come up to me in the last seven years"
+    },
+    {
+      "start": 449.28,
+      "end": 451.88,
+      "text": " and go like, I'm the best man in my brother's wedding"
+    },
+    {
+      "start": 451.88,
+      "end": 453.53999999999996,
+      "text": " and my family wouldn't talk to me."
+    },
+    {
+      "start": 453.53999999999996,
+      "end": 455.44,
+      "text": " And I found out about AA from you."
+    },
+    {
+      "start": 455.44,
+      "end": 456.76,
+      "text": " And I'm like, I'll take that dude"
+    },
+    {
+      "start": 456.76,
+      "end": 458.64,
+      "text": " over 1,000 fucking haters."
+    },
+    {
+      "start": 458.64,
+      "end": 459.88,
+      "text": " I've had two of those as well."
+    },
+    {
+      "start": 459.88,
+      "end": 462.04,
+      "text": " but you go around in a circle, it's kind of spiral"
+    },
+    {
+      "start": 462.04,
+      "end": 463.2,
+      "text": " because it's really crowded room."
+    },
+    {
+      "start": 463.2,
+      "end": 464.48,
+      "text": " Dax was usually near the end"
+    },
+    {
+      "start": 464.48,
+      "end": 465.48,
+      "text": " because he's been there a while."
+    },
+    {
+      "start": 465.48,
+      "end": 466.64,
+      "text": " He's kind of like a-"
+    },
+    {
+      "start": 466.64,
+      "end": 467.48,
+      "text": " Elder statesman."
+    },
+    {
+      "start": 467.48,
+      "end": 468.92,
+      "text": " Elder statesman, thank you."
+    },
+    {
+      "start": 468.92,
+      "end": 470.48,
+      "text": " And I really respected it."
+    },
+    {
+      "start": 470.48,
+      "end": 474.15999999999997,
+      "text": " Was really open, honest, was a way to take whatever theme"
+    },
+    {
+      "start": 474.15999999999997,
+      "end": 475.56,
+      "text": " seemed to go in the evening"
+    },
+    {
+      "start": 475.56,
+      "end": 477.28,
+      "text": " and then put it in the funniest package."
+    },
+    {
+      "start": 477.28,
+      "end": 478.88,
+      "text": " And it meant a lot to me, really did."
+    },
+    {
+      "start": 478.88,
+      "end": 479.8,
+      "text": " Good job, Dax."
+    },
+    {
+      "start": 479.8,
+      "end": 480.96,
+      "text": " Haven't talked to him since."
+    },
+    {
+      "start": 480.96,
+      "end": 481.8,
+      "text": " Yeah!"
+    },
+    {
+      "start": 481.8,
+      "end": 484.08,
+      "text": " He was so impactful that I have not seen him since."
+    },
+    {
+      "start": 484.08,
+      "end": 485.4,
+      "text": " He used him for what he's worth"
+    },
+    {
+      "start": 485.4,
+      "end": 487.32,
+      "text": " and then you walk away."
+    },
+    {
+      "start": 487.32,
+      "end": 488.15999999999997,
+      "text": " That's what we do."
+    },
+    {
+      "start": 488.16,
+      "end": 490.88000000000005,
+      "text": " send him a couple of the free products every now and then."
+    },
+    {
+      "start": 490.88000000000005,
+      "end": 491.78000000000003,
+      "text": " Can you tell you about our date?"
+    },
+    {
+      "start": 491.78000000000003,
+      "end": 494.52000000000004,
+      "text": " He did, but we keep you on the DL a little bit"
+    },
+    {
+      "start": 494.52000000000004,
+      "end": 495.48,
+      "text": " on this show."
+    },
+    {
+      "start": 495.48,
+      "end": 496.32000000000005,
+      "text": " Yeah."
+    },
+    {
+      "start": 496.32000000000005,
+      "end": 498.32000000000005,
+      "text": " And this is really kind of this fun theme."
+    },
+    {
+      "start": 498.32000000000005,
+      "end": 499.6,
+      "text": " And I often tell people this,"
+    },
+    {
+      "start": 499.6,
+      "end": 500.8,
+      "text": " and I wonder if you can relate to this."
+    },
+    {
+      "start": 500.8,
+      "end": 502.40000000000003,
+      "text": " Surely you've worked with people"
+    },
+    {
+      "start": 502.40000000000003,
+      "end": 507.36,
+      "text": " where you're holding two things simultaneously about them."
+    },
+    {
+      "start": 507.36,
+      "end": 509.68,
+      "text": " Like if you were to have worked with Paul Newman,"
+    },
+    {
+      "start": 509.68,
+      "end": 511.6,
+      "text": " I imagine you have Paul Newman"
+    },
+    {
+      "start": 511.6,
+      "end": 513.28,
+      "text": " and then you would have a man you know."
+    },
+    {
+      "start": 513.28,
+      "end": 516.0400000000001,
+      "text": " I think it's okay to keep both those things alive."
+    },
+    {
+      "start": 516.0400000000001,
+      "end": 517.2,
+      "text": " Yeah, I think that's fair."
+    },
+    {
+      "start": 517.2,
+      "end": 519.6,
+      "text": " I have a handful of friends, Robert Dunney Jr."
+    },
+    {
+      "start": 519.6,
+      "end": 522.9200000000001,
+      "text": " I saw him as a kid in Weird Science"
+    },
+    {
+      "start": 522.9200000000001,
+      "end": 526.48,
+      "text": " and him dumping the fucking malt off the top of the mall."
+    },
+    {
+      "start": 526.48,
+      "end": 528.24,
+      "text": " He's not even a main player in that movie."
+    },
+    {
+      "start": 528.24,
+      "end": 530.0400000000001,
+      "text": " We had a rad cardigan on."
+    },
+    {
+      "start": 530.0400000000001,
+      "end": 531.48,
+      "text": " And like a zootsuit or something."
+    },
+    {
+      "start": 531.48,
+      "end": 532.32,
+      "text": " Yeah, he was wild."
+    },
+    {
+      "start": 532.32,
+      "end": 533.76,
+      "text": " And I'm like, that dude's awesome."
+    },
+    {
+      "start": 533.76,
+      "end": 536.2,
+      "text": " I love that dude, followed him throughout the years,"
+    },
+    {
+      "start": 536.2,
+      "end": 537.4000000000001,
+      "text": " ultimately became friends with him."
+    },
+    {
+      "start": 537.4000000000001,
+      "end": 539.6400000000001,
+      "text": " And it's like, yeah, I have Robert the dude I know."
+    },
+    {
+      "start": 539.6400000000001,
+      "end": 542.76,
+      "text": " And then there's the guy I just was in love with"
+    },
+    {
+      "start": 542.76,
+      "end": 544.76,
+      "text": " from Chaplin and all these things."
+    },
+    {
+      "start": 544.76,
+      "end": 545.76,
+      "text": " They don't intersect, right?"
+    },
+    {
+      "start": 545.76,
+      "end": 547.08,
+      "text": " Yeah, they don't intertwine that way."
+    },
+    {
+      "start": 547.08,
+      "end": 548.24,
+      "text": " Did you have anyone like that?"
+    },
+    {
+      "start": 548.24,
+      "end": 549.08,
+      "text": " You said it."
+    },
+    {
+      "start": 549.08,
+      "end": 551.24,
+      "text": " I remember meeting Newman, working with Redford,"
+    },
+    {
+      "start": 551.24,
+      "end": 552.36,
+      "text": " working with Hackman."
+    },
+    {
+      "start": 552.36,
+      "end": 553.2,
+      "text": " You know what I have that with?"
+    },
+    {
+      "start": 553.2,
+      "end": 554.0400000000001,
+      "text": " Sean Penn."
+    },
+    {
+      "start": 554.0400000000001,
+      "end": 555.48,
+      "text": " Oh, yeah. There you go."
+    },
+    {
+      "start": 555.48,
+      "end": 557.12,
+      "text": " 89, Sean Penn."
+    },
+    {
+      "start": 557.12,
+      "end": 558.48,
+      "text": " Oh, fuck, yes."
+    },
+    {
+      "start": 558.48,
+      "end": 559.32,
+      "text": " He'd be number one."
+    },
+    {
+      "start": 559.32,
+      "end": 561.6600000000001,
+      "text": " Oh my God, how about racing with the moon?"
+    },
+    {
+      "start": 561.6600000000001,
+      "end": 563.6,
+      "text": " How about at close range?"
+    },
+    {
+      "start": 563.6,
+      "end": 564.64,
+      "text": " Oh my God, he was fun."
+    },
+    {
+      "start": 564.64,
+      "end": 565.48,
+      "text": " You know this one?"
+    },
+    {
+      "start": 565.48,
+      "end": 566.32,
+      "text": " I haven't seen that one."
+    },
+    {
+      "start": 566.32,
+      "end": 567.1600000000001,
+      "text": " Rush home."
+    },
+    {
+      "start": 567.1600000000001,
+      "end": 568.0,
+      "text": " Okay, I will."
+    },
+    {
+      "start": 568.0,
+      "end": 568.84,
+      "text": " What's going on?"
+    },
+    {
+      "start": 568.84,
+      "end": 569.6600000000001,
+      "text": " He's in it with his brother."
+    },
+    {
+      "start": 569.6600000000001,
+      "end": 570.84,
+      "text": " Christopher Walken, yeah, Chris."
+    },
+    {
+      "start": 570.84,
+      "end": 572.84,
+      "text": " And he got fucking huge for it."
+    },
+    {
+      "start": 572.84,
+      "end": 573.8000000000001,
+      "text": " Remember when you were young, you were like,"
+    },
+    {
+      "start": 573.8000000000001,
+      "end": 575.9200000000001,
+      "text": " oh shit, Sean Penn's fucking huge."
+    },
+    {
+      "start": 575.9200000000001,
+      "end": 576.76,
+      "text": " You're a badass."
+    },
+    {
+      "start": 576.76,
+      "end": 581.8,
+      "text": " But he super stylized the way it shot Jimmy Foley, directed it, but I think younger actors"
+    },
+    {
+      "start": 581.8,
+      "end": 585.96,
+      "text": " should study it because so much is said without saying it."
+    },
+    {
+      "start": 585.96,
+      "end": 590.0,
+      "text": " It's such a streamlined script and everything is undercurrent."
+    },
+    {
+      "start": 590.0,
+      "end": 591.0,
+      "text": " The movie's pretty quiet."
+    },
+    {
+      "start": 591.0,
+      "end": 592.0,
+      "text": " It's great."
+    },
+    {
+      "start": 592.0,
+      "end": 594.84,
+      "text": " Okay, we share another one while we're on this road."
+    },
+    {
+      "start": 594.84,
+      "end": 595.84,
+      "text": " Mickey Rourke."
+    },
+    {
+      "start": 595.84,
+      "end": 596.84,
+      "text": " We do."
+    },
+    {
+      "start": 596.84,
+      "end": 597.84,
+      "text": " Whoa."
+    },
+    {
+      "start": 597.84,
+      "end": 598.84,
+      "text": " Love that Mickey Rourke."
+    },
+    {
+      "start": 598.84,
+      "end": 599.84,
+      "text": " Where does it start for you?"
+    }
+  ]
+}

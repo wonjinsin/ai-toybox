@@ -1,0 +1,14 @@
+{
+  "id": "full-andrew-slow",
+  "prompt": "full-slow",
+  "voice": "en-US-AndrewNeural",
+  "source_rate": "-15%",
+  "pitch": 1,
+  "index_rate": 1,
+  "seed": 11,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/full-slow-en-US-AndrewNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/full-andrew-slow.wav",
+  "sample_rate": 32000,
+  "samples": 1986560,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 3.47s | F0 3.77s | 合成 35.60s"
+}

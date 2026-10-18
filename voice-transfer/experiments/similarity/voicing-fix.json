@@ -1,0 +1,6 @@
+[
+  {"id":"fixed-guy-tuning","prompt":"tuning","voice":"en-US-GuyNeural","pitch":0,"index_rate":0.75,"seed":11},
+  {"id":"fixed-andrew-tuning","prompt":"tuning","voice":"en-US-AndrewNeural","pitch":0,"index_rate":1.0,"seed":11},
+  {"id":"fixed-guy-heldout","prompt":"heldout","voice":"en-US-GuyNeural","pitch":0,"index_rate":0.75,"seed":11},
+  {"id":"fixed-andrew-heldout","prompt":"heldout","voice":"en-US-AndrewNeural","pitch":0,"index_rate":1.0,"seed":11}
+]

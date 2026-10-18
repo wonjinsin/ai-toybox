@@ -1,0 +1,50 @@
+[
+  {
+    "id": "heldout-eric-s11",
+    "prompt": "heldout",
+    "voice": "en-US-EricNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 11
+  },
+  {
+    "id": "heldout-eric-s23",
+    "prompt": "heldout",
+    "voice": "en-US-EricNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 23
+  },
+  {
+    "id": "heldout-eric-s37",
+    "prompt": "heldout",
+    "voice": "en-US-EricNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 37
+  },
+  {
+    "id": "heldout-eric-s53",
+    "prompt": "heldout",
+    "voice": "en-US-EricNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 53
+  },
+  {
+    "id": "heldout-eric-s71",
+    "prompt": "heldout",
+    "voice": "en-US-EricNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 71
+  },
+  {
+    "id": "full-eric",
+    "prompt": "full",
+    "voice": "en-US-EricNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 11
+  }
+]

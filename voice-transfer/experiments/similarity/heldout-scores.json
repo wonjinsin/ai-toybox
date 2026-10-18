@@ -1,0 +1,2412 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrew-s11.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 7.86,
+    "rms": 0.07672865688800812,
+    "number_of_windows": 1,
+    "discarded_tail_seconds": 1.8600000000000003,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0778769925236702
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5813671946525574,
+    "cosine_similarity_range": [
+      0.5110015273094177,
+      0.6402233839035034
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 6,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.603861927986145,
+        "cosine_similarity_range": [
+          0.5110015273094177,
+          0.6214054822921753
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6214054822921753
+          ],
+          [
+            0.603861927986145
+          ],
+          [
+            0.5110015273094177
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5588724613189697,
+        "cosine_similarity_range": [
+          0.5362803936004639,
+          0.6402233839035034
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6402233839035034
+          ],
+          [
+            0.5588724613189697
+          ],
+          [
+            0.5362803936004639
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrew-s23.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 7.86,
+    "rms": 0.07605739682912827,
+    "number_of_windows": 1,
+    "discarded_tail_seconds": 1.8600000000000003,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.07690799236297607
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.6144683361053467,
+    "cosine_similarity_range": [
+      0.5181814432144165,
+      0.6800001859664917
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 6,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6272948980331421,
+        "cosine_similarity_range": [
+          0.5181814432144165,
+          0.6588395833969116
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6588395833969116
+          ],
+          [
+            0.6272948980331421
+          ],
+          [
+            0.5181814432144165
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6016417145729065,
+        "cosine_similarity_range": [
+          0.571757972240448,
+          0.6800001859664917
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6800001859664917
+          ],
+          [
+            0.6016417145729065
+          ],
+          [
+            0.571757972240448
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrew-s37.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 7.86,
+    "rms": 0.0766257643699646,
+    "number_of_windows": 1,
+    "discarded_tail_seconds": 1.8600000000000003,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.07784049212932587
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.604731023311615,
+    "cosine_similarity_range": [
+      0.5080257654190063,
+      0.6524564623832703
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 6,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.631320595741272,
+        "cosine_similarity_range": [
+          0.5080257654190063,
+          0.6524564623832703
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6524564623832703
+          ],
+          [
+            0.631320595741272
+          ],
+          [
+            0.5080257654190063
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.578141450881958,
+        "cosine_similarity_range": [
+          0.5488001704216003,
+          0.647638201713562
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.647638201713562
+          ],
+          [
+            0.578141450881958
+          ],
+          [
+            0.5488001704216003
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrew-s53.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 7.86,
+    "rms": 0.07680973410606384,
+    "number_of_windows": 1,
+    "discarded_tail_seconds": 1.8600000000000003,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.07855471968650818
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.6005038022994995,
+    "cosine_similarity_range": [
+      0.5275524854660034,
+      0.6606249213218689
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 6,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6277995109558105,
+        "cosine_similarity_range": [
+          0.5275524854660034,
+          0.6606249213218689
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6606249213218689
+          ],
+          [
+            0.6277995109558105
+          ],
+          [
+            0.5275524854660034
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5732080340385437,
+        "cosine_similarity_range": [
+          0.5496367812156677,
+          0.6494666934013367
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.6494666934013367
+          ],
+          [
+            0.5732080340385437
+          ],
+          [
+            0.5496367812156677
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrew-s71.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 7.86,
+    "rms": 0.077151820063591,
+    "number_of_windows": 1,
+    "discarded_tail_seconds": 1.8600000000000003,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0780055895447731
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.614357590675354,
+    "cosine_similarity_range": [
+      0.538108229637146,
+      0.656902551651001
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 6,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6445413827896118,
+        "cosine_similarity_range": [
+          0.538108229637146,
+          0.653416633605957
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.653416633605957
+          ],
+          [
+            0.6445413827896118
+          ],
+          [
+            0.538108229637146
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5841737985610962,
+        "cosine_similarity_range": [
+          0.5562355518341064,
+          0.656902551651001
+        ],
+        "number_of_window_pairs": 3,
+        "window_pair_cosine_similarities": [
+          [
+            0.656902551651001
+          ],
+          [
+            0.5841737985610962
+          ],
+          [
+            0.5562355518341064
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s11.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.09164281189441681,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0939837098121643
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08801481872797012
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5801550149917603,
+    "cosine_similarity_range": [
+      0.4957773983478546,
+      0.669908344745636
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5938235521316528,
+        "cosine_similarity_range": [
+          0.4957773983478546,
+          0.669908344745636
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6686938405036926,
+            0.5884103775024414
+          ],
+          [
+            0.669908344745636,
+            0.5947651863098145
+          ],
+          [
+            0.5928819179534912,
+            0.4957773983478546
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5333695411682129,
+        "cosine_similarity_range": [
+          0.5186976194381714,
+          0.6337562203407288
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6337562203407288,
+            0.5718995928764343
+          ],
+          [
+            0.5323373675346375,
+            0.529626727104187
+          ],
+          [
+            0.5186976194381714,
+            0.5344017148017883
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s23.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.09100804477930069,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09408631920814514
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08618473261594772
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5944269299507141,
+    "cosine_similarity_range": [
+      0.49912822246551514,
+      0.6726942658424377
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6119933128356934,
+        "cosine_similarity_range": [
+          0.535891056060791,
+          0.6726942658424377
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.659484326839447,
+            0.6065244674682617
+          ],
+          [
+            0.6726942658424377,
+            0.6174622178077698
+          ],
+          [
+            0.5823293924331665,
+            0.535891056060791
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5554520487785339,
+        "cosine_similarity_range": [
+          0.49912822246551514,
+          0.6108952760696411
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6108952760696411,
+            0.6084221601486206
+          ],
+          [
+            0.5096780061721802,
+            0.5629643201828003
+          ],
+          [
+            0.49912822246551514,
+            0.5479397773742676
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s37.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.0907398909330368,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09303607046604156
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08718230575323105
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5888100862503052,
+    "cosine_similarity_range": [
+      0.500413715839386,
+      0.6634950637817383
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6055829524993896,
+        "cosine_similarity_range": [
+          0.524017870426178,
+          0.6634950637817383
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6400427222251892,
+            0.6033647656440735
+          ],
+          [
+            0.6634950637817383,
+            0.607801079750061
+          ],
+          [
+            0.5667871832847595,
+            0.524017870426178
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5644067525863647,
+        "cosine_similarity_range": [
+          0.500413715839386,
+          0.6179042458534241
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6048148274421692,
+            0.6179042458534241
+          ],
+          [
+            0.500413715839386,
+            0.5545579791069031
+          ],
+          [
+            0.5014603734016418,
+            0.5742554664611816
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s53.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.09134339541196823,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09372618049383163
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08764786273241043
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.593829870223999,
+    "cosine_similarity_range": [
+      0.5044360756874084,
+      0.6682307124137878
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6030797958374023,
+        "cosine_similarity_range": [
+          0.5076532363891602,
+          0.6682307124137878
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.651995837688446,
+            0.5907378792762756
+          ],
+          [
+            0.6682307124137878,
+            0.6092378497123718
+          ],
+          [
+            0.5969218015670776,
+            0.5076532363891602
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5498281121253967,
+        "cosine_similarity_range": [
+          0.5044360756874084,
+          0.6212507486343384
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6212507486343384,
+            0.6062184572219849
+          ],
+          [
+            0.5148765444755554,
+            0.5452888011932373
+          ],
+          [
+            0.5044360756874084,
+            0.5543674230575562
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s71.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.09098208695650101,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09264615178108215
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08842729777097702
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5896594524383545,
+    "cosine_similarity_range": [
+      0.5102156400680542,
+      0.6707101464271545
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6121758222579956,
+        "cosine_similarity_range": [
+          0.5313626527786255,
+          0.6707101464271545
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6557427048683167,
+            0.6056771874427795
+          ],
+          [
+            0.6707101464271545,
+            0.6186744570732117
+          ],
+          [
+            0.5645721554756165,
+            0.5313626527786255
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5656020641326904,
+        "cosine_similarity_range": [
+          0.5102156400680542,
+          0.615077555179596
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6089078783988953,
+            0.615077555179596
+          ],
+          [
+            0.514423668384552,
+            0.5736417174339294
+          ],
+          [
+            0.5102156400680542,
+            0.5575623512268066
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guyminus3-s11.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.08455098420381546,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08702132850885391
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08070380240678787
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5845555067062378,
+    "cosine_similarity_range": [
+      0.4891185164451599,
+      0.6698644757270813
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6376590132713318,
+        "cosine_similarity_range": [
+          0.5672674179077148,
+          0.6698644757270813
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6698644757270813,
+            0.6432434916496277
+          ],
+          [
+            0.648415744304657,
+            0.6320745348930359
+          ],
+          [
+            0.5672674179077148,
+            0.5844956636428833
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5372145175933838,
+        "cosine_similarity_range": [
+          0.4891185164451599,
+          0.599965512752533
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.599965512752533,
+            0.5846153497695923
+          ],
+          [
+            0.5090101957321167,
+            0.5428652167320251
+          ],
+          [
+            0.4891185164451599,
+            0.5315638780593872
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guyminus3-s23.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.0841357409954071,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08687960356473923
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.07984334230422974
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5866817235946655,
+    "cosine_similarity_range": [
+      0.5166738033294678,
+      0.6841967701911926
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6244497299194336,
+        "cosine_similarity_range": [
+          0.5645062923431396,
+          0.6841967701911926
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6841967701911926,
+            0.6323282718658447
+          ],
+          [
+            0.6563547253608704,
+            0.6165711283683777
+          ],
+          [
+            0.5645062923431396,
+            0.5941179990768433
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5432553291320801,
+        "cosine_similarity_range": [
+          0.5166738033294678,
+          0.6177983283996582
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6177983283996582,
+            0.5792455077171326
+          ],
+          [
+            0.534489095211029,
+            0.5520215630531311
+          ],
+          [
+            0.5166738033294678,
+            0.5294817090034485
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guyminus3-s37.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.08373019844293594,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08585676550865173
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08043501526117325
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.587609052658081,
+    "cosine_similarity_range": [
+      0.4962571859359741,
+      0.6544012427330017
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6203899383544922,
+        "cosine_similarity_range": [
+          0.5609900951385498,
+          0.6544012427330017
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6544012427330017,
+            0.6252737045288086
+          ],
+          [
+            0.6450805068016052,
+            0.6155062317848206
+          ],
+          [
+            0.5609900951385498,
+            0.5849841833114624
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5283371806144714,
+        "cosine_similarity_range": [
+          0.4962571859359741,
+          0.6058032512664795
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6058032512664795,
+            0.5902339816093445
+          ],
+          [
+            0.5106641054153442,
+            0.5327650308609009
+          ],
+          [
+            0.4962571859359741,
+            0.523909330368042
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guyminus3-s53.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.08426613360643387,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08656094968318939
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.08070167154073715
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5943862199783325,
+    "cosine_similarity_range": [
+      0.5084410905838013,
+      0.6702408790588379
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6295289993286133,
+        "cosine_similarity_range": [
+          0.5755767822265625,
+          0.6702408790588379
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6702408790588379,
+            0.6348923444747925
+          ],
+          [
+            0.6658114790916443,
+            0.6241656541824341
+          ],
+          [
+            0.5867710709571838,
+            0.5755767822265625
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5482125878334045,
+        "cosine_similarity_range": [
+          0.5084410905838013,
+          0.6205328106880188
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6205328106880188,
+            0.6020013093948364
+          ],
+          [
+            0.5386655926704407,
+            0.5519846081733704
+          ],
+          [
+            0.5084410905838013,
+            0.5444405674934387
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guyminus3-s71.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 10.0,
+    "rms": 0.08366859704256058,
+    "number_of_windows": 2,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08573367446660995
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 10.0,
+        "duration_seconds": 4.0,
+        "rms": 0.0804716944694519
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.6029119491577148,
+    "cosine_similarity_range": [
+      0.4917006194591522,
+      0.656064510345459
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 12,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.6281658411026001,
+        "cosine_similarity_range": [
+          0.5500996708869934,
+          0.656064510345459
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6548669934272766,
+            0.6165397763252258
+          ],
+          [
+            0.656064510345459,
+            0.6397918462753296
+          ],
+          [
+            0.5500996708869934,
+            0.6010042428970337
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5656278729438782,
+        "cosine_similarity_range": [
+          0.4917006194591522,
+          0.6235665082931519
+        ],
+        "number_of_window_pairs": 6,
+        "window_pair_cosine_similarities": [
+          [
+            0.6048195958137512,
+            0.6235665082931519
+          ],
+          [
+            0.527199387550354,
+            0.5828745365142822
+          ],
+          [
+            0.4917006194591522,
+            0.5483812093734741
+          ]
+        ]
+      }
+    ]
+  }
+]

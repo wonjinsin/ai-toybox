@@ -1,0 +1,8 @@
+[
+  {"id":"guy-pitch-minus3","parent":"guy-pitch-minus2","prompt":"tuning","voice":"en-US-GuyNeural","pitch":-3,"index_rate":0.75},
+  {"id":"guy-pitch-minus4","parent":"guy-pitch-minus2","prompt":"tuning","voice":"en-US-GuyNeural","pitch":-4,"index_rate":0.75},
+  {"id":"guy-minus2-index100","parent":"guy-pitch-minus2","prompt":"tuning","voice":"en-US-GuyNeural","pitch":-2,"index_rate":1.0},
+  {"id":"andrew-pitch-plus1","parent":"andrew-baseline","prompt":"tuning","voice":"en-US-AndrewNeural","pitch":1,"index_rate":0.75},
+  {"id":"andrew-pitch-plus2","parent":"andrew-baseline","prompt":"tuning","voice":"en-US-AndrewNeural","pitch":2,"index_rate":0.75},
+  {"id":"andrew-index100","parent":"andrew-baseline","prompt":"tuning","voice":"en-US-AndrewNeural","pitch":0,"index_rate":1.0}
+]

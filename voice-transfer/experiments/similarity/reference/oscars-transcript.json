@@ -1,0 +1,241 @@
+{
+  "audio": "experiments/similarity/reference/oscars.wav",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.98,
+      "text": " How do we measure the impact of a film?"
+    },
+    {
+      "start": 3.98,
+      "end": 7.88,
+      "text": " Some measure it by its box office, but for me,"
+    },
+    {
+      "start": 7.88,
+      "end": 11.120000000000001,
+      "text": " the true impact of a film can be as simple"
+    },
+    {
+      "start": 11.120000000000001,
+      "end": 15.4,
+      "text": " as a memorable line or a searing performance."
+    },
+    {
+      "start": 15.4,
+      "end": 19.04,
+      "text": " Over the decades, so many actors and supporting roles"
+    },
+    {
+      "start": 19.04,
+      "end": 22.240000000000002,
+      "text": " gave us moments we will never forget."
+    },
+    {
+      "start": 22.240000000000002,
+      "end": 26.14,
+      "text": " I am in awe of Louis Gossett Jr.'s Sergeant Foley"
+    },
+    {
+      "start": 26.14,
+      "end": 28.240000000000002,
+      "text": " and an officer and a gentleman."
+    },
+    {
+      "start": 28.240000000000002,
+      "end": 40.24,
+      "text": " Joel Gray's playfully menacing will come in in Cabaret."
+    },
+    {
+      "start": 40.24,
+      "end": 46.18000000000001,
+      "text": " Denzel's heartbreaking performance in Glory."
+    },
+    {
+      "start": 46.18000000000001,
+      "end": 53.22,
+      "text": " The five men nominated this year as best supporting actor have all made a significant impact with"
+    },
+    {
+      "start": 53.22,
+      "end": 57.22,
+      "text": " and the vivid moments that will linger for many years to come."
+    },
+    {
+      "start": 65.22,
+      "end": 71.22,
+      "text": " Here are the nominees for performance by an actor in a supporting role."
+    },
+    {
+      "start": 72.22,
+      "end": 75.22,
+      "text": " Tom Hanks, A Beautiful Day in the Neighborhood"
+    },
+    {
+      "start": 79.22,
+      "end": 82.22,
+      "text": " Anthony Hopkins, The Two Popes"
+    },
+    {
+      "start": 83.22,
+      "end": 104.82,
+      "text": " Al Pacino, the Irishman, Joe Pesci, the Irishman, Brad Pitt, once upon a time in Hollywood."
+    },
+    {
+      "start": 104.82000000000001,
+      "end": 108.82000000000001,
+      "text": " And the Oscar goes to Brad Pitt."
+    },
+    {
+      "start": 108.82000000000001,
+      "end": 110.82000000000001,
+      "text": " Welcome to the stage."
+    },
+    {
+      "start": 113.82000000000001,
+      "end": 116.82000000000001,
+      "text": " This is the second Oscar for Brad Pitt."
+    },
+    {
+      "start": 116.82000000000001,
+      "end": 118.82000000000001,
+      "text": " His first for acting."
+    },
+    {
+      "start": 128.82,
+      "end": 129.82,
+      "text": " Wow."
+    },
+    {
+      "start": 129.82,
+      "end": 138.04,
+      "text": " Thank you, this is incredible, really incredible."
+    },
+    {
+      "start": 138.04,
+      "end": 141.45999999999998,
+      "text": " Thank you to the Academy for this honor of honors."
+    },
+    {
+      "start": 141.45999999999998,
+      "end": 146.44,
+      "text": " They told me I only have 45 seconds up here, which is 45 seconds more than the Senate gave"
+    },
+    {
+      "start": 146.44,
+      "end": 152.16,
+      "text": " John Bolton this week."
+    },
+    {
+      "start": 152.16,
+      "end": 155.79999999999998,
+      "text": " I'm thinking maybe Quentin does a movie about it and in the end the adults do the"
+    },
+    {
+      "start": 155.8,
+      "end": 165.44,
+      "text": " right thing. This really is about Quentin Jerome Tarantino. You are original, you"
+    },
+    {
+      "start": 165.44,
+      "end": 171.16000000000003,
+      "text": " are one of a kind, the film industry would be a much drier place without you,"
+    },
+    {
+      "start": 171.16000000000003,
+      "end": 177.46,
+      "text": " and I love Ethos you gave Cliff Booth. Look for the best in people, expect the"
+    },
+    {
+      "start": 177.46,
+      "end": 184.64000000000001,
+      "text": " worst, but look for the best. Leo, I'll write on your coattails any day, man."
+    },
+    {
+      "start": 184.64000000000001,
+      "end": 187.72000000000003,
+      "text": " The view is fantastic."
+    },
+    {
+      "start": 187.72000000000003,
+      "end": 195.64000000000001,
+      "text": " To the rest of the cast and crew, Big Bad Bob Richardson, Robert Garcia, Richie, my man"
+    },
+    {
+      "start": 195.64000000000001,
+      "end": 199.68,
+      "text": " Mike Moe, I also want to say why we're doing all this."
+    },
+    {
+      "start": 199.68,
+      "end": 207.12,
+      "text": " I think it's time we give a little love to our stunt coordinators and our stunt crews."
+    },
+    {
+      "start": 207.12,
+      "end": 212.72000000000003,
+      "text": " Listen, I'm a big gobsmack."
+    },
+    {
+      "start": 212.72,
+      "end": 215.08,
+      "text": " I'm not one to look back, but this has made me do so."
+    },
+    {
+      "start": 215.08,
+      "end": 217.4,
+      "text": " And I think of my folks taking me to the drive-in"
+    },
+    {
+      "start": 217.4,
+      "end": 220.28,
+      "text": " to see Butch and Sundance and loading up my car"
+    },
+    {
+      "start": 220.28,
+      "end": 221.2,
+      "text": " and moving out here."
+    },
+    {
+      "start": 221.2,
+      "end": 224.04,
+      "text": " And Gina and Ridley giving me my first shot"
+    },
+    {
+      "start": 224.04,
+      "end": 227.68,
+      "text": " to all the wonderful people I've met along the way"
+    },
+    {
+      "start": 227.68,
+      "end": 228.72,
+      "text": " to stand here now."
+    },
+    {
+      "start": 229.72,
+      "end": 232.52,
+      "text": " Once upon a time in Hollywood, he passed the truth."
+    },
+    {
+      "start": 232.52,
+      "end": 237.52,
+      "text": " This is for my kids who color everything I do."
+    },
+    {
+      "start": 239.76,
+      "end": 240.64,
+      "text": " I adore you."
+    },
+    {
+      "start": 241.6,
+      "end": 242.44,
+      "text": " Thank you."
+    },
+    {
+      "start": 242.72,
+      "end": 244.72,
+      "text": " You"
+    }
+  ]
+}

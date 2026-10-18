@@ -1,0 +1,6 @@
+{
+  "url": "https://gemini.google.com/app/a6cf679ba1bf71a3",
+  "prompt": "C.wav와 D.wav 두 짧은 음성 파일의 소리 자체를 비교해 주세요. 전사문이나 의미의 차이가 아니라, 배경음·효과음·음질·말소리 외의 소리에서 확실한 차이가 있는지 확인해 주세요. 실제로 오디오에 접근할 수 없다면 그렇게 답하세요. 차이가 없다면 없다고 말하고, 있다면 어느 파일의 어느 구간에서 어떤 소리가 들리는지 설명해 주세요. 소리의 종류나 위치를 추정으로 채우지 마세요. 간결하게 한국어로 답해 주세요.",
+  "response_snapshot": "- title: \"오디오 파일 접근 불가 안내 - Google Gemini\" [url=https://gemini.google.com/app/a6cf679ba1bf71a3]\n- button \"C.wav\" [ref=e210]: \"WAV  C\"\n- button \"D.wav\" [ref=e211]: \"WAV  D\"\n- generic [ref=e212]:\n  - heading \"C.wav와 D.wav 두 짧은 음성 파일의 소리 자체를 비교해 주세요. 전사문이나 의미의 차이가 아니라, 배경음·효과음·음질·말소리 외의 소리에서 확실한 차이가 있는지 확인해 주\" [level=5]: \"말씀하신 내용  C.wav와 D.wav 두 짧은 음성 파일의 소리 자체를 비교해 주세요. 전사문이나 의미의 차이가 아니라, 배경음·효과음·음질·말소리 외의 소리에서 확실한 차이가 있는지 확인해 주…\"\n  - text: \"C.wav와 D.wav 두 짧은 음성 파일의 소리 자체를 비교해 주세요. 전사문이나 의미의 차이가 아니라, 배경음·효과음·음질·말소리 외의 소리에서 확실한 차이가 있는지 확인해 주세요. 실제로 오디오에 접근할 수 없다면 그렇게 답하세요. 차이가 없다면 없다고 말하고, 있다면 어느 파일의 어느 구간에서 어떤 소리가 들리는지 설명해 주세요. 소리의 종류나 위치를 추정으로 채우지 마세요. 간결하게 한국어로 답해 주세요.\"\n  - button \"펼치기\" [ref=e213]\n- heading \"Gemini의 응답\" [level=6]\n- text: \"실제로 오디오 파일에 접근할 수 없습니다.\"",
+  "verdict": "Failed: evaluator explicitly states it cannot access the audio. Earlier subjective A/B claims are not accepted as verified listening evidence."
+}

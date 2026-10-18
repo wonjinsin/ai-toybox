@@ -1,0 +1,5 @@
+[
+  {"id":"christopher-index100","prompt":"tuning","voice":"en-US-ChristopherNeural","pitch":0,"index_rate":1.0,"seed":11},
+  {"id":"eric-index100","prompt":"tuning","voice":"en-US-EricNeural","pitch":0,"index_rate":1.0,"seed":11},
+  {"id":"steffan-index100","prompt":"tuning","voice":"en-US-SteffanNeural","pitch":0,"index_rate":1.0,"seed":11}
+]

@@ -1,0 +1,6 @@
+[
+  {"id":"full-eric-p1","prompt":"full","voice":"en-US-EricNeural","pitch":1,"index_rate":1.0,"seed":11},
+  {"id":"heldout-eric-p1","prompt":"heldout","voice":"en-US-EricNeural","pitch":1,"index_rate":1.0,"seed":11},
+  {"id":"full-eric-p2","prompt":"full","voice":"en-US-EricNeural","pitch":2,"index_rate":1.0,"seed":11},
+  {"id":"heldout-eric-p2","prompt":"heldout","voice":"en-US-EricNeural","pitch":2,"index_rate":1.0,"seed":11}
+]

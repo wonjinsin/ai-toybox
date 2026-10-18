@@ -1,0 +1,13 @@
+{
+  "id": "ja-r1-baseline",
+  "prompt": "ja-tuning",
+  "voice": "Keita",
+  "pitch": 0,
+  "index_rate": 1,
+  "protect": 0.33,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/ja-tuning-Keita.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-r1-baseline.wav",
+  "sample_rate": 32000,
+  "samples": 767360,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 0.99s | F0 2.33s | 合成 10.39s"
+}

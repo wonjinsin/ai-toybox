@@ -1,0 +1,20 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-ja-long.source.wav",
+    "reference_characters": 847,
+    "character_errors": 29,
+    "character_error_rate": 0.03423848878394333
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-ja-long.wav",
+    "reference_characters": 847,
+    "character_errors": 24,
+    "character_error_rate": 0.02833530106257379
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-ja-long-selected.wav",
+    "reference_characters": 847,
+    "character_errors": 56,
+    "character_error_rate": 0.06611570247933884
+  }
+]

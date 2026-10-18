@@ -1,0 +1,13 @@
+{
+  "id": "guy-pitch-minus4",
+  "parent": "guy-pitch-minus2",
+  "prompt": "tuning",
+  "voice": "en-US-GuyNeural",
+  "pitch": -4,
+  "index_rate": 0.75,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/tuning-en-US-GuyNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/guy-pitch-minus4.wav",
+  "sample_rate": 32000,
+  "samples": 348160,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 0.52s | F0 0.71s | 合成 5.56s"
+}

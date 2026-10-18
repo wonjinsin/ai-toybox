@@ -1,0 +1,13 @@
+{
+  "C.wav": {
+    "source": "First 12 seconds of B.wav",
+    "added_sound": "1000 Hz sine tone from 5.00 to 5.45 seconds with 10 ms fades",
+    "speech_changed": false
+  },
+  "D.wav": {
+    "source": "First 12 seconds of B.wav",
+    "added_sound": null,
+    "speech_changed": false
+  },
+  "purpose": "Check whether the audio review route detects a non-speech acoustic difference, not merely the transcript. Do not show this mapping to the evaluator."
+}

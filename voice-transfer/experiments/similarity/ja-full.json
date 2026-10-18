@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ja-full-andrew-s11",
+    "prompt": "ja-full",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 11
+  }
+]

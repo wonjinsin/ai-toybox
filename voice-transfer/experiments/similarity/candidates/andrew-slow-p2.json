@@ -1,0 +1,14 @@
+{
+  "id": "andrew-slow-p2",
+  "prompt": "tuning-slow",
+  "voice": "en-US-AndrewNeural",
+  "source_rate": "-15%",
+  "pitch": 2,
+  "index_rate": 1,
+  "seed": 11,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/tuning-slow-en-US-AndrewNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/andrew-slow-p2.wav",
+  "sample_rate": 32000,
+  "samples": 334080,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 1.55s | F0 2.09s | 合成 12.90s"
+}

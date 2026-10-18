@@ -1,0 +1,23 @@
+{
+  "claim": "Choose an English RVC configuration with a higher calibrated speaker-embedding similarity to attributable Brad Pitt reference speech, without worse transcription. This is not a perceptual identity guarantee.",
+  "acceptance": {
+    "minimum_candidates": 6,
+    "minimum_cosine_gain": 0.03,
+    "held_out_prompts": 1,
+    "finalist_seeds": [11, 23, 37, 53, 71],
+    "require_no_worse_word_errors": true,
+    "require_unclipped_audio": true
+  },
+  "prompts": {
+    "tuning": "I used to think that every important decision had to happen in a hurry. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster.",
+    "heldout": "I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet."
+  },
+  "source_voices": ["en-US-GuyNeural", "en-US-AndrewNeural", "en-US-BrianNeural"],
+  "baseline": {"voice": "en-US-GuyNeural", "pitch": 0, "index_rate": 0.75, "protect": 0.33},
+  "hypotheses": [
+    "The source voice determines prosody and pitch. A conversational source may fit the target speaker better than a narration source.",
+    "RVC explicitly shifts the source F0. Matching the target pitch range may improve speaker similarity.",
+    "Higher index blending replaces more source features with training-speaker features, but may degrade words.",
+    "Interpolating unvoiced F0 removes the distinction that consonant protection uses. Preserve it only if an actual comparison improves the result."
+  ]
+}

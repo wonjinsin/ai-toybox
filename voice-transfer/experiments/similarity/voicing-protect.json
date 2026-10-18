@@ -1,0 +1,4 @@
+[
+  {"id":"fixed-andrew-protect50-tuning","prompt":"tuning","voice":"en-US-AndrewNeural","pitch":0,"index_rate":1.0,"protect":0.5,"seed":11},
+  {"id":"fixed-andrew-protect50-heldout","prompt":"heldout","voice":"en-US-AndrewNeural","pitch":0,"index_rate":1.0,"protect":0.5,"seed":11}
+]

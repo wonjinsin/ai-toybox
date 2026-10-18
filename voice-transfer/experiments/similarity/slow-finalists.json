@@ -1,0 +1,56 @@
+[
+  {
+    "id": "heldout-andrewslow-s11",
+    "prompt": "heldout-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 11
+  },
+  {
+    "id": "heldout-andrewslow-s23",
+    "prompt": "heldout-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 23
+  },
+  {
+    "id": "heldout-andrewslow-s37",
+    "prompt": "heldout-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 37
+  },
+  {
+    "id": "heldout-andrewslow-s53",
+    "prompt": "heldout-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 53
+  },
+  {
+    "id": "heldout-andrewslow-s71",
+    "prompt": "heldout-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 71
+  },
+  {
+    "id": "full-andrew-slow",
+    "prompt": "full-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 11
+  }
+]

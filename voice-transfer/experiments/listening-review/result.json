@@ -1,0 +1,100 @@
+{
+  "status": "blocked_unvalidated_listening",
+  "captured_at": "2026-10-18T17:15:31.776673+09:00",
+  "overview": "No reliable direct-listening verdict on Japanese intonation was obtained. Do not treat the earlier preference for the unconverted source as verified.",
+  "key_concepts": {
+    "uploaded_audio_is_not_verified_listening": true,
+    "asr_is_not_prosody_validation": true,
+    "human_listener_used": false,
+    "assistant_directly_heard_audio": false,
+    "accepted_naturalness_verdict": null
+  },
+  "inputs": {
+    "A.wav": {
+      "sha256": "9c885dff30e7c6463ff8014ea7bef6ea61ef882b2a26606cbb1369781eb21ccd",
+      "bytes": 10332204
+    },
+    "B.wav": {
+      "sha256": "0b86b662cfcaab3c71523b4921c2b6ef4baad87a8986ba4809c97b0e999deb84",
+      "bytes": 12917838
+    },
+    "C.wav": {
+      "sha256": "e96be5dcaadb32481710ff57a8f6907f53b6fda40edda8bfbed93add5925b6b1",
+      "bytes": 1058478
+    },
+    "D.wav": {
+      "sha256": "143f5aff02e868af7650d9e02b2e2ce1e0acdec66cb71b1c702d01bbbf040e2f",
+      "bytes": 960078
+    }
+  },
+  "mapping": {
+    "A.wav": "outputs/brad-pitt-ja-conversational-final.wav (converted)",
+    "B.wav": "outputs/brad-pitt-ja-conversational-final.source.wav (unconverted native Japanese TTS)"
+  },
+  "how_it_works": {
+    "premise_tested": "An evaluator receiving uploaded WAVs can reliably perceive non-speech acoustic content, rather than merely describing the transcript.",
+    "calibration": "C is the first 12 seconds of B plus a 1000 Hz tone at 5.00–5.45 seconds; D is the same speech without that tone. Ground truth was not disclosed in the prompts.",
+    "control_verification": {
+      "C_sample_rate": 44100,
+      "D_sample_rate": 40000,
+      "duration_seconds": 12.0,
+      "comparison_resampling": "D resampled from 40000 to 44100 Hz for verification only; original uploads unchanged",
+      "outside_difference_rms": 3.7266758682729445e-05,
+      "inside_difference_rms": 0.07069545315306537,
+      "dominant_added_frequency_hz": 1000.0000000000001,
+      "expected_tone_interval_seconds": [
+        5.0,
+        5.45
+      ]
+    },
+    "acceptance_gate": "Identify the added non-speech sound in the correct file before relying on subjective prosody judgments. Passing this gate alone would not establish native Japanese accent expertise."
+  },
+  "attempts": [
+    {
+      "route": "Gemini web automatic mode",
+      "input": "Full A/B blind comparison, followed by C/D in a separate chat",
+      "observation": "Preferred B initially; retracted incorrect scene and final-sentence descriptions after a challenge. The separate control response explicitly said it could not access the audio.",
+      "decision": "Reject the initial naturalness preference and phrase-level claims as verified listening evidence.",
+      "evidence": [
+        "audio-review-first.json",
+        "audio-review-followup.json",
+        "audio-review-control.json"
+      ]
+    },
+    {
+      "route": "Google AI Studio",
+      "model": "gemini-3.8-flash",
+      "input": "C then D, in a fresh temporary chat; UI reported 386 audio tokens per file.",
+      "observation": "Claimed no acoustic difference and clean speech with no effects in both files. Did not identify the known added tone.",
+      "decision": "Calibration failed; no A/B naturalness verdict requested on this route.",
+      "evidence": [
+        "native-audio-control-flash.json",
+        "native-audio-control-flash.png"
+      ]
+    },
+    {
+      "route": "Google AI Studio",
+      "model": "gemini-3.1-pro-preview",
+      "input": "C alone, in a fresh temporary chat; no prior response or control answer supplied.",
+      "observation": "Explicitly stated that it could not access or hear the audio and could not judge background sounds.",
+      "decision": "Calibration failed; no A/B naturalness verdict requested on this route.",
+      "evidence": [
+        "native-audio-control-pro-final.json",
+        "native-audio-control-pro.png"
+      ]
+    }
+  ],
+  "where_things_live": "experiments/listening-review/",
+  "gotchas": [
+    "A failed control does not establish that an entire model family is incapable of audio perception. It makes these specific evaluation attempts unsuitable as listening evidence.",
+    "C is 44100 Hz and D is 40000 Hz because of FFmpeg mixing negotiation. Both are 12 seconds. D was resampled only for local signal verification; original uploads were unchanged.",
+    "The AI Studio Get code snippet contains INSERT_INPUT_HERE, not the actual request body. It cannot establish whether audio was omitted in transport.",
+    "The original and converted WAVs were preserved unchanged. No generator, voice profile, or script changes were made during this listening investigation.",
+    "No paid upgrade, API-key creation, or Google Drive access grant was performed. The original AI Studio model setting was restored and the created tab was closed."
+  ],
+  "remaining_acceptance": "A working, calibrated audio-perception evaluator or a Japanese-speaking human listener is required to assess intonation. Human direct listening has not occurred.",
+  "principles": {
+    "Prove It Works": "Rejected plausible naturalness descriptions when actual audio controls failed.",
+    "Attack the Premise": "Tested whether successful WAV attachment implied usable auditory perception instead of continuing to tune the voice based on unverified descriptions."
+  }
+}

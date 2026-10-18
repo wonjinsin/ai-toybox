@@ -1,0 +1,29 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-en.source.wav",
+    "reference_words": 174,
+    "word_errors": 0,
+    "word_error_rate": 0.0,
+    "detected_language": "en",
+    "peak": 0.79833984375,
+    "transcript": "I used to think that every important decision had to happen in a hurry. You see an opportunity, you take it, and you figure out the rest along the way. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster. Last summer, I drove out of the city before sunrise. No meetings, no schedule, and no particular destination. I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet. He smiled and said, then you're probably having a better morning than most people. I stayed there for almost an hour, watching the light come through the windows. Nothing remarkable happened. Nobody called with life-changing news. But for the first time in a long while, I didn't feel like I was running late for my own life. Maybe that's the point. You don't always need a better plan. Sometimes you just need enough quiet to notice where you already are."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-en.wav",
+    "reference_words": 174,
+    "word_errors": 3,
+    "word_error_rate": 0.017241379310344827,
+    "detected_language": "en",
+    "peak": 0.929229736328125,
+    "transcript": "I used to think that every important decision had to happen in a hurry. You see an opportunity, you take it, and you figure up the rest along the way. Sometimes it works. Sometimes it just means you arrive in the wrong place a little faster. Last summer, I drove out of the city before sunrise. No meetings, no schedule, and no particular destination. I stopped at a small diner beside the highway and ordered coffee. me. The man behind the counter asked where I was going. I told him I wasn't sure yet. He smiled and said, then you're probably having a better morning than most people. I stayed there for almost an hour, watching the light come through the windows. Nothing remarkable happened. Nobody called with life changing news. But for the first time in a long while, I didn't feel like I was running late for my own life. Maybe that's the point. You don't always need a better plan. Sometimes you just need enough quiet to notice where you already are."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/full-andrew.wav",
+    "reference_words": 174,
+    "word_errors": 1,
+    "word_error_rate": 0.005747126436781609,
+    "detected_language": "en",
+    "peak": 0.976409912109375,
+    "transcript": "I used to think that every important decision had to happen in a hurry. You see an opportunity, you take it, and you figure out the rest along the way. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster. Last summer, I drove out of the city before sunrise. No meetings, no schedule, and no particular destination. I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet. You smiled and said, then you're probably having a better morning than most people. I stayed there for almost an hour, watching the light come through the windows. Nothing remarkable happened. Nobody called with life changing news. But for the first time in a long while, I didn't feel like I was running late for my own life. Maybe that's the point. You don't always need a better plan. Sometimes you just need enough quiet to notice where you already are."
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "heldout-guy-s11",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": 0,
+    "index_rate": 0.75,
+    "seed": 11
+  },
+  {
+    "id": "heldout-andrew-s11",
+    "prompt": "heldout",
+    "voice": "en-US-AndrewNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 11
+  },
+  {
+    "id": "heldout-guyminus3-s11",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": -3,
+    "index_rate": 0.75,
+    "seed": 11
+  },
+  {
+    "id": "heldout-guy-s23",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": 0,
+    "index_rate": 0.75,
+    "seed": 23
+  },
+  {
+    "id": "heldout-andrew-s23",
+    "prompt": "heldout",
+    "voice": "en-US-AndrewNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 23
+  },
+  {
+    "id": "heldout-guyminus3-s23",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": -3,
+    "index_rate": 0.75,
+    "seed": 23
+  },
+  {
+    "id": "heldout-guy-s37",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": 0,
+    "index_rate": 0.75,
+    "seed": 37
+  },
+  {
+    "id": "heldout-andrew-s37",
+    "prompt": "heldout",
+    "voice": "en-US-AndrewNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 37
+  },
+  {
+    "id": "heldout-guyminus3-s37",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": -3,
+    "index_rate": 0.75,
+    "seed": 37
+  },
+  {
+    "id": "heldout-guy-s53",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": 0,
+    "index_rate": 0.75,
+    "seed": 53
+  },
+  {
+    "id": "heldout-andrew-s53",
+    "prompt": "heldout",
+    "voice": "en-US-AndrewNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 53
+  },
+  {
+    "id": "heldout-guyminus3-s53",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": -3,
+    "index_rate": 0.75,
+    "seed": 53
+  },
+  {
+    "id": "heldout-guy-s71",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": 0,
+    "index_rate": 0.75,
+    "seed": 71
+  },
+  {
+    "id": "heldout-andrew-s71",
+    "prompt": "heldout",
+    "voice": "en-US-AndrewNeural",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 71
+  },
+  {
+    "id": "heldout-guyminus3-s71",
+    "prompt": "heldout",
+    "voice": "en-US-GuyNeural",
+    "pitch": -3,
+    "index_rate": 0.75,
+    "seed": 71
+  }
+]

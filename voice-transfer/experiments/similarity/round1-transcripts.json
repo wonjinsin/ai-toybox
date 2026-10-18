@@ -1,0 +1,42 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/guy-baseline.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 10.88,
+    "peak": 0.848541259765625,
+    "rms": 0.09332239288682759,
+    "detected_language": "en",
+    "language_probability": 0.9917925596237183,
+    "transcript": "I used to think that every important decision had to happen in a hurry. Sometimes it works. Sometimes it just means you arrive in the wrong place a little faster."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/guy-pitch-minus2.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 10.88,
+    "peak": 0.834747314453125,
+    "rms": 0.09052384810610027,
+    "detected_language": "en",
+    "language_probability": 0.9942308664321899,
+    "transcript": "I used to think that every important decision had to happen in a hurry. Sometimes it works. Sometimes it just means you arrive in the wrong place a little faster."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/guy-index100.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 10.88,
+    "peak": 0.837615966796875,
+    "rms": 0.09336841279169653,
+    "detected_language": "en",
+    "language_probability": 0.9918575882911682,
+    "transcript": "I used to think that every important decision had to happen in a hurry. Sometimes it works. Sometimes it just means you arrive in the wrong place a little faster."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/andrew-baseline.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 8.88,
+    "peak": 0.9696044921875,
+    "rms": 0.08145824324015417,
+    "detected_language": "en",
+    "language_probability": 0.9879823327064514,
+    "transcript": "I used to think that every important decision had to happen in a hurry. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster."
+  }
+]

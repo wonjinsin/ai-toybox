@@ -1,0 +1,22 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/full-andrew-slow.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 62.08,
+    "peak": 0.96636962890625,
+    "rms": 0.08634287634871672,
+    "detected_language": "en",
+    "language_probability": 0.9849445223808289,
+    "transcript": "I used to think that every important decision had to happen in a hurry. You see an opportunity, you take it, and you figure out the rest along the way. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster. Last summer, I drove out of the city before sunrise. No meetings, no schedule, and no particular destination. I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet. He smiled and said, Then you're probably having a better morning than most people. I stayed there for almost an hour, watching the light come through the windows. Nothing remarkable happened. Nobody called with life changing news, but for the first time in a long while, I didn't feel like I was running late for my own life. Maybe that's the point. You don't always need a better plan. Sometimes you just need enough quiet to notice where you already are."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrewslow-s11.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 9.22,
+    "peak": 0.85333251953125,
+    "rms": 0.0817154244826065,
+    "detected_language": "en",
+    "language_probability": 0.9963948130607605,
+    "transcript": "I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet."
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "ja-r1-baseline",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": 0,
+    "index_rate": 1,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-index025",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": 0,
+    "index_rate": 0.25,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-index065",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": 0,
+    "index_rate": 0.65,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-down1",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": -1,
+    "index_rate": 1,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-down2",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": -2,
+    "index_rate": 1,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-up1",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": 1,
+    "index_rate": 1,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-up2",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": 2,
+    "index_rate": 1,
+    "protect": 0.33
+  },
+  {
+    "id": "ja-r1-protect050",
+    "prompt": "ja-tuning",
+    "voice": "Keita",
+    "pitch": 0,
+    "index_rate": 1,
+    "protect": 0.5
+  }
+]

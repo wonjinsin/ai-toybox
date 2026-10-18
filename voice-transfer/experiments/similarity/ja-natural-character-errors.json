@@ -1,0 +1,38 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-natural-before-full.wav",
+    "reference_characters": 847,
+    "character_errors": 29,
+    "character_error_rate": 0.03423848878394333,
+    "peak": 0.911712646484375,
+    "duration_seconds": 170.8,
+    "language": "ja"
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-natural-before-heldout.wav",
+    "reference_characters": 153,
+    "character_errors": 1,
+    "character_error_rate": 0.006535947712418301,
+    "peak": 0.8431396484375,
+    "duration_seconds": 31.12,
+    "language": "ja"
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-natural-after-full.wav",
+    "reference_characters": 847,
+    "character_errors": 22,
+    "character_error_rate": 0.025974025974025976,
+    "peak": 0.938629150390625,
+    "duration_seconds": 170.8,
+    "language": "ja"
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-natural-after-heldout.wav",
+    "reference_characters": 153,
+    "character_errors": 2,
+    "character_error_rate": 0.013071895424836602,
+    "peak": 0.8358154296875,
+    "duration_seconds": 31.12,
+    "language": "ja"
+  }
+]

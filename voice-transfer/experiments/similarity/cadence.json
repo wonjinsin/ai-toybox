@@ -1,0 +1,29 @@
+[
+  {
+    "id": "andrew-slow-p0",
+    "prompt": "tuning-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 0,
+    "index_rate": 1,
+    "seed": 11
+  },
+  {
+    "id": "andrew-slow-p1",
+    "prompt": "tuning-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 1,
+    "index_rate": 1,
+    "seed": 11
+  },
+  {
+    "id": "andrew-slow-p2",
+    "prompt": "tuning-slow",
+    "voice": "en-US-AndrewNeural",
+    "source_rate": "-15%",
+    "pitch": 2,
+    "index_rate": 1,
+    "seed": 11
+  }
+]

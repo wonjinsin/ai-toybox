@@ -1,0 +1,13 @@
+{
+  "id": "heldout-guy-s71",
+  "prompt": "heldout",
+  "voice": "en-US-GuyNeural",
+  "pitch": 0,
+  "index_rate": 0.75,
+  "seed": 71,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/heldout-en-US-GuyNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s71.wav",
+  "sample_rate": 32000,
+  "samples": 320000,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 1.21s | F0 1.38s | 合成 9.30s"
+}

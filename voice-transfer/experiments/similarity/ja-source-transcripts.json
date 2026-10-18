@@ -1,0 +1,32 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/ja-text-tuning-ja-JP-KeitaNeural.wav",
+    "sample_rate": 40000,
+    "duration_seconds": 23.088,
+    "peak": 0.847930908203125,
+    "rms": 0.09481936245284926,
+    "detected_language": "ja",
+    "language_probability": 0.9964962601661682,
+    "transcript": "昔の僕は大事な決断ほど急いで答えを出さなければならないと思っていた目の前にチャンスが現れたら迷わず飛び込む後のことは走りながら考えればいい 確かにそれでうまくいくこともあるでも時には間違った場所に人より少し早くついてしまうだけなんだ"
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/ja-text-tuning-en-US-AndrewMultilingualNeural.wav",
+    "sample_rate": 40000,
+    "duration_seconds": 21.984,
+    "peak": 0.604034423828125,
+    "rms": 0.08644436137170682,
+    "detected_language": "ja",
+    "language_probability": 0.9936079978942871,
+    "transcript": "昔の僕は大事な決断ほど急いで答え を出さなければならないと思っていた目の前にチャンスが現れたら迷わず 飛び込むあとのことは走りながら考えればいい確かにそれでうまく 行くこともあるでも時には間違った場所に人より少し早くついてしまう だけなんだ"
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/ja-text-tuning-en-US-BrianMultilingualNeural.wav",
+    "sample_rate": 40000,
+    "duration_seconds": 23.064,
+    "peak": 0.535186767578125,
+    "rms": 0.08698558607130037,
+    "detected_language": "ja",
+    "language_probability": 0.9984813332557678,
+    "transcript": "昔の僕は大事な決断ほど急いで答え を出さなければならないと思っていた 目の前にチャンスが現れたら迷わず飛び込むあとのことは走りながら 考えればいい確かにそれでうまくいくこともあるでも時には間違った 場所に人より少し早くついてしまうだけなんだ"
+  }
+]

@@ -1,0 +1,29 @@
+diff --git a/docs/en/cli.md b/docs/en/cli.md
+index 2ab7a55..905abf2 100644
+--- a/docs/en/cli.md
++++ b/docs/en/cli.md
+@@ -282,6 +282,8 @@ Common inference options:
+ | `--protect` | `0.33` | Consonant and breath protection, from 0 to 0.5 |
+ | `--overwrite` | Off | Replace existing output files |
+
++Offline pitch extraction preserves detected unvoiced frames as zero frequency, including during pitch shifts. Synthesis and consonant protection use these zeros. Lower `--protect` values retain more original features in unvoiced frames; `0.5` disables that feature protection. `--index-rate` controls the separate retrieval blend. These controls do not guarantee natural pronunciation or speaker similarity across languages.
++
+ Successful completion returns exit code 0, an inference failure returns 1, and user interruption returns 130.
+
+ ## CLI Inference For The Current WebUI PyMSS Models
+diff --git a/infer/vc/pipeline.py b/infer/vc/pipeline.py
+index 2aa3235..6a6302e 100644
+--- a/infer/vc/pipeline.py
++++ b/infer/vc/pipeline.py
+@@ -122,11 +122,6 @@ class Pipeline(object):
+                 threshold=0.006,
+             ).squeeze().detach().cpu().numpy()
+
+-        try:
+-            uv = f0 == 0
+-            f0[uv] = np.interp(np.where(uv)[0], np.where(~uv)[0], f0[~uv])
+-        except Exception:
+-            traceback.print_exc()
+         f0 *= pow(2, f0_up_key / 12)
+         f0bak = f0.copy()
+         f0_mel = 1127 * np.log(1 + f0 / 700)

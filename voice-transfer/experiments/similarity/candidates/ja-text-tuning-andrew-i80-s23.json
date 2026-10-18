@@ -1,0 +1,13 @@
+{
+  "id": "ja-text-tuning-andrew-i80-s23",
+  "prompt": "ja-text-tuning",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "pitch": 0,
+  "index_rate": 0.8,
+  "seed": 23,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/ja-text-tuning-en-US-AndrewMultilingualNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-text-tuning-andrew-i80-s23.wav",
+  "sample_rate": 32000,
+  "samples": 702720,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 1.00s | F0 1.30s | 合成 10.90s"
+}

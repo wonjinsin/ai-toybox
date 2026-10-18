@@ -1,0 +1,13 @@
+{
+  "observed_shape": {
+    "audioMimeTypes": [],
+    "hasFileUri": false,
+    "hasInlineData": false,
+    "hasFileUpload": false,
+    "modelIds": [
+      "gemini-3.1-pro-preview"
+    ]
+  },
+  "generated_code": "import os\nfrom google import genai\n\nclient = genai.Client(\n    api_key=os.environ.get(\"GEMINI_API_KEY\"),\n)\n\ngeneration_config = {\n    'temperature': 1,\n    'max_output_tokens': 65536,\n    'top_p': 0.95,\n    'thinking_level': 'high',\n}\n\ninteraction = client.interactions.create(\n    model='models/gemini-3.1-pro-preview',\n    input=\"\"\"INSERT_INPUT_HERE\"\"\",\n    generation_config=generation_config,\n)\n\nprint(interaction.output_text)",
+  "limitation": "Get code contains INSERT_INPUT_HERE rather than the actual request. Its lack of audio fields does not prove that the real request omitted audio."
+}

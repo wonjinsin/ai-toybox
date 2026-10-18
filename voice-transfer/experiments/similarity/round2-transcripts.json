@@ -1,0 +1,22 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/andrew-index100.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 8.88,
+    "peak": 0.9615478515625,
+    "rms": 0.08016268711625929,
+    "detected_language": "en",
+    "language_probability": 0.9928233623504639,
+    "transcript": "I used to think that every important decision had to happen in a hurry. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/guy-pitch-minus3.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 10.88,
+    "peak": 0.93231201171875,
+    "rms": 0.08855726524731852,
+    "detected_language": "en",
+    "language_probability": 0.9951300621032715,
+    "transcript": "I used to think that every important decision had to happen in a hurry. Sometimes it works. Sometimes it just means you arrive in the wrong place a little faster."
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "tuning_reference": {
+    "file": "brad-oscars.wav",
+    "source": "https://www.youtube.com/watch?v=R5Y1mHxfnA8",
+    "publisher": "Oscars",
+    "source_title": "Brad Pitt Wins Best Supporting Actor",
+    "start_seconds": 160,
+    "duration_seconds": 18,
+    "attribution": "The Academy identifies the award recipient as Brad Pitt. The interval is within his acceptance speech, after the presenter and announcer have finished.",
+    "timestamp_evidence": "oscars-transcript.json"
+  },
+  "independent_recording_reference": {
+    "file": "brad-interview.wav",
+    "source": "https://armchairexpertpod.com/pods/brad-pitt",
+    "media": "https://rss.art19.com/episodes/3c0d895d-2039-4daf-b049-16404fc80d67.mp3",
+    "start_seconds": 393,
+    "duration_seconds": 18,
+    "attribution": "Guest's uninterrupted account of his New York Times interview and men's group, following Dax's question. Speaker attribution is based on official episode identity and dialogue context, not direct human audition.",
+    "timestamp_evidence": "interview-transcript.json",
+    "timing_warning": "Offsets refer to the downloaded interview-first10m.wav. Dynamic advertisements can change offsets on later downloads."
+  },
+  "positive_control": {
+    "file": "brad-oscars-heldout.wav",
+    "start_seconds": 212.7,
+    "duration_seconds": 16,
+    "attribution": "Non-overlapping part of the same Academy acceptance speech."
+  },
+  "negative_control": {
+    "file": "dax-control.wav",
+    "start_seconds": 432,
+    "duration_seconds": 18,
+    "attribution": "Host's response about speaking publicly about AA. Attribution is from dialogue context."
+  },
+  "limits": "References differ in age, delivery, room acoustics, and recording processing. ECAPA similarity is a selection proxy, not human-listening evidence or an identity percentage."
+}

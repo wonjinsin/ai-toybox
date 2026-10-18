@@ -1,0 +1,84 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-ja-custom.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 5.04,
+    "rms": 0.07587228715419769,
+    "number_of_windows": 1,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 5.04,
+        "duration_seconds": 5.04,
+        "rms": 0.07587228715419769
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.19205906987190247,
+    "cosine_similarity_range": [
+      0.19205906987190247,
+      0.19205906987190247
+    ],
+    "number_of_references": 1,
+    "number_of_reference_windows": 1,
+    "number_of_window_pairs": 1,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/outputs/brad-pitt-ja-custom.source.wav",
+        "sample_rate": 40000,
+        "channels": 1,
+        "duration_seconds": 5.064,
+        "rms": 0.09632565826177597,
+        "number_of_windows": 1,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 5.064,
+            "duration_seconds": 5.064,
+            "rms": 0.09632565826177597
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.19205906987190247,
+        "cosine_similarity_range": [
+          0.19205906987190247,
+          0.19205906987190247
+        ],
+        "number_of_window_pairs": 1,
+        "window_pair_cosine_similarities": [
+          [
+            0.19205906987190247
+          ]
+        ]
+      }
+    ]
+  }
+]

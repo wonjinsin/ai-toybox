@@ -1,0 +1,50 @@
+{
+  "tuning/ja-JP-KeitaNeural": {
+    "count": 5,
+    "median": 0.5118701457977295,
+    "range": [
+      0.504004716873169,
+      0.5212079286575317
+    ],
+    "per_reference_medians": [
+      0.5263383388519287,
+      0.5131223797798157
+    ]
+  },
+  "tuning/en-US-AndrewMultilingualNeural": {
+    "count": 5,
+    "median": 0.5678385496139526,
+    "range": [
+      0.5510622262954712,
+      0.5757471323013306
+    ],
+    "per_reference_medians": [
+      0.5939239263534546,
+      0.5492660999298096
+    ]
+  },
+  "heldout/ja-JP-KeitaNeural": {
+    "count": 5,
+    "median": 0.5347357988357544,
+    "range": [
+      0.502517580986023,
+      0.5396724939346313
+    ],
+    "per_reference_medians": [
+      0.5443974733352661,
+      0.5257972478866577
+    ]
+  },
+  "heldout/en-US-AndrewMultilingualNeural": {
+    "count": 5,
+    "median": 0.5597676634788513,
+    "range": [
+      0.5546619296073914,
+      0.5620644092559814
+    ],
+    "per_reference_medians": [
+      0.6135836839675903,
+      0.5438101291656494
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ja-full-andrew-i65-s11",
+    "prompt": "ja-full",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 0.65,
+    "seed": 11
+  },
+  {
+    "id": "ja-full-andrew-i80-s11",
+    "prompt": "ja-full",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 0.8,
+    "seed": 11
+  }
+]

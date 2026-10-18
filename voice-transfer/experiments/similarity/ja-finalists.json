@@ -1,0 +1,146 @@
+[
+  {
+    "id": "ja-text-tuning-ja-JP-KeitaNeural-s23",
+    "prompt": "ja-text-tuning",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 23
+  },
+  {
+    "id": "ja-text-tuning-en-US-AndrewMultilingualNeural-s23",
+    "prompt": "ja-text-tuning",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 23
+  },
+  {
+    "id": "ja-text-tuning-ja-JP-KeitaNeural-s37",
+    "prompt": "ja-text-tuning",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 37
+  },
+  {
+    "id": "ja-text-tuning-en-US-AndrewMultilingualNeural-s37",
+    "prompt": "ja-text-tuning",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 37
+  },
+  {
+    "id": "ja-text-tuning-ja-JP-KeitaNeural-s53",
+    "prompt": "ja-text-tuning",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 53
+  },
+  {
+    "id": "ja-text-tuning-en-US-AndrewMultilingualNeural-s53",
+    "prompt": "ja-text-tuning",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 53
+  },
+  {
+    "id": "ja-text-tuning-ja-JP-KeitaNeural-s71",
+    "prompt": "ja-text-tuning",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 71
+  },
+  {
+    "id": "ja-text-tuning-en-US-AndrewMultilingualNeural-s71",
+    "prompt": "ja-text-tuning",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 71
+  },
+  {
+    "id": "ja-text-heldout-ja-JP-KeitaNeural-s11",
+    "prompt": "ja-text-heldout",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 11
+  },
+  {
+    "id": "ja-text-heldout-en-US-AndrewMultilingualNeural-s11",
+    "prompt": "ja-text-heldout",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 11
+  },
+  {
+    "id": "ja-text-heldout-ja-JP-KeitaNeural-s23",
+    "prompt": "ja-text-heldout",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 23
+  },
+  {
+    "id": "ja-text-heldout-en-US-AndrewMultilingualNeural-s23",
+    "prompt": "ja-text-heldout",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 23
+  },
+  {
+    "id": "ja-text-heldout-ja-JP-KeitaNeural-s37",
+    "prompt": "ja-text-heldout",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 37
+  },
+  {
+    "id": "ja-text-heldout-en-US-AndrewMultilingualNeural-s37",
+    "prompt": "ja-text-heldout",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 37
+  },
+  {
+    "id": "ja-text-heldout-ja-JP-KeitaNeural-s53",
+    "prompt": "ja-text-heldout",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 53
+  },
+  {
+    "id": "ja-text-heldout-en-US-AndrewMultilingualNeural-s53",
+    "prompt": "ja-text-heldout",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 53
+  },
+  {
+    "id": "ja-text-heldout-ja-JP-KeitaNeural-s71",
+    "prompt": "ja-text-heldout",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 71
+  },
+  {
+    "id": "ja-text-heldout-en-US-AndrewMultilingualNeural-s71",
+    "prompt": "ja-text-heldout",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0,
+    "seed": 71
+  }
+]

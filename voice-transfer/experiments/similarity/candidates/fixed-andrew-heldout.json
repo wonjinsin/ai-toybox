@@ -1,0 +1,13 @@
+{
+  "id": "fixed-andrew-heldout",
+  "prompt": "heldout",
+  "voice": "en-US-AndrewNeural",
+  "pitch": 0,
+  "index_rate": 1.0,
+  "seed": 11,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/heldout-en-US-AndrewNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/fixed-andrew-heldout.wav",
+  "sample_rate": 32000,
+  "samples": 251520,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 0.46s | F0 0.66s | 合成 4.36s"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "steffan-index100",
+  "prompt": "tuning",
+  "voice": "en-US-SteffanNeural",
+  "pitch": 0,
+  "index_rate": 1.0,
+  "seed": 11,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/tuning-en-US-SteffanNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/steffan-index100.wav",
+  "sample_rate": 32000,
+  "samples": 344960,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 0.36s | F0 0.48s | 合成 3.96s"
+}

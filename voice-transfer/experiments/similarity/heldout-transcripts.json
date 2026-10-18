@@ -1,0 +1,32 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guy-s11.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 10.0,
+    "peak": 0.76458740234375,
+    "rms": 0.09185234627635516,
+    "detected_language": "en",
+    "language_probability": 0.9969167709350586,
+    "transcript": "I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-andrew-s11.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 7.86,
+    "peak": 0.829833984375,
+    "rms": 0.07698556926033154,
+    "detected_language": "en",
+    "language_probability": 0.9970346689224243,
+    "transcript": "I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet."
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/heldout-guyminus3-s11.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 10.0,
+    "peak": 0.78973388671875,
+    "rms": 0.08479718932038618,
+    "detected_language": "en",
+    "language_probability": 0.9968921542167664,
+    "transcript": "I stopped at a small diner beside the highway and ordered coffee. The man behind the counter asked where I was going. I told him I wasn't sure yet."
+  }
+]

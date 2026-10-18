@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ja-natural-before-full",
+    "prompt": "ja-native-full",
+    "voice": "Keita",
+    "pitch": 0,
+    "index_rate": 0.25,
+    "seed": 11
+  },
+  {
+    "id": "ja-natural-before-heldout",
+    "prompt": "ja-text-heldout",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 0.25,
+    "seed": 11
+  }
+]

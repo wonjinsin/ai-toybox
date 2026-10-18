@@ -1,0 +1,982 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-full-andrew-i65-s11.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 160.92,
+    "rms": 0.092900849878788,
+    "number_of_windows": 27,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09088606387376785
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 12.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09235376864671707
+      },
+      {
+        "index": 2,
+        "start_seconds": 12.0,
+        "end_seconds": 18.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08665714412927628
+      },
+      {
+        "index": 3,
+        "start_seconds": 18.0,
+        "end_seconds": 24.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08315597474575043
+      },
+      {
+        "index": 4,
+        "start_seconds": 24.0,
+        "end_seconds": 30.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0898047462105751
+      },
+      {
+        "index": 5,
+        "start_seconds": 30.0,
+        "end_seconds": 36.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08815779536962509
+      },
+      {
+        "index": 6,
+        "start_seconds": 36.0,
+        "end_seconds": 42.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09243762493133545
+      },
+      {
+        "index": 7,
+        "start_seconds": 42.0,
+        "end_seconds": 48.0,
+        "duration_seconds": 6.0,
+        "rms": 0.10278015583753586
+      },
+      {
+        "index": 8,
+        "start_seconds": 48.0,
+        "end_seconds": 54.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08780540525913239
+      },
+      {
+        "index": 9,
+        "start_seconds": 54.0,
+        "end_seconds": 60.0,
+        "duration_seconds": 6.0,
+        "rms": 0.10080797225236893
+      },
+      {
+        "index": 10,
+        "start_seconds": 60.0,
+        "end_seconds": 66.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09241146594285965
+      },
+      {
+        "index": 11,
+        "start_seconds": 66.0,
+        "end_seconds": 72.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08871396631002426
+      },
+      {
+        "index": 12,
+        "start_seconds": 72.0,
+        "end_seconds": 78.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09530159085988998
+      },
+      {
+        "index": 13,
+        "start_seconds": 78.0,
+        "end_seconds": 84.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09929506480693817
+      },
+      {
+        "index": 14,
+        "start_seconds": 84.0,
+        "end_seconds": 90.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0965069830417633
+      },
+      {
+        "index": 15,
+        "start_seconds": 90.0,
+        "end_seconds": 96.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09974513947963715
+      },
+      {
+        "index": 16,
+        "start_seconds": 96.0,
+        "end_seconds": 102.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08417203277349472
+      },
+      {
+        "index": 17,
+        "start_seconds": 102.0,
+        "end_seconds": 108.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0987020879983902
+      },
+      {
+        "index": 18,
+        "start_seconds": 108.0,
+        "end_seconds": 114.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09474864602088928
+      },
+      {
+        "index": 19,
+        "start_seconds": 114.0,
+        "end_seconds": 120.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09731753915548325
+      },
+      {
+        "index": 20,
+        "start_seconds": 120.0,
+        "end_seconds": 126.0,
+        "duration_seconds": 6.0,
+        "rms": 0.10165654122829437
+      },
+      {
+        "index": 21,
+        "start_seconds": 126.0,
+        "end_seconds": 132.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09185652434825897
+      },
+      {
+        "index": 22,
+        "start_seconds": 132.0,
+        "end_seconds": 138.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09628690779209137
+      },
+      {
+        "index": 23,
+        "start_seconds": 138.0,
+        "end_seconds": 144.0,
+        "duration_seconds": 6.0,
+        "rms": 0.07842154800891876
+      },
+      {
+        "index": 24,
+        "start_seconds": 144.0,
+        "end_seconds": 150.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09625176340341568
+      },
+      {
+        "index": 25,
+        "start_seconds": 150.0,
+        "end_seconds": 156.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08556556701660156
+      },
+      {
+        "index": 26,
+        "start_seconds": 156.0,
+        "end_seconds": 160.92,
+        "duration_seconds": 4.92,
+        "rms": 0.09087923169136047
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5168404579162598,
+    "cosine_similarity_range": [
+      0.37290194630622864,
+      0.6483759880065918
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 162,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5503106117248535,
+        "cosine_similarity_range": [
+          0.39469391107559204,
+          0.6483759880065918
+        ],
+        "number_of_window_pairs": 81,
+        "window_pair_cosine_similarities": [
+          [
+            0.6202735900878906,
+            0.6311564445495605,
+            0.5367820262908936,
+            0.5032724738121033,
+            0.6071958541870117,
+            0.5972778797149658,
+            0.6483759880065918,
+            0.5767936110496521,
+            0.5869398713111877,
+            0.5645621418952942,
+            0.6078369617462158,
+            0.5572417378425598,
+            0.551476001739502,
+            0.6349027156829834,
+            0.5499250888824463,
+            0.5924060344696045,
+            0.5156248807907104,
+            0.5822908282279968,
+            0.5937252044677734,
+            0.609655499458313,
+            0.6162154078483582,
+            0.6377184391021729,
+            0.5210028886795044,
+            0.5707963109016418,
+            0.6014309525489807,
+            0.6236668825149536,
+            0.5683655142784119
+          ],
+          [
+            0.6202211380004883,
+            0.609860897064209,
+            0.5314489603042603,
+            0.5217836499214172,
+            0.5787091255187988,
+            0.6101377010345459,
+            0.6196784973144531,
+            0.546440601348877,
+            0.5279157757759094,
+            0.5718227028846741,
+            0.5629058480262756,
+            0.5448877215385437,
+            0.545821487903595,
+            0.5917033553123474,
+            0.5503106117248535,
+            0.5629648566246033,
+            0.5045056343078613,
+            0.5069299936294556,
+            0.5446630716323853,
+            0.6131141185760498,
+            0.6115313768386841,
+            0.5782085061073303,
+            0.5359237790107727,
+            0.5169995427131653,
+            0.5711628198623657,
+            0.5995531678199768,
+            0.5832233428955078
+          ],
+          [
+            0.4851061701774597,
+            0.5540928840637207,
+            0.44281503558158875,
+            0.40193313360214233,
+            0.4632343351840973,
+            0.5339245796203613,
+            0.5594809055328369,
+            0.4782940745353699,
+            0.4771064519882202,
+            0.5054883360862732,
+            0.47002607583999634,
+            0.4567102789878845,
+            0.4730619788169861,
+            0.4901968538761139,
+            0.4591795802116394,
+            0.466957688331604,
+            0.40293246507644653,
+            0.4801146686077118,
+            0.49057430028915405,
+            0.5125999450683594,
+            0.5158474445343018,
+            0.5580888390541077,
+            0.41166380047798157,
+            0.39469391107559204,
+            0.5356497764587402,
+            0.5291633009910583,
+            0.48497822880744934
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.4989277124404907,
+        "cosine_similarity_range": [
+          0.37290194630622864,
+          0.5810080766677856
+        ],
+        "number_of_window_pairs": 81,
+        "window_pair_cosine_similarities": [
+          [
+            0.5664232969284058,
+            0.5207633972167969,
+            0.4635867178440094,
+            0.4985264837741852,
+            0.5120431184768677,
+            0.5410977602005005,
+            0.5711038112640381,
+            0.4574196934700012,
+            0.4989277124404907,
+            0.4518059194087982,
+            0.4701630473136902,
+            0.5085411071777344,
+            0.4223855137825012,
+            0.529525876045227,
+            0.4528160095214844,
+            0.5338374376296997,
+            0.44446396827697754,
+            0.49900898337364197,
+            0.4901297688484192,
+            0.4882315993309021,
+            0.5155162811279297,
+            0.5578346848487854,
+            0.45709165930747986,
+            0.42925751209259033,
+            0.5526912808418274,
+            0.5238428115844727,
+            0.5088784694671631
+          ],
+          [
+            0.5612148642539978,
+            0.5284364819526672,
+            0.45478060841560364,
+            0.5326935052871704,
+            0.5170959830284119,
+            0.5378783345222473,
+            0.5810080766677856,
+            0.46625322103500366,
+            0.5023725032806396,
+            0.47037196159362793,
+            0.43849366903305054,
+            0.4943615794181824,
+            0.42402130365371704,
+            0.5537670850753784,
+            0.4580293297767639,
+            0.5429702997207642,
+            0.48002928495407104,
+            0.5050641894340515,
+            0.505643367767334,
+            0.5092301368713379,
+            0.503673791885376,
+            0.532926082611084,
+            0.4488033652305603,
+            0.416607141494751,
+            0.5565112233161926,
+            0.5505712628364563,
+            0.485228568315506
+          ],
+          [
+            0.5284022688865662,
+            0.4954839050769806,
+            0.43123412132263184,
+            0.5079269409179688,
+            0.5208067893981934,
+            0.503821611404419,
+            0.5348063707351685,
+            0.43900105357170105,
+            0.45492199063301086,
+            0.42777588963508606,
+            0.41997724771499634,
+            0.47173964977264404,
+            0.37290194630622864,
+            0.5159276723861694,
+            0.41508835554122925,
+            0.5024700164794922,
+            0.4210357069969177,
+            0.4862012267112732,
+            0.4691651165485382,
+            0.4564248323440552,
+            0.46866679191589355,
+            0.5399477481842041,
+            0.4363968074321747,
+            0.38074007630348206,
+            0.516681432723999,
+            0.5316793918609619,
+            0.4381248950958252
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-full-andrew-i80-s11.wav",
+    "sample_rate": 32000,
+    "channels": 1,
+    "duration_seconds": 160.92,
+    "rms": 0.09139791131019592,
+    "number_of_windows": 27,
+    "discarded_tail_seconds": 0.0,
+    "windows": [
+      {
+        "index": 0,
+        "start_seconds": 0.0,
+        "end_seconds": 6.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08902556449174881
+      },
+      {
+        "index": 1,
+        "start_seconds": 6.0,
+        "end_seconds": 12.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09053241461515427
+      },
+      {
+        "index": 2,
+        "start_seconds": 12.0,
+        "end_seconds": 18.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08301258087158203
+      },
+      {
+        "index": 3,
+        "start_seconds": 18.0,
+        "end_seconds": 24.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08219727128744125
+      },
+      {
+        "index": 4,
+        "start_seconds": 24.0,
+        "end_seconds": 30.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0904213935136795
+      },
+      {
+        "index": 5,
+        "start_seconds": 30.0,
+        "end_seconds": 36.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08515169471502304
+      },
+      {
+        "index": 6,
+        "start_seconds": 36.0,
+        "end_seconds": 42.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0930061936378479
+      },
+      {
+        "index": 7,
+        "start_seconds": 42.0,
+        "end_seconds": 48.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09938611835241318
+      },
+      {
+        "index": 8,
+        "start_seconds": 48.0,
+        "end_seconds": 54.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08599413186311722
+      },
+      {
+        "index": 9,
+        "start_seconds": 54.0,
+        "end_seconds": 60.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09919910132884979
+      },
+      {
+        "index": 10,
+        "start_seconds": 60.0,
+        "end_seconds": 66.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08877959847450256
+      },
+      {
+        "index": 11,
+        "start_seconds": 66.0,
+        "end_seconds": 72.0,
+        "duration_seconds": 6.0,
+        "rms": 0.086210235953331
+      },
+      {
+        "index": 12,
+        "start_seconds": 72.0,
+        "end_seconds": 78.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09126052260398865
+      },
+      {
+        "index": 13,
+        "start_seconds": 78.0,
+        "end_seconds": 84.0,
+        "duration_seconds": 6.0,
+        "rms": 0.10033626854419708
+      },
+      {
+        "index": 14,
+        "start_seconds": 84.0,
+        "end_seconds": 90.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09406548738479614
+      },
+      {
+        "index": 15,
+        "start_seconds": 90.0,
+        "end_seconds": 96.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09880901873111725
+      },
+      {
+        "index": 16,
+        "start_seconds": 96.0,
+        "end_seconds": 102.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08248119801282883
+      },
+      {
+        "index": 17,
+        "start_seconds": 102.0,
+        "end_seconds": 108.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09730636328458786
+      },
+      {
+        "index": 18,
+        "start_seconds": 108.0,
+        "end_seconds": 114.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09118324518203735
+      },
+      {
+        "index": 19,
+        "start_seconds": 114.0,
+        "end_seconds": 120.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09563015401363373
+      },
+      {
+        "index": 20,
+        "start_seconds": 120.0,
+        "end_seconds": 126.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09914278239011765
+      },
+      {
+        "index": 21,
+        "start_seconds": 126.0,
+        "end_seconds": 132.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0912119597196579
+      },
+      {
+        "index": 22,
+        "start_seconds": 132.0,
+        "end_seconds": 138.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09310807287693024
+      },
+      {
+        "index": 23,
+        "start_seconds": 138.0,
+        "end_seconds": 144.0,
+        "duration_seconds": 6.0,
+        "rms": 0.08064139634370804
+      },
+      {
+        "index": 24,
+        "start_seconds": 144.0,
+        "end_seconds": 150.0,
+        "duration_seconds": 6.0,
+        "rms": 0.09736865758895874
+      },
+      {
+        "index": 25,
+        "start_seconds": 150.0,
+        "end_seconds": 156.0,
+        "duration_seconds": 6.0,
+        "rms": 0.0875593051314354
+      },
+      {
+        "index": 26,
+        "start_seconds": 156.0,
+        "end_seconds": 160.92,
+        "duration_seconds": 4.92,
+        "rms": 0.08946216106414795
+      }
+    ],
+    "model": {
+      "id": "speechbrain/spkrec-ecapa-voxceleb",
+      "local_directory": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/speaker-ecapa",
+      "sha256": {
+        "hyperparams.yaml": "6f78854fa04ba59e761437b76a2575d3aba5e5016de3e9b69f0c9a5077fb1a41",
+        "embedding_model.ckpt": "0575cb64845e6b9a10db9bcb74d5ac32b326b8dc90352671d345e2ee3d0126a2"
+      },
+      "speechbrain_version": "1.0.3",
+      "torch_version": "2.8.0",
+      "torchaudio_version": "2.8.0",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "sample_rate": 16000,
+      "embedding_normalization": "L2; encode_batch(normalize=False)"
+    },
+    "score_interpretation": "Cosine similarity proxy, not an identity percentage or probability.",
+    "aggregation": "Median over every reference-window/candidate-window pair; longer references have more pairs.",
+    "window_pair_matrix_axes": [
+      "reference_window_index",
+      "candidate_window_index"
+    ],
+    "window_seconds": 6.0,
+    "minimum_window_seconds": 3,
+    "median_cosine_similarity": 0.5431783199310303,
+    "cosine_similarity_range": [
+      0.3860079050064087,
+      0.6832740306854248
+    ],
+    "number_of_references": 2,
+    "number_of_reference_windows": 6,
+    "number_of_window_pairs": 162,
+    "per_reference": [
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-oscars.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.05424368008971214,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.06251771003007889
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.05446610972285271
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.0441826768219471
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5722893476486206,
+        "cosine_similarity_range": [
+          0.39398613572120667,
+          0.6832740306854248
+        ],
+        "number_of_window_pairs": 81,
+        "window_pair_cosine_similarities": [
+          [
+            0.6555922627449036,
+            0.6515011191368103,
+            0.5628161430358887,
+            0.4903499484062195,
+            0.650888204574585,
+            0.629166841506958,
+            0.6481584310531616,
+            0.6092584729194641,
+            0.5797776579856873,
+            0.5735401511192322,
+            0.591083824634552,
+            0.5985441207885742,
+            0.5953789949417114,
+            0.6619691848754883,
+            0.5722893476486206,
+            0.6309825778007507,
+            0.5637642741203308,
+            0.579623818397522,
+            0.6001277565956116,
+            0.6206791400909424,
+            0.66483473777771,
+            0.6832740306854248,
+            0.5438547134399414,
+            0.6333016157150269,
+            0.6462153196334839,
+            0.6661087870597839,
+            0.5858163833618164
+          ],
+          [
+            0.6592361330986023,
+            0.6394087076187134,
+            0.5530449151992798,
+            0.49426084756851196,
+            0.6356282234191895,
+            0.6194002628326416,
+            0.6226019263267517,
+            0.5794159173965454,
+            0.5435928106307983,
+            0.5704002380371094,
+            0.56334388256073,
+            0.5753335952758789,
+            0.5900918841362,
+            0.628940224647522,
+            0.5512545108795166,
+            0.5989188551902771,
+            0.5317919850349426,
+            0.5206294059753418,
+            0.5628986358642578,
+            0.6129650473594666,
+            0.637335479259491,
+            0.6358380317687988,
+            0.5580100417137146,
+            0.5767552256584167,
+            0.6081879138946533,
+            0.6135857701301575,
+            0.5914336442947388
+          ],
+          [
+            0.5575461387634277,
+            0.5489402413368225,
+            0.4102836847305298,
+            0.39398613572120667,
+            0.5039172172546387,
+            0.5361860990524292,
+            0.5437764525413513,
+            0.4793427586555481,
+            0.4747583568096161,
+            0.5107845067977905,
+            0.46013933420181274,
+            0.4634082317352295,
+            0.4998238682746887,
+            0.51170814037323,
+            0.4511573314666748,
+            0.5047875046730042,
+            0.4390997588634491,
+            0.45836910605430603,
+            0.5030934810638428,
+            0.524772047996521,
+            0.5462673902511597,
+            0.6006603240966797,
+            0.4230409264564514,
+            0.4491405785083771,
+            0.5686957836151123,
+            0.5320240259170532,
+            0.5098243951797485
+          ]
+        ]
+      },
+      {
+        "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/reference/brad-interview.wav",
+        "sample_rate": 16000,
+        "channels": 1,
+        "duration_seconds": 18.0,
+        "rms": 0.11136656254529953,
+        "number_of_windows": 3,
+        "discarded_tail_seconds": 0.0,
+        "windows": [
+          {
+            "index": 0,
+            "start_seconds": 0.0,
+            "end_seconds": 6.0,
+            "duration_seconds": 6.0,
+            "rms": 0.1226855143904686
+          },
+          {
+            "index": 1,
+            "start_seconds": 6.0,
+            "end_seconds": 12.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10379813611507416
+          },
+          {
+            "index": 2,
+            "start_seconds": 12.0,
+            "end_seconds": 18.0,
+            "duration_seconds": 6.0,
+            "rms": 0.10668527334928513
+          }
+        ],
+        "same_file_as_candidate": false,
+        "median_cosine_similarity": 0.5085196495056152,
+        "cosine_similarity_range": [
+          0.3860079050064087,
+          0.6449304223060608
+        ],
+        "number_of_window_pairs": 81,
+        "window_pair_cosine_similarities": [
+          [
+            0.5946544408798218,
+            0.5472588539123535,
+            0.4773314893245697,
+            0.4955296516418457,
+            0.5406382083892822,
+            0.5689279437065125,
+            0.5460593700408936,
+            0.4777182936668396,
+            0.48888155817985535,
+            0.46177273988723755,
+            0.493222177028656,
+            0.5427638292312622,
+            0.45349863171577454,
+            0.5568188428878784,
+            0.4614526629447937,
+            0.5781054496765137,
+            0.46502912044525146,
+            0.5272292494773865,
+            0.5008002519607544,
+            0.49966326355934143,
+            0.5483810901641846,
+            0.6449304223060608,
+            0.4706316590309143,
+            0.4793208837509155,
+            0.5919635891914368,
+            0.5592658519744873,
+            0.5259606242179871
+          ],
+          [
+            0.5660931468009949,
+            0.5767030715942383,
+            0.444673627614975,
+            0.5296989679336548,
+            0.5498746633529663,
+            0.5723129510879517,
+            0.5573272705078125,
+            0.4840637147426605,
+            0.49591660499572754,
+            0.4732779264450073,
+            0.44802579283714294,
+            0.5273463726043701,
+            0.44823819398880005,
+            0.5666146278381348,
+            0.4685795307159424,
+            0.5829184055328369,
+            0.4928954839706421,
+            0.5212103724479675,
+            0.5088807344436646,
+            0.5121405720710754,
+            0.5310137271881104,
+            0.5968213081359863,
+            0.47136253118515015,
+            0.4565836787223816,
+            0.5814257264137268,
+            0.5806487798690796,
+            0.49969398975372314
+          ],
+          [
+            0.5442003011703491,
+            0.5291064977645874,
+            0.44318756461143494,
+            0.48525145649909973,
+            0.5496360063552856,
+            0.526336133480072,
+            0.5085196495056152,
+            0.4487074315547943,
+            0.4500317871570587,
+            0.43712660670280457,
+            0.4293854236602783,
+            0.5031125545501709,
+            0.3860079050064087,
+            0.5241172313690186,
+            0.41892439126968384,
+            0.5502674579620361,
+            0.4406551718711853,
+            0.5030221939086914,
+            0.47707659006118774,
+            0.4614998996257782,
+            0.5094269514083862,
+            0.6185981035232544,
+            0.4601442515850067,
+            0.4424316883087158,
+            0.5397964715957642,
+            0.5455312132835388,
+            0.4588925838470459
+          ]
+        ]
+      }
+    ]
+  }
+]

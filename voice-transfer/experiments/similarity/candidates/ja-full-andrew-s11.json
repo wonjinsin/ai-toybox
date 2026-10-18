@@ -1,0 +1,13 @@
+{
+  "id": "ja-full-andrew-s11",
+  "prompt": "ja-full",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "pitch": 0,
+  "index_rate": 1.0,
+  "seed": 11,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/ja-full-en-US-AndrewMultilingualNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-full-andrew-s11.wav",
+  "sample_rate": 32000,
+  "samples": 5149440,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 14.70s | F0 21.85s | 合成 142.60s"
+}

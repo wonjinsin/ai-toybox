@@ -1,0 +1,12 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/en-natural-after-full.wav",
+    "sample_rate": 32000,
+    "duration_seconds": 65.68,
+    "peak": 0.919830322265625,
+    "rms": 0.07527110636746734,
+    "detected_language": "en",
+    "language_probability": 0.9953007698059082,
+    "transcript": "I used to think that every important decision had to happen in a hurry. You see an opportunity, you take it, and you figure out the rest along the way. Sometimes that works. Sometimes it just means you arrive in the wrong place a little faster. Last summer, I drove out of the city before sunrise. No meetings, no schedule, and no particular destination. I stopped at a small diner beside the highway and ordered coffee. me. The man behind the counter asked where I was going. I told him I wasn't sure yet. He smiled and said, Then you're probably having a better morning than most people. I stayed there for almost an hour, watching the light come through the windows. Nothing remarkable happened. Nobody called with life changing news. But for the first time in a long while, I didn't feel like I was running late for my own life. Maybe that's the point. You don't always need a better plan. Sometimes you just need enough quiet to notice where you already are."
+  }
+]

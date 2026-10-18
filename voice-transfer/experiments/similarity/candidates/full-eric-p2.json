@@ -1,0 +1,13 @@
+{
+  "id": "full-eric-p2",
+  "prompt": "full",
+  "voice": "en-US-EricNeural",
+  "pitch": 2,
+  "index_rate": 1.0,
+  "seed": 11,
+  "source": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/sources/full-en-US-EricNeural.wav",
+  "output": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/full-eric-p2.wav",
+  "sample_rate": 32000,
+  "samples": 2101760,
+  "status": "【単発推論】\n状態：成功\n\nインデックス：/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/models/brad-pitt/added_IVF840_Flat_nprobe_1_BradPitt_v2.index\n所要時間：特徴量 3.13s | F0 3.44s | 合成 31.76s"
+}

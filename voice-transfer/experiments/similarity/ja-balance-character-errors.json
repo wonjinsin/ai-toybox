@@ -1,0 +1,20 @@
+[
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-full-andrew-i65-s11.wav",
+    "reference_characters": 847,
+    "character_errors": 48,
+    "character_error_rate": 0.05667060212514758,
+    "language": "ja",
+    "peak": 0.945526123046875,
+    "duration_seconds": 160.92
+  },
+  {
+    "file": "/Users/WonjinSin/Documents/project/ai-toybox/voice-transfer/experiments/similarity/candidates/ja-full-andrew-i80-s11.wav",
+    "reference_characters": 847,
+    "character_errors": 56,
+    "character_error_rate": 0.06611570247933884,
+    "language": "ja",
+    "peak": 0.89593505859375,
+    "duration_seconds": 160.92
+  }
+]

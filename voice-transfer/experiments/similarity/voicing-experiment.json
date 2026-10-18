@@ -1,0 +1,8 @@
+{
+  "decision": "Rejected for the requested similarity objective; upstream pipeline restored unchanged.",
+  "diagnostic": {"frames":1090,"detected_unvoiced_frames":455,"upstream_preserved":0,"experimental_preserved":455},
+  "experimental_change": "Removed the try/except block interpolating f0==0 in infer/vc/pipeline.py get_f0, before pitch transposition.",
+  "metric_reports": ["voicing-fix-scores.json","voicing-protect-scores.json"],
+  "baseline_reports": ["round1-scores.json","round2-scores.json","heldout-scores.json"],
+  "conclusion": "The invariant repair did not improve speaker similarity on either phrase. Disabling original-source consonant mixing did not recover the loss. This does not establish which version sounds more natural to a listener."
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ja-source-ja-JP-KeitaNeural",
+    "prompt": "ja-text-tuning",
+    "voice": "ja-JP-KeitaNeural",
+    "pitch": 0,
+    "index_rate": 1.0
+  },
+  {
+    "id": "ja-source-en-US-AndrewMultilingualNeural",
+    "prompt": "ja-text-tuning",
+    "voice": "en-US-AndrewMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0
+  },
+  {
+    "id": "ja-source-en-US-BrianMultilingualNeural",
+    "prompt": "ja-text-tuning",
+    "voice": "en-US-BrianMultilingualNeural",
+    "pitch": 0,
+    "index_rate": 1.0
+  }
+]
