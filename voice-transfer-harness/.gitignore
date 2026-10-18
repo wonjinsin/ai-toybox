@@ -1,4 +1,5 @@
 .venv/
+.venv-kokoro/
 .runtime/
 models/
 outputs/

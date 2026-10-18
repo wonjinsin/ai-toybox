@@ -1,0 +1,468 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "path": ".runtime/kokoro/config.json",
+      "url": "https://huggingface.co/mlx-community/Kokoro-82M-bf16/resolve/a71e4d38b236d968966a2002c4c895dbd12b1c3c/config.json",
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+    },
+    {
+      "path": ".runtime/kokoro/kokoro-v1_0.safetensors",
+      "url": "https://huggingface.co/mlx-community/Kokoro-82M-bf16/resolve/a71e4d38b236d968966a2002c4c895dbd12b1c3c/kokoro-v1_0.safetensors",
+      "sha256": "4e9ecdf03b8b6cf906070390237feda473dc13327cb8d56a43deaa374c02acd8"
+    },
+    {
+      "path": ".runtime/kokoro/voices/jm_kumo.safetensors",
+      "url": "https://huggingface.co/mlx-community/Kokoro-82M-bf16/resolve/a71e4d38b236d968966a2002c4c895dbd12b1c3c/voices/jm_kumo.safetensors",
+      "sha256": "9f6b9d85ae099c409193924add0f1c478d7c9b6904ef181f2297154bfe05cc2c"
+    },
+    {
+      "path": ".runtime/kokoro/README.md",
+      "url": "https://huggingface.co/mlx-community/Kokoro-82M-bf16/resolve/a71e4d38b236d968966a2002c4c895dbd12b1c3c/README.md",
+      "sha256": "31766be53abd2b182fea067461e935eb6399dbe0e1ce8d165afb1f1c64895b30"
+    },
+    {
+      "path": ".runtime/kokoro/VOICES.md",
+      "url": "https://huggingface.co/mlx-community/Kokoro-82M-bf16/resolve/a71e4d38b236d968966a2002c4c895dbd12b1c3c/VOICES.md",
+      "sha256": "ec7e4941ad7e194af61e3455928528a9ff5360c7c505e412efab27d6a69ea106"
+    },
+    {
+      "path": ".runtime/kokoro/LICENSE",
+      "url": "https://raw.githubusercontent.com/hexgrad/kokoro/dfb907a02bba8152ca444717ca5d78747ccb4bec/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    }
+  ],
+  "sources": {
+    "model": {
+      "repository": "mlx-community/Kokoro-82M-bf16",
+      "revision": "a71e4d38b236d968966a2002c4c895dbd12b1c3c",
+      "license": "Apache-2.0",
+      "stored_tensor_dtype": "float32",
+      "inference_dtype": "float32",
+      "dtype_note": "Despite its bf16 repository name, the pinned artifact contains 548 F32 tensors. The source loader preserves the published tensor precision without conversion.",
+      "language": "j",
+      "voice": "jm_kumo",
+      "speed": 1.0
+    },
+    "mlx_audio": {
+      "version": "0.5.9",
+      "license": "MIT",
+      "documentation": "https://github.com/Blaizzy/mlx-audio/blob/main/docs/models/tts/kokoro.md"
+    },
+    "japanese_processing": {
+      "misaki_version": "0.7.4",
+      "reason": "Later Misaki releases declare Python <3.13. Misaki 0.7.4 Japanese uses bundled UniDic Lite without first-use downloads.",
+      "dictionary_package": "unidic-lite",
+      "dictionary_version": "1.0.8",
+      "dictionary_files": [
+        {
+          "path": "AUTHORS",
+          "sha256": "a05bfdd3a9db36d9c64495f4a3d1824d05b95fbb4fc6dc07c660e91bc191c481"
+        },
+        {
+          "path": "BSD",
+          "sha256": "7917ecfaf95a5ba7b4f45aa9a845ac931d79c90f39b7e711442dbc21c612560f"
+        },
+        {
+          "path": "COPYING",
+          "sha256": "178ffb7cbc2beadb0b87a14497e58222b484076ba7cfc8938a07ac7627fa22c4"
+        },
+        {
+          "path": "ChangeLog",
+          "sha256": "48035977a308fbb65326e4d81f15186cc241013b360ad161d82c7a151a5bd8a0"
+        },
+        {
+          "path": "GPL",
+          "sha256": "a137434196f5e39d8836de895866fcfea074ad1b28243174ca1c4a585a1229b0"
+        },
+        {
+          "path": "INSTALL",
+          "sha256": "7b4f980a88e9e33e96ce57b75ace60bc936138ec7edac0b03ebbd9c9e3be7250"
+        },
+        {
+          "path": "LGPL",
+          "sha256": "512d2d21b6b3384ba64781abb0208a1b87740bc31e2df48e2b206ddb7e4d5779"
+        },
+        {
+          "path": "README.md",
+          "sha256": "c2797d1bb416d9cb2f4f2d47e3ff8eb3e91a6bc35974a02ecc4ffcd4441607f7"
+        },
+        {
+          "path": "char.bin",
+          "sha256": "dd31396563d8924645b80fd3c9aa7b13ca089d7748f25553a1d6bc3f9b511ae8"
+        },
+        {
+          "path": "dicrc",
+          "sha256": "fcd17f35752de1417859a15e2e1f043d666da03f36dc632e8c0ed46887883a59"
+        },
+        {
+          "path": "left-id.def",
+          "sha256": "c5ecfbe47a7d2d9f0404b6f9746e4ab96fc7f2f37e16224f0325a530ab67adf7"
+        },
+        {
+          "path": "matrix.bin",
+          "sha256": "88fb99efe1075d9b8b40e01bb2751e4095f1612618f2490af776eb5ed39190a9"
+        },
+        {
+          "path": "mecabrc",
+          "sha256": "72021ae17e5680bb4bb3b570e7e792b567e4c6758c7b17b39fbc7c8c499229b3"
+        },
+        {
+          "path": "rewrite.def",
+          "sha256": "1e50193f2f8c3e0fbef2759cd78cb756ee3b93bfdf51cb66c85fddc243298bdb"
+        },
+        {
+          "path": "right-id.def",
+          "sha256": "c5ecfbe47a7d2d9f0404b6f9746e4ab96fc7f2f37e16224f0325a530ab67adf7"
+        },
+        {
+          "path": "sys.dic",
+          "sha256": "122c4c91f026bf4b65bbe2dfd8b9f8eeb6ab56d8eb2a7287a68bca75708ba513"
+        },
+        {
+          "path": "unidic-mecab.pdf",
+          "sha256": "6e5ecc4770881cfe2bca6c3b74ba20f1b07bba757c864548cb79f62b0550cc5b"
+        },
+        {
+          "path": "unk.dic",
+          "sha256": "e3b92803feeb6c2712c796b905317ec192a59729d2c1e92b2728d454169541c4"
+        },
+        {
+          "path": "version",
+          "sha256": "9f6271951edca02e0c8a669a79930626717b77f0443ad8a327b93a52e4194829"
+        }
+      ],
+      "dictionary_notices": [
+        "COPYING",
+        "BSD",
+        "GPL",
+        "LGPL",
+        "AUTHORS"
+      ]
+    },
+    "license_notice": {
+      "repository": "https://github.com/hexgrad/kokoro",
+      "revision": "dfb907a02bba8152ca444717ca5d78747ccb4bec"
+    },
+    "packages": [
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5",
+        "filename": "annotated_doc-0.0.5-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/3e/30/e900b21425a860e195f32e37657aa1f7c7f2b1bfb26f03ca209b90933c06/annotated_doc-0.0.5-py3-none-any.whl",
+        "sha256": "117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101"
+      },
+      {
+        "name": "anyio",
+        "version": "4.15.1",
+        "filename": "anyio-4.15.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/12/b8/4bd346e22b28902df4d651910f5242c28d84e4a5c2435ca5c3f797ed7e2e/anyio-4.15.1-py3-none-any.whl",
+        "sha256": "6152fdbbf9a77fdec97731721bebf7c4c44f7c29b424b0065826173efc7ed101"
+      },
+      {
+        "name": "cffi",
+        "version": "2.1.1",
+        "filename": "cffi-2.1.1-cp313-cp313-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/55/41/4c7042f317b9217502988f0873af87e16ad606dc20f84e546e3e6ce9764c/cffi-2.1.1-cp313-cp313-macosx_11_0_arm64.whl",
+        "sha256": "19ee6127ee34de7d83ce3d371ebc5ed91addbdcc39f9ab15ce4eb35a4e534971"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0",
+        "filename": "click-8.5.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl",
+        "sha256": "255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360"
+      },
+      {
+        "name": "Cython",
+        "version": "3.0.12",
+        "filename": "Cython-3.0.12-py2.py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/27/6b/7c87867d255cbce8167ed99fc65635e9395d2af0f0c915428f5b17ec412d/Cython-3.0.12-py2.py3-none-any.whl",
+        "sha256": "0038c9bae46c459669390e53a1ec115f8096b2e4647ae007ff1bf4e6dee92806"
+      },
+      {
+        "name": "filelock",
+        "version": "4.2.2",
+        "filename": "filelock-4.2.2-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/4e/53/35698fff350cb99c49ee01ae5cb1eb4408567792a286314ea984b53b5002/filelock-4.2.2-py3-none-any.whl",
+        "sha256": "1851d2f14ca2901e98069d68333b33ad7409f56904e17b48cc0c32a0db8ed73a"
+      },
+      {
+        "name": "fsspec",
+        "version": "2026.9.0",
+        "filename": "fsspec-2026.9.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/6c/c0/a98505f18594f1bce828bb159cec0fcf9860562f1a2c85913409fc8f3d9e/fsspec-2026.9.0-py3-none-any.whl",
+        "sha256": "8dd6e646e99ea382bd85f97a45e6b526a442d79423a7dc673f1e2756d05fcb5f"
+      },
+      {
+        "name": "fugashi",
+        "version": "1.5.2",
+        "filename": "fugashi-1.5.2-cp313-cp313-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/7c/31/a6a79ae7d2eec7e052069ae697e361b15702707977cded3a9f6332a6c26e/fugashi-1.5.2-cp313-cp313-macosx_11_0_arm64.whl",
+        "sha256": "2ee7b102fef6ec554bdeba51a969ce894a519cc71bade5d05a27935de4426745"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0",
+        "filename": "h11-0.16.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl",
+        "sha256": "63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86"
+      },
+      {
+        "name": "hf-xet",
+        "version": "1.7.0",
+        "filename": "hf_xet-1.7.0-cp38-abi3-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/c3/47/a26ebdce7056a61e931f228439bc0ab08cbec239d1690f965e5e637cba79/hf_xet-1.7.0-cp38-abi3-macosx_11_0_arm64.whl",
+        "sha256": "59fba37039233c7fcbe196817d6cdcf1b40dfb17b410f229d85b0cf0a1848da4"
+      },
+      {
+        "name": "httpcore2",
+        "version": "2.13.1",
+        "filename": "httpcore2-2.13.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/09/ba/a4568248771ce81957bfb7cc600264a40fbcda092391ee1c415c50be4bea/httpcore2-2.13.1-py3-none-any.whl",
+        "sha256": "e1e05d4f25f7d7d496bfb96748f6f4b67657b03da069b3a68c36069f3db73d0a"
+      },
+      {
+        "name": "httpx2",
+        "version": "2.13.1",
+        "filename": "httpx2-2.13.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/d8/9c/6fe8931fd9f381042a9e4c7d5a7b4cbf7016b252bec0c99a49fce42c3326/httpx2-2.13.1-py3-none-any.whl",
+        "sha256": "6dff50fabc270ee5fd25d845d0b078ed20564579744d6d962850975996d2f9a4"
+      },
+      {
+        "name": "huggingface_hub",
+        "version": "2.2.0",
+        "filename": "huggingface_hub-2.2.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/eb/b0/0f7b430fd100b3a3b037fdbb314878200241082e607b3383c63d91a13a72/huggingface_hub-2.2.0-py3-none-any.whl",
+        "sha256": "1667f145dc56dc210d60966069397df9ecfca9607a5d43db88b308c89dae56b3"
+      },
+      {
+        "name": "idna",
+        "version": "3.20",
+        "filename": "idna-3.20-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl",
+        "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c"
+      },
+      {
+        "name": "jaconv",
+        "version": "0.5.0",
+        "filename": "jaconv-0.5.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/3b/da/9657d637bcacdbaf6a914ce504000da5639f9d945f8d3552a940f021d6c0/jaconv-0.5.0-py3-none-any.whl",
+        "sha256": "2914114fe761ca49fc7089e25e6ad4a400c26f262ffce84e13b176916b71610a"
+      },
+      {
+        "name": "markdown-it-py",
+        "version": "4.2.0",
+        "filename": "markdown_it_py-4.2.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/b3/81/4da04ced5a082363ecfa159c010d200ecbd959ae410c10c0264a38cac0f5/markdown_it_py-4.2.0-py3-none-any.whl",
+        "sha256": "9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a"
+      },
+      {
+        "name": "mdurl",
+        "version": "0.1.2",
+        "filename": "mdurl-0.1.2-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl",
+        "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"
+      },
+      {
+        "name": "miniaudio",
+        "version": "1.71",
+        "filename": "miniaudio-1.71-cp313-cp313-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/bd/d1/071a560000c8ce903dc919968ecce40fbe7a73213ac399051b887184f8a3/miniaudio-1.71-cp313-cp313-macosx_11_0_arm64.whl",
+        "sha256": "d9dc15eff711bcfc62a9d05e0c78e4bc34821a455595e049629f2fea7491a523"
+      },
+      {
+        "name": "misaki",
+        "version": "0.7.4",
+        "filename": "misaki-0.7.4-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/06/e9/f092172a37c0994bf1e57e0d2f3b16bd18f63b98744d6039f18a055c2ad5/misaki-0.7.4-py3-none-any.whl",
+        "sha256": "f9cf1afc0a2c0e77dadf02ae8203d3a7c312ee67b235d3b658c08367919b17c1"
+      },
+      {
+        "name": "mlx",
+        "version": "0.32.4",
+        "filename": "mlx-0.32.4-cp313-cp313-macosx_15_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/1c/ad/1377a281f1b81f42929a3887b5225d0a38fba2d804ac1039011a223d2ab2/mlx-0.32.4-cp313-cp313-macosx_15_0_arm64.whl",
+        "sha256": "d46dd07f57a65bae00ba7da239ee76ebf87e3202f042808d209b56be3140e416"
+      },
+      {
+        "name": "mlx-audio",
+        "version": "0.5.9",
+        "filename": "mlx_audio-0.5.9-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/57/3c/5864cf8c30661049db2ed22d6c2ab1137691f3f49df3c1fd4c7b885953da/mlx_audio-0.5.9-py3-none-any.whl",
+        "sha256": "fa662cf24cbca69cdd912612cdb677e65f77c6329a95906cc80b50e5b4689d6b"
+      },
+      {
+        "name": "mlx-metal",
+        "version": "0.32.4",
+        "filename": "mlx_metal-0.32.4-py3-none-macosx_15_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/54/8c/9754dd6c4db485037f59cc8be6495738e14cdeb8bf19d5bddb5e96da890f/mlx_metal-0.32.4-py3-none-macosx_15_0_arm64.whl",
+        "sha256": "9f0a3cc26d89724434d9684932fc6f3e4e83669d2a895d858ed2c8a55eb84e8b"
+      },
+      {
+        "name": "mojimoji",
+        "version": "0.0.13",
+        "filename": "mojimoji-0.0.13.tar.gz",
+        "url": "https://files.pythonhosted.org/packages/08/fb/ee22357cd7622fb879fac575feaffc54469ed9a0c1d9073355b1ebc62b7f/mojimoji-0.0.13.tar.gz",
+        "sha256": "0e6d2fba22cc8bf132a5bdf3a964296d9287a618d09681a12868f0fd518e4230"
+      },
+      {
+        "name": "numpy",
+        "version": "2.5.4",
+        "filename": "numpy-2.5.4-cp313-cp313-macosx_14_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/e2/84/6a3d75b3ba3dfe84ac0053450753d1e6d250a8bf80f66474cc46d1fb643f/numpy-2.5.4-cp313-cp313-macosx_14_0_arm64.whl",
+        "sha256": "6d6a71b9d9a97c03633aa12565ef2825ffa036cc1d99cfd50dacf0f128af4fe2"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3",
+        "filename": "packaging-26.3-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+        "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+      },
+      {
+        "name": "pycparser",
+        "version": "3.11",
+        "filename": "pycparser-3.11-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/90/11/0e6f11117525ff0eec40ebac3d313376f102df93ca44ad9e893ee85e4f89/pycparser-3.11-py3-none-any.whl",
+        "sha256": "51d5a8ba2be0bbe440b99d2112604c95bbbc3c2748a64260186c541e1729cd80"
+      },
+      {
+        "name": "Pygments",
+        "version": "2.21.0",
+        "filename": "pygments-2.21.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/71/46/17f022dd3e953bf20a04a028a21ec746d942f8d2af30fa0f124fa0e6a684/pygments-2.21.0-py3-none-any.whl",
+        "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"
+      },
+      {
+        "name": "PyYAML",
+        "version": "6.0.3",
+        "filename": "pyyaml-6.0.3-cp313-cp313-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/b1/16/95309993f1d3748cd644e02e38b75d50cbc0d9561d21f390a76242ce073f/pyyaml-6.0.3-cp313-cp313-macosx_11_0_arm64.whl",
+        "sha256": "2283a07e2c21a2aa78d9c4442724ec1eb15f5e42a723b99cb3d822d48f5f7ad1"
+      },
+      {
+        "name": "regex",
+        "version": "2026.9.29",
+        "filename": "regex-2026.9.29-cp313-cp313-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/11/9e/aa0f4cde3bc4688c1d58b0cd8415edd708339bc0bc401a195b0b1e8c8f0c/regex-2026.9.29-cp313-cp313-macosx_11_0_arm64.whl",
+        "sha256": "c90fcf7804ea0a54b896ce0f2b9565350220b8d4890fd0db461a476a4c687963"
+      },
+      {
+        "name": "rich",
+        "version": "15.0.0",
+        "filename": "rich-15.0.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/82/3b/64d4899d73f91ba49a8c18a8ff3f0ea8f1c1d75481760df8c68ef5235bf5/rich-15.0.0-py3-none-any.whl",
+        "sha256": "33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb"
+      },
+      {
+        "name": "safetensors",
+        "version": "0.8.0",
+        "filename": "safetensors-0.8.0-cp310-abi3-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/f5/b1/fa7c600e7dceae12e9606c7578cbc9ff1e1ed55844883ee5c92205e86226/safetensors-0.8.0-cp310-abi3-macosx_11_0_arm64.whl",
+        "sha256": "c80201d22cbf405b80647a60ada77bba06c8fba2da2743ba1e89cdcc39a81f25"
+      },
+      {
+        "name": "scipy",
+        "version": "1.18.1",
+        "filename": "scipy-1.18.1-cp313-cp313-macosx_14_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/9a/d7/21d890274f75ea37a8209d5519e72da3da90302e3b9fb8397a0918386a62/scipy-1.18.1-cp313-cp313-macosx_14_0_arm64.whl",
+        "sha256": "ea324d9dd34c38bfb9bec8ca4d1b407db97dbb74029f566b8e322b1b6fe56fe6"
+      },
+      {
+        "name": "setuptools",
+        "version": "80.9.0",
+        "filename": "setuptools-80.9.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl",
+        "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"
+      },
+      {
+        "name": "shellingham",
+        "version": "1.5.4",
+        "filename": "shellingham-1.5.4-py2.py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/e0/f9/0595336914c5619e5f28a1fb793285925a8cd4b432c9da0a987836c7f822/shellingham-1.5.4-py2.py3-none-any.whl",
+        "sha256": "7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686"
+      },
+      {
+        "name": "sounddevice",
+        "version": "0.5.6",
+        "filename": "sounddevice-0.5.6-py3-none-macosx_10_6_x86_64.macosx_10_6_universal2.whl",
+        "url": "https://files.pythonhosted.org/packages/b6/84/85e719d49cf98b2f406d9ac9c338892286c4448eb42ef0b2625ccf159616/sounddevice-0.5.6-py3-none-macosx_10_6_x86_64.macosx_10_6_universal2.whl",
+        "sha256": "e3aef00ad8b1d1740eb66d9a7671eab88a4d2b8fa4ab33498d742e63b65c309c"
+      },
+      {
+        "name": "soundfile",
+        "version": "0.13.1",
+        "filename": "soundfile-0.13.1-py2.py3-none-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/a0/e5/58fd1a8d7b26fc113af244f966ee3aecf03cb9293cb935daaddc1e455e18/soundfile-0.13.1-py2.py3-none-macosx_11_0_arm64.whl",
+        "sha256": "743f12c12c4054921e15736c6be09ac26b3b3d603aef6fd69f9dde68748f2593"
+      },
+      {
+        "name": "tokenizers",
+        "version": "0.23.3",
+        "filename": "tokenizers-0.23.3-cp310-abi3-macosx_11_0_arm64.whl",
+        "url": "https://files.pythonhosted.org/packages/b2/72/01e49f032bb346e5aaf06c10c74fe8aeec847173adbadd66eb7c53054bf2/tokenizers-0.23.3-cp310-abi3-macosx_11_0_arm64.whl",
+        "sha256": "68649e97d5b43c44c031d8d848874a6eecae8f8fe40ea989aa777a5a83aca716"
+      },
+      {
+        "name": "tqdm",
+        "version": "4.70.1",
+        "filename": "tqdm-4.70.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/a7/03/921a3d3c75785aca9ebfbfcabfbc3a1be12e2ab5265deb026d55a5a3f83e/tqdm-4.70.1-py3-none-any.whl",
+        "sha256": "c293e525e6fef9c20e8728fd4612df02a0aa31bb5fe91ecd93e123b1b7bffa73"
+      },
+      {
+        "name": "transformers",
+        "version": "5.20.1",
+        "filename": "transformers-5.20.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/ae/ba/057af605774c3c7a9228ce61d88040749134ef320426403b31bb73755d43/transformers-5.20.1-py3-none-any.whl",
+        "sha256": "5f51ce444193e5d0a751e3fa489ddbc2224ff12f6675a5cfefd4044b09757c19"
+      },
+      {
+        "name": "truststore",
+        "version": "0.10.5",
+        "filename": "truststore-0.10.5-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/51/e9/3a7820be2bb0fe53b6bc9c3be26d3d1158004e4c3ab953aa6840b955b1e9/truststore-0.10.5-py3-none-any.whl",
+        "sha256": "9aaaedaefaf06d8b206278cf8b5012bc897f485a874503501e12d776df78951c"
+      },
+      {
+        "name": "typer",
+        "version": "0.27.3",
+        "filename": "typer-0.27.3-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/07/ea/2e31b67051e91a133189e9c000c222502ddc6969856416de0d095de4c0b0/typer-0.27.3-py3-none-any.whl",
+        "sha256": "e50022f28b82a86313e54501317a1db64bf8f8d036ff8cfe5ca7e47675454aff"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0",
+        "filename": "typing_extensions-4.16.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+        "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+      },
+      {
+        "name": "unidic-lite",
+        "version": "1.0.8",
+        "filename": "unidic-lite-1.0.8.tar.gz",
+        "url": "https://files.pythonhosted.org/packages/55/2b/8cf7514cb57d028abcef625afa847d60ff1ffbf0049c36b78faa7c35046f/unidic-lite-1.0.8.tar.gz",
+        "sha256": "db9d4572d9fdd4d00a97949d4b0741ec480ee05a7e7e2e32f547500dae27b245"
+      },
+      {
+        "name": "wheel",
+        "version": "0.45.1",
+        "filename": "wheel-0.45.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/0b/2c/87f3254fd8ffd29e4c02732eee68a83a1d3c346ae39bc6822dcbcb697f2b/wheel-0.45.1-py3-none-any.whl",
+        "sha256": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248"
+      }
+    ],
+    "build": {
+      "dependencies": [
+        "Cython",
+        "setuptools",
+        "wheel",
+        "packaging"
+      ],
+      "no_build_isolation": true,
+      "compiler_prerequisite": "Apple Command Line Tools C++ compiler for mojimoji"
+    }
+  }
+}
