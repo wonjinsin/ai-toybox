@@ -5,10 +5,10 @@ The target directory contains one `reviews/` directory with `review.json` and
 `review.md`. These are the latest review, not a history. Replace only those two
 files on re-review; do not delete other existing user files.
 
-Each new attempt replaces the previous review, including a `blocked` attempt
-under the [stop rule](../SKILL.md#stop-on-access-or-verification-blockers).
-Save the current blocker instead of retaining old scores or continuing evaluation.
-An observed artifact defect is a review finding, not an infrastructure blocker.
+Each new attempt replaces the previous review under the
+[continuation and access rules](../SKILL.md#continue-independent-permitted-checks).
+Preserve this attempt's verified findings when later checks cannot run. Existing
+reviews are not evidence. An observed artifact defect is a finding, not a blocker.
 
 ## JSON fields
 
@@ -23,9 +23,9 @@ An observed artifact defect is a review finding, not an infrastructure blocker.
   A sourced effort of `none` may identify an explicit no-reasoning mode, not a
   missing effort. Model `none` is a placeholder.
 - `status`: `complete` only when all checks are verified and the reviewer model,
-  effort, and timestamp are known; `partial` when some checks remain unverified
-  without a stop condition; `blocked` for an incompatible task, invalid required
-  inputs, unresolved required metadata, or an access/verification blocker.
+  effort, and timestamp are known; `partial` when evidence or required metadata is
+  incomplete and usable findings remain; `blocked` for no usable evaluation or
+  an unresolved/incompatible task contract.
 - `requirements_verdict`: `pass`, `fail` or `unverified`, derived from the rubric.
 - `verification`: `browser_method` (`http` or `none`) and `viewports` (only
   actually checked CSS-pixel sizes, expressed as strings such as `1440x900`).
@@ -37,7 +37,8 @@ An observed artifact defect is a review finding, not an infrastructure blocker.
   or the missing evidence. For failures include steps, expected and observed
   behavior; for subjective ratings explain the relevant anchor. Do not claim
   precise measurements, screenshots or source lines that were not obtained.
-- `total_score`: calculated 0–100 score rounded to two decimals, or null.
+- `total_score`: calculated 0–100 score rounded to two decimals, or null when
+  evidence or required reviewer metadata is incomplete.
 - `coverage`: integer `passed`, `failed`, `unverified` check counts, summing to 19.
 - `notes`: concise strings for metadata sources and their limits, missing metadata,
   prompt mismatch, environment limits, partial grouped-check coverage, applied
@@ -51,18 +52,21 @@ available clock or a trustworthy current-session time source. Record sources and
 limits in notes. Never infer metadata from the generator, folder names, an earlier
 review, or invented values, and do not launch another model to supply an identity.
 If permitted sources cannot resolve a required value, retain null with a reason
-and save an unscored blocked attempt before inspection at a resolved safe target.
-Losing required metadata during review also takes the blocked stop path.
+and continue independently permitted inspection. Finalize partial with null total,
+even when every check is observed. Losing required metadata during review does
+not erase observations or justify invented replacements.
 
-For a blocked review, set all checks to `unverified` with null ratings, all scores
-to null, `requirements_verdict` to `unverified`, and coverage to
+For a blocked review, all checks are `unverified` with null ratings, all scores
+are null, `requirements_verdict` is `unverified`, and coverage is
 0 passed, 0 failed, 19 unverified. Record only this attempt's observed browser
 method and viewports, or `none` and an empty list if none were observed. Explain
-the blocker and unperformed checks in notes and Markdown; do not carry over old
-scores or findings. Missing required inputs or malformed run JSON also produce
-a blocked replacement when the target directory is resolved and output is safe.
-An unresolved target, unsafe output or denied write must instead be reported
-without bypassing the restriction or claiming the replacement succeeded.
+the blocker and unperformed checks. Missing required inputs or malformed run JSON
+produce a blocked record when the target directory is resolved and output is safe.
+Never discard verified findings from this attempt to fit blocked status after a
+later capability gap or denial; preserve them in a partial record. Stop the denied
+operation without retry or bypass and continue only independent permitted work.
+An unresolved target, unsafe output or denied write must be reported without
+claiming publication succeeded. Existing reviews cannot fill current evidence gaps.
 
 No generation token/time metrics, hashes, copied source, screenshots or historical
 reviews belong in this record. During a real review, source preservation can be
@@ -87,6 +91,23 @@ It never rewrites the input. Skill maintenance leaves saved files unchanged;
 there is no historical bypass, invented metadata fill, migration, or rescoring.
 An explicit migration request cannot waive this completeness gate.
 
+Use the same [publication command](review-format.md#publication-command) for both
+formats:
+
+```sh
+node skills/benchmark-review/scripts/finalize-review.mjs <run-directory> <draft-review.json>
+```
+
+The draft is a regular non-linked file outside the target run. The command uses
+the scorer's exported normalizer, preserves format 2 without cap/raw fields, and
+generates Markdown from normalized JSON. Publish an early unscored checkpoint,
+then the final complete, partial, or blocked record. Each output replacement is
+atomic, but the pair is not transactional. On failure report each file's actual
+publication state from the command and any readback/cleanup errors. Never claim
+rollback or a validated pair on failure. Safe output rejection, temporary-file
+cleanup, and readback use the same rules as format 3.
+
+
 ## Markdown report
 
 Write `review.md` in English, consistent with repository documentation. Use:
@@ -101,5 +122,6 @@ Write `review.md` in English, consistent with repository documentation. Use:
    acceptance-scenario outcomes and unexecuted steps.
    Explicitly state when no browser execution occurred. Include cleanup failures.
 
-Use the JSON as the single numerical source for Markdown. Do not create a second
-independent set of scores. Read both files back before claiming they were saved.
+The publication command uses JSON as the single numerical source for Markdown,
+includes every finding and note with literal escaping, and reads both outputs back
+before reporting success. Do not create an independent set of Markdown scores.

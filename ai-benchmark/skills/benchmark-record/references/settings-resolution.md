@@ -15,9 +15,9 @@ Resolve `model` and `effort` separately, in order:
    verification is unavailable. It does not change settings or override runtime.
 3. Automatically inspected applicable host configuration, labeled
    configuration-derived. Use valid values even if active overrides are inaccessible.
-4. If still unresolved, stop setup before directory creation or implementation.
-   If an attempt already exists, preserve its artifacts and record null with a
-   reason in notes. It cannot become `completed` without the missing value.
+4. If still unresolved, record null with a reason, publish the early checkpoint
+   and continue permitted implementation. Finalize `failed` if a required value
+   remains unavailable. Do not discard HTML or leave the attempt `running`.
 
 In one or two short notes, name sources/unverified overrides. Keep the schema;
 no extra provenance fields, config copies or evidence files are needed. Resolve
@@ -28,14 +28,15 @@ Prefer TOML/JSON parsers. If none is available, inspect exact scalar keys with
 section/scope context. Ambiguous structure is unusable. No broad search mixing unrelated/inactive
 keys, whole config/environment/credential/transcript dumps, or unrelated sessions/histories.
 Briefly note missing, malformed or unsupported sources and try permitted fallbacks.
-Unresolved required settings stop setup. An access/security denial takes the
-[whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers);
-do not treat denied access as merely missing metadata.
+Unresolved settings are recording limitations, not construction blockers.
+An access/security denial stops that lookup operation under the
+[scoped continuation rule](../SKILL.md#continue-safely-and-finalize).
+Do not retry or bypass denied access; use only independently permitted sources.
 
 Preserve configured identifiers/aliases exactly in JSON; note unresolved exact
 runtime models, never guess versions. Empty/reset/default selectors (model
 `default`, effort `auto`) are not concrete: resolve from current-run sources or
-stop setup with the unresolved selector noted. Never infer effort from model,
+record null and the unresolved selector in notes. Never infer effort from model,
 thinking budget, account tier or built-in defaults. Metadata placeholders
 `unknown`, `null`, `undefined`, `unavailable`, `n/a`, `default`, `auto`,
 `unspecified`, `unset`, `not available`, `not applicable`, `tbd`, `todo`, and
@@ -47,7 +48,9 @@ usage are required for success. Never rename existing run directories.
 
 ## Host settings
 
-Read only the current host's document: [Codex](codex.md#settings) or [Claude Code](claude-code.md#settings).
+Read only the actual current host's document: [OMP](omp.md#settings),
+[Codex](codex.md#settings) or [Claude Code](claude-code.md#settings). A provider
+or model named Codex does not make an OMP session a Codex host session.
 
 ## Sources
 

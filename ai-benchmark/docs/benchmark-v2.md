@@ -69,15 +69,19 @@ before interpreting that order.
 ## Required completion values
 
 A completed generation record must include its actual session ID, model, effort,
-elapsed work time, and both full-interval token totals. Setup must establish the
-identity, settings, clock, and accounting source before creating a fresh attempt.
-If final boundaries or complete usage cannot be established after work starts,
-preserve the artifact and finalize a failed record with honest unknowns.
+elapsed work time, and both full-interval token totals. Missing metadata or usage
+does not block implementation. Reserve an early running checkpoint, finish
+permitted work, and finalize `failed` with honest unknowns when recording values
+cannot be established. A finished, measured attempt may be `completed` with
+documented functional defects or browser verification gaps. That status records
+execution completion, not artifact quality.
 
-A complete review must include the reviewer model, effort, and review timestamp
-in addition to verified checks. Resolve reviewer metadata before browser work.
-If it remains unavailable, use the safe blocked-review path, not a completion
-claim with a note. This applies to both supported review formats.
+A complete review must include reviewer model, effort, and review timestamp in
+addition to verified checks. Missing metadata does not block inspection. Preserve
+same-attempt evidence in `partial` with null totals, even when all checks were
+observed. Missing browser capabilities leave the affected checks unverified.
+Use `blocked` for no usable evaluation or incompatible task routing. This applies
+to both supported review formats. Never bypass an access denial to continue.
 
 The standalone [run validator](../skills/benchmark-record/scripts/validate-run.mjs)
 and [review scorer](../skills/benchmark-review/scripts/score-review.mjs) enforce
@@ -90,19 +94,53 @@ Unknown fields remain null in incomplete or failed records. An unapplied
 Existing saved artifacts are not migrated. An older complete record with missing
 required values now fails validation instead of receiving an exception.
 
+## Reliable publication
+
+The recording validator also publishes checkpoints and terminal records. It
+validates the proposal before replacing `run.json`, rejects stale writes using
+the existing record's SHA-256, and refuses to overwrite finalized histories.
+Completed records require a saved prompt and HTML entrypoint. The checksum is
+working state, not a new record field.
+
+The review finalizer scores one draft and generates both reports from the same
+normalized JSON. Each replacement is atomic. The pair is not a filesystem
+transaction, so an error reports each output's saved state. Both commands reject
+unsafe output paths and read back their writes. Structural validity never proves
+browser behavior or measurement provenance.
+
+These changes address saved attempts where a missing browser input capability
+made an otherwise finished attempt fail, and where recording remained `running`.
+No prompt, saved run, or historical score is rewritten. A forcibly terminated
+session can still leave its last checkpoint. The workflow cannot promise a final
+write after its process has stopped or the host denies output access.
+
+
 ## Verification and calibration
 
 Run the record-completion and scoring regression cases from the repository root:
 
 ```sh
-node --test tests/benchmark-record.test.mjs tests/benchmark-score.test.mjs
+node --test tests/benchmark-*.test.mjs
 ```
 
 The cases exercise completed, running, failed, interrupted, partial, blocked,
-malformed, and historical inputs through the real CLIs. They include missing
-required values, placeholders, genuine zero measurements, and unchanged inputs.
-They do not prove browser behavior, measurement provenance, or model separation.
+malformed, and historical inputs through the real CLIs. They cover metadata gaps,
+retained findings, zero measurements, stale writes, unsafe paths, source
+preservation, and JSON/Markdown agreement. They do not prove browser behavior,
+measurement provenance, or model separation.
 Reviewers must still obtain actual observations and accounting sources.
+
+The continuation/publication repair passed `node --test tests/*.test.mjs` with
+92 tests. A separate CLI smoke run exercised running, interrupted, resumed, and
+completed publication with an explicit browser gap. The metadata-gap case that
+previously failed scoring now publishes a partial review with null totals and
+all observed checks retained. Six discovery entrypoints and 81 local skill links
+passed structural checks. Checksums confirmed that 19 existing run, prompt, and
+gallery files remained unchanged. These checks use synthetic publication fixtures,
+not a fresh Solar System benchmark or browser quality evaluation.
+A separate injected disk-error scenario failed the Markdown rename after JSON
+publication. The CLI exited nonzero, reported JSON as saved and Markdown as
+unchanged, preserved the previous Markdown, and removed its temporary file.
 
 Before strict completion validation was introduced, the task-revision check
 passed all 38 repository tests, including eight scorer regression cases.

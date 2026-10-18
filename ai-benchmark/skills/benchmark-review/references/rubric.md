@@ -189,8 +189,9 @@ null/unverified. Quality-only failure does not fail mandatory requirements.
 Each category is its checks' arithmetic mean on a 0..5 scale. Any unverified
 owned check makes that category null. Display category means to two decimals.
 Calculate `raw_total_score` from unrounded means times weight/5 and round only
-the final sum to two decimals. Any unverified check makes both totals null.
-Never renormalize known categories or publish a partial sum.
+the final sum to two decimals. Any unverified check or missing required reviewer
+metadata makes both totals null. Preserve observed ratings and complete category
+means. Never renormalize known categories or publish a partial sum.
 
 `requirements_verdict` is fail if any mandatory check fails, otherwise unverified
 if any mandatory check is unverified, otherwise pass. `score_cap` is 69 if any
@@ -202,5 +203,8 @@ original uncapped arithmetic and has neither new field.
 
 Coverage counts all 27 checks by status. Complete means every check is observed
 and required reviewer metadata and the timestamp are known, not that every check
-passes. Numeric computation validates a record's consistency; it cannot establish
-browser facts or prove that metadata or a prose observation is true.
+passes. Partial may retain all observed checks when required metadata is missing.
+Blocked is unscored and has no usable evaluation, not merely a missing capability.
+Preserve verified findings from the current attempt when later independent checks
+cannot run. Numeric computation validates consistency, not browser facts or the
+truth of metadata or prose observations.

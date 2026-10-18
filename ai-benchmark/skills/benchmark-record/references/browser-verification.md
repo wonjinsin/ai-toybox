@@ -15,9 +15,10 @@ Use the documented snapshot, locator, screenshot and event APIs to check the
 artifact. Record actual capability and verification gaps.
 
 Install/register Aside outside benchmark attempts. Do not install it or add MCP
-configuration during a measured run. Unavailable Aside or inability to perform a
-required check triggers the same stop rule, not remaining checks or a static-only
-completion. Do not switch to another browser or install another browser runtime.
+configuration during a measured run. If Aside or a required operation is
+unavailable, mark only the affected checks unverified and continue implementation
+and other permitted checks. Do not switch to another browser or install a runtime.
+Static checks may provide limited evidence, never substitute for browser proof.
 
 No new browser installation, raw CDP, insecure flags or security-setting changes.
 Follow Aside's documented initialization and navigation capabilities.
@@ -34,9 +35,10 @@ Follow Aside's documented initialization and navigation capabilities.
    record the exact operation/error and use the same HTTP path only when host
    file access and loopback HTTP are permitted. Do not infer an OS permission
    failure from that message alone. An explicit host/tool security policy denial
-   is not this capability fallback: take the
-   [whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers),
-   without retrying the denied operation, changing permissions or bypassing it.
+   stops the denied operation under the
+   [scoped continuation rule](../SKILL.md#continue-safely-and-finalize).
+   Do not retry it, change permissions or bypass it with a different transport.
+   Continue only checks and construction independently permitted by that policy.
 3. For HTTP, run a tracked host process serving only unchanged `output/`, not the
    repository root:
 
@@ -57,8 +59,9 @@ Follow Aside's documented initialization and navigation capabilities.
    local scripts/assets for file compatibility without claiming execution proof.
    Keep the artifact directly runnable without a server/build.
 5. Close only attempt-created tabs and stop the temporary server on every exit,
-   including failure, before measurement ends. If no permitted method is
-   available, take the whole-attempt stop path; do not substitute static checks.
+   including failure, before measurement ends, when those operations are permitted.
+   If no permitted browser method is available, record browser checks as
+   unverified, continue implementation/static checks and finalize the record.
 
 Use all requirements and acceptance sequences in the attempt's exact saved
 `prompt.md` as the verification checklist. For a fresh attempt, that is the
@@ -107,13 +110,25 @@ to `run.json`.
   failure, check the saving-unavailable notice and continued in-memory use.
   Report any unexercised storage failure path honestly. Direct-file and HTTP
   storage contexts are different. HTTP persistence does not prove `file://`
-  persistence. The existing whole-attempt stop rule still applies to any
-  unavailable required check or access/security denial.
+  persistence. An unavailable required operation leaves that check unverified,
+  not the entire attempt failed. An access/security denial stops the affected
+  operation without bypass; its policy scope determines which other work is allowed.
 - Use actual keyboard events through the Aside REPL, not programmatic click
   substitutes, for the DOM-control sequence at both viewport sizes. Inspect
   accessible names, visible focus, Tab order, keyboard activation, range
   changes, textarea editing, and absence of a focus trap or horizontal overflow.
 
-Access and verification blockers stop the entire attempt, not only navigation.
-An observed artifact defect remains a benchmark finding, not an infrastructure
-blocker.
+Investigate application defects and fix them during generation when feasible.
+An undefined runtime dependency or a broken scene-selection handler is not merely
+a browser limitation. Conversely, an unsupported viewport API or wheel event
+that the driver cannot deliver is not proof that the application is defective.
+Record exact actions/results and stop repeating unsupported operations. Continue
+independent checks rather than abandoning the artifact.
+
+Verification gaps and unresolved defects belong in notes. They do not alone
+prevent `completed` for a finished, fully identified/measured attempt. For example,
+successful construction and measurement with an unverified mobile zoom gesture
+may finish `completed`, explicitly noting that gap. Missing identity/measurements
+or unfinished construction instead requires a terminal non-completed status.
+Always apply [publication and read-back](record-format.md#validation-and-publication),
+even when browser checks could not run.

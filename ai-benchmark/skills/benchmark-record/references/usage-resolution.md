@@ -15,16 +15,16 @@ or unsupported accounting. Never select a newest/neighbor file, infer identity
 from cwd, or substitute another conversation's usage. A moved workspace needs
 runtime evidence linking it to this session.
 
-Try another available current-run source after a failed lookup only if no
-access/security denial occurred. A denial takes the
-[whole-attempt stop path](../SKILL.md#stop-on-access-or-verification-blockers),
-including during usage lookup. Missing injected counters alone do not establish
-that no source exists. Exhaust permitted current-session sources before deciding.
-Before reserving a fresh run, require a trustworthy source for both input and
-output with usable boundary/finality accounting and a reliable clock. Otherwise
-stop setup without a run. If an attempt exists and counts remain unprovable,
-keep affected fields null, name the lookup/schema/cutoff/coverage failure, and
-finalize `failed`, never `completed`.
+Try another available current-run source after a missing/unsupported lookup.
+An access/security denial stops the affected operation under the
+[scoped continuation rule](../SKILL.md#continue-safely-and-finalize); never retry
+or bypass it. Other independently permitted sources/work may continue.
+Missing injected counters alone do not establish that no source exists.
+Exhaust scoped permitted sources without indefinite searching or invented paths.
+Missing usage or a reliable clock does not block the early checkpoint or
+implementation. Keep affected fields null, name the lookup/schema/cutoff/coverage
+failure, preserve output and finalize `failed` if required measurements remain
+unprovable. Never discard the artifact or leave `running` merely for missing usage.
 
 ## Capture comparable boundaries
 
@@ -65,7 +65,9 @@ requires all metadata and measurements to become `completed`; otherwise use `fai
 
 ## Host lookup
 
-Read only the current host's document: [Codex](codex.md#session-and-tokens) or [Claude Code](claude-code.md#session-and-tokens).
+Read only the actual current host's document: [OMP](omp.md#session-and-tokens),
+[Codex](codex.md#session-and-tokens) or [Claude Code](claude-code.md#session-and-tokens).
+Provider/model names do not identify the host.
 
 ## Delegated work
 
@@ -79,9 +81,10 @@ cache/reasoning already included.` On failure, name identity, permission, schema
 finality, boundary or coverage failure, not merely absent prompt metadata.
 Finalize in this invocation even with null metrics, but use `failed` for missing
 final measurements. A note never waives a completed run's required values.
-Validate the saved record with the bundled
-[validator](record-format.md#validation-and-publication) before publication and
-again at read-back. The validator cannot prove source truth, bounds, or coverage.
+Publish the checkpoint and terminal proposal through the bundled
+[validated atomic writer](record-format.md#validation-and-publication).
+It validates before replacing the record and at read-back; it cannot prove source
+truth, bounds or coverage. Missing usage must not defer same-invocation finalization.
 
 If parent interval counts are valid but full linked coverage is unknown, keep
 known fields in one note, explicitly partial: `Partial parent work usage:

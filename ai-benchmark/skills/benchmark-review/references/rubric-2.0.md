@@ -117,8 +117,10 @@ Quality-only failures do not by themselves fail mandatory requirements.
 A category score is the arithmetic mean of its check ratings on a 0–5 scale.
 If any owned check is unverified, its score is null. Total is the sum of
 `unrounded_category_score / 5 * weight`, rounded once to two decimal places;
-it is null if any category is null. Display category scores to two decimal
-places, but calculate the total from check ratings, not rounded displays.
+it is null if any category or required reviewer metadata is missing. Display
+category scores to two decimal places, but calculate the total from check ratings,
+not rounded displays. A metadata gap does not erase observed ratings or category
+means; finalize partial with null total even when every check was observed.
 
 `requirements_verdict` is `fail` if any R-linked check fails, otherwise
 `unverified` if any R-linked check is unverified, otherwise `pass`. A complete

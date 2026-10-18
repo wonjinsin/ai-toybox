@@ -2,15 +2,15 @@
 
 Apply [shared settings rules](settings-resolution.md) and [shared usage rules](usage-resolution.md) alongside this document.
 
-Before reserving a run or starting implementation, resolve concrete current
-identity, model and effort, a reliable clock, and a trustworthy usage source with
-usable boundary/finality accounting for both input and output. Exhaust permitted
-fallbacks; missing injected counters alone do not establish that no source exists.
-Unresolved setup requirements stop setup without a run. If an attempt already
-exists, preserve artifacts and finalize `failed` when final required values or
-coverage cannot be proven, retaining nulls with reasons. Unfinished interruptions
-remain `interrupted`. Follow the bundled
-[validation and publication gate](record-format.md#validation-and-publication).
+Use this reference only for an actual Claude Code host. Resolve current identity,
+model/effort, clock and usage through permitted scoped sources. Missing injected
+counters do not end lookup. Missing metadata, clock or usable usage does not
+prevent reserving a checkpoint or implementation. Preserve artifacts and finalize
+`failed` if required final values/coverage remain unprovable, retaining nulls with
+reasons. Unfinished interruptions remain `interrupted`. Apply the
+[scoped continuation rule](../SKILL.md#continue-safely-and-finalize) to denials,
+and the [atomic publication contract](record-format.md#validation-and-publication)
+to every checkpoint and terminal outcome.
 
 ## Settings
 

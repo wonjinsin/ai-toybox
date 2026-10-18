@@ -1,7 +1,7 @@
 # Solar System AI Benchmark
 
-Run one fixed Solar System task in Codex or Claude Code. The skill builds the
-HTML, automatically saves a small run record, and then replies with the result.
+Run one fixed Solar System task in OMP, Codex, or Claude Code. The skill builds the
+HTML, saves a validated run record, and then replies with the result.
 One invocation completes the workflow; there is no follow-up collection step.
 
 The [fixed prompt](skills/benchmark-record/assets/solar-system-prompt.md) is task
@@ -228,22 +228,22 @@ and do not certify that excluded generation requirement.
 Checks distinguish pass, fail and unverified. Any unverified check leaves its
 category and the total unscored; verified failures are still reported separately.
 Both review formats require a concrete reviewer model, effort, and review
-timestamp before `status: complete` is accepted. Resolve them before browser
-work. If they remain unavailable, save a safe, unscored `blocked` attempt rather
-than claiming completion. A note cannot waive these required values.
+timestamp before `status: complete` is accepted. Missing metadata stays null
+with a reason and does not prevent independent checks. The result is `partial`
+with null totals, even when every check was observed.
 Aside's direct REPL is the only permitted browser tool. Reviews use documented,
 host-permitted loopback HTTP serving only the unchanged `output/` directory.
 Do not test `file://` or leave a review unscored for missing local-file access.
 See the [browser preflight](skills/benchmark-review/references/verification.md)
 for server setup, real CSS viewport fixtures, access-denial boundaries and cleanup.
-A required inaccessible file, an explicit access/security denial, unavailable
-Aside or an unsupported required check stops evaluation immediately. Do not
-continue static inspection or score the artifact.
-Clean up review-created resources and
-replace both review files with this attempt's `blocked` result: no scores, the
-exact blocker and unperformed checks. A new attempt replaces the previous review,
-including a previously successful one. If the target or output is unsafe, or a
-write is denied, report the actual saved/unsaved state without bypassing it.
+A functional defect is a finding, not a reason to abandon the remaining checks.
+Unavailable browser capabilities leave only the affected checks unverified.
+Keep same-attempt findings in a `partial` review and continue permitted work.
+Use `blocked` when no usable evaluation can be made or task routing is incompatible.
+Never copy an earlier review's evidence into the new attempt.
+An access or security denial stops the affected operation. Do not retry or bypass
+it. Continue unrelated work only when policy permits it. If the target or output
+is unsafe, or a write is denied, report the actual saved and unsaved state.
 Past errors are historical context, not current observations. Generation time,
 tokens and model identity do not affect quality scores.
 
@@ -259,6 +259,18 @@ Existing files are not rewritten or grandfathered through validation. It does
 not execute the artifact or certify the reviewer's observations. See the
 [revision and calibration guide](docs/benchmark-v2.md) for the design choices,
 verification cases, and limits on interpreting new scores.
+
+Publish both reports from one draft outside the run directory:
+
+```sh
+node skills/benchmark-review/scripts/finalize-review.mjs "<run>" "<draft-review.json>"
+```
+
+The command validates and scores the draft, generates Markdown from that JSON,
+and reads back both files. Invalid proposals do not replace existing reports.
+Each file replacement is atomic, but the pair is not a filesystem transaction.
+A publication error reports which files were saved. Do not claim pair completion
+until both files pass read-back.
 
 ## Saved Files
 
@@ -288,17 +300,18 @@ and the current host's configuration before naming the run. It resolves model
 and effort separately. When runtime verification is unavailable, it can use
 configuration-derived values and labels their source and unverified overrides
 in `notes`. If model, effort, or current-session identity remains unresolved,
-stop setup before creating a new run. Do not put `unknown` into a completed
-record. JSON preserves known selected identifiers or aliases as originally
-reported; aliases are not guessed into exact model versions. See
+keep the corresponding JSON values null with reasons and continue implementation.
+Directory components may use `unknown`; JSON metadata may not use placeholders.
+JSON preserves known identifiers or aliases without guessing exact model versions. See
 [automatic settings resolution](skills/benchmark-record/references/settings-resolution.md)
 and the complete
 [directory naming rules](skills/benchmark-record/references/record-format.md#run-directory).
 
-Codex checks `model` and `model_reasoning_effort` in applicable configuration
-when runtime metadata is missing. Claude Code also checks its active effort
-environment and model/effort configuration, including user, project and local
-settings. Neither path launches another model or requires a second user request.
+OMP uses explicit current-session runtime metadata and permitted, identity-checked
+usage sources. It never treats an OMP model provider as the host or guesses a
+Codex thread ID. Codex checks applicable configuration when runtime metadata is
+missing. Claude Code checks its active environment and applicable settings.
+No path launches another model or requires a second user request.
 
 The [record template](skills/benchmark-record/assets/run.json) keeps:
 
@@ -309,12 +322,13 @@ The [record template](skills/benchmark-record/assets/run.json) keeps:
 - A format version, execution status, and notes for sources, verification limits,
   interruptions, or failure.
 
-Format `2.1` adds `session_id` to `2.0`. Codex records the current thread ID;
-Claude Code records the current session ID. Missing identity prevents a new
-attempt from starting. Failed or interrupted attempts may retain null values
-with reasons, but `completed` requires all metadata and measurements.
-Resuming the same attempt preserves its original session ID and measurement
-bounds. See [session identity](skills/benchmark-record/references/record-format.md#session-identity).
+Format `2.1` adds `session_id` to `2.0`. Each host records its actual invoking
+session identity. Missing identity or accounting does not prevent building HTML.
+Finalize such attempts as `failed` with honest nulls and reasons.
+`completed` requires all metadata and measurements, but does not certify bug-free
+behavior or full browser coverage. Record functional defects and verification
+gaps in notes. Resuming retains original identity and measurement bounds.
+See [session identity](skills/benchmark-record/references/record-format.md#session-identity).
 
 Validate a proposed or saved record without modifying it:
 
@@ -327,6 +341,24 @@ The validator requires `session_id`, `model`, `effort`, `duration_ms`,
 values and placeholder strings, not genuine measured zero. It validates the
 record's structure, not the truth of its sources. The same gate applies to old
 saved records when explicitly validated; this policy does not rewrite them.
+
+Reserve an empty run directory and publish a running checkpoint before work:
+
+```sh
+node skills/benchmark-record/scripts/validate-run.mjs --checkpoint "<draft.json>" "<run>"
+```
+
+After work, publish a terminal draft using the SHA-256 of the current record:
+
+```sh
+node skills/benchmark-record/scripts/validate-run.mjs --finalize "<draft.json>" "<run>" "<expected-sha256>"
+```
+
+Keep drafts outside the run directory. The command validates before replacement,
+rejects stale writes and terminal-record overwrites, and reads the saved JSON
+back. A completed proposal also requires the saved prompt and HTML entrypoint.
+Use the [publication contract](skills/benchmark-record/references/record-format.md#validation-and-publication)
+for interrupted checkpoints and safe resume.
 
 There are no response copies, child/turn identifiers, hashes, transcript or
 evidence archives, cache/reasoning breakdowns, or previous-record backups.
@@ -368,16 +400,14 @@ The artifact must still run directly without a server. Record HTTP interaction
 checks separately from static `file://` compatibility; neither proves direct-file
 execution. See [browser verification](skills/benchmark-record/references/browser-verification.md).
 
-This fallback never overrides an explicit host/tool security policy. If a required
-file is inaccessible, access is explicitly denied, Aside is unavailable or no
-permitted method can perform a required check, stop the entire attempt. Do not
-continue implementation or remaining/static checks, switch tools or protocols to
-bypass a denial, or install another browser runtime. Preserve existing artifacts;
-mark an already-created, writable `run.json` as `failed`, never `completed`.
-If setup stopped before a run existed, create no run. Report the exact blocker,
-unperformed work and saved/unsaved state; do not retry a denied write. Missing
-required metadata or accounting is also a completion blocker, but is not itself
-an access denial. Exhaust other permitted sources before treating it as unavailable.
+This fallback never overrides an explicit host or tool security policy. Stop a
+denied operation without retrying it, changing permissions, or switching tools
+to bypass it. Continue independent implementation and checks only where permitted.
+Unavailable Aside or an unsupported input operation is a verification gap, not
+a command to abandon implementation. Use available static checks without claiming
+they prove browser behavior. Record the exact limitation and unperformed checks.
+Finalize writable JSON before replying. A denied output write is an explicit
+publication failure, never a successful save.
 
 ## Measurement Boundary
 
@@ -390,9 +420,10 @@ API latency. The task does not pin a Three.js version; delivery must work via
 The agent uses normal clock and host inspection tools. It automatically checks
 current-run usage and existing current-session files, following
 [usage resolution](skills/benchmark-record/references/usage-resolution.md).
+OMP can use a permitted current-session usage API or explicitly supplied journal;
 Codex can use App Server usage or its current rollout; Claude Code can use its
-current session transcript. Current runtime identity selects the file; the agent
-never substitutes the newest session or another conversation from the project.
+current session transcript. Runtime identity selects the source. The agent never
+substitutes the newest session or another conversation from the project.
 The Claude discovery entrypoint also passes its native session substitution to
 the shared skill for hosts that do not expose a session ID in the tool environment.
 
@@ -410,10 +441,9 @@ Missing counts in a delegation tool result alone do not end lookup. See
 [delegated usage collection](skills/benchmark-record/references/delegated-usage.md).
 
 If current-session identity or a usable usage source cannot be established during
-setup, stop before creating a new run. Verify that the source supports both token
-totals and the required interval boundaries; a context-window counter is not
-enough. An environment without reliable usage accounting cannot produce a
-completed benchmark record.
+setup, retain nulls and continue the task. A context-window counter is not interval
+usage. An environment without reliable accounting can produce an artifact and a
+valid finalized record, but not a `completed` format `2.1` benchmark record.
 
 If final usage, clock bounds, or full delegated coverage cannot be established
 after work starts, preserve the artifact and save the attempt as `failed`.
@@ -422,11 +452,12 @@ remain in notes but cannot replace full-work totals. Do not substitute estimates
 zero, or another session's values, and do not claim completion because the HTML
 was built. The skill finalizes the failure and replies in the same invocation.
 
-An observed failure is saved as `failed`. An interrupted, unfinished attempt is
-`interrupted`. Resuming it retains the original measurement bounds and can reach
-`completed` only after implementation, verification, required metadata, and full
-measurements are established. An abrupt process termination can leave `running`
-because no background service finalizes it.
+Use `failed` when implementation cannot finish or required metadata and
+measurements remain unavailable. A functional defect or browser coverage gap
+alone does not make a finished, measured attempt failed. Use `interrupted` for
+unfinished work that was deliberately paused. An abrupt process termination can
+still leave `running`; no background service finalizes a dead session.
+These rules govern new work. Historical statuses are not relabeled.
 
 ### Validating skill changes
 
@@ -454,7 +485,8 @@ The shared `SKILL.md` contains the workflow; references separate the detailed ru
 Read the shared [record format](skills/benchmark-record/references/record-format.md),
 [settings](skills/benchmark-record/references/settings-resolution.md), [usage](skills/benchmark-record/references/usage-resolution.md)
 and [browser verification](skills/benchmark-record/references/browser-verification.md), then only the current host's
-[Codex](skills/benchmark-record/references/codex.md) or [Claude Code](skills/benchmark-record/references/claude-code.md) document.
+[OMP](skills/benchmark-record/references/omp.md),
+[Codex](skills/benchmark-record/references/codex.md), or [Claude Code](skills/benchmark-record/references/claude-code.md) document.
 Read Shared procedure and the current-host section of [delegated usage](skills/benchmark-record/references/delegated-usage.md) only when delegating.
 The run record schema, settings precedence and token calculations are unchanged.
 The fixed task is versioned separately. Authoring Sources are not runtime inputs.

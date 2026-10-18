@@ -2,7 +2,7 @@
 
 Use [run.json](../assets/run.json), format `2.1`. Each attempt contains exact bundled
 `prompt.md`, `output/index.html` with local resources, and `run.json`.
-Never migrate or overwrite existing records.
+Never migrate historical records. Update only the active attempt through the publication CLI.
 
 ## Task identity
 
@@ -26,15 +26,17 @@ Under the project root's `runs/v1/` or requested output root, exclusively create
 
 - `agent`: actual host (`codex`, `claude-code`, etc.), never inferred from model or
   discovery entrypoint; `unknown` if unavailable.
-- `model`, `effort`: resolve separately per [settings resolution](settings-resolution.md)
-  before reservation. Missing identity, model, effort, clock, or a usable current-session
-  usage source stops setup without a directory. Configuration-derived settings are
-  allowed when runtime verification is unavailable; note source/limits, never guess.
+- `model`, `effort`: resolve separately per [settings resolution](settings-resolution.md).
+  Missing identity, settings or usage does not block reservation or construction.
+  Use `unknown` only in directory components, never in JSON metadata. Configuration-derived
+  settings are allowed when runtime verification is unavailable; note source/limits.
 - Normalize these three components: lowercase; replace runs outside `a-z`, `0-9`,
   `.` and `-` with `-`; collapse repeated hyphens; trim leading/trailing dots/hyphens;
   empty becomes `unknown`. Preserve original known model/effort strings in JSON.
 - `run-id`: real invocation-start clock from setup, converted to `Asia/Seoul`
-  (UTC+09:00), formatted `YYYYMMDD-HHmmss`. Work measurement still starts at step 2.
+  (UTC+09:00), formatted `YYYYMMDD-HHmmss`. If no reliable clock is available,
+  use `undated-<random-UUID>` for collision-safe reservation and explain that this
+  is not a timestamp. Work measurement still starts at step 2; do not fabricate time.
 - On collision, append `-02`, `-03`, etc. to the full name until exclusive creation
   succeeds. Keep the original timestamp; never reuse paths or rename old runs.
 
@@ -64,14 +66,19 @@ Populate the template's values and explanatory notes before saving a record.
 
 ## Status and resume
 
-- Finished implementation/checks is `completed` only when `session_id`, `model`,
-  `effort`, `duration_ms`, `input_tokens`, and `output_tokens` are all known and valid,
-  with proven measurement boundaries and full parent/delegated coverage. Access or
-  verification blockers never permit completion.
-- An observed/recoverable failure that prevents finishing is `failed`; apply the [stop rule](../SKILL.md#stop-on-access-or-verification-blockers) for access/verification blockers.
-- If an attempt exists and final metadata, counts, bounds, or coverage cannot be
-  proven, preserve artifacts and finalize `failed` with affected values null and
-  reasons in notes. Do not turn estimates, partial totals or placeholders into facts.
+- A finished attempt is `completed` only when `session_id`, `model`, `effort`,
+  `duration_ms`, `input_tokens`, and `output_tokens` are all known and valid,
+  with proven measurement boundaries and full parent/delegated coverage.
+  Completion describes the measured attempt, not app quality or exhaustive
+  verification. A mobile zoom or viewport capability gap alone does not make it
+  `failed`. Note unverified requirements and remaining functional defects.
+- An observed failure that prevents finishing construction is `failed`. Apply the
+  [scoped continuation rule](../SKILL.md#continue-safely-and-finalize), not a
+  whole-attempt abort for a check-specific limitation or recoverable defect.
+- If final metadata, counts, bounds or coverage cannot be proven, preserve HTML
+  and finalize `failed` with explicit recording limitations and affected values
+  null. Continue construction and independent checks before finalization.
+  Do not turn estimates, partial totals or placeholders into facts.
 - Use `interrupted` only for unfinished interrupted attempts. Resume the same attempt
   with original measurement bounds. Finished resumed work becomes `completed` only
   when every required value is proven; otherwise use `failed`.
@@ -80,19 +87,19 @@ Populate the template's values and explanatory notes before saving a record.
 
 ## Session identity
 
-During setup, use the current-host identity sources and validation rules in
-[usage resolution](usage-resolution.md). For Codex, record the current thread ID
-from `CODEX_THREAD_ID` or concrete current-turn metadata, never a generic MCP
-`sessionId`. For Claude Code, use the current `CLAUDE_CODE_SESSION_ID`, substituted
+During setup, use the actual current-host sources in
+[usage resolution](usage-resolution.md). [OMP](omp.md) uses explicit current OMP
+session metadata or a runtime-linked journal, never an inferred Codex thread ID.
+For Codex, use `CODEX_THREAD_ID` or concrete current-turn metadata, never a generic
+MCP `sessionId`. For Claude Code, use current `CLAUDE_CODE_SESSION_ID`, substituted
 `${CLAUDE_SESSION_ID}` or explicit current-session metadata; reject stale inherited
 values and unexpanded placeholders. Other hosts require an explicit current-session ID.
 Never infer an ID from configuration, cwd, the run directory or the newest log.
 
-Resolve identity even if the usage file, counts or boundaries are unavailable.
-Add a short source note. Missing, invalid or conflicting identity stops fresh setup
-without a directory. If an attempt already exists, retain honest nulls with reasons,
-preserve artifacts and do not mark it `completed`. Record the invoking parent
-session, not delegated child sessions.
+Resolve identity even if counts or boundaries are unavailable. Note the source.
+Missing, invalid or conflicting identity leaves `session_id` null with a reason;
+reserve the early checkpoint and continue permitted work. The attempt cannot be
+`completed` without proven identity. Record the invoking parent session, not children.
 When resuming the same attempt, retain its original `session_id`; if the current
 session changes, note the change without replacing the original identity.
 
@@ -128,24 +135,71 @@ Only when delegating, also apply the shared and current-host sections of [delega
 
 ## Validation and publication
 
-The standalone skill includes [validate-run.mjs](../scripts/validate-run.mjs).
-Run it with Node.js on the saved record before publishing and again at read-back:
+The independently installable skill includes a dependency-free
+[validate-run.mjs](../scripts/validate-run.mjs). Its original read-only mode remains:
 
 ```sh
 node <skill-root>/scripts/validate-run.mjs <run.json>
 ```
 
-It requires exactly the format `2.1` fields, validates types and bounds for every
-status, and rejects null required values for `completed`. Null values in other
-statuses require notes. Each note must be a nonempty string; operators must ensure
-that the notes actually explain missing values and source limits.
+It validates exactly the format `2.1` fields, types and bounds for every status,
+rejects null required values for `completed`, and requires nonempty notes for
+nulls. Operators must explain each null and establish provenance themselves.
+Read-only success prints the input unchanged. Invalid input/I/O emits a diagnostic
+to stderr, exits nonzero and emits no stdout. Never redirect stdout over the input.
 
-On success, the CLI prints the validated input unchanged and exits zero. On invalid
-input or an I/O error, it emits a diagnostic to stderr, exits nonzero, and emits no
-stdout. It never writes files. Do not redirect stdout over the input file.
-Validation checks structure, not measurement truth, provenance, or artifact quality.
-Do not publish a record as successful unless both validation and source checks pass.
+Use explicit write modes rather than manually replacing the record:
 
-Historical records remain untouched. A historical `completed` record with missing
-required values now fails validation. There is no legacy bypass, automatic metadata
-fill, or migration.
+```sh
+node <skill-root>/scripts/validate-run.mjs --checkpoint <proposal.json> <run-directory>
+node <skill-root>/scripts/validate-run.mjs --finalize <proposal.json> <run-directory> <expected-sha256>
+```
+
+Exclusively reserve an empty directory first. The checkpoint requires `running`
+and publishes `run.json` before copying the fixed prompt or building HTML.
+Keep the proposal outside the run directory and never use an artifact as a draft.
+Every write validates the proposal before changing the final record, uses a
+unique sibling temporary file and atomic rename, then validates exact read-back.
+The CLI prints the saved JSON to stdout and its SHA-256 to stderr. Retain this hash
+as the next write's `expected-sha256`; it covers the exact existing record bytes.
+If recovering an existing attempt, calculate that hash from the inspected file,
+not an unrelated or newest record. Do not refresh a stale hash just to force a write.
+
+Finalization requires a terminal proposal and an existing `running` record with
+the matching hash. A `completed` proposal additionally requires nonempty regular
+`prompt.md` and `output/index.html` under a real output directory. The run directory,
+proposal and record cannot be symlinks. Files read by publication cannot be
+hard-linked or special files. Canonicalize parent directories so host aliases
+such as macOS `/var` are allowed. Check proposal containment against the canonical
+run directory. The run directory cannot be a filesystem root.
+Failed or interrupted publication does not inspect the artifact tree. An unreadable
+or unsafe artifact must not prevent recording the failure in writable JSON.
+Invalid proposals, missing completed output and stale hashes preserve the old record.
+
+For an explicitly resumed `interrupted` attempt, or an active `running` checkpoint
+update, use `--checkpoint <proposal.json> <run-directory> <expected-sha256>`.
+The proposal must be `running`. Preserve the original nonnull `session_id`; the
+CLI rejects replacement or erasure. An originally null identity can be filled only
+with evidence of the original invoking session, not the resuming session.
+Keep the saved prompt, notes and original measurement bounds. Record changed
+session context in notes. `completed` and `failed` records are immutable through
+these modes. Resume support is not permission to modify saved historical runs
+during maintenance.
+
+Use one publisher per attempt. Parallel attempts must own separate directories.
+The expected hash detects stale input but is not an atomic compare-and-swap across
+concurrent publishers. Do not change target directories during publication.
+The CLI is not a sandbox against hostile concurrent filesystem mutation.
+Normal errors remove the CLI's temporary file. Abrupt process death may leave
+that file; it is not a lock and does not prevent a resumed attempt from finalizing.
+Never retry denied writes. If the final write/read-back is unavailable, report
+the last observed state and preserve output.
+
+Structure is not truth. The CLI cannot prove measurement bounds, usage coverage,
+exact prompt bytes or functional correctness. Check these separately; no notes
+waive a completed record's required identity and measurements. Historical records
+remain untouched even when the current validator rejects them.
+
+The implementation uses write modes in the existing validator rather than a
+second finalizer. This keeps schema validation in one standalone-copyable file,
+avoids duplicated rules/import dependencies, and preserves the read-only interface.

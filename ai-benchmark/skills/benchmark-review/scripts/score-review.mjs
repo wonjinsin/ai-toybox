@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
@@ -37,7 +38,7 @@ function round(value) {
   return Math.round((value + Number.EPSILON) * 100) / 100;
 }
 
-function normalize(review, registry) {
+export function normalize(review, registry) {
   requireValue(review !== null && typeof review === 'object' && !Array.isArray(review), 'review must be an object');
   requireValue(typeof review.rubric_version === 'string' && Object.hasOwn(registry.rubrics, review.rubric_version), 'unsupported rubric_version');
   const rubric = registry.rubrics[review.rubric_version];
@@ -57,7 +58,8 @@ function normalize(review, registry) {
     if (review.status === 'complete') requireValue(value !== null, `complete review requires reviewer.${field}`);
   }
   requireValue(Array.isArray(review.notes) && review.notes.every(text), 'notes must be an array of nonempty strings');
-  if (review.reviewed_at === null || Object.values(review.reviewer).includes(null)) {
+  const missingMetadata = review.reviewed_at === null || Object.values(review.reviewer).includes(null);
+  if (missingMetadata) {
     requireValue(review.notes.length > 0, 'missing metadata requires a note');
   }
   object(review.verification, ['browser_method', 'viewports'], 'verification');
@@ -116,8 +118,8 @@ function normalize(review, registry) {
     mandatoryUnknown ||= definition.mandatory && check.status === 'unverified';
     categoryRatings.get(definition.category).push(check.rating);
   });
-  const status = review.status === 'blocked' ? 'blocked' : coverage.unverified > 0 ? 'partial' : 'complete';
-  requireValue(review.status === status, 'status is incompatible with check coverage');
+  const status = review.status === 'blocked' ? 'blocked' : coverage.unverified > 0 || missingMetadata ? 'partial' : 'complete';
+  requireValue(review.status === status, 'status is incompatible with check coverage or required metadata');
   if (status === 'blocked') {
     requireValue(coverage.unverified === rubric.checks.length && review.notes.length > 0, 'blocked reviews require all checks unverified and a blocker note');
     requireValue(review.total_score === null && review.categories.every(category => category.score === null) && review.requirements_verdict === 'unverified', 'blocked reviews cannot retain scores or a verdict');
@@ -132,7 +134,7 @@ function normalize(review, registry) {
     if (mean !== null) weightedTotal += mean / 5 * definition.weight;
     return { ...definition, score: mean === null ? null : round(mean) };
   });
-  const raw = coverage.unverified > 0 ? null : round(weightedTotal);
+  const raw = status === 'complete' ? round(weightedTotal) : null;
   const cap = mandatoryFailure ? rubric.mandatory_failure_cap : null;
   if (status === 'partial') {
     requireValue(review.total_score === null && (!current || review.raw_total_score === null), 'partial reviews cannot publish numeric totals');
@@ -151,12 +153,14 @@ function normalize(review, registry) {
   };
 }
 
-try {
-  requireValue(process.argv.length === 3, 'usage: node skills/benchmark-review/scripts/score-review.mjs <review.json>');
-  const registry = JSON.parse(await readFile(new URL('../assets/check-registry.json', import.meta.url), 'utf8'));
-  const review = JSON.parse(await readFile(process.argv[2], 'utf8'));
-  process.stdout.write(`${JSON.stringify(normalize(review, registry), null, 2)}\n`);
-} catch (error) {
-  process.stderr.write(`score-review: ${error.message}\n`);
-  process.exitCode = 1;
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try {
+    requireValue(process.argv.length === 3, 'usage: node skills/benchmark-review/scripts/score-review.mjs <review.json>');
+    const registry = JSON.parse(await readFile(new URL('../assets/check-registry.json', import.meta.url), 'utf8'));
+    const review = JSON.parse(await readFile(process.argv[2], 'utf8'));
+    process.stdout.write(`${JSON.stringify(normalize(review, registry), null, 2)}\n`);
+  } catch (error) {
+    process.stderr.write(`score-review: ${error.message}\n`);
+    process.exitCode = 1;
+  }
 }

@@ -31,15 +31,17 @@ Record actual HTTP rendering, interactions and resource-loading results.
 External CDN resources are permitted; distinguish observed loading failures
 from environment/network restrictions.
 
-An explicit host/tool access or security-policy denial triggers the
-[whole-review stop rule](../SKILL.md#stop-on-access-or-verification-blockers),
-as does unavailable Aside or no permitted method for a required browser check.
+An explicit host/tool access or security-policy denial stops the affected
+operation under the [continuation and access rules](../SKILL.md#continue-independent-permitted-checks).
 Do not retry denied access, change permissions or switch protocols/tools to bypass
-a denial. Do not fall back to static inspection; replace the previous review with
-the current blocked result. Report the exact operation and error, not an invented
-OS permission diagnosis. A past review's denial is historical context, not a fresh
-attempt on this target or proof of a current restriction. Never infer rendering or
-interaction success from HTML, screenshots from previous reviews, or mocks.
+a denial. Continue only independent permitted work. Missing Aside or a required
+browser capability leaves affected checks unverified; it does not prohibit
+permitted static inspection for D2 or erase observed findings. A confirmed
+functional failure is fail; continue other checks. Finalize partial when usable
+findings remain, blocked when none do. Report the exact operation and error, not
+an invented OS permission diagnosis. A past review's denial is historical context,
+not a fresh attempt on this target or proof of a current restriction. Never infer
+rendering or interaction success from HTML, old screenshots, or mocks.
 
 Create a new review tab; do not inspect unrelated tabs or browsing memory. Close
 only that tab and stop the temporary server on every exit. Inspect screenshots
@@ -85,8 +87,9 @@ and storage-quota fixtures below are the only storage-boundary exceptions.
 Recheck dimensions before comparing repeated positions; a changed viewport
 invalidates a pixel comparison, not the artifact.
 Do not use raw CDP, another browser, permission changes or an iframe to bypass
-an access denial. If the permitted frame path cannot perform a required check,
-apply the existing stop rule.
+an access denial. If no permitted frame path can perform a required viewport
+check, leave that check unverified with its reason and continue independent
+allowed checks. Preserve already observed passes and failures in partial JSON.
 
 Record the actual document sizes and disclose embedded-frame verification in
 notes and Markdown. It is not top-level viewport or touch-device proof.
@@ -219,7 +222,7 @@ entry through its UI and compare the saved fields and derived angles.
 These fixtures apply only to D6 in the new task. They do not authorize modifying
 artifact source, runtime objects, browser security settings, storage prototypes,
 or getter functions. They cannot establish capture/import UI success.
-The access-denial stop rule still takes precedence.
+The access-denial rule still stops affected operations without retry or bypass.
 
 Use the same scheme, host, port, page, and browser storage context for persistence
 and reload checks. Do not switch localhost/127.0.0.1 or a port between samples.
@@ -241,10 +244,10 @@ documented storage access, with no unrelated data at risk. Keep the app's origin
 snapshot value in memory and start the UI with room to capture another snapshot.
 Choose one unique review-owned filler key and verify it is absent before use.
 With a fixed upper bound of 8 MiB of string content, fill only that key; a bounded
-binary search can find the largest value storage accepts. Stop on unexpected
-errors, especially an access/security denial. Do not treat quota exhaustion as
-an access denial when the tool successfully executed and the storage API returned
-the expected quota exception.
+binary search can find the largest value storage accepts. Stop the fixture on
+unexpected errors, especially an access/security denial, and continue only
+independent permitted work. Do not treat quota exhaustion as an access denial
+when the tool executed and storage returned the expected quota exception.
 
 Attempt capture or an import that requires a larger saved payload using the real
 UI. Confirm an actual attempted write failed rather than assuming filling was
@@ -258,6 +261,8 @@ A documented browser facility that safely makes this isolated page's storage
 unavailable may substitute for the quota fixture. Never claim that a quota-write
 probe also exercised read denial. If no permitted fixture can exercise a required
 recovery clause, retain D6 as unverified and explain the gap, unless another D6
-clause already has a confirmed failure. If the required browser capability itself
-is unavailable or denied, apply the existing whole-review stop rule. Source code
+clause already has a confirmed failure. If the required capability is unavailable,
+leave only unsupported checks unverified and continue independent checks. If it
+is denied, stop the affected operation without bypass and continue only permitted
+work. Preserve same-attempt verified findings in a partial record. Source code
 and exception-handler presence cannot fill an observation gap.

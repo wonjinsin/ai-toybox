@@ -9,7 +9,7 @@ old record or apply the new cap to historical scores.
 
 Each run has only `reviews/review.json` and `reviews/review.md` as the latest
 attempt. Re-review replaces those two files, including on a blocker. Leave
-other user files untouched. Apply the unchanged [stop rule](../SKILL.md#stop-on-access-or-verification-blockers)
+other user files untouched. Apply the [continuation and access rules](../SKILL.md#continue-independent-permitted-checks)
 and safe-output rules before writing. An artifact defect is a finding, not an
 infrastructure blocker. Never repair the artifact to finish a review.
 
@@ -29,7 +29,8 @@ The current record has exactly these fields. No additional fields are allowed.
   it is not a substitute for missing effort. Model `none` is a placeholder.
 - `status` is `complete` only when every check is verified and all required
   reviewer metadata and the timestamp are known. It is `partial` when evidence
-  is incomplete without a stop condition, or `blocked` after a stop condition.
+  or required metadata is incomplete and usable findings remain. `blocked`
+  means no usable evaluation or an unresolved/incompatible task contract.
 - `requirements_verdict` is `pass`, `fail`, or `unverified`, derived from mandatory
   checks. A complete review may fail. A partial review may have confirmed failures.
 - `verification` has exactly `browser_method`, either `http` or `none`, and
@@ -45,7 +46,7 @@ The current record has exactly these fields. No additional fields are allowed.
   other verified check requires `http`. HTTP check evidence requires the review's
   browser method to be `http`. L1 and L2 passes require their actual viewports.
 - `raw_total_score` is the uncapped weighted total rounded to two decimals, or
-  null if any check is unverified.
+  null if any check is unverified or required reviewer metadata is missing.
 - `score_cap` is 69 when at least one mandatory check fails, otherwise null.
   A confirmed failure still sets this field when raw and total are null.
 - `total_score` is raw limited by the cap, or null whenever raw is null.
@@ -76,16 +77,19 @@ applies to the current review session, in that precedence. Generic defaults and
 from the available clock or a trustworthy current-session time source. Record the
 sources and limits in notes. Do not use generator metadata, folder names, earlier
 review identities, or invented values. Do not launch another model to fill a gap.
-Unresolved required metadata takes the blocked, unscored stop path before
-inspection, with null values and reasons. The same rule applies if metadata
-becomes unavailable during review. Save only at a resolved safe target under
-the existing output rules.
+Unresolved required metadata remains null with reasons. Continue independently
+permitted inspection and finalize `partial` with null totals, even if all checks
+were observed. The same rule applies if metadata becomes unavailable during review.
+Save only at a resolved safe target under the output rules.
 
-For `blocked`, reset all checks to unverified/null and all scores, raw, and cap
-to null. Verdict is unverified and coverage is 0/0/27. Include the current blocker
-in notes, not old findings. Browser method and viewports may describe observations
-from this attempt before it stopped. If target resolution, safe output, or a write
-is blocked, report exactly which files remain old, missing, or newly saved.
+For `blocked`, all checks are unverified/null and all scores, raw, and cap are null.
+Verdict is unverified and coverage is 0/0/27. Explain why no usable evaluation was
+possible. Missing/malformed inputs still produce this record when the target is
+safe. Do not reset same-attempt verified findings after a later capability gap or
+denial; preserve them in a partial record and stop only affected operations.
+Never copy findings from an existing review. If target resolution, safe output,
+or a write is blocked, report each output's known saved, unchanged, missing, or
+unknown state.
 
 No generation token/time metrics, hashes, copied source, screenshots, or historical
 reviews belong in the record. Source-preservation hashes stay only in working
@@ -105,9 +109,10 @@ node skills/benchmark-review/scripts/score-review.mjs <review.json>
 ```
 
 The dependency-free CLI reads JSON and the check registry, then prints normalized
-JSON to stdout. It writes no files and does not alter the input bytes. It exports
-no API. Invalid input prints a diagnostic on stderr, exits nonzero, and emits no
-scored output. Metadata errors identify the affected field.
+JSON to stdout. It writes no files and does not alter the input bytes. The module
+exports the pure `normalize(review, registry)` function used by the finalizer;
+the CLI runs only when invoked directly. Invalid input prints a diagnostic on
+stderr, exits nonzero, and emits no scored output.
 Do not redirect stdout onto its input file.
 Use a host-permitted temporary working file outside the run when validating a
 proposed report, then remove that working file. Do not retain extra evidence files
@@ -121,16 +126,63 @@ valid timestamp, even if notes explain the missing values. The CLI validates
 metadata structure, not its truth or provenance. For otherwise valid records it
 derives category scores, coverage, verdict, status, and totals.
 Well-formed stale derived values are replaced in stdout; it does not treat those
-values as evidence. Compare every derived field against the proposed JSON before
-publishing, resolve any disagreement, and regenerate Markdown from that same
-normalized record. After saving, run the command on the saved path and compare
-again. Historical format 2 accepts its original nonempty evidence strings and
-19-check shape, retains uncapped arithmetic, and never gains new fields.
+values as evidence. A partial record requires missing evidence or metadata and
+null totals, but retains all observed ratings, complete category means, and the
+derived mandatory verdict/cap. Historical format 2 accepts its original nonempty
+evidence strings and 19-check shape, retains uncapped arithmetic, and never gains
+new fields. Use the publication command to generate Markdown from normalized JSON
+and validate the saved pair.
 
 The design uses one declarative registry rather than per-category scoring
 functions. Both contracts use the same arithmetic and validation. Data keeps
 historical membership explicit without compatibility wrappers. Browser judgments
 remain in the rubric and evidence matrix because numeric code cannot prove them.
+
+## Publication command
+
+```sh
+node skills/benchmark-review/scripts/finalize-review.mjs <run-directory> <draft-review.json>
+```
+
+Both arguments are required. The target must be an existing non-symlink directory.
+The draft must be a regular, non-symlink, single-link file outside the entire target
+run, including after canonical path resolution. The command preserves the draft.
+The caller removes its working draft after publication. Missing or malformed run
+inputs do not prevent publication of an honest blocked draft at a safe target.
+Complete publication additionally requires regular nonempty `prompt.md`,
+`run.json`, and `output/index.html`, with a real output directory and a parseable
+run JSON object. Partial and blocked publication do not require playable output.
+
+The command validates and normalizes before creating or replacing final outputs.
+It generates every Markdown score, finding, coverage count, and note from that
+normalized JSON and escapes user-controlled text as literal content. It rejects a
+symlinked `reviews/`, symlinked or hard-linked named outputs, nonregular outputs,
+and escaping output paths. It does not touch source artifacts or unrelated files.
+It stages both files with exclusive sibling temporary files, flushes and closes
+them, then renames JSON followed by Markdown. It cleans up its own temporary files.
+Do not run concurrent publishers or change the target directories during publication.
+Path checks detect changed directories but are not a sandbox against hostile
+concurrent filesystem mutation.
+
+Each rename is atomic. The pair is not transactionally atomic, and the command
+does not attempt rollback. A failure after the JSON rename can leave new JSON
+beside unchanged or missing Markdown. Readback parses and normalizes saved JSON
+and compares both saved files against the generated bytes. Exit 0 means the saved
+pair passed readback. Exit 1 means validation, publication, readback, or cleanup
+failed; stderr gives the diagnostic. Stdout always reports a JSON object with
+`ok`, per-file `outputs`, resolved `paths` when available, and an `error` or
+`cleanup_errors` when applicable. Each output state is `saved`, `unchanged`,
+`missing`, or `unknown`. `saved` records a successful rename, not a successful
+pair readback. `unknown` means safe inspection did not establish the state.
+On a readback failure, report the error alongside those operation states rather
+than claiming the current contents are validated. Never retry a denied operation
+or claim successful rollback.
+
+Publish an all-unverified unscored checkpoint before inspection, with notes that
+evaluation has not occurred. Publish the final record after all independently
+permitted checks, including partial and blocked outcomes. Existing saved reviews
+are not fresh evidence.
+
 
 ## Markdown report
 
@@ -148,5 +200,6 @@ Write the report in English with these sections:
    unexecuted clauses, storage fixture restoration, and cleanup failures.
    State explicitly when no browser execution occurred.
 
-Use JSON as the only numerical source. Validate both reports in memory before
-replacing either. Read both saved files back before claiming the pair is complete.
+Use JSON as the only numerical source. The publication command generates these
+sections, including every check's full evidence and every note, and validates the
+saved pair before reporting success.

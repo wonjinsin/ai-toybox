@@ -229,3 +229,28 @@ for (const format of ['2.0', '3.0']) {
     });
   }
 }
+
+for (const format of ['2.0', '3.0']) {
+  test(`format ${format} keeps observed findings when reviewer metadata is unavailable`, async t => {
+    const review = await completeReview(format);
+    review.status = 'partial';
+    review.reviewer.effort = null;
+    review.notes = ['Synthetic case. The current host does not expose reviewer effort.'];
+    const failedId = format === '3.0' ? 'S7' : 'T3';
+    Object.assign(review.checks.find(check => check.id === failedId), { status: 'fail', rating: 0 });
+    const result = await score(t, review);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.value.status, 'partial');
+    assert.equal(result.value.requirements_verdict, 'fail');
+    assert.equal(result.value.reviewer.effort, null);
+    assert.deepEqual(result.value.checks, review.checks);
+    assert.deepEqual(result.value.coverage, {
+      passed: review.checks.length - 1, failed: 1, unverified: 0,
+    });
+    assert.equal(result.value.total_score, null);
+    if (format === '3.0') {
+      assert.equal(result.value.raw_total_score, null);
+      assert.equal(result.value.score_cap, 69);
+    }
+  });
+}
