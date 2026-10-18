@@ -1,0 +1,273 @@
+{
+  "format_version": "4.0",
+  "rubric_version": "solar-system-4.0",
+  "reviewed_at": "2026-10-18T09:21:45.040625+00:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6-astra",
+    "effort": null
+  },
+  "status": "partial",
+  "requirements_verdict": "fail",
+  "verification": {
+    "browser_method": "http",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ]
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": 3.13,
+      "score_upper_bound": 4.38
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": 2,
+      "score_upper_bound": 2
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": 1.6,
+      "score_upper_bound": 1.6
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": 3,
+      "score_upper_bound": 3
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": 2.5,
+      "score_upper_bound": 2.5
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": 3,
+      "score_upper_bound": 4
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Observe the sun/three colored planets during motion and seek 0, 12, 24, and 48 at the same desktop camera. Expected: distinct planets on circular 12/24/48-second orbits with fixed phases. Observed: one orange sun, larger red Ember, medium blue Azure, and smaller green Jade; Ember returned at 12, Azure at 24, and all three at 48, with Jade opposite its initial position at 24. Rendered paths followed the projected orbit rings. Source phases are 0, 1.2, and 2.4 radians; displayed-angle defects are separately recorded under T2/S8."
+    },
+    {
+      "id": "S2",
+      "status": "unverified",
+      "rating": null,
+      "method": "http",
+      "evidence": "Fresh and reloaded pages showed automatic motion, 1.00x, Overview, disabled tracking, and explicit no-selection information, with the first observed times around 5 seconds after navigation. The exact time-zero initialization frame was not observed because openTab returned after that frame. Source defaults alone do not prove the complete startup condition; ordinary load elapsed time is not classified as a failure."
+    },
+    {
+      "id": "S3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Pause/seek 17, compare rendered output and state over 3.1 seconds, select planets while paused, then resume from sought times. Expected: frozen time/positions while paused and continuous resumption. Observed: time remained exactly 17.00 s, selected information stayed fixed, and before/after screenshots were byte-identical. Both selection routes remained usable. Resumption advanced from the sought time rather than resetting; the 30-second/2x scenario advanced 6.40 seconds over 3.2011 wall seconds. Camera usability is independently failed in U1."
+    },
+    {
+      "id": "S4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Set 0.25x, 2x, and 4x at paused time 17, resume and sample each for at least 3.1 real seconds, and change speed during playback before pausing again. Expected: current time/positions preserved by the change and proportional simulation rates. Observed: each paused setting retained 17.00 and the same selected readout; measured deltas were 0.78/6.21/12.44 simulation seconds over 3.1014/3.1027/3.1058 wall seconds. No reset occurred, and rendered orbital progression retained the 12/24/48 period relationship."
+    },
+    {
+      "id": "S5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Seek 0/30/120 and noncanonical 17/73, alter speed/playback/selection, revisit 17/30/73, then reload and repeat using the same camera/selection/speed. Expected: immediate pause/time/position updates and deterministic phases. Observed: seeks paused with exact target time; tracking updated on seek. Repeated full screenshots at 17, 30, and 73 were byte-identical both after intervening edits and after reload. Imported 17.25 restored exactly; incorrect angle readouts are separately failed in T2/S8."
+    },
+    {
+      "id": "S6",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Seek 119, set 4x, resume and wait 1.3 seconds; then seek 73 and resume. Expected: stop at 120 without wrap/overshoot and resume from an earlier time. Observed: 120.00 s with Resume button after the wait, followed by 73.86 s and Pause after seeking/resuming at 73."
+    },
+    {
+      "id": "S7",
+      "status": "unverified",
+      "rating": null,
+      "method": "http",
+      "evidence": "Observed a loaded three.min.js HTTP resource, canvas data-engine three.js r160, actual rendered moving spheres/rings and zoom changes; source creates SphereGeometry, PerspectiveCamera and WebGLRenderer. However camera dragging did not rotate the scene (confirmed under U1), so the required rendered orbit/depth/occlusion perspective inspection could not be completed. The dependency and source alone are not a full pass."
+    },
+    {
+      "id": "S8",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: At paused time 30, speed 2x, Jade tracking, capture obs-1; change all live fields; import/restore fractional snapshots and reload. Expected: immutable captured fields with angles derived from the same fixed phases/periods as the scene. Observed: the saved 30-second angles were Ember 70.4, Azure 295.1, Jade 341.0 degrees, versus rendered-orbit predictions 180.0, 158.7549, 2.5099 degrees. Saved values stayed fixed and IDs survived export/reload, but angles are wrong. index.html line 8 destructures period/phase one slot early, reading orbital radius/period instead of period/phase."
+    },
+    {
+      "id": "T1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: For each Ember/Azure/Jade, select from its labeled list, select another planet, then click the target rendered planet with the real pointer; repeat paused and playing. Expected: both routes select/highlight the same planet. Observed: all six canvas cases changed information and list selection to the intended name, agreeing with the corresponding list route; visible emissive highlight moved with selection. Playing readouts advanced naturally without resetting time."
+    },
+    {
+      "id": "T2",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Select Ember and seek 0, 12, 24, 48; inspect information and rendered returns; inspect all three saved angles at 30. Expected: angle agrees with fixed-phase rendered orbital position. Observed: Ember occupies the same initial position at these whole periods but readouts are 327.5, 224.7, 121.8, and 276.1 degrees rather than the same 0-degree phase. At 30 it reports 70.4 instead of 180. Null-selection restore correctly clears information/highlight, but the angle clause fails; source cause is the line-8 angles destructuring."
+    },
+    {
+      "id": "T3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Track Jade during playback, pause/seek 30, switch to Azure, and restore a null-selection overview snapshot. Expected: selected target stays centered, seeks/switches synchronize target and name/highlight while preserving other state, and tracking requires selection. Observed: across two waits totaling 3.304 seconds the mobile Jade center stayed at approximately (168,567) in a scene bounded by x=7..329,y=374..760 screenshot pixels, within tolerance of its center. Seeking and switching to Azure placed its highlighted center there at 30.00; desktop switching retained playback/speed. Null-selection restore disabled tracking and cleared selected information. Numeric angle accuracy is failed separately under T2."
+    },
+    {
+      "id": "T4",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Return to Full overview at mobile 390x844, time 0.01, with Jade selected; scroll to the entire scene. Expected: the full solar system is visible with other state preserved. Observed: time/speed/selection were preserved, but Jade and substantial outer-orbit portions were outside the horizontally clipped 357x428 canvas. The full-system overview framing does not adapt to the narrow aspect ratio. Desktop overview was also exercised."
+    },
+    {
+      "id": "T5",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Capture tracking obs-1 at time 30/2x/Jade, change live fields, restore, zoom out with wheel, and restore the same snapshot again. Expected: paused captured state and deterministic standard framing independent of manual zoom. Observed: captured time/speed/selection/mode returned and playback paused, but the second restore retained the zoomed-out scene instead of the original standard framing (sun diameter approximately 91 versus 114 screenshot pixels in the same viewport). restore() in line 8 does not reset theta/phi/dist. Null-selection and fractional tracking restores were also exercised; their fields restored but angles failed as noted in S8."
+    },
+    {
+      "id": "U1",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Drag the canvas in paused overview and tracking using real pointer down/moves/up; zoom by wheel. Expected: camera orbit and zoom respond without changing simulation. Observed: wheel changed scale, but a 50-pixel/25-move tracking drag left the viewing orientation unchanged. Independent scratch-page input confirmed pointerdown, pointermoves with buttons=1, and pointerup delivery. Source line 10 accesses renderer.dataset instead of renderer.domElement.dataset, preventing the drag path. All playing/mode combinations were not exhaustively re-run after this confirmed required paused-orbit failure."
+    },
+    {
+      "id": "U2",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: At mobile paused time 30 tracking Azure, drag from its center (186,630) to (261,630), using 25 moves of 3 CSS pixels before releasing over Ember. Expected: cumulative drag must not be interpreted as selection. Observed: selection and tracking changed from Azure to Ember despite no click intention; time stayed 30.00. This is a 75-pixel cumulative drag failure. DOM controls did not visibly select the scene, but the required drag-separation clause fails."
+    },
+    {
+      "id": "U3",
+      "status": "pass",
+      "rating": 3,
+      "method": "http",
+      "evidence": "Action: Use playback, selection, tracking, snapshot capacity/restore, and JSON controls at both sizes. Expected: understandable purpose and feedback. Observed: plainly labeled controls, explicit paused/running button text, time/speed outputs, stable ID mapping, tracking labels, capacity and JSON errors make normal use understandable. The compact utilitarian interface merits the ordinary clear/usable anchor 3, not exceptional polish; misleading saving success is independently failed under D6."
+    },
+    {
+      "id": "U4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Capture obs-1/obs-2/obs-3, attempt a fourth, delete middle obs-2 using Enter, capture again, and export. Expected: max three, visible rejection, retained values/order, append-only new capture and no live-state changes. Observed: fourth capture showed the capacity message with three unchanged entries. Deletion retained obs-1/obs-3 and time 73/2x/Jade/overview; recapture appended a noncolliding obs-2 after them. Export order was obs-1, obs-3, obs-2. Reuse of a deleted ID did not collide with any retained snapshot."
+    },
+    {
+      "id": "U5",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: At both 1440x900 and 390x844 use Enter on selection/playback/view/capture/restore/delete/import/export, arrows/Home on ranges, keyboard text insertion, and Tab from the textarea onto a snapshot Restore button. Expected: accessible names, visible persistent focus, operable Tab navigation without lost focus. Observed: primary keyboard actions worked, but focused Restore had focus-visible=true immediately and lost focus to BODY within 120 ms at both sizes, while paused. renderUI() clears and rebuilds all snapshot buttons every animation frame. Direct locator Enter can activate before replacement, but normal keyboard focus is unstable. A pointer Restore attempt also produced Element is detached from the DOM."
+    },
+    {
+      "id": "V1",
+      "status": "pass",
+      "rating": 3,
+      "method": "http",
+      "evidence": "Action: Inspect rendered overview/tracking scenes and selected planets at both viewports. Expected: readable scene and selection. Observed: distinct red/blue/green bodies, unobtrusive orbit rings, and brighter selected planets provide ordinary clear visual separation; the sun is immediately recognizable. Shapes/shading are plain and not exceptionally polished. Mobile clipping is assessed in L2/T4 rather than used as an additional visual penalty."
+    },
+    {
+      "id": "V2",
+      "status": "pass",
+      "rating": 3,
+      "method": "http",
+      "evidence": "Action: Inspect controls, information, snapshots and JSON panels at desktop/mobile. Expected: coherent legible typography, spacing and hierarchy. Observed: consistent dark-blue panels, restrained borders, readable light text, visible headings and grouped controls; dense small snapshot details remain legible. This is coherent ordinary execution (3), without exceptional spacing or typographic refinement."
+    },
+    {
+      "id": "L1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Measure the real desktop iframe and operate every primary control including snapshot/JSON workflows. Expected: usable scene/controls without horizontal scrolling or panel occlusion at 1440x900. Observed: innerWidth/innerHeight were 1440/900 and clientWidth/scrollWidth 1440/1440; the scene and right control panel were separate and all controls reachable. Snapshot activation/focus and camera defects are functional findings under T5/U1/U5, not desktop panel overlap."
+    },
+    {
+      "id": "L2",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Measure 390x844, exercise keyboard selection/speed/seek/playback/view/snapshot/JSON controls, and scroll to the full overview scene at time 0.01. Expected: scene and primary controls remain usable without horizontal clipping. Observed: actual 390x844 with 373/373 client/scroll width; controls were reachable and no horizontal document overflow occurred, but the fixed camera framing clipped Jade and large outer-orbit portions outside the 357x428 scene. Vertical scrolling could not recover off-canvas content."
+    },
+    {
+      "id": "D2",
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Action: Inspect output/index.html and all output-directory resources against the served root. Expected: referenced local assets present without repository/build dependencies. Observed: the only output file is index.html, containing inline CSS/application JS and one permitted HTTPS CDN reference to Three.js r160; there are no missing local paths or build/root dependencies. File-protocol execution is outside this review."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "http",
+      "evidence": "The page rendered and the required Three.js script was present in resource timing. However console and pageerror subscriptions returned empty arrays for deliberately generated errors on a reviewer-owned scratch page, including a later readback. Subsequent noninterfering app error listeners also yielded no captured errors and could not cover startup. Therefore clean console/resource-error coverage is not established; source-suspected exceptions are not reported as captured diagnostics."
+    },
+    {
+      "id": "D4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Export empty/captured/imported lists through the Snapshot JSON textarea; round-trip IDs including spaces and Case/case; export while paused and playing. Expected: only required version/snapshot fields, exact types/order/IDs, exposed planet mapping and unchanged state. Observed: empty export was {\"version\":1,\"snapshots\":[]}; populated exports contained exactly id/time/speed/selectedPlanet/viewMode, no angles/camera/playback/extra keys, preserved order and case/spaces, and used ember/azure/jade displayed beside names. Export did not change list or displayed live fields; scene-region screenshot was identical before/after paused export."
+    },
+    {
+      "id": "D5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Run the 34 invalid classes listed in notes against a nonempty paused list; import valid two/three/empty lists, fractional and endpoint values, null/selected overview and tracking, case-distinct/space IDs and extra keys; repeat valid import while playing. Expected: atomic rejection and list-only valid replacement without coercion or scene changes. Observed: all 34 errors were visible and all list/live readouts unchanged, including valid-first/invalid-later. Every invalid case and valid list shape had a byte-identical scene-region screenshot. Valid exports retained exact IDs/order/types, ignored supplied angles/extra keys, empty input cleared only snapshots, and playing time continued without reset. Derived angles themselves are wrong under S8 but were not overridden by imported values."
+    },
+    {
+      "id": "D6",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Reload after import, deletion and capture; corrupt only the app key; then fill a unique reviewer quota key to 5242628 characters and capture with capacity available. Expected: persistence/recovery plus visible saving-unavailable notice on a real failed write. Observed: import/delete/capture persisted and corrupt data recovered with notice/usable controls. Under quota pressure, capture added obs-2 in memory while persisted solar-observations remained the prior two-entry JSON, yet the visible status said Snapshot captured rather than saving unavailable. save() sets the error then capture overwrites it with success in line 9. Original storage was restored and filler removed. Unavailable-storage read denial was not tested; the confirmed write-failure notice violation already fails this grouped check."
+    }
+  ],
+  "raw_total_score": 50.93,
+  "raw_total_score_upper_bound": 59.18,
+  "score_cap": 69,
+  "total_score": 50.93,
+  "total_score_upper_bound": 59.18,
+  "coverage": {
+    "passed": 15,
+    "failed": 9,
+    "unverified": 3
+  },
+  "notes": [
+    "User selected benchmark-review for the result of this Terra low invocation. Reviewer model is concrete current-host metadata: openai-codex/gpt-6-astra. Reviewer effort is null: the host exposes generic/default role configuration but no concrete current-execution effort; generic defaults do not establish the review selection.",
+    "Host-required aside-browser was additionally loaded; aside guide and aside guide repl were read. Only connected Aside direct REPL will be used; no separate review model, file navigation, or artifact repair.",
+    "Preregistered tolerances: rate samples at least 3 wall seconds, error <= max(0.15 simulation seconds, 5% expected delta) plus one displayed increment; paused values one displayed increment and 1 degree; predicted orbital angles 2 degrees plus display rounding; repeated standard framing 2 CSS pixels; tracking center within 10% of scene smaller dimension. JSON identity/order/type and paused state preservation are exact.",
+    "Task routing: saved prompt exactly matches the 15-requirement solar-system-observatory-2 contract. Review used format 4.0 / solar-system-4.0, independently of generation status. No previous review findings were reused.",
+    "Viewport checks used unchanged output in the documented secure loopback iframe fixture, not top-level viewport emulation or a touch device. Actual inner sizes were 1440x900 and 390x844; desktop document client/scroll widths 1440/1440 and mobile 373/373 (vertical scrollbar). Both child contexts reported isSecureContext=true.",
+    "Original eight-step sequence: observed automatic movement; the first moving-scene coordinate attempt did not select, so list selection was used to proceed with tracking. Paused/seeks at 30, paused speed 2x, measured resume, switching Jade to Azure during tracking, overview, and repeat seek were observed. Later all three canvas/list selection routes were independently exercised both paused and playing.",
+    "Additional sequences 1-6 were exercised in their saved order: capture/edit/restore with zoom; three-entry capacity/delete/recapture/export; invalid imports; valid fractional and null/tracking round-trips; import/delete/capture reloads plus corruption/quota fixtures; keyboard controls at both sizes. Confirmed failures and any incomplete clauses are assigned to individual checks below.",
+    "Rate samples were serialized with one review scene open and visible. Observed (speed, wall seconds, simulation seconds): (0.25,3.1014,0.78), (2,3.1027,6.21), (4,3.1058,12.44); the original 2x scenario measured 3.2011 wall seconds and 6.40 simulation seconds. All fit preregistered tolerances.",
+    "Observation/driver limits: Aside frame evaluation runs in an isolated world (THREE global was inaccessible), and frames() returned detached handles after reload; fresh current handles were selected. These were not attributed to the app. Browser console/pageerror subscriptions failed a deliberate scratch-page positive control, so empty diagnostic arrays do not establish a clean console. Noninterfering error listeners also yielded no qualifying errors; no startup diagnostic coverage is claimed.",
+    "Pointer transport was separately exercised on a reviewer-owned scratch page: real pointerdown, 20 intermediate pointermove events with buttons=1, and pointerup were observed. App drags still failed to orbit and a 75-CSS-pixel/25-move drag changed selection. Static source corroborates misuse of renderer.dataset rather than renderer.domElement.dataset, but no captured console exception is claimed.",
+    "JSON rejection matrix covered 34 cases against a nonempty paused list: malformed JSON; null/array roots; missing root fields; string/unsupported version; nonarray snapshots; each missing entry field; null/array entries; empty/numeric IDs; string/boolean time and speed; both time and speed range directions; invalid/numeric/string-null planet IDs; invalid mode; null tracking; duplicates; four entries; valid-first/invalid-later; and 1e400. Every case showed an error and preserved list and displayed live fields. A separate scene-region screenshot comparison was byte-identical for all 34 cases, valid three/empty/two lists, and export.",
+    "Valid JSON probes covered time 0/120/17.25/30, speed 0.25/4/1.5, no-selection overview, selected overview, selected tracking, exact IDs containing spaces and case-distinct Case/case, extra root/entry keys, ignored imported angles, empty clearing, and playing imports. Export contained only the required fields. Wrong derived angle values remain an S8/T2 failure, not evidence that extra supplied angles were accepted.",
+    "Storage fixtures used only solar-observations and the verified-absent reviewer key terra-review-quota-20261018 on the isolated 127.0.0.1:8865 origin. Malformed and schema-invalid saved payloads were exercised. A bounded <=8 MiB search filled 5242628 characters, then a real capture left persisted JSON unchanged while adding an in-memory snapshot. The exact pre-fixture app value was restored and the filler key removal verified. No unrelated storage was read or cleared; unavailable-storage read denial was not exercised.",
+    "Cleanup: all review-created app and scratch tabs were closed, both tracked output/viewport servers were stopped, and the noninterfering error listener was removed. Screenshots were inspected transiently only, never retained in the run. Source prompt, run record, and HTML were not modified. Browser verification used the host-required additional aside-browser skill; isolation from that extra skill is not claimed."
+  ]
+}

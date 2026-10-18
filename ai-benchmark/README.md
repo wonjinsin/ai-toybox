@@ -13,6 +13,35 @@ The saved `output/index.html` must run directly in a browser without a server or
 build step. The [original task](skills/benchmark-record/assets/solar-system-prompt-v1.md)
 remains available only to interpret historical runs.
 
+## Current results
+
+As of October 18, 2026, the catalog contains **six saved OMP attempts** for
+`solar-system-observatory-2`, each with an HTML artifact and a format `4.0` review
+using `solar-system-4.0`. Browse them in the
+[published gallery](https://wonjinsin.github.io/ai-toybox/) or open the local
+[`index.html`](index.html).
+
+| Model | Effort | Published score range / 100 | Review |
+| --- | --- | --- | --- |
+| GPT-5.6 Terra | low | 50.93–59.18 | [Partial](runs/v1/omp-openai-codex-gpt-5.6-terra-low-20261018-181954/reviews/review.md) |
+| GPT-6 Luna | low | 20.33–27.33 | [Partial](runs/v1/omp-gpt-6-luna-low-20261018-111641/reviews/review.md) |
+| GPT-6 Luna | medium | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-medium-20261018-110650/reviews/review.md) |
+| GPT-6 Luna | high | 69–69 | [Complete](runs/v1/omp-openai-codex-gpt-6-luna-high-20261018-110644/reviews/review.md) |
+| GPT-6 Luna | xhigh | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-xhigh-20261018-110643/reviews/review.md) |
+| GPT-6 Luna | max | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-max-20261018-110659/reviews/review.md) |
+
+These are saved review results, not new verification or a model ranking.
+The lower endpoint is established credit; a partial review still has missing
+proof or reviewer metadata. Confirmed mandatory failures cap published scores
+at 69, so equal endpoints at that cap do not imply identical raw scores or
+complete coverage.
+
+All six generation records are `failed`, with unavailable full-interval token
+totals and, in most cases, unavailable session identity. That recording status
+is separate from the artifact's review status and score. The latest Terra low
+attempt also has no validated duration. Its review leaves S2, S7, D3 and reviewer
+effort unverified; direct-file execution remains outside review scope.
+
 ## Browse the static results
 
 Open this folder's `index.html` directly in a browser, or open the published
@@ -123,7 +152,7 @@ not rewrite benchmark outputs or repair their individual file compatibility.
 Run the regression suite from `ai-benchmark`:
 
 ```sh
-node --test tests/gallery*.test.mjs
+node --test tests/*.test.mjs
 ```
 
 Hook regressions use temporary Git repositories and do not stage this checkout.
@@ -387,10 +416,10 @@ for interrupted checkpoints and safe resume.
 
 There are no response copies, child/turn identifiers, hashes, transcript or
 evidence archives, cache/reasoning breakdowns, or previous-record backups.
-The prompt and HTML are the retained task and result. Runs and local experiments
-are ignored by Git; existing archives remain unchanged. Earlier runs retain their
-original prompts and may require a server, so compare them separately from runs
-using the current prompt.
+The prompt and HTML are the retained task and result. Runs are tracked in Git;
+local experiments under `experiments/` are ignored, while existing tracked
+archives remain unchanged. Earlier runs retain their original prompts and may
+require a server, so compare them separately from runs using the current prompt.
 
 Browser verification uses only connected Aside MCP's direct `repl` tool. The current model
 controls the browser; Aside `exec` and natural-language CLI tasks must not launch

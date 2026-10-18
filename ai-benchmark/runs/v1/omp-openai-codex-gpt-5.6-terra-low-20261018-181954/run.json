@@ -1,0 +1,20 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-5.6-terra",
+  "effort": "low",
+  "duration_ms": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Model and effort are user-declared for this invocation; no concrete OMP runtime metadata was exposed to verify overrides.",
+    "Session ID is null because no explicit current OMP parent-session metadata or runtime-linked journal path was exposed; the supplied CLAUDE_SESSION_ID was an unexpanded placeholder and is not an OMP identity.",
+    "Measurement clock boundaries were captured with the same host clock at 1792315204385188000 ns and 1792315275822794000 ns, a 71437.606 ms implementation/check interval; duration is null because required current-session token accounting and request-boundary provenance were not exposed.",
+    "Input and output tokens are null: no scoped current-session OMP final-usage API, runtime-linked journal locator, issuing request IDs, or comparable usage boundaries were exposed. Full interval coverage and token cutoffs cannot be proven.",
+    "Applied skill: benchmark-record only. No additional user-selected skills were applied; the host-required Aside direct REPL browser procedure was used because browser verification required it.",
+    "Browser verification used an attempt-created Aside tab over temporary loopback HTTP. Observed automatic motion, 3D canvas rendering, list selection, tracking, pause, seek to 30, speed 2x while paused, snapshot capture/export, malformed-JSON rejection with list retained, persistence after reload with live reset, and keyboard Enter/Arrow interactions. The temporary tab and server were closed.",
+    "Direct file:// execution and file-context persistence are unverified because local-file navigation support was not established. HTTP verification does not prove file:// behavior. Mobile 390x844 verification is unverified because the connected Aside page lacks a supported viewport-setting operation (TypeError: not a function). Full invalid-input matrix, scene-click selection, camera-drag/zoom behavior, storage-corruption recovery, storage-write-failure behavior, capacity/deletion/recapture, and all keyboard sequences remain unverified.",
+    "The artifact references Three.js by HTTPS CDN script, so offline/direct-file dependency availability is an unresolved compatibility defect."
+  ]
+}
