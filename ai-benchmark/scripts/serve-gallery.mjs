@@ -121,7 +121,7 @@ export function createGalleryServer({ root = sourceRoot } = {}) {
       response.setHeader('Content-Length', String(info.size));
       response.setHeader('Access-Control-Allow-Origin', '*');
       response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-      response.setHeader('Content-Security-Policy', 'sandbox allow-scripts allow-forms allow-modals allow-pointer-lock allow-popups allow-downloads');
+      response.setHeader('Content-Security-Policy', 'sandbox allow-scripts allow-same-origin allow-forms allow-modals allow-pointer-lock allow-popups allow-downloads');
       if (request.method === 'HEAD') {
         response.end();
       } else {

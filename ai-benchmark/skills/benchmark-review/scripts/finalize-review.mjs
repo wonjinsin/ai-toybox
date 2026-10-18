@@ -30,15 +30,31 @@ function literal(value) {
 
 function markdown(review, registry) {
   const value = item => item === null ? 'Unscored' : literal(item);
+  const current = review.format_version === '4.0';
+  const range = (lower, upper) => lower === upper ? lower.toFixed(2) : `${lower.toFixed(2)} to ${upper.toFixed(2)}`;
+  const definitions = registry.rubrics[review.rubric_version].checks;
+  const missingChecks = review.checks.filter(check => check.status === 'unverified').map(check => check.id);
   const lines = [
     '# Benchmark review', '', '## Conclusion', '',
     `Status: ${literal(review.status)}.`,
     `Mandatory verdict: ${literal(review.requirements_verdict)}.`,
-    `Published total: ${value(review.total_score)}.`,
+    current
+      ? `Published total: ${review.total_score.toFixed(2)} / 100. ${review.total_score === review.total_score_upper_bound ? 'Determined score' : 'Conservative lower bound'}. Range: ${range(review.total_score, review.total_score_upper_bound)}.`
+      : `Published total: ${value(review.total_score)}.`,
   ];
-  if (review.format_version === '3.0') {
-    lines.push(`Raw total: ${value(review.raw_total_score)}.`, `Applied cap: ${review.score_cap === null ? 'None' : review.score_cap}.`);
-    if (review.score_cap !== null) lines.push('The 69 cap is review policy, not a calibrated quality measurement.');
+  if (current) {
+    lines.push(`Raw total: ${range(review.raw_total_score, review.raw_total_score_upper_bound)}.`,
+      `Confirmed cap: ${review.score_cap === null ? 'None' : review.score_cap}.`);
+    if (review.score_cap !== null) lines.push('The confirmed 69 cap is existing review policy for a mandatory failure, not a calibrated quality measurement.');
+    else if (definitions.some((definition, index) => definition.mandatory && review.checks[index].status === 'unverified')) {
+      lines.push('An unverified mandatory check may fail. The lower endpoint includes the possible 69 cap; no failure or cap is confirmed.');
+    }
+    const missingMetadata = [
+      ...(review.reviewed_at === null ? ['reviewed_at'] : []),
+      ...Object.entries(review.reviewer).filter(([, item]) => item === null).map(([field]) => `reviewer.${field}`),
+    ];
+    lines.push(`Missing checks (${missingChecks.length}): ${missingChecks.length ? missingChecks.join(', ') : 'None'}.`,
+      `Missing reviewer metadata: ${missingMetadata.length ? missingMetadata.join(', ') : 'None'}.`);
   }
   lines.push(
     `Format: ${literal(review.format_version)}. Rubric: ${literal(review.rubric_version)}.`,
@@ -47,10 +63,13 @@ function markdown(review, registry) {
     `Reviewer effort: ${review.reviewer.effort === null ? 'Unavailable' : literal(review.reviewer.effort)}.`,
     '', '## Scores', '', '| Category | Score / 5 | Weight | Basis |', '| --- | --- | --- | --- |',
   );
-  const definitions = registry.rubrics[review.rubric_version].checks;
   for (const category of review.categories) {
     const ids = definitions.filter(check => check.category === category.id).map(check => check.id);
-    lines.push(`| ${literal(category.id)} | ${category.score === null ? 'Unverified' : category.score} | ${category.weight} | ${ids.join(', ')}; ${category.score === null ? 'incomplete evidence' : 'mean of observed ratings'} |`);
+    const categoryScore = current ? range(category.score, category.score_upper_bound) : category.score === null ? 'Unverified' : category.score;
+    const basis = current
+      ? category.score === category.score_upper_bound ? 'determined score; full category denominator' : 'conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator'
+      : category.score === null ? 'incomplete evidence' : 'mean of observed ratings';
+    lines.push(`| ${literal(category.id)} | ${categoryScore} | ${category.weight} | ${ids.join(', ')}; ${basis} |`);
   }
   lines.push('', '## Findings', '');
   for (const [status, heading] of [['fail', 'Confirmed failures'], ['unverified', 'Missing proof'], ['pass', 'Verified passes']]) {

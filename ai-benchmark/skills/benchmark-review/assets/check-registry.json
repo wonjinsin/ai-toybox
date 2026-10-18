@@ -33,8 +33,8 @@
         { "id": "D3", "category": "delivery", "mandatory": false, "qualitative": false, "requirements": [], "method": "http" }
       ]
     },
-    "solar-system-3.0": {
-      "format_version": "3.0",
+    "solar-system-4.0": {
+      "format_version": "4.0",
       "mandatory_failure_cap": 69,
       "checks": [
         { "id": "S1", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R1", "R3"], "method": "http" },

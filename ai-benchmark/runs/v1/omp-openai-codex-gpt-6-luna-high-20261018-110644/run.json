@@ -1,0 +1,20 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "high",
+  "duration_ms": 190884.3309879303,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Applied benchmark-record; aside-browser was additionally required by higher-priority browser policy and loaded for permitted direct REPL verification.",
+    "Model openai-codex/gpt-6-luna and effort high are user-selected invocation values; runtime overrides were not exposed for verification.",
+    "No explicit invoking OMP session ID was exposed; session_id is null. No current-session usage API or explicitly scoped journal locator was exposed; input_tokens and output_tokens are null, not zero.",
+    "Duration is the same-host wall-clock delta between separate pre-implementation and post-check date readings (190884.331 ms); request identities and usage boundary/source positions were not exposed, so token totals cannot be proven.",
+    "Prompt copy is byte-identical to the bundled fixed prompt. Three.js r160 is bundled as a local classic script; rendering and window.THREE were observed in the connected browser.",
+    "Browser checks used a temporary loopback HTTP server on 127.0.0.1:8913, then stopped it and closed attempt-created tabs. Observed rendering/automatic motion; pause and seek to 30s; speed 2x while paused; Venus selection details; tracking; snapshot capture/export; malformed JSON rejection without changing visible snapshot/live state; and reload persistence with live state reset to playing at time 0.",
+    "Fixed-size embedded-frame checks observed 1440x900 CSS viewport (document client/scroll width 1440) and 390x844 CSS viewport (document client/scroll width 375; no horizontal overflow). This is embedded-frame verification, not top-level viewport or touch-device proof. Frame storage reported unavailable; direct-tab reload did preserve the captured snapshot. Saving-failure behavior was not independently induced outside the frame.",
+    "HTTP browser verification only; direct file:// execution was not verified. Remaining unverified: exhaustive original eight-step sequence; camera orbit/zoom and canvas picking; capacity/deletion/fourth capture; full valid-import round trips and each invalid schema class; corrupted saved-data recovery; direct-tab storage failure; complete keyboard-only DOM sequence at both sizes."
+  ]
+}

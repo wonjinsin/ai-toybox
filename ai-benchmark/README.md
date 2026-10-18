@@ -23,9 +23,12 @@ when the site is hosted below a repository path.
 
 The explorer keeps model navigation, search, latest and score sorting,
 score-state filters, bookmarkable details, prompts, review findings, duration,
-tokens, recording notes, and output previews. Missing scores are **unscored**,
-not zero. Numeric zero remains a valid score. Incomplete or malformed metadata
-appears with warnings. The gallery does not evaluate or modify saved runs.
+tokens, recording notes, and output previews. A missing review or historical null
+score is **unscored**, not zero. Current format 4 reviews always provide numeric
+scores with explicit bounds. A lower bound is not a completed evaluation.
+Incomplete or malformed metadata appears with warnings. The gallery displays
+saved scores without evaluating or modifying runs. Literally empty directories
+are not runs and are omitted; nonempty incomplete records remain visible.
 
 ### Refresh the local catalog
 
@@ -107,9 +110,11 @@ each run's `output/` files. Raw record files, repository configuration, tests,
 and skills are not uploaded. Prompts, reviews, notes, and normalized run fields
 are included in the public catalog because the gallery displays them.
 
-Embedded output previews retain their iframe sandbox without same-origin
-access. A standalone output opened in a new tab on Pages does not receive the
-local preview server's sandbox response header. Only publish trusted artifacts.
+The gallery executes this repository's trusted artifacts with scripts and
+same-origin access. This permits local libraries and browser storage in embedded
+previews. The local HTTP server applies the same policy to output responses.
+Artifacts can access same-origin gallery pages and storage. The iframe is not a
+security boundary against malicious output. Do not add or publish untrusted HTML.
 External CDN dependencies may still require internet access. The gallery does
 not rewrite benchmark outputs or repair their individual file compatibility.
 
@@ -125,14 +130,21 @@ Hook regressions use temporary Git repositories and do not stage this checkout.
 They cover staged-only generation, partial staging, deletions, alternate
 indexes, failure handling, and existing-hook preservation.
 
-Browser verification uses Aside's direct MCP REPL. In the static migration
-check, Aside denied `file://` navigation because local file access was disabled.
-Direct-file runtime compatibility remains **unverified**. Separate HTTP checks
-used an output-only temporary site under `/ai-toybox/`. They exercised model
-navigation, search, filters, sorting, detail sections, preview playback, new-tab
-output links, keyboard navigation, zero versus unscored values, and missing-data
-guidance. The normal gallery path produced no captured console or page errors
-and no API requests. HTTP success does not establish `file://` compatibility.
+Browser verification uses Aside's direct MCP REPL. The trusted-preview fix was
+exercised in the actual `file://` gallery and through the loopback gallery server.
+The xhigh artifact rendered inside the gallery, and HTTP preview selection,
+pause, capture, storage, and the standalone output URL worked. The low artifact
+still has its own blank-scene defect. Gallery execution does not certify an
+artifact against the benchmark rubric. The existing file gallery tab and its
+embedded previews worked, but Aside denied the new-tab `file://` navigation with
+`Cannot navigate to a file URL without local file access`. That operation remains
+unverified through this tool. Its permissions were not changed.
+
+The review viewport helper preserves a secure loopback parent for 1440x900 and
+390x844 child documents. The mobile fixture was exercised with keyboard capture.
+See the [browser preflight](skills/benchmark-review/references/verification.md)
+for commands and diagnostic positive controls. Empty event collections from an
+unsupported console transport are not proof of error-free execution.
 
 ## Run
 
@@ -208,29 +220,40 @@ categories: simulation/time correctness (25), selection/tracking consistency (20
 controls and interaction (15), visual quality (15), responsive usability (15),
 and delivery stability (10). Category scores range from 0 to 5.
 
-New task reviews use `solar-system-3.0` and review format `3.0`. They preserve the
-weighted result as `raw_total_score`. If a mandatory check fails, the published
-`total_score` is capped at **69**, with `score_cap` recording that policy.
-This threshold is a declared interpretation rule, not an empirically calibrated
-model ranking. A high raw score cannot override a failed requirement.
+New task reviews use `solar-system-4.0` and review format `4.0`. Every category,
+raw total, and published total has a numeric lower endpoint and an explicit
+`*_upper_bound`. Unknown check ratings remain null and span 0..5 for arithmetic.
+All registered checks stay in the denominator. The headline is a **conservative
+lower bound** unless its endpoints coincide, in which case the rounded score is
+determined even if the review remains partial.
+
+A confirmed mandatory failure caps both published endpoints at **69**, recorded
+in `score_cap`. An unknown mandatory check can impose that cap on the lower
+endpoint without becoming a confirmed failure. Raw bounds remain visible.
+The threshold is declared policy, not an empirically calibrated model ranking.
+The gallery distinguishes numeric score availability from completed evaluation
+and keeps missing-proof notices visible beside finite scores.
 
 Review the saved prompt before choosing a rubric. The original 11-requirement
-task still uses its frozen `solar-system-2.0` rubric and format `2.0`, without
-the new cap or requirements. Other tasks receive a blocked, unscored review.
-Existing runs and reviews are not migrated. Compare scores only within the same
-task and rubric version. The gallery displays rubric versions but does not
-prevent cross-version score sorting.
+task keeps frozen `solar-system-2.0` and format `2.0`, including its nullable,
+uncapped arithmetic. An incompatible current-task attempt is blocked with no
+established credit and a 0..100 range, not a zero-quality verdict. Format 3 is
+replaced rather than silently reinterpreted. The five current-task reviews in
+`runs/v1/` were explicitly migrated to format 4 without changing observations
+or original artifacts. Compare only the same task and rubric, and inspect the
+score ranges. The gallery does not prevent cross-version score sorting.
 
 Direct-file execution and file-protocol compatibility remain outside review
 scope. Generation still requires direct-file delivery. Review checks use HTTP
 and do not certify that excluded generation requirement.
 
-Checks distinguish pass, fail and unverified. Any unverified check leaves its
-category and the total unscored; verified failures are still reported separately.
-Both review formats require a concrete reviewer model, effort, and review
-timestamp before `status: complete` is accepted. Missing metadata stays null
-with a reason and does not prevent independent checks. The result is `partial`
-with null totals, even when every check was observed.
+Checks distinguish pass, fail and unverified. Numeric bounds do not turn missing
+observations into passes or failures. Both supported formats require concrete
+reviewer model, effort, and timestamp before `status: complete` is accepted.
+Missing metadata stays null with a reason and does not prevent independent
+checks. It makes the review `partial`, but does not withhold format 4 scores.
+An all-unverified current checkpoint has a 0..100 range and a lower bound of 0,
+meaning no established credit, not a completed grade.
 Aside's direct REPL is the only permitted browser tool. Reviews use documented,
 host-permitted loopback HTTP serving only the unchanged `output/` directory.
 Do not test `file://` or leave a review unscored for missing local-file access.
@@ -240,7 +263,9 @@ A functional defect is a finding, not a reason to abandon the remaining checks.
 Unavailable browser capabilities leave only the affected checks unverified.
 Keep same-attempt findings in a `partial` review and continue permitted work.
 Use `blocked` when no usable evaluation can be made or task routing is incompatible.
-Never copy an earlier review's evidence into the new attempt.
+Never copy an earlier review's evidence into a fresh attempt. An explicitly
+requested scoring-policy migration preserves existing evidence and metadata,
+records the policy change, and does not claim new browser observations.
 An access or security denial stops the affected operation. Do not retry or bypass
 it. Continue unrelated work only when policy permits it. If the target or output
 is unsafe, or a write is denied, report the actual saved and unsaved state.

@@ -1,0 +1,23 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "max",
+  "duration_ms": 2033863.291,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Applied the selected agents/benchmark-record skill. Also applied the mandatory aside-browser skill because host instructions require it for browser verification.",
+    "Model openai-codex/gpt-6-luna is from the current project runtime context; effort max is the explicit invocation target. No connected OMP settings API was exposed to verify active overrides.",
+    "The invoking OMP session ID was not exposed in current invocation metadata. LunaMax is a worker label, not a session ID; session_id is null.",
+    "duration_ms is computed from separate host wall-clock time.time_ns readings at the start and stop boundaries. No current-session OMP final-usage API or runtime-linked journal locator was exposed, and host tool calls did not expose issuing request IDs; input_tokens and output_tokens are null because same-interval usage, finality, and cutoff cannot be proven.",
+    "Finished output was served only from this run's output directory over loopback HTTP at 127.0.0.1:8915. Connected Aside direct REPL showed a WebGL 2 context and Three.js r160 rendering one sun and three 3D planets. Top-level console, page-error, failed-request, and HTTP-error collectors remained empty. The server and attempt-created tabs were closed.",
+    "Browser actions covered auto-start, pause stability, deterministic seeking to 30 seconds, speed change without time change, playback resumption (5 simulation seconds over 2.5028 real seconds at 2x, approximately 1.998x), selection by list and canvas, tracking/overview state preservation, camera orbit/zoom, drag without accidental selection, and the 120-second stop with earlier-time resumption.",
+    "Snapshot checks covered captured-value stability and derived angles, the three-item limit and fourth-capture rejection, delete/recapture ordering and IDs, export field types, 15 invalid JSON payload classes with transactional preservation, valid null-selection and tracking imports, empty-list import, and import during playback. Same-origin HTTP reloads preserved import, deletion, and capture; invalid saved data recovered to an empty usable list.",
+    "Fixed-size embedded iframe documents reported 1440x900 and 390x844 CSS pixels. At both sizes document scrollWidth equaled clientWidth (1425 and 375 respectively, with vertical scrollbars), so no horizontal overflow was observed. Tab traversal, visible focus, arrow/Enter operation of simulation, selection, tracking, overview, snapshot, textarea, export, and import controls were exercised; focus escaped normally at the last control. Aside REPL Space-key presses did not activate a focused planet button, while Enter did; Space-specific activation remains unverified and no workaround was added.",
+    "Browser storage was available on the top-level loopback page, including persistence/recovery checks. In both embedded viewport fixtures the browser reported storage unavailable and the app displayed that snapshots remained in memory only; a quota/write-failure path outside that fixture was not forced.",
+    "Local-file navigation support was not established, so verification used the documented loopback fallback without probing file://. Static inspection found a local classic ./three.min.js script and no module script, fetch/XHR, or external URL dependency in index.html; direct file:// execution remains unverified.",
+    "The finished artifact is preserved, but terminal status is failed because required session identity and interval token counts are unavailable. No other functional defect was observed in the exercised HTTP browser paths."
+  ]
+}

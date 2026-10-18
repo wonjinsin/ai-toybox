@@ -30,12 +30,16 @@ function timestamp(value) {
   return new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10) === date;
 }
 
-function score(value, maximum) {
-  return value === null || (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= maximum);
+function score(value, maximum, nullable = true) {
+  return (nullable && value === null) || (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= maximum);
 }
 
 function round(value) {
   return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
+function roundRatio(numerator, denominator) {
+  return Math.floor((numerator * 200 + denominator) / (2 * denominator)) / 100;
 }
 
 export function normalize(review, registry) {
@@ -43,9 +47,9 @@ export function normalize(review, registry) {
   requireValue(typeof review.rubric_version === 'string' && Object.hasOwn(registry.rubrics, review.rubric_version), 'unsupported rubric_version');
   const rubric = registry.rubrics[review.rubric_version];
   requireValue(review.format_version === rubric.format_version, 'format_version and rubric_version do not match');
-  const current = review.format_version === '3.0';
+  const current = review.format_version === '4.0';
   const fields = ['format_version', 'rubric_version', 'reviewed_at', 'reviewer', 'status', 'requirements_verdict', 'verification', 'categories', 'checks', 'total_score', 'coverage', 'notes'];
-  if (current) fields.push('raw_total_score', 'score_cap');
+  if (current) fields.push('raw_total_score', 'raw_total_score_upper_bound', 'total_score_upper_bound', 'score_cap');
   object(review, fields, 'review');
   requireValue(['complete', 'partial', 'blocked'].includes(review.status), 'invalid status');
   requireValue(['pass', 'fail', 'unverified'].includes(review.requirements_verdict), 'invalid requirements_verdict');
@@ -70,13 +74,16 @@ export function normalize(review, registry) {
   requireValue(Array.isArray(review.categories) && review.categories.length === registry.categories.length, 'categories must contain the six registered categories');
   registry.categories.forEach((definition, index) => {
     const category = review.categories[index];
-    object(category, ['id', 'weight', 'score'], `categories[${index}]`);
+    object(category, current ? ['id', 'weight', 'score', 'score_upper_bound'] : ['id', 'weight', 'score'], `categories[${index}]`);
     requireValue(category.id === definition.id && category.weight === definition.weight, `invalid category ID, order or weight at ${index}`);
-    requireValue(score(category.score, 5), `invalid category score for ${category.id}`);
+    requireValue(score(category.score, 5, !current), `invalid category score for ${category.id}`);
+    if (current) requireValue(score(category.score_upper_bound, 5, false), `invalid category score_upper_bound for ${category.id}`);
   });
-  requireValue(score(review.total_score, 100), 'invalid total_score');
+  requireValue(score(review.total_score, 100, !current), 'invalid total_score');
   if (current) {
-    requireValue(score(review.raw_total_score, 100), 'invalid raw_total_score');
+    requireValue(score(review.raw_total_score, 100, false), 'invalid raw_total_score');
+    requireValue(score(review.raw_total_score_upper_bound, 100, false), 'invalid raw_total_score_upper_bound');
+    requireValue(score(review.total_score_upper_bound, 100, false), 'invalid total_score_upper_bound');
     requireValue(review.score_cap === null || review.score_cap === rubric.mandatory_failure_cap, 'invalid score_cap');
   }
   object(review.coverage, ['passed', 'failed', 'unverified'], 'coverage');
@@ -122,11 +129,50 @@ export function normalize(review, registry) {
   requireValue(review.status === status, 'status is incompatible with check coverage or required metadata');
   if (status === 'blocked') {
     requireValue(coverage.unverified === rubric.checks.length && review.notes.length > 0, 'blocked reviews require all checks unverified and a blocker note');
-    requireValue(review.total_score === null && review.categories.every(category => category.score === null) && review.requirements_verdict === 'unverified', 'blocked reviews cannot retain scores or a verdict');
-    requireValue(review.coverage.passed === 0 && review.coverage.failed === 0 && review.coverage.unverified === rubric.checks.length, 'blocked reviews cannot retain coverage');
-    if (current) requireValue(review.raw_total_score === null && review.score_cap === null, 'blocked reviews cannot retain raw scores or a cap');
+    requireValue(review.requirements_verdict === 'unverified', 'blocked reviews cannot retain a verdict');
+    if (!current) requireValue(review.total_score === null && review.categories.every(category => category.score === null), 'blocked reviews cannot retain scores');
+    if (!current) requireValue(review.coverage.passed === 0 && review.coverage.failed === 0 && review.coverage.unverified === rubric.checks.length, 'blocked reviews cannot retain coverage');
   }
   const verdict = mandatoryFailure ? 'fail' : mandatoryUnknown ? 'unverified' : 'pass';
+  const cap = mandatoryFailure ? rubric.mandatory_failure_cap : null;
+  if (current) {
+    const scale = [...categoryRatings.values()].reduce((product, ratings) => product * ratings.length, 1);
+    let lowerNumerator = 0;
+    let upperNumerator = 0;
+    const categories = registry.categories.map(definition => {
+      const ratings = categoryRatings.get(definition.id);
+      let sum = 0;
+      let unknown = 0;
+      for (const rating of ratings) {
+        if (rating === null) unknown += 1;
+        else sum += rating;
+      }
+      const upperSum = sum + 5 * unknown;
+      lowerNumerator += sum * definition.weight * (scale / ratings.length);
+      upperNumerator += upperSum * definition.weight * (scale / ratings.length);
+      return {
+        ...definition,
+        score: roundRatio(sum, ratings.length),
+        score_upper_bound: roundRatio(upperSum, ratings.length),
+      };
+    });
+    const denominator = scale * 5;
+    const lower = mandatoryFailure || mandatoryUnknown
+      ? Math.min(lowerNumerator, rubric.mandatory_failure_cap * denominator) : lowerNumerator;
+    const upper = mandatoryFailure ? Math.min(upperNumerator, cap * denominator) : upperNumerator;
+    return {
+      ...review,
+      status,
+      requirements_verdict: verdict,
+      categories,
+      raw_total_score: roundRatio(lowerNumerator, denominator),
+      raw_total_score_upper_bound: roundRatio(upperNumerator, denominator),
+      score_cap: cap,
+      total_score: roundRatio(lower, denominator),
+      total_score_upper_bound: roundRatio(upper, denominator),
+      coverage,
+    };
+  }
   let weightedTotal = 0;
   const categories = registry.categories.map(definition => {
     const ratings = categoryRatings.get(definition.id);
@@ -135,9 +181,8 @@ export function normalize(review, registry) {
     return { ...definition, score: mean === null ? null : round(mean) };
   });
   const raw = status === 'complete' ? round(weightedTotal) : null;
-  const cap = mandatoryFailure ? rubric.mandatory_failure_cap : null;
   if (status === 'partial') {
-    requireValue(review.total_score === null && (!current || review.raw_total_score === null), 'partial reviews cannot publish numeric totals');
+    requireValue(review.total_score === null, 'partial reviews cannot publish numeric totals');
     categories.forEach((category, index) => {
       requireValue(category.score !== null || review.categories[index].score === null, `unverified category ${category.id} cannot publish a score`);
     });
@@ -147,7 +192,6 @@ export function normalize(review, registry) {
     status,
     requirements_verdict: verdict,
     categories,
-    ...(current ? { raw_total_score: raw, score_cap: cap } : {}),
     total_score: raw === null ? null : cap === null ? raw : Math.min(raw, cap),
     coverage,
   };

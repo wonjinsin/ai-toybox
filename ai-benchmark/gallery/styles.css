@@ -91,7 +91,7 @@ h2 { font-size: 14px; font-weight: 650; margin: 0; }
 .run-score { text-align: right; }
 .score { font-size: 25px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.8px; }
 .score.unscored { font-size: 12px; font-weight: 500; color: #89909c; letter-spacing: 0; }
-.score-caption { display: block; color: var(--muted); font-size: 9px; margin-top: 4px; }
+.score-caption { display: block; color: var(--muted); font-size: 9px; margin-top: 4px; word-break: keep-all; }
 .open-arrow { justify-self: end; color: #a5a8b3; font-size: 18px; }
 .score-note { color: var(--muted); font-size: 10px; line-height: 1.8; margin: 17px 0 0; }
 .empty { padding: 64px 24px; border: 1px dashed var(--border); border-radius: 10px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.9; }

@@ -1,0 +1,25 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "xhigh",
+  "duration_ms": 1093139.369,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Current host is OMP. Model openai-codex/gpt-6-luna and effort xhigh are user-declared from this invocation's assignment; runtime overrides were not independently exposed.",
+    "session_id is null because no explicit current OMP session identity or connected host API/runtime-linked identity source was exposed; the agent display name was not used as an ID.",
+    "duration_ms is the UTC wall-clock delta between the separate work/check boundaries 2026-10-18T02:07:21.336898000Z and 2026-10-18T02:25:34.476267000Z. OMP boundary request identities/source positions were unavailable.",
+    "input_tokens and output_tokens are null because no current-session final-usage API or exact runtime journal locator was exposed; boundary request IDs, finality, and full interval coverage could not be established. This missing identity and usage requires failed status.",
+    "The fixed bundled prompt was copied unchanged to prompt.md; byte-for-byte cmp against the current bundled source succeeded.",
+    "Browser verification used output-only loopback HTTP on assigned port 8914. The local Three.js r160 bundle loaded as revision 160 with WebGLRenderer and a working WebGL canvas; screenshots showed the sun and three separate orbiting planets. No application console errors were observed during attached checks.",
+    "Exercised automatic startup/reload, deterministic period/angle readouts and fixed phase (Mercury 12.0 degrees at time 0 and 192.0 degrees at time 30), pause/resume/freeze, speed changes while paused, seeking and the 120-second stop, selection by list and rendered-canvas click, tracking/overview, camera orbit/zoom while paused, drag without accidental selection, and standard snapshot restore behavior.",
+    "Exercised snapshot immutability, three-item capacity and rejected fourth capture, deletion/recapture with unique IDs and retained order, export field types/order, valid fractional-speed/null-selection/tracking imports and round-trip, empty import/re-import, invalid-input transactional rejection across malformed/root/version/missing-field/type/range/duplicate/planet/capacity/tracking/prefix classes, capture/deletion/import persistence across top-level HTTP reload, startup reset, and corrupted saved-data recovery with usable controls.",
+    "At measured 1440x900 and 390x844 CSS sizes, fresh blank-tab fixed-size iframe fixtures were used because the direct REPL page had no setViewportSize method. Both documents had no horizontal overflow; primary control bounds stayed within the viewport. Real keyboard events exercised selection buttons, time/speed, pause/resume, tracking/overview, capture/restore/delete, textarea editing, export/import/clear/re-import at both sizes; visible focus was 3px and Tab left the fixture without a focus trap. These embedded fixtures are not top-level viewport or touch-device proof.",
+    "LocalStorage was unavailable in the embedded viewport fixtures; the app visibly reported saving unavailable while in-memory controls and JSON interactions worked. Persistence was separately verified in the top-level loopback page. A storage-write failure could not be induced in the top-level page.",
+    "Direct file:// execution was not tested because local-file navigation capability was not established in the connected Aside session. The saved HTML references only a local classic ./three.min.js script; source inspection found no module imports, fetch(), or XMLHttpRequest. This is compatibility inspection, not file:// execution proof.",
+    "Keyboarded planet-list buttons worked at both CSS viewport sizes. The native planet select did not change under attempted REPL ArrowDown/Enter events; native-select keyboard behavior therefore remains unverified, with no confirmed application defect.",
+    "The host-required aside-browser skill was loaded for direct Aside REPL verification; aside guide and aside guide repl were read."
+  ]
+}

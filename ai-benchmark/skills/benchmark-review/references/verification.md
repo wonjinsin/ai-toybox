@@ -55,23 +55,29 @@ browser presentation. When no viewport setter is available, use direct REPL's
 documented frame support to load the unchanged artifact in a fresh, fixed-size
 iframe. This tests a real CSS viewport, not a screenshot crop or scaled layout.
 
-Create the fixture only in a review-created blank tab, using the already
-permitted artifact URL. Use fresh variable names and a fresh fixture for each
-required size; the example uses the output-scoped HTTP server above.
+Do not use an `about:blank` parent. Its opaque, potentially insecure context can
+disable storage or `crypto.randomUUID` in an otherwise secure loopback child.
+That fixture failure is not an artifact failure. Start the fixture-only server
+alongside the output-only server. It reads no repository or output files:
+
+```sh
+node "<skill-root>/scripts/serve-viewport.mjs" 8766
+```
+
+Use an available port and retain its process handle for cleanup. Open a fresh
+fixture for each size with direct REPL:
 
 ```js
-const viewTab = await openTab("about:blank");
-await viewTab.evaluate(({ url, width, height }) => {
-  document.body.style.margin = "0";
-  const frame = document.createElement("iframe");
-  frame.id = "review-frame";
-  frame.style.cssText =
-    `display:block;width:${width}px;height:${height}px;border:0`;
-  frame.src = url;
-  document.body.appendChild(frame);
-}, { url: "http://127.0.0.1:8765/index.html", width: 390, height: 844 });
+const fixtureUrl = new URL("http://127.0.0.1:8766/");
+fixtureUrl.searchParams.set("url", "http://127.0.0.1:8765/index.html");
+fixtureUrl.searchParams.set("size", "mobile");
+const viewTab = await openTab(fixtureUrl.href);
 console.log((await snapshot(viewTab, { interactive: true })).tree);
 ```
+
+Use `size=desktop` for 1440x900 and `size=mobile` for 390x844. Verify
+`isSecureContext` inside the child before judging secure-context-dependent
+operations. Both servers must use `127.0.0.1`, not mixed hostnames.
 
 Wait for the snapshot to show the loaded artifact, taking another snapshot if
 navigation is still pending. Resolve its frame with `await viewTab.frames()`,
@@ -81,8 +87,8 @@ then measure inside that frame with `frame.evaluate`: `innerWidth`,
 Exercise actual frame controls through `frame.locator(...)` or snapshot frame
 refs, and inspect a transient screenshot. Repeat at 1440x900 and 390x844.
 
-Modify only the blank fixture, never the artifact DOM, CSS, script, runtime state,
-or reported viewport properties. The current task's narrowly scoped persisted-data
+The fixture server creates only its own wrapper. Never modify the artifact DOM,
+CSS, script, runtime state, or reported viewport properties. The persisted-data
 and storage-quota fixtures below are the only storage-boundary exceptions.
 Recheck dimensions before comparing repeated positions; a changed viewport
 invalidates a pixel comparison, not the artifact.
@@ -93,7 +99,7 @@ allowed checks. Preserve already observed passes and failures in partial JSON.
 
 Record the actual document sizes and disclose embedded-frame verification in
 notes and Markdown. It is not top-level viewport or touch-device proof.
-Close the fixture tab on every exit.
+Close the fixture tabs and stop both review-created servers on every exit.
 
 ## Observe the saved task
 
@@ -114,11 +120,35 @@ record numeric tolerances before judging the observation; never relax them after
 a mismatch to produce a pass. If accessible observations cannot establish a
 condition, leave it unverified rather than exposing or patching app internals.
 
+Measure rates with only the review's target scene running. Close review-created
+duplicate scene and viewport tabs before timing, and serialize timing across
+reviews that share a browser. Holding other tool calls is insufficient while
+their WebGL scenes still render. Keep each before/read, timed wait, and after/read
+in one uninterrupted REPL call. Record actual wall time and visibility. If a
+sample was contaminated, retain it with its context and repeat under controlled
+conditions without widening the tolerance. Never close unrelated user tabs.
+
 Use DOM/console/resource observations as supporting evidence, not replacements
 for rendered motion and actual user input. Separate observed app defects from
 infrastructure restrictions. Explain each failure with control actions, expected
 behavior, observed behavior, and source locations when inspection establishes a
 cause. Source references are supplementary; no retained screenshot is required.
+
+### Validate diagnostic transport
+
+Before trusting console or page-error subscriptions, exercise them on a
+reviewer-owned scratch page with a deliberate console error and thrown exception.
+An empty result from a subscription that failed this positive control is not
+evidence of a clean console. Do not use undocumented raw CDP or another browser
+to compensate.
+
+Non-interfering `error` and `unhandledrejection` listeners may observe later
+events. Do not prevent default handling, wrap application functions, or change
+application state. Remove listeners after use and reattach after navigation.
+Record their coverage limits. Post-load listeners miss startup errors and do
+not capture ordinary `console.error` calls. A captured qualifying failure can
+fail D3. Missing required diagnostic coverage leaves D3 unverified rather than
+inventing a pass from empty arrays. Continue all independent functional checks.
 
 ## Current task evidence matrix
 
@@ -181,7 +211,7 @@ mismatch. If precision prevents a conclusion, record the check as unverified.
 | U2 | Drag beginning on a planet with a fast move, then a slow cumulative drag of at least 30 CSS pixels over at least 20 small moves before pointer-up. Confirm no accidental selection. Exercise every DOM control and confirm no leaked scene selection/camera motion. |
 | U3 | Observe state labels, discoverability, capacity/errors, and interaction feedback across the exercised states. Explain the selected qualitative anchor. |
 | U4 | Capture three entries, attempt a fourth, delete a middle entry, and capture again. Record visible capacity rejection, stable values/IDs, append order, preserved remaining order, no collision, and unchanged live state. |
-| U5 | At both viewports use Tab/Shift+Tab and each control's normal Enter/Space/arrows. Operate all primary DOM controls including textarea and snapshot controls. Record accessible names, visible focus, actual action outcomes, and ability to leave controls without a trap. |
+| U5 | At both viewports use Tab/Shift+Tab and a normal activation key for each control, such as Enter for native buttons, arrows for ranges, and typeahead plus Enter for native selects. R15 says Enter, Space, **or** arrows as appropriate, not every equivalent key on every control. Operate all primary DOM controls including textarea and snapshot controls. Record accessible names, visible focus, actual action outcomes, and ability to leave controls without a trap. A transport failure of an unused equivalent key does not invalidate demonstrated normal keyboard operation. |
 | V1 | Inspect rendered scene and selection across overview/tracking and both sizes. Explain readability and the qualitative anchor. |
 | V2 | Inspect typography, spacing, colors, and hierarchy at both sizes, including new panels. Explain the qualitative anchor. |
 | L1 | Verify actual 1440x900 document size and scrollWidth. Exercise every primary control, including snapshot/JSON operations. Record occlusion and horizontal overflow; vertical scroll is allowed. |

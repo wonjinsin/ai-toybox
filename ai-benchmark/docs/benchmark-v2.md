@@ -40,17 +40,28 @@ of imported state.
 
 ## Scoring changes
 
-Rubric `solar-system-3.0` adds explicit checks for genuine Three.js rendering and
-the new behavior. Its six category weights remain unchanged. A declarative
+Rubric `solar-system-4.0` retains the 27 current-task checks introduced in 3.0,
+including genuine Three.js rendering and snapshot behavior. Its six category
+weights remain unchanged. The declarative
 [check registry](../skills/benchmark-review/assets/check-registry.json) owns check
 membership and mandatory-versus-qualitative status.
 
-The review records both the weighted `raw_total_score` and the published
-`total_score`. A confirmed mandatory failure sets `score_cap` to 69. When all
-checks are verified, the total is the lower of the raw score and that cap.
-Without a mandatory failure, the cap is null. A qualitative weakness alone does
-not trigger it. Missing evidence still makes both totals null, even when another
-check has a confirmed failure.
+Format 4 separates evidence completeness from score uncertainty. The review stores
+numeric category, raw-total, and published-total lower endpoints with matching
+`*_upper_bound` fields. An unknown rating stays null and contributes the possible
+interval 0..5. Each category uses its full registered denominator, not only
+observed checks. Totals use unrounded means before two-decimal half-up rounding.
+
+A confirmed mandatory failure sets `score_cap` to 69 and caps both total
+endpoints. An unknown mandatory check can cap only the lower endpoint, without
+changing the verdict to fail or setting the confirmed cap. Equal total endpoints
+give a determined score even when evidence is incomplete. Otherwise the headline
+must be labeled as a conservative lower bound with its range.
+
+Missing reviewer metadata affects completion status, not format 4 arithmetic.
+All-unverified blocked records carry 0..100 total bounds. Their zero headline
+means no established credit, not observed zero quality. Unknown observations
+remain distinct from failures. Frozen format 2 keeps its original null behavior.
 
 The cap is a policy choice. It means that 70 or above requires all in-scope
 mandatory behavior to pass. It is not a measured difficulty threshold. Keeping
@@ -66,6 +77,26 @@ be compared numerically with an old task score as if they measured the same work
 sort different rubric versions together, so use its displayed rubric identifier
 before interpreting that order.
 
+The explicit current-task scoring migration replaces format 3 with 4. It does not
+change task requirements, check ratings, observed evidence, reviewer identity,
+or observation time. A migration note identifies recalculation rather than a
+fresh browser review. It never authorizes converting an original-task review.
+
+### Format 4 verification
+
+The numeric-score migration passed all 110 repository tests. The finalizer saved
+and read back all five JSON/Markdown pairs. Every category and total endpoint is
+numeric, and the regenerated five-run catalog matches the saved review JSON.
+All original check observations, reviewer metadata, and observation timestamps
+were preserved. Checksums confirmed 22 original source files remained unchanged.
+
+Direct Aside REPL checks over loopback HTTP exercised all five score details,
+numeric-score filters, and score sorting. The gallery showed five numeric results
+and zero unscored results. Desktop rendering and a real 390x844 iframe viewport
+displayed the scores, ranges, and missing-proof notices without horizontal
+overflow. These checks verify score publication and presentation, not fresh
+observations of the benchmark artifacts.
+
 ## Required completion values
 
 A completed generation record must include its actual session ID, model, effort,
@@ -78,10 +109,10 @@ execution completion, not artifact quality.
 
 A complete review must include reviewer model, effort, and review timestamp in
 addition to verified checks. Missing metadata does not block inspection. Preserve
-same-attempt evidence in `partial` with null totals, even when all checks were
-observed. Missing browser capabilities leave the affected checks unverified.
-Use `blocked` for no usable evaluation or incompatible task routing. This applies
-to both supported review formats. Never bypass an access denial to continue.
+same-attempt evidence in `partial`; format 4 still publishes numeric bounds,
+while frozen format 2 keeps null totals. Missing browser capabilities leave the
+affected checks unverified. Use `blocked` for no usable evaluation or incompatible
+task routing. Never bypass an access denial to continue.
 
 The standalone [run validator](../skills/benchmark-record/scripts/validate-run.mjs)
 and [review scorer](../skills/benchmark-review/scripts/score-review.mjs) enforce
@@ -89,10 +120,11 @@ these completion requirements. Notes cannot waive required values. Placeholder
 strings and invented zeros are not acceptable substitutes. The tools validate
 structure, not the truth of a claimed measurement or source.
 
-Unknown fields remain null in incomplete or failed records. An unapplied
-`score_cap` remains null because that means no cap, not missing evidence.
-Existing saved artifacts are not migrated. An older complete record with missing
-required values now fails validation instead of receiving an exception.
+Unknown metadata and check ratings remain null in incomplete records. Format 4
+scores are numeric bounds instead. A null `score_cap` means no confirmed mandatory
+failure, although an unknown mandatory check can constrain the lower endpoint.
+Original saved artifacts are not changed by scoring migration. Older complete
+records missing required metadata fail validation instead of receiving an exception.
 
 ## Reliable publication
 
@@ -132,9 +164,9 @@ Reviewers must still obtain actual observations and accounting sources.
 
 The continuation/publication repair passed `node --test tests/*.test.mjs` with
 92 tests. A separate CLI smoke run exercised running, interrupted, resumed, and
-completed publication with an explicit browser gap. The metadata-gap case that
-previously failed scoring now publishes a partial review with null totals and
-all observed checks retained. Six discovery entrypoints and 81 local skill links
+completed publication with an explicit browser gap. Under the then-current
+format 3 policy, the metadata-gap case published a partial review with null totals
+and all observed checks retained. Six discovery entrypoints and 81 local skill links
 passed structural checks. Checksums confirmed that 19 existing run, prompt, and
 gallery files remained unchanged. These checks use synthetic publication fixtures,
 not a fresh Solar System benchmark or browser quality evaluation.
@@ -146,8 +178,9 @@ Before strict completion validation was introduced, the task-revision check
 passed all 38 repository tests, including eight scorer regression cases.
 A read-only CLI run on the 11 then-saved review records reproduced
 their category scores, totals, coverage, status, and requirement verdicts without
-changing input bytes. The current blank template remained unscored with all 27
-checks unverified. These checks establish scoring behavior, not new model quality.
+changing input bytes. The then-current format 3 blank template remained unscored
+with all 27 checks unverified. These checks establish historical scoring behavior,
+not new model quality.
 
 Strict-completion verification passed all 72 repository tests. Direct CLI smoke
 checks accepted real zero measurements, rejected a completed record with a

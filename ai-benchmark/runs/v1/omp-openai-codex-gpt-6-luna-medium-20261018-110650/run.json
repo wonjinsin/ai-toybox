@@ -1,0 +1,21 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-6-luna",
+  "effort": "medium",
+  "duration_ms": 153472.174,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Selected skill: agents/benchmark-record. Host-required extra skill aside-browser was loaded for browser verification; its connected direct REPL capabilities were read. No other skill was applied.",
+    "Host is OMP per invocation context. No explicit current OMP session ID or session-scoped final usage API/journal locator was exposed, so session_id is null. No current-session usage records or final token source was available; input_tokens and output_tokens are null and full usage coverage is unproven.",
+    "Model openai-codex/gpt-6-luna and effort medium are the explicit invocation selection/runtime context; no independently queryable runtime settings source or override verification was exposed.",
+    "Duration is the same-host wall-clock epoch delta between separate implementation/check start (1792289226.991573) and final work boundary (1792289380.463747), 153472.174 ms. No request IDs were exposed. Usage therefore remains unknown; recording and finalization occurred after the frozen end boundary.",
+    "Browser: opened the output over loopback HTTP on assigned port 8912. Main page rendering, loaded Three.js r160, live playback, planet list selection, tracking, pause, seek to 30 seconds, speed 2x, capture with three derived angles, export, restore, invalid import preserving live state, deletion and recapture were exercised. Attempt-created tab and server were closed.",
+    "CSS viewport dimensions were exercised using unchanged artifact in blank-tab iframe fixtures: 1440x900 and 390x844. Both reported no document horizontal overflow (desktop document client/scroll width 1425; mobile 375; iframe inner dimensions were requested sizes). Limited desktop/mobile control checks; this is embedded-frame coverage, not top-level viewport or touch-device proof. Broad 15-requirement scenario, all invalid-input classes, keyboard-only sequences at both sizes, camera orbit/zoom, reload persistence, corruption recovery, and storage-unavailable behavior were not fully exercised.",
+    "Iframe fixture browser context explicitly denied localStorage access and lacked crypto.randomUUID; snapshot capture was unavailable there. The direct loopback page did successfully capture, export, restore, persist and delete snapshots. No permission change or bypass was attempted.",
+    "Unresolved portability defect: Three.js is loaded from a remote CDN rather than a local bundled asset, so offline/direct-file operation is not established and was not tested. Direct file:// execution was not verified because the connected browser documentation did not establish local-file navigation support. External CDN availability is required for this HTTP-tested app.",
+    "Finished output is preserved, but required invocation identity and token totals are missing; status is failed rather than completed. Browser checks were partial, and no repository build, lint, test, or formatter was run."
+  ]
+}

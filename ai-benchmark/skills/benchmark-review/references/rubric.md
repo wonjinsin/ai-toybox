@@ -1,6 +1,6 @@
 # Solar System review rubric
 
-Rubric version `solar-system-3.0`. Review format `3.0`.
+Rubric version `solar-system-4.0`. Review format `4.0`.
 
 ## Route the saved task
 
@@ -9,9 +9,9 @@ existing review's version. Select exactly one contract before inspecting behavio
 
 | Saved task | Rubric | Format and template |
 | --- | --- | --- |
-| `solar-system-observatory-2`, all R1 through R15 and its acceptance scenario | This rubric, `solar-system-3.0` | [Format 3.0](review-format.md), [template](../assets/review.json) |
+| `solar-system-observatory-2`, all R1 through R15 and its acceptance scenario | This rubric, `solar-system-4.0` | [Format 4.0](review-format.md), [template](../assets/review.json) |
 | Original 11-requirement task and original eight-step scenario, including saved prompts without an explicit task ID | [Frozen rubric 2.0](rubric-2.0.md), `solar-system-2.0` | [Frozen format 2.0](review-format-2.0.md), [frozen template](../assets/review-2.0.json) |
-| Missing, ambiguous, or incompatible behavioral contract | Unscored blocked attempt | Use the contract identified by an explicit supported task ID, otherwise format 3.0; explain the mismatch |
+| Missing, ambiguous, or incompatible behavioral contract | Blocked attempt with no established credit | Use the contract identified by an explicit supported task ID, otherwise format 4.0 as an envelope only; explain the mismatch |
 
 An explicit ID does not override incompatible requirements. Harmless wording
 changes are allowed. An old prompt does not acquire new requirements because a
@@ -186,25 +186,46 @@ qualitative ratings with concrete observations. D3 remains objective and quality
 Qualitative ratings 0 through 2 fail; 3 through 5 pass. Unobserved quality stays
 null/unverified. Quality-only failure does not fail mandatory requirements.
 
-Each category is its checks' arithmetic mean on a 0..5 scale. Any unverified
-owned check makes that category null. Display category means to two decimals.
-Calculate `raw_total_score` from unrounded means times weight/5 and round only
-the final sum to two decimals. Any unverified check or missing required reviewer
-metadata makes both totals null. Preserve observed ratings and complete category
-means. Never renormalize known categories or publish a partial sum.
+Scores and evidence completeness are separate. For a category with `n` registered
+checks, observed-rating sum `s`, and `u` unknown ratings, its lower mean is `s/n`
+and upper mean is `(s + 5u)/n`. Keep every registered check in the denominator.
+An unknown rating remains null, not an observed zero or five. Its possible
+completions define the bounds.
+
+Calculate raw bounds from the unrounded category means times weight/5. Round
+category and final total endpoints to two decimals, half up. Do not calculate
+totals from rounded categories. The bounds enclose possible rounded scores;
+they are not probabilities or a promise that every interior value is attainable.
+Store lower endpoints as `score` and `raw_total_score`, and upper endpoints as
+`score_upper_bound` and `raw_total_score_upper_bound`.
 
 `requirements_verdict` is fail if any mandatory check fails, otherwise unverified
-if any mandatory check is unverified, otherwise pass. `score_cap` is 69 if any
-mandatory check fails, even in an otherwise partial review; otherwise it is null.
-When raw is known, `total_score = min(raw_total_score, score_cap)` if capped,
-otherwise it equals raw. Raw remains visible. The 69 cap is a declared policy,
-not an empirically calibrated quality threshold. Historical format 2 keeps its
-original uncapped arithmetic and has neither new field.
+if any mandatory check is unverified, otherwise pass. `score_cap` is 69 only for
+a confirmed mandatory failure; otherwise it is null. Published bounds follow:
 
-Coverage counts all 27 checks by status. Complete means every check is observed
-and required reviewer metadata and the timestamp are known, not that every check
-passes. Partial may retain all observed checks when required metadata is missing.
-Blocked is unscored and has no usable evaluation, not merely a missing capability.
-Preserve verified findings from the current attempt when later independent checks
-cannot run. Numeric computation validates consistency, not browser facts or the
-truth of metadata or prose observations.
+- With a confirmed mandatory failure, cap both raw endpoints at 69.
+- With no confirmed failure but an unknown mandatory check, cap only the lower
+  endpoint at 69. The unknown check could fail; the upper completion passes.
+- With every mandatory check passing, use the raw endpoints without a cap.
+
+Store these as `total_score` and `total_score_upper_bound`. Equal endpoints mean
+the rounded published score is determined, even if some checks remain unknown.
+Otherwise the headline is a conservative lower bound and must be labeled beside
+its range. For example, an unknown optional D3 and a confirmed mandatory failure
+can leave raw bounds of 82.2..84.2 but a determined published score of 69.
+The cap is declared policy, not an empirically calibrated quality threshold.
+
+All format 4 category and total endpoints are numeric. Missing reviewer metadata
+affects completion status, not arithmetic. Coverage counts all 27 checks by
+status. Complete means every check is observed and required reviewer metadata
+and the timestamp are known, not that every check passes. Partial retains
+usable findings. Blocked has all checks unverified, category ranges 0..5 and
+total ranges 0..100. Its zero headline means no established credit, not proven
+zero quality or a compatible task.
+
+Preserve verified findings when later independent checks cannot run. Arithmetic
+validates consistency, not browser facts or the truth of metadata and prose.
+Frozen format 2 retains its original nullable, uncapped arithmetic and no bound
+fields. Format 3 is replaced, not silently reinterpreted. Only an explicit
+scoring-policy migration may recalculate existing observations under format 4;
+it does not constitute a fresh browser review.

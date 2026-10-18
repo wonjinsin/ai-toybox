@@ -1,11 +1,11 @@
 # Review record format
 
 Use [task routing](rubric.md#route-the-saved-task) before selecting a format.
-Current task `solar-system-observatory-2` uses format `3.0`, rubric
-`solar-system-3.0`, and the [27-check template](../assets/review.json).
+Current task `solar-system-observatory-2` uses format `4.0`, rubric
+`solar-system-4.0`, and the [27-check template](../assets/review.json).
 The original task uses [frozen format 2.0](review-format-2.0.md) and its
-[historical template](../assets/review-2.0.json). Do not add format 3 fields to an
-old record or apply the new cap to historical scores.
+[historical template](../assets/review-2.0.json). Do not add format 4 fields to an
+old-task record or apply the new cap to historical scores.
 
 Each run has only `reviews/review.json` and `reviews/review.md` as the latest
 attempt. Re-review replaces those two files, including on a blocker. Leave
@@ -17,8 +17,8 @@ infrastructure blocker. Never repair the artifact to finish a review.
 
 The current record has exactly these fields. No additional fields are allowed.
 
-- `format_version` is `3.0`.
-- `rubric_version` is `solar-system-3.0`.
+- `format_version` is `4.0`.
+- `rubric_version` is `solar-system-4.0`.
 - `reviewed_at` is an actual valid ISO 8601 timestamp with timezone. Only partial
   or blocked records may use null with a note.
 - `reviewer` has exactly `model` and `effort`, each a concrete nonempty string.
@@ -37,19 +37,24 @@ The current record has exactly these fields. No additional fields are allowed.
   `viewports`, unique actually observed CSS-pixel sizes such as `1440x900`.
   Method `none` requires an empty viewport list.
 - `categories` contains exactly the six registry IDs in registry order with
-  `id`, `weight`, and `score`. Weights remain 25, 20, 15, 15, 15, and 10. Scores
-  are rounded means in 0..5 or null when any owned check is unverified.
+  `id`, `weight`, `score`, and `score_upper_bound`. Weights remain 25, 20, 15, 15,
+  15, and 10. Scores are finite lower and upper bounds in 0..5, rounded to two
+  decimals. Every registered check stays in the denominator.
 - `checks` contains all 27 registry checks exactly once in registry order. Each
   has exactly `id`, `status`, `rating`, `method`, and `evidence`.
   Status is `pass`, `fail`, or `unverified`. Ratings follow the rubric.
   Method is `http`, `static`, or `none`; verified D2 requires `static`, and every
   other verified check requires `http`. HTTP check evidence requires the review's
   browser method to be `http`. L1 and L2 passes require their actual viewports.
-- `raw_total_score` is the uncapped weighted total rounded to two decimals, or
-  null if any check is unverified or required reviewer metadata is missing.
+- `raw_total_score` and `raw_total_score_upper_bound` are finite lower and upper
+  bounds on the uncapped weighted score, rounded to two decimals.
 - `score_cap` is 69 when at least one mandatory check fails, otherwise null.
-  A confirmed failure still sets this field when raw and total are null.
-- `total_score` is raw limited by the cap, or null whenever raw is null.
+  It records only a confirmed failure, not the possible cap from an unknown check.
+- `total_score` and `total_score_upper_bound` are finite lower and upper bounds on
+  the published score. The lower endpoint accounts for either a confirmed or
+  possible mandatory failure. The upper endpoint applies the cap only for a
+  confirmed failure. See the [exact formulas](rubric.md#ratings-and-totals).
+  Equal endpoints establish a determined rounded score, not complete evidence.
 - `coverage` has integer `passed`, `failed`, and `unverified` counts totaling 27.
 - `notes` is an array of nonempty strings. Record metadata sources and their
   limits, missing metadata, task mismatch, preregistered tolerances, environment
@@ -57,7 +62,7 @@ The current record has exactly these fields. No additional fields are allowed.
   setup/restoration, and cleanup gaps. Notes cannot waive completion requirements.
 
 Evidence is a nonempty string, not a Boolean or an invented measurement. A
-verified format 3 check uses `Action: ... Expected: ... Observed: ...` in that
+verified format 4 check uses `Action: ... Expected: ... Observed: ...` in that
 order. Describe the actual input, expected outcome, and observed result with
 values where available. For failures provide reproducible steps; for qualitative
 checks explain the chosen anchor. Put any incomplete clauses after the actual
@@ -78,27 +83,31 @@ from the available clock or a trustworthy current-session time source. Record th
 sources and limits in notes. Do not use generator metadata, folder names, earlier
 review identities, or invented values. Do not launch another model to fill a gap.
 Unresolved required metadata remains null with reasons. Continue independently
-permitted inspection and finalize `partial` with null totals, even if all checks
-were observed. The same rule applies if metadata becomes unavailable during review.
-Save only at a resolved safe target under the output rules.
+permitted inspection and finalize `partial`. Missing metadata does not change
+format 4 arithmetic or authorize inventing an identity. The same rule applies if
+metadata becomes unavailable during review. Save only at a resolved safe target.
 
-For `blocked`, all checks are unverified/null and all scores, raw, and cap are null.
-Verdict is unverified and coverage is 0/0/27. Explain why no usable evaluation was
-possible. Missing/malformed inputs still produce this record when the target is
-safe. Do not reset same-attempt verified findings after a later capability gap or
+For `blocked`, all checks remain unverified with null ratings. Category bounds
+are 0..5; raw and published total bounds are 0..100; `score_cap` is null.
+The headline 0 is a lower bound with no established credit, not observed zero
+quality. Verdict is unverified and coverage is 0/0/27. Explain why no usable
+evaluation was possible. An unresolved task's range establishes no task identity.
+Missing/malformed inputs still produce this record when the target is safe.
+Do not reset same-attempt verified findings after a later capability gap or
 denial; preserve them in a partial record and stop only affected operations.
-Never copy findings from an existing review. If target resolution, safe output,
+A fresh review must not copy earlier findings. If target resolution, safe output,
 or a write is blocked, report each output's known saved, unchanged, missing, or
 unknown state.
 
 No generation token/time metrics, hashes, copied source, screenshots, or historical
 reviews belong in the record. Source-preservation hashes stay only in working
-memory. Skill maintenance does not rewrite saved reviews. Historical schema and
-scoring remain supported, but old complete files with missing reviewer metadata
-or timestamps now fail strict validation. There is no historical bypass and no
-automatic metadata fill, migration, or rescoring. A later explicit migration
-request must not fabricate metadata or observations, waive the completeness
-gate, or convert the old task into the new task; strict task routing still applies.
+memory. Maintenance alone does not authorize rewriting saved reviews.
+An explicit scoring-policy migration may recalculate existing current-task
+evidence. Preserve its check ratings, statuses, methods, observations, reviewer,
+and observation timestamp. Add a migration note and do not claim a fresh review.
+Format 3.0 is replaced by 4.0 rather than accepted as a silent alias.
+Frozen format 2.0 retains its schema and arithmetic. Missing completion metadata
+still fails validation. Never fabricate metadata or convert the old task.
 
 ## Read-only scoring command
 
@@ -127,16 +136,16 @@ metadata structure, not its truth or provenance. For otherwise valid records it
 derives category scores, coverage, verdict, status, and totals.
 Well-formed stale derived values are replaced in stdout; it does not treat those
 values as evidence. A partial record requires missing evidence or metadata and
-null totals, but retains all observed ratings, complete category means, and the
-derived mandatory verdict/cap. Historical format 2 accepts its original nonempty
-evidence strings and 19-check shape, retains uncapped arithmetic, and never gains
-new fields. Use the publication command to generate Markdown from normalized JSON
-and validate the saved pair.
+retains all observed ratings and the derived mandatory verdict. Format 4 scores
+and upper bounds must be finite, including in partial and blocked drafts.
+Historical format 2 accepts its original nonempty evidence strings and 19-check
+shape, retains nullable uncapped arithmetic, and never gains new fields.
+Use the publication command to generate Markdown from normalized JSON and
+validate the saved pair.
 
-The design uses one declarative registry rather than per-category scoring
-functions. Both contracts use the same arithmetic and validation. Data keeps
-historical membership explicit without compatibility wrappers. Browser judgments
-remain in the rubric and evidence matrix because numeric code cannot prove them.
+One declarative registry owns check membership and weights. The normalizer owns
+both versioned scoring policies and evidence validation. Browser judgments remain
+in the rubric and evidence matrix because arithmetic cannot prove them.
 
 ## Publication command
 
@@ -178,21 +187,23 @@ On a readback failure, report the error alongside those operation states rather
 than claiming the current contents are validated. Never retry a denied operation
 or claim successful rollback.
 
-Publish an all-unverified unscored checkpoint before inspection, with notes that
-evaluation has not occurred. Publish the final record after all independently
-permitted checks, including partial and blocked outcomes. Existing saved reviews
-are not fresh evidence.
+Publish an all-unverified checkpoint before inspection, with notes that evaluation
+has not occurred. Format 4 shows a 0..100 score range at that point. Publish the
+final record after all independently permitted checks, including partial and
+blocked outcomes. Existing saved reviews are not fresh evidence.
 
 
 ## Markdown report
 
 Write the report in English with these sections:
 
-1. **Conclusion.** Status, mandatory verdict, published total or `Unscored`, raw
-   total or `Unscored`, applied cap or `None`, timestamp, and reviewer. Explain
-   a 69 cap as policy rather than a calibrated quality measurement.
-2. **Scores.** One table of six categories, scores or `Unverified`, weights, and
-   short reasons. Never display a partial sum as a total.
+1. **Conclusion.** Evidence status, mandatory verdict, published and raw score
+   bounds, confirmed failure cap or `None`, timestamp, and reviewer. Identify a
+   determined total or a conservative lower bound independently of evidence
+   completeness. Explain a 69 cap as policy, not a calibrated quality measurement.
+2. **Scores.** One table of six category bounds, weights, and short reasons.
+   Unknown ratings span 0..5 without becoming observed failures. Include all
+   registered checks rather than renormalizing only observed ones.
 3. **Findings.** Check IDs, reproducible actions, expected and observed outcomes,
    and qualitative anchor reasons. Separate confirmed failures from missing proof.
 4. **Verification and limits.** Actual browser method and viewports, coverage,

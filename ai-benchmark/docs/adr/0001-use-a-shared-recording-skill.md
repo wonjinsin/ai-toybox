@@ -76,13 +76,28 @@ workflow without provider-specific collectors.
 - Save only `reviews/review.json` and `reviews/review.md` in that directory.
   Re-review replaces those two files; do not retain timestamp directories,
   screenshots, evidence archives or previous-review backups.
-- Use a versioned six-category rubric and the saved prompt. Incompatible tasks
-  receive an unscored, blocked review. Missing evidence remains unverified;
-  incomplete categories and totals stay null, while confirmed mandatory failures
-  are reported independently.
+- Use a versioned six-category rubric and the saved prompt. The original review
+  policy left incompatible tasks blocked and unscored. Missing evidence remained
+  unverified and withheld incomplete category scores and totals. The numeric-score
+  revision below replaces that rule only for the current task.
 - Keep browser restrictions unchanged: Aside direct REPL only, direct-file and
   HTTP verification separate, no bypass of explicit access denials. Generation
   status and prior reviews are not fresh verification evidence.
+
+## Numeric-score policy
+
+Current-task reviews use [format 4](../../skills/benchmark-review/references/review-format.md).
+Evidence completeness and numerical certainty are independent. All category and
+total scores are numeric lower bounds with explicit upper endpoints. Unknown
+check ratings remain null, and confirmed failures remain failures. A determined
+capped total does not make a partial review complete.
+
+An explicitly requested scoring migration may recalculate existing observations
+without pretending to run a new review. Preserve reviewer metadata and timestamps,
+all check evidence, and every original artifact. Frozen format 2 retains its
+original nullable arithmetic. The gallery labels score uncertainty separately
+from review status instead of substituting zero for missing review data.
+
 
 ## Consequences
 

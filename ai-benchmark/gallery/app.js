@@ -30,9 +30,29 @@
     return node;
   }
 
+  function scoreRange(review, lowerKey = 'total_score', upperKey = 'total_score_upper_bound', maximum = 100) {
+    if (!['2.0', '4.0'].includes(review?.format_version)) return null;
+    const lower = review?.[lowerKey];
+    const upper = review?.format_version === '4.0' ? review[upperKey] : lower;
+    return Number.isFinite(lower) && Number.isFinite(upper) && lower >= 0 && lower <= upper && upper <= maximum
+      ? { lower, upper } : null;
+  }
+
   function score(run) {
-    const value = run.review?.total_score;
-    return Number.isFinite(value) && value >= 0 && value <= 100 ? value : null;
+    return scoreRange(run.review)?.lower ?? null;
+  }
+
+  function rangeText(range) {
+    return range.lower === range.upper ? number.format(range.lower) : `${number.format(range.lower)} ~ ${number.format(range.upper)}`;
+  }
+
+  function scoreDescription(run) {
+    const range = scoreRange(run.review);
+    if (!range) return `미채점 · ${reviewLabel(run)}`;
+    const basis = run.review.format_version === '4.0'
+      ? range.lower === range.upper ? '확정 점수' : '보수적 하한'
+      : '저장된 점수';
+    return `${number.format(range.lower)}점 / 100 · ${basis}${range.lower !== range.upper ? ` · 가능 범위 ${rangeText(range)}` : ''} · ${reviewLabel(run)}`;
   }
 
   function date(value) {
@@ -64,9 +84,15 @@
 
   function scoreBlock(run, className = 'run-score') {
     const wrapper = element('div', className);
-    const value = score(run);
-    wrapper.append(element('span', `score${value === null ? ' unscored' : ''}`, value === null ? '미채점' : number.format(value)));
-    wrapper.append(element('span', 'score-caption', value === null ? reviewLabel(run) : `/ 100 · ${reviewLabel(run)}`));
+    const range = scoreRange(run.review);
+    wrapper.setAttribute('role', 'group');
+    wrapper.setAttribute('aria-label', scoreDescription(run));
+    wrapper.append(element('span', `score${range === null ? ' unscored' : ''}`, range === null ? '미채점' : number.format(range.lower)));
+    const basis = range && run.review.format_version === '4.0'
+      ? range.lower === range.upper ? '확정 점수' : '보수적 하한'
+      : '저장된 점수';
+    wrapper.append(element('span', 'score-caption', range === null ? reviewLabel(run) : `/ 100 · ${basis} · ${reviewLabel(run)}`));
+    if (range && range.lower !== range.upper) wrapper.append(element('span', 'score-caption', `가능 범위 ${rangeText(range)}`));
     return wrapper;
   }
 
@@ -119,7 +145,7 @@
     const stats = [
       ['실행 기록', selectedRuns.length, '저장된 시도'],
       ['생성된 결과물', selectedRuns.filter(run => run.artifactUrl).length, 'HTML 결과'],
-      ['최고 점수', scores.length ? number.format(Math.max(...scores)) : '—', `${scored.length}개 채점 / 100`],
+      ['최고 표시 점수', scores.length ? number.format(Math.max(...scores)) : '—', `${scored.length}개 숫자 점수 · 확정값 또는 보수적 하한 / 100 · 검증 완료와 별개`],
     ];
     $('stats').replaceChildren(...stats.map(([label, value, hint]) => {
       const card = element('div', 'stat');
@@ -157,7 +183,7 @@
       const card = existing.get(key) ?? element('a', 'run-card');
       card.dataset.focusKey = key;
       card.href = routeUrl(model, run.id);
-      card.setAttribute('aria-label', `${run.model ?? '모델 미확인'}, ${run.effort ?? 'effort 미확인'}, ${date(run.createdAt)}, ${score(run) === null ? '미채점' : `${score(run)}점`}, 상세 보기`);
+      card.setAttribute('aria-label', `${run.model ?? '모델 미확인'}, ${run.effort ?? 'effort 미확인'}, ${date(run.createdAt)}, ${scoreDescription(run)}, 상세 보기`);
       const info = element('div');
       const title = element('div', 'run-title', run.model ?? '모델 미확인');
       title.append(element('span', 'effort', run.effort ?? 'effort 미확인'));
@@ -200,10 +226,10 @@
     toolbar.append(element('span', '', 'output / index.html'), open);
     const frame = element('iframe', 'preview-frame');
     frame.title = `${run.model ?? '모델 미확인'} / ${run.effort ?? '미확인'} 생성 결과물`;
-    frame.setAttribute('sandbox', 'allow-scripts allow-pointer-lock');
+    frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-pointer-lock');
     frame.referrerPolicy = 'no-referrer';
     frame.src = run.artifactUrl;
-    panel.append(toolbar, frame, element('p', 'score-note', '결과물은 격리된 미리보기에서 실행됩니다. 비어 있거나 일부 기능이 제한되면 새 탭에서 여세요. 외부 CDN을 사용하는 결과물은 인터넷 연결이 필요합니다. 미리보기 표시는 평가 검증을 의미하지 않습니다.'));
+    panel.append(toolbar, frame, element('p', 'score-note', '신뢰한 저장소의 결과물을 원본 권한으로 실행합니다. 결과물은 갤러리와 같은 출처의 페이지와 저장소에 접근할 수 있습니다. 신뢰할 수 없는 HTML을 추가하지 마세요. 외부 CDN을 사용하는 결과물은 인터넷 연결이 필요합니다. 미리보기 표시는 평가 검증을 의미하지 않습니다.'));
   }
 
   function reviewPanel(run, panel) {
@@ -214,30 +240,46 @@
     }
     const reviewer = review.reviewer && typeof review.reviewer === 'object' ? review.reviewer : {};
     panel.append(element('p', 'review-summary', `${reviewLabel(run)} · 평가 모델: ${reviewer.model ?? '미확인'} · effort: ${reviewer.effort ?? '미확인'}\n평가 기준: ${review.rubric_version ?? '미기록'} · ${date(review.reviewed_at)} KST`));
-    if (score(run) === null) panel.append(element('p', 'notice', '총점이 기록되지 않았습니다. 미검증 항목이나 평가 제한을 확인하세요. 미채점 항목은 0점으로 환산하지 않습니다.'));
+    const checks = Array.isArray(review.checks) ? review.checks.filter(value => value && typeof value === 'object') : [];
+    const pending = checks.filter(check => check.status === 'unverified').map(check => check.id ?? 'ID 미기록');
+    const missing = [['평가 모델', reviewer.model], ['effort', reviewer.effort], ['평가 시각', review.reviewed_at]]
+      .filter(([, value]) => typeof value !== 'string' || !value.trim()).map(([label]) => label);
+    if (pending.length) panel.append(element('p', 'notice', `미검증 ${pending.length}개 (${pending.join(', ')}) · 숫자 점수가 있어도 이 항목들의 검증은 완료되지 않았습니다.`));
+    if (missing.length) panel.append(element('p', 'notice', `평가 정보 누락 (${missing.join(', ')}) · 점수 확정 여부와 별개로 평가 정보가 불완전합니다.`));
+    if (score(run) === null) {
+      panel.append(element('p', 'notice', '유효한 저장 점수가 없어 미채점으로 표시합니다. 미채점은 0점이 아닙니다. 이 화면은 점수를 새로 계산하지 않습니다.'));
+    }
+    const raw = scoreRange(review, 'raw_total_score', 'raw_total_score_upper_bound');
+    if (raw) panel.append(element('p', 'review-summary', `원점수 ${rangeText(raw)} / 100${raw.lower !== raw.upper ? ' · 가능 범위' : ''}`));
+    if (Number.isFinite(review.score_cap)) {
+      panel.append(element('p', 'notice', `확인된 필수 항목 실패로 확정 상한 ${number.format(review.score_cap)}점이 적용됩니다. 기존 필수 항목 정책에 따른 상한이며, 모델 품질에 대한 추가 추정이 아닙니다.`));
+    }
+    if (review.format_version === '4.0') {
+      panel.append(element('p', 'score-note', '확정 점수는 가능한 총점이 하나라는 뜻이며 검증 완료를 뜻하지 않습니다. 보수적 하한은 미검증 항목을 포함한 가능 범위의 최솟값이며, 미검증을 실패나 실제 0점으로 판정한 것이 아닙니다. 필수 항목이 미검증이면 실패 가능성을 반영해 하한만 69점 이하로 제한할 수 있으며, 이는 확정 상한이나 실패 판정이 아닙니다.'));
+    }
     if (review.verification) {
       panel.append(element('p', 'review-summary', `브라우저 검증: ${review.verification.browser_method ?? '미기록'} · 요구사항 판정: ${review.requirements_verdict ?? '미기록'}`));
     }
     const categories = Array.isArray(review.categories) ? review.categories.filter(value => value && typeof value === 'object') : [];
     const grid = element('div', 'category-grid');
     for (const category of categories) {
-      const valid = Number.isFinite(category.score) && category.score >= 0 && category.score <= 5;
+      const range = scoreRange({ ...category, format_version: review.format_version }, 'score', 'score_upper_bound', 5);
+      const name = categoryNames[category.id] ?? category.id ?? '평가 항목';
       const card = element('div', 'category');
-      card.append(element('h3', '', categoryNames[category.id] ?? category.id ?? '평가 항목'));
-      const value = element('p', '', valid ? `${category.score} ` : '미채점 ');
+      card.append(element('h3', '', name));
+      const value = element('p', '', range ? `${rangeText(range)}${range.lower !== range.upper ? ' · 가능 범위' : ''} ` : '미채점 ');
       value.append(element('small', '', `/ 5 · 가중치 ${category.weight ?? '미기록'}`));
       card.append(value);
-      if (valid) {
+      if (range) {
         const bar = element('progress');
         bar.max = 5;
-        bar.value = category.score;
-        bar.setAttribute('aria-label', `${categoryNames[category.id] ?? category.id} ${category.score}/5`);
+        bar.value = range.lower;
+        bar.setAttribute('aria-label', `${name} ${rangeText(range)} / 5${range.lower !== range.upper ? ' · 가능 범위, 막대는 보수적 하한' : ''}`);
         card.append(bar);
       }
       grid.append(card);
     }
     panel.append(grid);
-    const checks = Array.isArray(review.checks) ? review.checks.filter(value => value && typeof value === 'object') : [];
     if (checks.length) panel.append(element('h2', '', '검증 항목'));
     for (const check of checks) {
       const row = element('div', 'check');

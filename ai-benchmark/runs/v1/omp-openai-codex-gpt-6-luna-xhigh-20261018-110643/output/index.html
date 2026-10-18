@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Orbital Observatory · Solar System</title>
+<style>
+:root{color-scheme:dark;--bg:#080c17;--surface:#101829;--surface2:#151f33;--line:#27334b;--text:#f4f6fc;--muted:#9aa8c0;--cyan:#72e5e0;--gold:#ffc86a;--danger:#ff8d91;--radius:18px;font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;min-width:320px;background:radial-gradient(ellipse at 48% -20%,#1c3452 0%,var(--bg) 55%);color:var(--text)}button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.46}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}.shell{width:min(1600px,100%);margin:0 auto;padding:22px clamp(12px,2vw,30px) 40px}.masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:13px}.brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(140deg,#ffe49c,#ef9c44 58%,#b44c31);box-shadow:0 0 30px #f2a34c55;position:relative}.brand-mark:after{content:"";position:absolute;width:27px;height:27px;left:8px;top:8px;border:1px solid #fff9;border-radius:50%}.eyebrow{font-size:.69rem;letter-spacing:.17em;text-transform:uppercase;color:var(--cyan);font-weight:750}.masthead h1{font-size:clamp(1.22rem,2.2vw,1.8rem);line-height:1.1;margin:2px 0 0;letter-spacing:-.035em}.version-pill{white-space:nowrap;color:#c6d4ec;background:#18243a;border:1px solid #293958;border-radius:999px;padding:7px 11px;font-size:.72rem}
+.layout{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(330px,.88fr);gap:16px;align-items:start}.panel{background:linear-gradient(160deg,#121c2d,#0d1524);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 14px 42px #0003;min-width:0}.scene-panel{overflow:hidden}.scene-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 19px 12px}.scene-title h2,.section-title{font-size:.9rem;letter-spacing:.02em;margin:0;font-weight:700}.scene-title p{margin:2px 0 0;color:var(--muted);font-size:.76rem}.scene-badge{border:1px solid #2b455b;border-radius:99px;color:#9fece3;background:#10222b;padding:5px 9px;font-size:.68rem;white-space:nowrap}.scene-frame{height:min(61vh,610px);min-height:360px;position:relative;background:radial-gradient(ellipse at center,#152b47 0%,#0a1020 70%);overflow:hidden}.scene-frame canvas{display:block;width:100%;height:100%;touch-action:none}.scene-hint{position:absolute;left:14px;bottom:12px;background:#080d19bb;border:1px solid #ffffff18;color:#b8c8df;padding:6px 9px;border-radius:8px;font-size:.68rem;pointer-events:none}.scene-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:28px;text-align:center;background:#080c17ee;color:#ffd1d2}.scene-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #202c40;padding:10px 17px;color:var(--muted);font-variant-numeric:tabular-nums;font-size:.78rem}.scene-footer strong{color:var(--text);font-weight:650}.sidebar{display:grid;gap:14px}.section{padding:15px 16px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}.section-kicker{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.simulation-controls{display:grid;gap:12px}.button-row{display:flex;gap:8px;flex-wrap:wrap}.button{border:1px solid #35435c;background:#1a263a;border-radius:10px;padding:8px 12px;font-weight:650;font-size:.8rem;transition:background .15s,border-color .15s,transform .15s}.button:hover:not(:disabled){background:#243650;border-color:#58728f}.button:active:not(:disabled){transform:translateY(1px)}.button.primary{background:linear-gradient(110deg,#237d83,#286b86);border-color:#48b7b9;color:#fff}.button.primary:hover:not(:disabled){background:linear-gradient(110deg,#2b9699,#347e9c)}.button.subtle{background:#121d2d}.button.danger{border-color:#754049;color:#ffc1c3}.button.small{padding:5px 8px;font-size:.7rem;border-radius:8px}.control-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.75rem;color:#cfdaeb;font-weight:650}.control-value{font-variant-numeric:tabular-nums;color:var(--cyan);font-weight:700}.range-wrap{display:grid;gap:5px}input[type=range]{width:100%;accent-color:#68d9d0;height:20px;margin:0;cursor:pointer}.range-limits{display:flex;justify-content:space-between;color:#8493aa;font-size:.65rem;font-variant-numeric:tabular-nums}.time-readout{font-variant-numeric:tabular-nums;font-size:.83rem;color:var(--text)}.select-label{display:block;margin-bottom:5px;color:#cfdaeb;font-size:.75rem;font-weight:650}select,textarea{width:100%;border:1px solid #33425c;border-radius:10px;background:#0b1321;padding:9px 10px}.planet-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}.planet-choice{min-width:0;text-align:left;display:flex;align-items:center;gap:7px;padding:8px 7px;border:1px solid #2b3850;background:#111b2c;border-radius:10px;font-size:.72rem}.planet-choice:hover{border-color:#4f6882}.planet-choice[aria-pressed=true]{border-color:var(--planet);background:color-mix(in srgb,var(--planet) 12%,#111b2c);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--planet) 32%,transparent)}.planet-dot{flex:0 0 10px;width:10px;height:10px;border-radius:50%;background:var(--planet);box-shadow:0 0 10px color-mix(in srgb,var(--planet) 65%,transparent)}.planet-choice b{display:block;line-height:1.15}.planet-choice small{display:block;color:#94a3ba;font-size:.59rem;line-height:1.25;margin-top:3px;overflow-wrap:anywhere}.info-card{margin-top:10px;min-height:74px;border:1px solid #2a3850;background:#0d1626;border-radius:11px;padding:10px 12px}.info-card strong{display:block;font-size:.86rem}.info-card p{margin:3px 0 0;color:#aab7ca;font-size:.73rem}.info-card .angle{color:#96e7df;font-variant-numeric:tabular-nums}.inline-note{color:#92a1b8;font-size:.68rem;margin:7px 0 0}.camera-controls{display:flex;gap:8px}.camera-controls .button{flex:1}.notice{min-height:1.25em;color:#ffcc83;font-size:.72rem;margin:8px 0 0}.notice.error{color:#ff9da1}.notice.success{color:#89e2ca}.snapshot-list{display:grid;gap:8px}.empty-state{padding:12px;border:1px dashed #34435a;border-radius:10px;color:#9caac0;text-align:center;font-size:.74rem}.snapshot-item{border:1px solid #2b3850;background:#0d1626;border-radius:11px;padding:10px}.snapshot-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:7px}.snapshot-heading strong{font-size:.76rem;overflow-wrap:anywhere}.snapshot-heading small{display:block;color:#96a4bb;font-size:.66rem;margin-top:2px}.snapshot-values{margin:7px 0 8px;color:#b5c2d5;font-size:.66rem;line-height:1.55;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.snapshot-actions{display:flex;gap:6px}.snapshot-actions .button{flex:1}.json-area{min-height:100px;resize:vertical;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c9d7ea}.json-actions{display:flex;gap:8px;margin-top:8px}.json-actions .button{flex:1}.mapping{display:block;margin-top:8px;color:#97a7bd;font-size:.64rem;line-height:1.45;overflow-wrap:anywhere}.footer-note{color:#73829a;text-align:center;font-size:.67rem;margin:17px 0 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1000px){.layout{grid-template-columns:minmax(0,1.15fr) minmax(310px,.85fr)}.scene-frame{height:52vh;min-height:340px}}
+@media(max-width:760px){.shell{padding:14px 12px 30px}.layout{grid-template-columns:1fr;gap:12px}.scene-frame{height:clamp(310px,58vh,490px);min-height:310px}.sidebar{grid-template-columns:1fr}.scene-top{padding:14px 14px 10px}.scene-footer{padding:9px 13px}.version-pill{font-size:.62rem;padding:6px 8px}.masthead{margin-bottom:13px}}
+@media(max-width:420px){.brand-mark{width:36px;height:36px;border-radius:12px}.brand-mark:after{width:23px;height:23px;left:6px;top:6px}.brand{gap:9px}.version-pill{max-width:115px;white-space:normal;text-align:center}.section{padding:13px}.planet-list{gap:5px}.planet-choice{font-size:.68rem;padding:7px 5px}.planet-choice small{font-size:.55rem}.button{padding:8px 10px}.scene-frame{height:370px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead">
+    <div class="brand"><div class="brand-mark" aria-hidden="true"></div><div><div class="eyebrow">Deep space · live instrument</div><h1>Orbital Observatory</h1></div></div>
+    <div class="version-pill">SOL SYSTEM / OBSERVATION MODE</div>
+  </header>
+  <main class="layout">
+    <section class="panel scene-panel" aria-label="Three-dimensional solar system">
+      <div class="scene-top"><div class="scene-title"><h2>Heliocentric view</h2><p>Three worlds · deterministic orbital mechanics</p></div><span id="sceneMode" class="scene-badge">FULL SYSTEM</span></div>
+      <div id="sceneFrame" class="scene-frame"><canvas id="space" aria-label="Interactive 3D solar system. Drag to orbit, scroll to zoom, or choose a planet from the list."></canvas><div class="scene-hint">Drag to orbit · scroll to zoom</div><div id="sceneError" class="scene-error" role="alert"></div></div>
+      <div class="scene-footer"><span>SIMULATION CLOCK</span><strong><span id="footerTime">00.0</span> s · <span id="footerState">PLAYING</span></strong><span>THREE-DIMENSIONAL · WEBGL</span></div>
+    </section>
+    <aside class="sidebar" aria-label="Observatory controls">
+      <section class="panel section" aria-labelledby="simulationHeading">
+        <div class="section-head"><div><div class="section-kicker">01 · Simulation</div><h2 id="simulationHeading" class="section-title">Time & motion</h2></div><span class="control-value" id="playState">LIVE</span></div>
+        <div class="simulation-controls">
+          <button id="playButton" class="button primary" type="button" aria-label="Pause simulation">Ⅱ &nbsp; Pause simulation</button>
+          <div class="range-wrap"><label class="control-label" for="timeSlider"><span>Simulation time</span><span class="time-readout"><span id="timeText">0.0</span> / 120 s</span></label><input id="timeSlider" type="range" min="0" max="120" step="0.1" value="0" aria-label="Simulation time, 0 to 120 seconds"><div class="range-limits"><span>0 s</span><span>120 s · stop</span></div></div>
+          <div class="range-wrap"><label class="control-label" for="speedSlider"><span>Global speed</span><span class="control-value" id="speedText">1.00×</span></label><input id="speedSlider" type="range" min="0.25" max="4" step="0.05" value="1" aria-label="Global simulation speed, 0.25x to 4x"><div class="range-limits"><span>0.25×</span><span>4×</span></div></div>
+        </div>
+      </section>
+      <section class="panel section" aria-labelledby="planetHeading">
+        <div class="section-head"><div><div class="section-kicker">02 · Observation</div><h2 id="planetHeading" class="section-title">Select a planet</h2></div></div>
+        <label class="select-label" for="planetSelect">Planet selector</label><select id="planetSelect" aria-label="Select a planet"><option value="">No planet selected</option></select>
+        <div id="planetList" class="planet-list" role="group" aria-label="Planet selection buttons"></div>
+        <div id="planetInfo" class="info-card" aria-live="polite"><strong>No planet selected</strong><p>Choose a world to inspect its orbit and current angle.</p></div>
+        <div class="mapping">Stable IDs · <span id="idMapping"></span></div>
+      </section>
+      <section class="panel section" aria-labelledby="cameraHeading">
+        <div class="section-head"><div><div class="section-kicker">03 · Perspective</div><h2 id="cameraHeading" class="section-title">Camera mode</h2></div></div>
+        <div class="camera-controls"><button id="trackButton" class="button" type="button" disabled aria-label="Track selected planet">◎ &nbsp; Track planet</button><button id="overviewButton" class="button" type="button" aria-label="Return to full-system overview">◉ &nbsp; Full overview</button></div>
+        <p class="inline-note">Tracking follows the selected world. Camera orbit and zoom work in either mode.</p>
+      </section>
+      <section class="panel section" aria-labelledby="snapHeading">
+        <div class="section-head"><div><div class="section-kicker">04 · Field notes</div><h2 id="snapHeading" class="section-title">Observation snapshots</h2></div><span id="snapshotCount" class="control-value">0 / 3</span></div>
+        <button id="captureButton" class="button primary" type="button" aria-label="Capture observation snapshot">＋ &nbsp; Capture snapshot</button>
+        <div id="snapshotNotice" class="notice" role="status" aria-live="polite"></div>
+        <div id="snapshotList" class="snapshot-list" aria-live="polite" style="margin-top:9px"></div>
+      </section>
+      <section class="panel section" aria-labelledby="jsonHeading">
+        <div class="section-head"><div><div class="section-kicker">05 · Portable record</div><h2 id="jsonHeading" class="section-title">Snapshot JSON</h2></div></div>
+        <label class="select-label" for="jsonText">Export or paste a version 1 snapshot list</label><textarea id="jsonText" class="json-area" spellcheck="false" aria-label="Snapshot JSON text"></textarea>
+        <div class="json-actions"><button id="exportButton" class="button" type="button" aria-label="Export snapshot list to text area">Export list</button><button id="importButton" class="button" type="button" aria-label="Import snapshot list from text area">Import list</button></div>
+        <div id="jsonNotice" class="notice" role="status" aria-live="polite"></div>
+      </section>
+    </aside>
+  </main>
+  <p class="footer-note">Orbital periods are benchmark simulation values. Angles derive from fixed starting phases and simulation time.</p>
+</div>
+<script src="./three.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const planets = [
+    { id: 'mercury', name: 'Mercury', period: 12, radius: 7, size: .48, color: '#61d9db', phase: 12 },
+    { id: 'venus', name: 'Venus', period: 24, radius: 11, size: .78, color: '#f0ae68', phase: 126 },
+    { id: 'earth', name: 'Earth', period: 48, radius: 16, size: .91, color: '#91a9ff', phase: 248 }
+  ];
+  const byId = Object.fromEntries(planets.map(p => [p.id, p]));
+  const el = id => document.getElementById(id);
+  const storageKey = 'solar-system-observatory-2:snapshots';
+  const state = { time: 0, speed: 1, selectedPlanet: null, viewMode: 'overview', playing: true, snapshots: [], storageAvailable: true, storageMessage: '', lastFrame: 0, snapshotSeq: 0 };
+  const sceneFrame = el('sceneFrame');
+  const canvas = el('space');
+  let scene, camera, renderer, sun, raycaster, pointerNdc;
+  const planetMeshes = {};
+  const orbitTargets = {};
+  let cameraTarget = new THREE.Vector3(0,0,0);
+  let yaw = .75, pitch = .61, distance = 43;
+  const defaultOverview = { yaw: .75, pitch: .61, distance: 43 };
+  const defaultTracking = { yaw: .85, pitch: .42, distance: 14 };
+  let pointerStart = null;
+
+  function angleAt(planet, time) {
+    return ((planet.phase + 360 * time / planet.period) % 360 + 360) % 360;
+  }
+  function positionAt(planet, time) {
+    const angle = angleAt(planet, time) * Math.PI / 180;
+    return new THREE.Vector3(Math.cos(angle) * planet.radius, 0, Math.sin(angle) * planet.radius);
+  }
+  function setText(node, text) { node.textContent = text; }
+  function setNotice(node, message, kind = '') {
+    node.textContent = message;
+    node.className = 'notice' + (kind ? ' ' + kind : '');
+  }
+  function initThree() {
+    if (!window.THREE || !THREE.WebGLRenderer) throw new Error('The local Three.js runtime did not load.');
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color('#080e1a');
+    camera = new THREE.PerspectiveCamera(45, 1, .1, 300);
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    scene.add(new THREE.AmbientLight(0x8496c4, 1.05));
+    const key = new THREE.PointLight(0xffd48e, 160, 140, 1.7);
+    key.position.set(0, 0, 0);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0x8caeff, 1.25);
+    fill.position.set(-12, 14, 20);
+    scene.add(fill);
+    const sunGeometry = new THREE.SphereGeometry(1.65, 40, 32);
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffc861 });
+    sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
+    const glow = new THREE.Mesh(new THREE.SphereGeometry(2.15, 32, 24), new THREE.MeshBasicMaterial({ color: 0xffa93f, transparent: true, opacity: .12, side: THREE.BackSide }));
+    scene.add(glow);
+    addStars();
+    planets.forEach(planet => {
+      const orbitPoints = [];
+      for (let i = 0; i <= 180; i++) {
+        const a = i / 180 * Math.PI * 2;
+        orbitPoints.push(new THREE.Vector3(Math.cos(a) * planet.radius, 0, Math.sin(a) * planet.radius));
+      }
+      const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+      const orbitMaterial = new THREE.LineBasicMaterial({ color: new THREE.Color(planet.color), transparent: true, opacity: .22 });
+      const orbit = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+      scene.add(orbit);
+      const geometry = new THREE.SphereGeometry(planet.size, 36, 28);
+      const material = new THREE.MeshStandardMaterial({ color: planet.color, roughness: .57, metalness: .06, emissive: planet.color, emissiveIntensity: .045 });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.userData.planetId = planet.id;
+      scene.add(mesh);
+      const halo = new THREE.Mesh(new THREE.SphereGeometry(planet.size * 1.23, 24, 18), new THREE.MeshBasicMaterial({ color: planet.color, transparent: true, opacity: .0, side: THREE.BackSide }));
+      mesh.add(halo);
+      mesh.userData.halo = halo;
+      planetMeshes[planet.id] = mesh;
+      orbitTargets[planet.id] = mesh.position;
+    });
+    raycaster = new THREE.Raycaster();
+    pointerNdc = new THREE.Vector2();
+    resizeRenderer();
+  }
+  function addStars() {
+    let seed = 783421;
+    const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const points = [];
+    for (let i = 0; i < 720; i++) {
+      const theta = random() * Math.PI * 2, phi = Math.acos(2 * random() - 1), radius = 85 + random() * 55;
+      points.push(radius * Math.sin(phi) * Math.cos(theta), radius * Math.cos(phi), radius * Math.sin(phi) * Math.sin(theta));
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+    const material = new THREE.PointsMaterial({ color: 0xa7c5f5, size: .29, transparent: true, opacity: .7, sizeAttenuation: true });
+    scene.add(new THREE.Points(geometry, material));
+  }
+  function resizeRenderer() {
+    if (!renderer) return;
+    const width = Math.max(1, sceneFrame.clientWidth), height = Math.max(1, sceneFrame.clientHeight);
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
+  function cameraTargetVector() {
+    if (state.viewMode === 'tracking' && state.selectedPlanet && planetMeshes[state.selectedPlanet]) return planetMeshes[state.selectedPlanet].position;
+    return cameraTarget;
+  }
+  function updateCamera() {
+    const target = cameraTargetVector();
+    const safePitch = Math.max(.08, Math.min(1.48, pitch));
+    const horizontal = distance * Math.cos(safePitch);
+    camera.position.set(target.x + horizontal * Math.sin(yaw), target.y + distance * Math.sin(safePitch), target.z + horizontal * Math.cos(yaw));
+    camera.lookAt(target);
+  }
+  function frameCamera(mode) {
+    const values = mode === 'tracking' ? defaultTracking : defaultOverview;
+    yaw = values.yaw; pitch = values.pitch; distance = values.distance;
+    cameraTarget.set(0, 0, 0);
+    updateCamera();
+  }
+  function updateGeometry() {
+    planets.forEach(planet => {
+      const mesh = planetMeshes[planet.id];
+      const p = positionAt(planet, state.time);
+      mesh.position.copy(p);
+      const active = state.selectedPlanet === planet.id;
+      mesh.scale.setScalar(active ? 1.23 : 1);
+      mesh.userData.halo.material.opacity = active ? .32 : .04;
+      mesh.material.emissiveIntensity = active ? .42 : .045;
+      mesh.rotation.y = state.time / planet.period * Math.PI * 2;
+    });
+    if (sun) sun.rotation.y += .002;
+    updateCamera();
+  }
+  function updateLiveUI() {
+    const playLabel = state.playing ? 'Ⅱ  Pause simulation' : '▶  Resume simulation';
+    el('playButton').textContent = playLabel;
+    el('playButton').setAttribute('aria-label', state.playing ? 'Pause simulation' : 'Resume simulation');
+    setText(el('playState'), state.playing ? 'LIVE' : 'PAUSED');
+    setText(el('footerState'), state.playing ? 'PLAYING' : 'PAUSED');
+    el('timeSlider').value = String(state.time);
+    setText(el('timeText'), state.time.toFixed(1));
+    setText(el('footerTime'), state.time.toFixed(1).padStart(4, '0'));
+    el('speedSlider').value = String(state.speed);
+    setText(el('speedText'), state.speed.toFixed(2) + '×');
+    el('planetSelect').value = state.selectedPlanet || '';
+    el('trackButton').disabled = !state.selectedPlanet;
+    el('sceneMode').textContent = state.viewMode === 'tracking' ? 'TRACKING · ' + byId[state.selectedPlanet].name.toUpperCase() : 'FULL SYSTEM';
+    const info = el('planetInfo');
+    if (!state.selectedPlanet) {
+      info.innerHTML = '<strong>No planet selected</strong><p>Choose a world to inspect its orbit and current angle.</p>';
+    } else {
+      const planet = byId[state.selectedPlanet];
+      info.innerHTML = '<strong>' + planet.name + ' <span style="color:#98a9c2;font-weight:500">· ' + planet.id + '</span></strong><p>Orbital period <b>' + planet.period + ' s</b> &nbsp;·&nbsp; Orbital angle <span class="angle">' + angleAt(planet, state.time).toFixed(1) + '°</span></p>';
+    }
+    [...el('planetList').querySelectorAll('button')].forEach(button => button.setAttribute('aria-pressed', String(button.dataset.planet === state.selectedPlanet)));
+  }
+  function createPlanetControls() {
+    const list = el('planetList'), select = el('planetSelect');
+    el('idMapping').textContent = planets.map(p => p.name + ' = ' + p.id).join(' · ');
+    planets.forEach(planet => {
+      const option = document.createElement('option'); option.value = planet.id; option.textContent = planet.name + ' (' + planet.id + ')'; select.append(option);
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'planet-choice'; button.dataset.planet = planet.id;
+      button.style.setProperty('--planet', planet.color); button.setAttribute('aria-pressed', 'false');
+      button.setAttribute('aria-label', 'Select ' + planet.name + ', ID ' + planet.id);
+      button.innerHTML = '<span class="planet-dot" aria-hidden="true"></span><span><b>' + planet.name + '</b><small>' + planet.period + ' s · ' + planet.id + '</small></span>';
+      button.addEventListener('click', () => selectPlanet(planet.id));
+      list.append(button);
+    });
+    select.addEventListener('change', () => selectPlanet(select.value || null));
+  }
+  function selectPlanet(id) {
+    state.selectedPlanet = id && byId[id] ? id : null;
+    if (state.viewMode === 'tracking' && !state.selectedPlanet) state.viewMode = 'overview';
+    updateLiveUI(); updateGeometry();
+  }
+  function validSnapshotList(value) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return { ok: false, error: 'Root must be a JSON object.' };
+    if (!Object.prototype.hasOwnProperty.call(value, 'version') || value.version !== 1) return { ok: false, error: 'Version must be the number 1.' };
+    if (!Object.prototype.hasOwnProperty.call(value, 'snapshots') || !Array.isArray(value.snapshots)) return { ok: false, error: 'Snapshots must be an array.' };
+    if (value.snapshots.length > 3) return { ok: false, error: 'A maximum of three snapshots is allowed.' };
+    const seen = new Set(), accepted = [];
+    for (let i = 0; i < value.snapshots.length; i++) {
+      const entry = value.snapshots[i];
+      if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return { ok: false, error: 'Snapshot ' + (i + 1) + ' must be an object.' };
+      for (const key of ['id','time','speed','selectedPlanet','viewMode']) if (!Object.prototype.hasOwnProperty.call(entry, key)) return { ok: false, error: 'Snapshot ' + (i + 1) + ' is missing ' + key + '.' };
+      if (typeof entry.id !== 'string' || entry.id.length < 1) return { ok: false, error: 'Snapshot IDs must be nonempty strings.' };
+      if (seen.has(entry.id)) return { ok: false, error: 'Snapshot IDs must be unique.' };
+      seen.add(entry.id);
+      if (typeof entry.time !== 'number' || !Number.isFinite(entry.time) || entry.time < 0 || entry.time > 120) return { ok: false, error: 'Snapshot time must be between 0 and 120 seconds.' };
+      if (typeof entry.speed !== 'number' || !Number.isFinite(entry.speed) || entry.speed < .25 || entry.speed > 4) return { ok: false, error: 'Snapshot speed must be between 0.25× and 4×.' };
+      if (entry.selectedPlanet !== null && (typeof entry.selectedPlanet !== 'string' || !Object.prototype.hasOwnProperty.call(byId, entry.selectedPlanet))) return { ok: false, error: 'Snapshot has an unknown planet ID.' };
+      if (entry.viewMode !== 'overview' && entry.viewMode !== 'tracking') return { ok: false, error: 'View mode must be overview or tracking.' };
+      if (entry.viewMode === 'tracking' && entry.selectedPlanet === null) return { ok: false, error: 'Tracking requires a selected planet.' };
+      accepted.push({ id: entry.id, time: entry.time, speed: entry.speed, selectedPlanet: entry.selectedPlanet, viewMode: entry.viewMode });
+    }
+    return { ok: true, snapshots: accepted };
+  }
+  function storageFailure(message) {
+    state.storageAvailable = false;
+    state.storageMessage = message || 'Saving unavailable; observations remain available in memory only.';
+    setNotice(el('snapshotNotice'), state.storageMessage, 'error');
+  }
+  function persistSnapshots() {
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify({ version: 1, snapshots: state.snapshots }));
+      state.storageAvailable = true;
+      state.storageMessage = '';
+      return true;
+    } catch (error) {
+      storageFailure('Saving unavailable; observations remain available in memory only.');
+      return false;
+    }
+  }
+  function loadSnapshots() {
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved === null) return;
+      let parsed;
+      try { parsed = JSON.parse(saved); } catch (_) { state.snapshots = []; state.storageMessage = 'Saved observations were invalid; recovered with an empty list.'; return; }
+      const checked = validSnapshotList(parsed);
+      if (!checked.ok) { state.snapshots = []; state.storageMessage = 'Saved observations were invalid (' + checked.error + '); recovered with an empty list.'; return; }
+      state.snapshots = checked.snapshots;
+    } catch (_) {
+      storageFailure('Saving unavailable; observations remain available in memory only.');
+    }
+  }
+  function renderSnapshots() {
+    const list = el('snapshotList');
+    setText(el('snapshotCount'), state.snapshots.length + ' / 3');
+    list.replaceChildren();
+    if (state.snapshots.length === 0) {
+      const empty = document.createElement('div'); empty.className = 'empty-state'; empty.textContent = 'No observations yet. Capture a state to begin your field log.'; list.append(empty); return;
+    }
+    state.snapshots.forEach((snapshot, index) => {
+      const entry = document.createElement('article'); entry.className = 'snapshot-item';
+      const heading = document.createElement('div'); heading.className = 'snapshot-heading';
+      const title = document.createElement('div');
+      const strong = document.createElement('strong'); strong.textContent = 'Observation ' + (index + 1) + ' · ' + snapshot.id;
+      const sub = document.createElement('small'); sub.textContent = snapshot.viewMode === 'tracking' ? 'Tracking ' + byId[snapshot.selectedPlanet].name : 'Full-system overview';
+      title.append(strong, sub); heading.append(title); entry.append(heading);
+      const values = document.createElement('div'); values.className = 'snapshot-values';
+      const angles = planets.map(p => p.name + ' ' + angleAt(p, snapshot.time).toFixed(1) + '°').join(' · ');
+      values.textContent = 't ' + snapshot.time.toFixed(1) + ' s · ' + snapshot.speed.toFixed(2) + '× · ' + (snapshot.selectedPlanet || 'no selection') + ' · ' + angles;
+      entry.append(values);
+      const actions = document.createElement('div'); actions.className = 'snapshot-actions';
+      const restore = document.createElement('button'); restore.className = 'button small'; restore.type = 'button'; restore.textContent = 'Restore'; restore.setAttribute('aria-label', 'Restore snapshot ' + snapshot.id); restore.addEventListener('click', () => restoreSnapshot(snapshot.id));
+      const remove = document.createElement('button'); remove.className = 'button small subtle'; remove.type = 'button'; remove.textContent = 'Delete'; remove.setAttribute('aria-label', 'Delete snapshot ' + snapshot.id); remove.addEventListener('click', () => deleteSnapshot(snapshot.id));
+      actions.append(restore, remove); entry.append(actions); list.append(entry);
+    });
+  }
+  function captureSnapshot() {
+    if (state.snapshots.length >= 3) { setNotice(el('snapshotNotice'), 'Snapshot capacity reached (3). Delete an observation before capturing another.', 'error'); return; }
+    let id;
+    do { id = 'obs-' + Date.now().toString(36) + '-' + (state.snapshotSeq++).toString(36); } while (state.snapshots.some(s => s.id === id));
+    state.snapshots.push({ id, time: state.time, speed: state.speed, selectedPlanet: state.selectedPlanet, viewMode: state.viewMode });
+    renderSnapshots();
+    if (persistSnapshots()) setNotice(el('snapshotNotice'), 'Snapshot captured and saved.', 'success');
+  }
+  function restoreSnapshot(id) {
+    const snapshot = state.snapshots.find(item => item.id === id);
+    if (!snapshot) return;
+    state.time = snapshot.time; state.speed = snapshot.speed; state.selectedPlanet = snapshot.selectedPlanet; state.viewMode = snapshot.viewMode; state.playing = false;
+    frameCamera(state.viewMode); updateLiveUI(); updateGeometry();
+    setNotice(el('snapshotNotice'), 'Snapshot restored. Playback is paused; standard framing applied.', 'success');
+  }
+  function deleteSnapshot(id) {
+    const index = state.snapshots.findIndex(item => item.id === id);
+    if (index < 0) return;
+    state.snapshots.splice(index, 1); renderSnapshots();
+    if (persistSnapshots()) setNotice(el('snapshotNotice'), 'Snapshot deleted and saved.', 'success');
+  }
+  function exportSnapshots() {
+    el('jsonText').value = JSON.stringify({ version: 1, snapshots: state.snapshots }, null, 2);
+    setNotice(el('jsonNotice'), 'Snapshot list exported to the text area.', 'success');
+  }
+  function importSnapshots() {
+    let parsed;
+    try { parsed = JSON.parse(el('jsonText').value); }
+    catch (_) { setNotice(el('jsonNotice'), 'Invalid JSON. Nothing was changed.', 'error'); return; }
+    const checked = validSnapshotList(parsed);
+    if (!checked.ok) { setNotice(el('jsonNotice'), checked.error + ' Nothing was changed.', 'error'); return; }
+    state.snapshots = checked.snapshots;
+    renderSnapshots();
+    persistSnapshots();
+    setNotice(el('jsonNotice'), state.storageAvailable ? 'Snapshot list imported and saved; live simulation state was preserved.' : state.storageMessage, state.storageAvailable ? 'success' : 'error');
+  }
+  function tick(now) {
+    if (!state.lastFrame) state.lastFrame = now;
+    const delta = Math.min(.1, Math.max(0, (now - state.lastFrame) / 1000));
+    state.lastFrame = now;
+    if (state.playing) {
+      state.time = Math.min(120, state.time + delta * state.speed);
+      if (state.time >= 120) { state.time = 120; state.playing = false; updateLiveUI(); }
+      else if (Math.floor(state.time * 10) !== Math.floor((state.time - delta * state.speed) * 10)) updateLiveUI();
+    }
+    if (sun && renderer) { updateGeometry(); renderer.render(scene, camera); }
+    requestAnimationFrame(tick);
+  }
+  function pointerToNdc(event) {
+    const rect = canvas.getBoundingClientRect();
+    pointerNdc.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+  }
+  function installSceneEvents() {
+    canvas.addEventListener('pointerdown', event => { pointerStart = { x: event.clientX, y: event.clientY, lastX: event.clientX, lastY: event.clientY, dragged: false, id: event.pointerId }; canvas.setPointerCapture(event.pointerId); });
+    canvas.addEventListener('pointermove', event => {
+      if (!pointerStart || pointerStart.id !== event.pointerId) return;
+      const dx = event.clientX - pointerStart.lastX, dy = event.clientY - pointerStart.lastY;
+      if (Math.abs(dx) + Math.abs(dy) < 2) return;
+      if (Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 5) pointerStart.dragged = true;
+      yaw -= dx * .008; pitch = Math.max(.09, Math.min(1.48, pitch + dy * .007));
+      pointerStart.lastX = event.clientX; pointerStart.lastY = event.clientY;
+      updateCamera();
+    });
+    canvas.addEventListener('pointerup', event => {
+      if (!pointerStart || pointerStart.id !== event.pointerId) return;
+      const dragged = pointerStart.dragged || Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 5;
+      pointerStart = null;
+      if (dragged || !raycaster) return;
+      pointerToNdc(event); raycaster.setFromCamera(pointerNdc, camera);
+      const hits = raycaster.intersectObjects(planets.map(p => planetMeshes[p.id]), false);
+      if (hits.length) selectPlanet(hits[0].object.userData.planetId);
+    });
+    canvas.addEventListener('pointercancel', () => { pointerStart = null; });
+    canvas.addEventListener('wheel', event => { event.preventDefault(); distance = Math.max(state.viewMode === 'tracking' ? 7 : 22, Math.min(90, distance * (event.deltaY > 0 ? 1.08 : .92))); updateCamera(); }, { passive: false });
+    if (window.ResizeObserver) new ResizeObserver(resizeRenderer).observe(sceneFrame);
+    else window.addEventListener('resize', resizeRenderer);
+  }
+  function installControls() {
+    el('playButton').addEventListener('click', () => { state.playing = !state.playing; updateLiveUI(); });
+    el('timeSlider').addEventListener('input', event => { state.time = Number(event.target.value); state.playing = false; updateLiveUI(); updateGeometry(); });
+    el('speedSlider').addEventListener('input', event => { state.speed = Number(event.target.value); updateLiveUI(); });
+    el('trackButton').addEventListener('click', () => {
+      if (!state.selectedPlanet) { setNotice(el('snapshotNotice'), 'Select a planet before enabling tracking.', 'error'); return; }
+      state.viewMode = 'tracking'; frameCamera('tracking'); updateLiveUI(); updateGeometry();
+    });
+    el('overviewButton').addEventListener('click', () => { state.viewMode = 'overview'; frameCamera('overview'); updateLiveUI(); updateGeometry(); });
+    el('captureButton').addEventListener('click', captureSnapshot);
+    el('exportButton').addEventListener('click', exportSnapshots);
+    el('importButton').addEventListener('click', importSnapshots);
+  }
+  function start() {
+    createPlanetControls(); loadSnapshots(); renderSnapshots(); installControls();
+    if (state.storageMessage) setNotice(el('snapshotNotice'), state.storageMessage, state.storageAvailable ? 'error' : 'error');
+    try { initThree(); installSceneEvents(); updateGeometry(); updateLiveUI(); requestAnimationFrame(tick); }
+    catch (error) { el('sceneError').style.display = 'flex'; el('sceneError').textContent = '3D scene could not start: ' + (error && error.message ? error.message : 'unknown rendering error'); console.error(error); }
+  }
+  start();
+})();
+</script>
+</body>
+</html>

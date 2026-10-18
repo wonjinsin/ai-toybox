@@ -1,6 +1,6 @@
 {
-  "format_version": "3.0",
-  "rubric_version": "solar-system-3.0",
+  "format_version": "4.0",
+  "rubric_version": "solar-system-4.0",
   "reviewed_at": null,
   "reviewer": {
     "model": null,
@@ -16,32 +16,38 @@
     {
       "id": "simulation",
       "weight": 25,
-      "score": null
+      "score": 0,
+      "score_upper_bound": 5
     },
     {
       "id": "selection",
       "weight": 20,
-      "score": null
+      "score": 0,
+      "score_upper_bound": 5
     },
     {
       "id": "usability",
       "weight": 15,
-      "score": null
+      "score": 0,
+      "score_upper_bound": 5
     },
     {
       "id": "visual",
       "weight": 15,
-      "score": null
+      "score": 0,
+      "score_upper_bound": 5
     },
     {
       "id": "responsive",
       "weight": 15,
-      "score": null
+      "score": 0,
+      "score_upper_bound": 5
     },
     {
       "id": "delivery",
       "weight": 10,
-      "score": null
+      "score": 0,
+      "score_upper_bound": 5
     }
   ],
   "checks": [
@@ -235,9 +241,11 @@
       "evidence": "Not observed. Required actions and expected outcomes have not been checked."
     }
   ],
-  "raw_total_score": null,
+  "raw_total_score": 0,
+  "raw_total_score_upper_bound": 100,
   "score_cap": null,
-  "total_score": null,
+  "total_score": 0,
+  "total_score_upper_bound": 100,
   "coverage": {
     "passed": 0,
     "failed": 0,

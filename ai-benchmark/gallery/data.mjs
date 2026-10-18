@@ -157,6 +157,12 @@ async function collectArtifact(root, prefix, issues) {
 async function collectRun(root, id) {
   const issues = [];
   const prefix = ['runs', 'v1', id];
+  try {
+    const { target } = await boundedPath(root, prefix, true);
+    if ((await readdir(target)).length === 0) return null;
+  } catch (error) {
+    issues.push(`${prefix.join('/')}: ${error.code ?? error.message}`);
+  }
   const record = await readRecord(root, [...prefix, 'run.json'], issues, true);
   const review = await readRecord(root, [...prefix, 'reviews', 'review.json'], issues);
   const prompt = await readOptional(root, [...prefix, 'prompt.md'], issues);
@@ -199,7 +205,9 @@ export async function collectRuns(root) {
   const entries = await readdir(collection, { withFileTypes: true });
   const runs = [];
   for (const entry of entries) {
-    if (entry.isDirectory()) runs.push(await collectRun(directory, entry.name));
+    if (!entry.isDirectory()) continue;
+    const run = await collectRun(directory, entry.name);
+    if (run) runs.push(run);
   }
   runs.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '') || a.id.localeCompare(b.id));
   return runs;

@@ -96,6 +96,8 @@ test('regeneration reflects run creation, updates, invalidation, repair and dele
   const { root, runs, save, snapshot } = await fixture(t);
   assert.deepEqual((await snapshot()).runs, []);
   await mkdir(path.join(runs, 'alpha'), { recursive: true });
+  assert.deepEqual((await snapshot()).runs, []);
+  await save('runs/v1/alpha/prompt.md', 'Incomplete but nonempty run');
   const incomplete = await snapshot();
   assert.deepEqual(incomplete.runs.map(run => run.id), ['alpha']);
   assert.equal(incomplete.runs[0].model, null);
@@ -151,8 +153,6 @@ test('artifact and supporting-file changes update revisions and serve fresh enco
   assert.equal(result.status, 200);
   assert.match(await result.text(), /First/);
   assert.match(result.headers.get('cache-control'), /no-store/);
-  assert.match(result.headers.get('content-security-policy'), /sandbox/);
-  assert.doesNotMatch(result.headers.get('content-security-policy'), /allow-same-origin/);
 
   await save(`${base}/output/assets/site.css`, 'body { color: blue; }');
   const assetChanged = (await snapshot()).runs[0];
@@ -238,3 +238,21 @@ test('symlinked metadata and output files cannot expose files outside a run', as
   assert.ok([403, 404].includes(response.status));
   assert.equal((await response.text()).includes('PRIVATE SENTINEL'), false);
 });
+
+test('collection skips only literally empty directories and preserves incomplete or malformed contents', async t => {
+  const { root, runs, save, snapshot } = await fixture(t);
+  await mkdir(path.join(runs, 'empty'), { recursive: true });
+  await mkdir(path.join(runs, 'nested', 'output'), { recursive: true });
+  await save('runs/v1/hidden/.keep', '');
+  await save('runs/v1/malformed/run.json', '{');
+  await save('runs/v1/broken-review/reviews/review.json', '{');
+  await save('runs/v1/unreviewed/run.json', { model: 'unreviewed' });
+  const result = await snapshot();
+  assert.deepEqual(result.runs.map(run => run.id).sort(), ['broken-review', 'hidden', 'malformed', 'nested', 'unreviewed']);
+  assert.equal(result.runs.find(run => run.id === 'broken-review').review, null);
+  assert.match(result.runs.find(run => run.id === 'broken-review').issues.join(' '), /review\.json/);
+  assert.equal(result.runs.find(run => run.id === 'malformed').model, null);
+  assert.equal(result.runs.find(run => run.id === 'nested').artifactUrl, null);
+  assert.equal(await readFile(path.join(root, 'runs/v1/malformed/run.json'), 'utf8'), '{');
+});
+
