@@ -1,225 +1,69 @@
 # Solar System AI Benchmark
 
-Run one fixed Solar System task in OMP, Codex, or Claude Code. The skill builds the
-HTML, saves a validated run record, and then replies with the result.
-One invocation completes the workflow; there is no follow-up collection step.
+Run the same interactive Three.js task in OMP, Codex, or Claude Code, save the generated artifact and execution record, then review a saved attempt separately.
 
-The [fixed prompt](skills/benchmark-record/assets/solar-system-prompt.md) is task
-`solar-system-observatory-2`. It requires a real Three.js scene with one sun and
-three planets, deterministic playback and seeking, selection and camera tracking,
-and responsive controls. It also requires immutable observation snapshots,
-transactional JSON import/export, snapshot persistence, and keyboard access.
-The saved `output/index.html` must run directly in a browser without a server or
-build step. The [original task](skills/benchmark-record/assets/solar-system-prompt-v1.md)
-remains available only to interpret historical runs.
+**[Browse the live benchmark gallery](https://wonjinsin.github.io/ai-toybox/)** · [Fixed task](skills/benchmark-record/assets/solar-system-prompt.md) · [Saved runs](runs/v1/)
 
-## Published score snapshot
+The gallery is the current score catalog. It shows model outputs, quality ranges, requirement verdicts, review findings, and available execution measurements. Scores are not duplicated here because saved reviews and scoring policies can change.
 
-The October 18, 2026 snapshot below lists **six saved OMP attempts** for
-`solar-system-observatory-2`, each with an HTML artifact and a format `4.0` review
-using the frozen `solar-system-4.0` policy. Browse the current catalog in the
-[published gallery](https://wonjinsin.github.io/ai-toybox/) or open the local
-[`index.html`](index.html).
+## What the benchmark measures
 
-| Model | Effort | Published score range / 100 | Review |
-| --- | --- | --- | --- |
-| GPT-5.6 Terra | low | 50.93–59.18 | [Partial](runs/v1/omp-openai-codex-gpt-5.6-terra-low-20261018-181954/reviews/review.md) |
-| GPT-6 Luna | low | 20.33–27.33 | [Partial](runs/v1/omp-gpt-6-luna-low-20261018-111641/reviews/review.md) |
-| GPT-6 Luna | medium | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-medium-20261018-110650/reviews/review.md) |
-| GPT-6 Luna | high | 69–69 | [Complete](runs/v1/omp-openai-codex-gpt-6-luna-high-20261018-110644/reviews/review.md) |
-| GPT-6 Luna | xhigh | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-xhigh-20261018-110643/reviews/review.md) |
-| GPT-6 Luna | max | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-max-20261018-110659/reviews/review.md) |
+The current task is **`solar-system-observatory-2`**. It asks for an observation tool with:
 
-These are original published review results, not new verification or a model
-ranking. Under the frozen 4.0 policy, confirmed mandatory failures cap published
-scores at 69. Equal endpoints at that cap do not imply identical quality or
-complete coverage. The gallery now shows uncapped 5.0 quality projections from
-these same observations, with the original published scores retained in detail.
-A policy-only score change is not an artifact improvement.
+- A genuine Three.js scene containing one sun and exactly three planets, with fixed orbital phases and periods of 12, 24, and 48 simulation seconds.
+- Consistent playback, pause/resume, speed from 0.25x to 4x, and seeking from 0 to 120 simulation seconds.
+- Planet selection, live information, camera tracking, and a full-system overview.
+- Up to three immutable observation snapshots, restore/delete controls, transactional JSON import/export, and browser-storage persistence.
+- Usable controls at 1440×900 and 390×844 CSS pixels, including keyboard access to primary DOM controls.
 
-All six generation records are `failed`, with unavailable full-interval token
-totals and, in most cases, unavailable session identity. That recording status
-is separate from the artifact's review status and score. The latest Terra low
-attempt also has no validated duration. Its review leaves S2, S7, D3 and reviewer
-effort unverified; direct-file execution remains outside review scope.
+The [complete prompt](skills/benchmark-record/assets/solar-system-prompt.md) defines all 15 requirements, the JSON contract, and acceptance sequences. Generated `output/index.html` must open directly through `file://`, without a server or build step. External CDN assets may still need network access; direct-file delivery does not mean offline delivery.
 
-## Browse the static results
+Generation and review are separate operations. `benchmark-record` creates an attempt and records it in one invocation. `benchmark-review` evaluates one explicitly selected saved attempt without repairing it. Neither skill switches models or starts a second model session.
 
-Open this folder's `index.html` directly in a browser, or open the published
-GitHub Pages site. The gallery loads `gallery/data.js` as a classic script.
-It does not call an API, use local module imports, or require a server to read
-the catalog. Application assets and output links use relative paths, including
-when the site is hosted below a repository path.
+## Browse results
 
-The explorer keeps model navigation, search, latest and score sorting,
-score-state filters, bookmarkable details, prompts, review findings, duration,
-tokens, recording notes, and output previews. Format 5 reviews use current quality
-bounds. Valid format 4 reviews receive a clearly labeled **policy-only projection**
-under the same 5.0 policy, based only on their existing observations.
+Open the **[GitHub Pages gallery](https://wonjinsin.github.io/ai-toybox/)** without installing the project, or open the local [`index.html`](index.html) in a browser with JavaScript enabled.
 
-Cards, detail headlines, and current score sorting use these uncapped quality
-bounds. Requirements verdicts, failed-check counts, and unverified-check counts
-remain visible independently, including mandatory failures and unknowns. A high
-quality score does not turn a requirement failure into a pass. Statistics exclude
-historical format 2 scores, and score sorting places those scores in a labeled,
-separate ranking because their task and check set differ.
+The explorer provides model navigation, search, latest/quality sorting, scored/unscored filters, bookmarkable run details, prompts, review findings, recording notes, and HTML previews. It reads the static `gallery/data.js` snapshot, not a live API. Local edits appear only after regenerating the catalog and reloading the page; published results update after deployment.
 
-Detail views retain the original published score, original review, and a SHA-256
-hash of the source `review.json` bytes. Missing reviews, historical null scores,
-and invalid projections are **unscored**, not zero. Invalid reviews show warnings
-and never fall back to raw numeric fields as trusted quality scores. The generator
-uses the shared scorer without changing saved reviews or performing new browser
-verification. Literally empty directories are omitted; nonempty incomplete
-records remain visible.
+### Read the results correctly
 
-### Verified repair experiment
+| Signal | Meaning |
+| --- | --- |
+| Generation record status | Whether implementation and required recording/accounting finished. `failed` can still have a usable, reviewed HTML artifact. |
+| Quality range | Evidence-backed score bounds out of 100. The headline is the conservative lower bound unless both endpoints coincide. |
+| Requirements verdict | Whether mandatory requirements pass, fail, or remain unresolved. A high quality score does not override a failed requirement. |
+| Review status and coverage | Whether the assessment and reviewer metadata are complete, and which checks passed, failed, or remain unverified. `partial` is not the same as a failed artifact. |
 
-The [Terra xhigh engineering copy](experiments/observatory-improvement/terra-xhigh/output/index.html)
-repairs overview framing and persistence-failure notices without changing the
-saved model output. Its [comparison result](experiments/observatory-improvement/terra-xhigh/comparison.json)
-separates policy-only score projections from fresh paired browser observations.
-All 69 original `runs/v1` files retain their recorded hashes.
+New current-task reviews use **format `5.0` / rubric `solar-system-5.0`**. Quality scores have no mandatory-failure cap. Unknown check ratings remain null and contribute a 0–5 range; every registered check remains in the denominator. Equal rounded endpoints do not by themselves establish complete coverage. Missing or invalid reviews are **unscored**, not zero.
 
-The focused comparison contains 21 paired scenarios. Seven reproduced failures
-become passes, covering four overview situations and three quota-failure notices.
-Thirteen existing passing scenarios remain passing. One diagnostic-transport
-scenario remains unverified. These are scenario counts, not seven independent
-root causes or a new complete benchmark score.
+The gallery can also project valid frozen format `4.0` observations through the current 5.0 policy. These are labeled **policy-only projections**: they do not rerun the artifact, add evidence, or improve its behavior. Original published scores and reviews remain available in the details. Historical format `2.0` results use a different task and are kept separate from the current-policy ranking.
 
-Run the evidence gate from this directory:
+See the [rubric](skills/benchmark-review/references/rubric.md) and [scoring design notes](docs/benchmark-v2.md) for weights, task routing, frozen policies, and interpretation limits. Model identity, generation time, and token counts do not affect quality scores.
+
+> [!WARNING]
+> Gallery previews execute trusted repository HTML with scripts and same-origin access. Artifacts can access gallery pages and browser storage; the iframe is not a security boundary. Do not add or publish untrusted HTML. Opening an artifact in the gallery does not certify its benchmark requirements or direct-file compatibility.
+
+## Run a new attempt
+
+### Prerequisites
+
+- Open **`ai-benchmark/` as the project** in your host and choose the model and effort before starting. A fresh conversation per attempt is recommended.
+- Use **Node.js 22 or newer** for the bundled record/review helpers, gallery scripts, and tests. These tools need no `npm install` step.
+- For browser verification, install and connect **Aside MCP before the attempt**. The skills use its direct `repl` tool, not `exec` or a natural-language browser task that could launch another model.
+- A `completed` record needs a verified current-session identity, model, effort, elapsed work time, and full-interval input/output token totals. If accounting is unavailable, the skill still builds what it can and saves honest nulls and a `failed` record.
+
+For Codex, register an existing [Aside CLI installation](https://docs.aside.com/help/developers), replacing the executable path:
 
 ```sh
-node skills/benchmark-review/scripts/compare-probes.mjs experiments/observatory-improvement/terra-xhigh/manifest.json
+codex mcp add aside -- /absolute/path/to/aside mcp --host local
 ```
 
-See [probe execution and scope](skills/benchmark-review/references/verification.md#focused-regression-automation)
-to collect fresh evidence through connected Aside. The gate checks saved evidence,
-not a new browser run. For example, the original Terra xhigh review remains
-69/100 under policy 4.0; its unchanged observations project to 86.30–88.30 under
-policy 5.0, still with a failed requirements verdict. That increase is policy-only.
-The repaired copy has no published full-review score.
+Start a new Codex session after registration. For other hosts, connect Aside through the host's MCP setup. Do not install tools or change MCP configuration during the measured attempt.
 
+### Invoke the recording skill
 
-### Refresh the local catalog
-
-Run these commands from `ai-benchmark` with Node.js 22 or newer:
-
-```sh
-node scripts/generate-gallery.mjs
-```
-
-Reload the page after generation. This command reads the working tree,
-including uncommitted records and reviews, and replaces only `gallery/data.js`.
-The snapshot has no generation timestamp. Its revision and artifact revisions
-depend on content, so unchanged input produces identical output.
-Live file detection and automatic preview refresh are no longer supported.
-
-To read another collection or write the snapshot elsewhere, use:
-
-```sh
-node scripts/generate-gallery.mjs --root /absolute/ai-benchmark --output /absolute/data.js
-```
-
-For optional HTTP preview, run:
-
-```sh
-node scripts/serve-gallery.mjs --port 4173
-```
-
-Open **http://127.0.0.1:4173/**. The server serves saved static files and output
-assets, not `/api/runs`. Its `--root DIRECTORY` option selects the complete site
-directory, including application assets and the generated catalog. It binds
-only to loopback. Stop it with Ctrl+C.
-
-### Install the commit hook
-
-The Git root is the parent `ai-toybox` repository. From `ai-benchmark`, run:
-
-```sh
-node scripts/install-gallery-hooks.mjs
-```
-
-The installer changes only this repository's local `core.hooksPath`. It creates
-private hooks inside the Git common directory and preserves the previous hook
-chain, including the shared `~/.git_template/hooks` hooks. It does not edit
-shared hooks or global Git configuration. Repeating installation retains the
-original chain and refreshes the installed driver. Reinstall after changing
-the hook implementation.
-
-When staged paths under `ai-benchmark/` change, pre-commit runs the previous
-pre-commit hook first, then builds a temporary tree from the effective Git
-index. It runs the **staged generator and collector**, not their unstaged
-working-tree versions. Partially staged records, staged deletions, and an
-alternate `GIT_INDEX_FILE` therefore produce the catalog for that commit.
-Untracked files and unstaged review edits do not enter the snapshot.
-
-After successful generation, the hook updates **only**
-`ai-benchmark/gallery/data.js` in the index. It leaves working-tree files
-unchanged, including the local catalog. The staged catalog can therefore differ
-from the catalog used by your current local preview. Generation failures stop
-the commit without installing a new catalog in the index. Unrelated commits
-skip generation, and deleting the entire project does not recreate it.
-
-The hook rejects unresolved index entries, symlinks, and submodules inside
-`ai-benchmark` rather than reading outside the staged tree. The installer does
-not support bare repositories or worktree-specific `core.hooksPath` overrides.
-The hook never pushes or deploys.
-
-### Publish with GitHub Actions
-
-The workflow is at the Git root,
-`../.github/workflows/benchmark-gallery.yml`. After a push to `master` changes
-`ai-benchmark/**` or that workflow, Actions runs the regression suite, generates
-the catalog from the checked-out commit, and deploys the static site with the
-official GitHub Pages actions. A manual workflow dispatch is also available.
-Set the repository's **Settings → Pages → Build and deployment → Source** to
-**GitHub Actions** before the first deployment.
-
-The upload contains only `index.html`, the browser assets in `gallery/`, and
-each run's `output/` files. Raw record files, repository configuration, tests,
-and skills are not uploaded. Prompts, reviews, notes, and normalized run fields
-are included in the public catalog because the gallery displays them.
-
-The gallery executes this repository's trusted artifacts with scripts and
-same-origin access. This permits local libraries and browser storage in embedded
-previews. The local HTTP server applies the same policy to output responses.
-Artifacts can access same-origin gallery pages and storage. The iframe is not a
-security boundary against malicious output. Do not add or publish untrusted HTML.
-External CDN dependencies may still require internet access. The gallery does
-not rewrite benchmark outputs or repair their individual file compatibility.
-
-### Verify changes
-
-Run the regression suite from `ai-benchmark`:
-
-```sh
-node --test tests/*.test.mjs
-```
-
-Hook regressions use temporary Git repositories and do not stage this checkout.
-They cover staged-only generation, partial staging, deletions, alternate
-indexes, failure handling, and existing-hook preservation.
-
-Browser verification uses Aside's direct MCP REPL. The trusted-preview fix was
-exercised in the actual `file://` gallery and through the loopback gallery server.
-The xhigh artifact rendered inside the gallery, and HTTP preview selection,
-pause, capture, storage, and the standalone output URL worked. The low artifact
-still has its own blank-scene defect. Gallery execution does not certify an
-artifact against the benchmark rubric. The existing file gallery tab and its
-embedded previews worked, but Aside denied the new-tab `file://` navigation with
-`Cannot navigate to a file URL without local file access`. That operation remains
-unverified through this tool. Its permissions were not changed.
-
-The review viewport helper preserves a secure loopback parent for 1440x900 and
-390x844 child documents. The mobile fixture was exercised with keyboard capture.
-See the [browser preflight](skills/benchmark-review/references/verification.md)
-for commands and diagnostic positive controls. Empty event collections from an
-unsupported console transport are not proof of error-free execution.
-
-## Run
-
-Open this checkout as a project and select the model and effort in your host.
-These are chat messages, not terminal commands.
+These are **chat messages, not terminal commands**.
 
 Codex:
 
@@ -233,381 +77,169 @@ Claude Code:
 /benchmark-record Run the Solar System benchmark.
 ```
 
-No additional task prompt is needed. The skill creates a new run directory,
-copies the fixed prompt, implements the task, performs available checks, and
-saves the record before answering. Use a fresh conversation for each attempt
-when practical. You can name a different output root in the same request.
+OMP, or a host without project skill discovery:
 
-During benchmark execution and recording, select and apply only skills explicitly
-invoked in the current request. `$benchmark-record` or `/benchmark-record` selects that
-skill alone unless other skills are also selected. Quoted examples or discussion
-do not select a skill. Reading the entrypoint, shared skill, and bundled resources
-counts as using the same skill.
+```text
+Read skills/benchmark-record/SKILL.md and run the Solar System benchmark.
+```
 
-Unselected skills are not applied, even when their instructions were already
-injected by the host or hooks. This restriction survives resume and compaction;
-prior activation, automatic routing, dependencies, and follow-up workflows do
-not authorize another skill. Delegated work follows the same restriction and
-uses ordinary host tools.
+No additional task prompt is needed. The skill reserves a fresh run directory, copies the fixed prompt, implements the HTML, performs permitted checks, and publishes the terminal record before answering. You can request a different output root in the same message; existing attempts are not overwritten.
 
-Injection alone grants no higher priority. An unselected skill may still apply
-when a higher-priority host instruction requires it; project rules cannot override
-that instruction. The agent records actually applied extras and their reasons in
-`run.json.notes`, distinguishing mandatory injected instructions from newly required
-skill loads, and discloses unavoidable exceptions in the final reply. Suppressed
-skills are not announced as active or given boilerplate notes. These restrictions
-and notes do not establish full environment isolation.
-The restriction applies to benchmark work; ordinary repository investigation and
-maintenance keep normal host skill selection. `benchmark-record` itself is never
-selected automatically.
+During benchmark execution and recording, only explicitly selected skills apply unless higher-priority host instructions require others. The skill records unavoidable exceptions in `run.json.notes`; this does not establish full environment isolation. Ordinary repository maintenance keeps the host's normal skill selection. See [skill context rules](skills/benchmark-record/references/record-format.md#skill-context-notes).
 
-If skill discovery is unavailable, ask the agent to read
-`skills/benchmark-record/SKILL.md` and run the benchmark. Reopen the project or
-start a new session if an existing session has not picked up the skill.
+### Browser verification boundaries
 
-## Review a Saved Run
+Generation must deliver direct-file-compatible HTML. Use `file://` verification only when supported and permitted; otherwise the recording workflow permits loopback HTTP over the unchanged `output/` directory. HTTP interaction checks do not prove direct-file execution.
 
-Use the separate [review skill](skills/benchmark-review/SKILL.md) with one explicit
-run directory. These are chat messages:
+Use only tabs created for the attempt and close them afterward. Do not access unrelated tabs or browser memory. An explicit access or security denial stops the affected operation: do not retry it, change permissions, or switch transports to bypass it. Unavailable capabilities remain documented verification gaps, not fabricated passes. See [generation browser verification](skills/benchmark-record/references/browser-verification.md).
+
+## Review a saved attempt
+
+Invoke the separate [review skill](skills/benchmark-review/SKILL.md) with one actual run directory. Replace the example path below.
+
+Codex:
 
 ```text
 $benchmark-review runs/v1/<agent>-<model>-<effort>-<run-id>
 ```
 
-In Claude Code, use `/benchmark-review` with the same directory argument.
-If discovery is unavailable, ask the agent to read
-`skills/benchmark-review/SKILL.md` and review that directory.
-The review does not invoke the generation skill, repair the artifact, or change
-`prompt.md`, `run.json` or `output/`.
+Claude Code:
 
-It saves only `reviews/review.json` and `reviews/review.md` inside the run.
-Re-review replaces those two files with the latest assessment; there are no
-timestamp subdirectories, retained screenshots, evidence archives or backups.
-Unrelated existing files are preserved.
-
-The [versioned rubric](skills/benchmark-review/references/rubric.md) uses six
-categories: simulation/time correctness (25), selection/tracking consistency (20),
-controls and interaction (15), visual quality (15), responsive usability (15),
-and delivery stability (10). Category scores range from 0 to 5.
-
-New task reviews use `solar-system-5.0` and review format `5.0`. Every category
-and total has a numeric lower endpoint and an explicit `*_upper_bound`.
-Unknown check ratings remain null and span 0..5 for arithmetic. All registered
-checks stay in the denominator. The headline is a **conservative lower bound**
-unless its endpoints coincide, in which case the rounded score is determined
-even if the review remains partial.
-
-Quality scores have no mandatory-failure cap. The separate requirements verdict
-still fails when a mandatory check fails. Coverage and mandatory failure or
-unverified IDs remain available alongside quality bounds. Format 5 removes
-`raw_total_score`, `raw_total_score_upper_bound`, and `score_cap` because total
-bounds already express uncapped quality.
-
-Frozen format 4 reviews retain their original policy. A confirmed mandatory
-failure caps both published endpoints at 69. An unknown mandatory check can cap
-only the lower endpoint without becoming a confirmed failure. The gallery
-projects validated format 4 observations through the shared 5.0 scoring API,
-without rewriting those reviews. This policy comparison supplies no new evidence
-and makes no claim of improved artifact behavior.
-
-Review the saved prompt before choosing a rubric. The original 11-requirement
-task keeps frozen `solar-system-2.0` and format `2.0`, including its nullable,
-uncapped arithmetic. An incompatible current-task attempt is blocked with no
-established credit and a 0..100 range, not a zero-quality verdict. Format 3 is
-replaced rather than silently reinterpreted. Earlier current-task reviews were
-explicitly migrated to format 4 without changing observations or original
-artifacts. Format 4 records are now frozen, not rewritten to format 5. Compare
-only compatible tasks and policies, and inspect score ranges. The gallery keeps
-format 2 scores separate from the current-policy ranking.
-
-Direct-file execution and file-protocol compatibility remain outside review
-scope. Generation still requires direct-file delivery. Review checks use HTTP
-and do not certify that excluded generation requirement.
-
-Checks distinguish pass, fail and unverified. Numeric bounds do not turn missing
-observations into passes or failures. All supported formats require concrete
-reviewer model, effort, and timestamp before `status: complete` is accepted.
-Missing metadata stays null with a reason and does not prevent independent
-checks. It makes the review `partial`, but does not withhold format 4 or 5 bounds.
-An all-unverified current checkpoint has a 0..100 range and a lower bound of 0,
-meaning no established credit, not a completed grade.
-Aside's direct REPL is the only permitted browser tool. Reviews use documented,
-host-permitted loopback HTTP serving only the unchanged `output/` directory.
-Do not test `file://` or leave a review unscored for missing local-file access.
-See the [browser preflight](skills/benchmark-review/references/verification.md)
-for server setup, real CSS viewport fixtures, access-denial boundaries and cleanup.
-A functional defect is a finding, not a reason to abandon the remaining checks.
-Unavailable browser capabilities leave only the affected checks unverified.
-Keep same-attempt findings in a `partial` review and continue permitted work.
-Use `blocked` when no usable evaluation can be made or task routing is incompatible.
-Never copy an earlier review's evidence into a fresh attempt. An explicitly
-requested scoring-policy migration preserves existing evidence and metadata,
-records the policy change, and does not claim new browser observations.
-An access or security denial stops the affected operation. Do not retry or bypass
-it. Continue unrelated work only when policy permits it. If the target or output
-is unsafe, or a write is denied, report the actual saved and unsaved state.
-Past errors are historical context, not current observations. Generation time,
-tokens and model identity do not affect quality scores.
-
-Recompute a review's derived fields without modifying its file:
-
-```sh
-node skills/benchmark-review/scripts/score-review.mjs "<run>/reviews/review.json"
+```text
+/benchmark-review runs/v1/<agent>-<model>-<effort>-<run-id>
 ```
 
-This command validates the scoring input and prints normalized JSON. It rejects
-complete reviews with missing required metadata, including older saved records.
-Existing files are not rewritten or grandfathered through validation. It does
-not execute the artifact or certify the reviewer's observations. See the
-[revision and calibration guide](docs/benchmark-v2.md) for the design choices,
-verification cases, and limits on interpreting new scores.
+OMP, or a host without project skill discovery:
 
-Publish both reports from one draft outside the run directory:
-
-```sh
-node skills/benchmark-review/scripts/finalize-review.mjs "<run>" "<draft-review.json>"
+```text
+Read skills/benchmark-review/SKILL.md and review runs/v1/<agent>-<model>-<effort>-<run-id>.
 ```
 
-The command validates and scores the draft, generates Markdown from that JSON,
-and reads back both files. Invalid proposals do not replace existing reports.
-Each file replacement is atomic, but the pair is not a filesystem transaction.
-A publication error reports which files were saved. Do not claim pair completion
-until both files pass read-back.
+The reviewer reads the saved prompt to select the compatible rubric. It does not invoke generation, repair the artifact, or modify `prompt.md`, `run.json`, or `output/`. It writes only:
 
-## Saved Files
+- `reviews/review.json`: structured checks, scores, coverage, and verification limits.
+- `reviews/review.md`: human-readable findings and reproduction steps.
+
+**Re-review replaces both reports.** There are no timestamped review backups or retained screenshot/evidence archives; unrelated existing files are preserved. Each replacement is atomic, but the pair is not a filesystem transaction. Publication is complete only after both files pass read-back.
+
+Reviews use connected Aside's direct REPL and permitted loopback HTTP serving only the unchanged output directory. **Direct-file execution is outside review scope**, even though generation requires it. Functional defects are findings, not reasons to abandon unrelated checks. Unavailable capabilities leave affected checks unverified; missing required reviewer metadata keeps the review partial. See [review verification](skills/benchmark-review/references/verification.md) and the [review format](skills/benchmark-review/references/review-format.md).
+
+## Saved files and measurements
 
 ```text
 runs/v1/<agent>-<model>-<effort>-<run-id>/
-  prompt.md           # Exact fixed task
-  output/index.html   # Open directly in a browser; local resources stay in output/
-  run.json            # Minimal settings and measurements
-  reviews/            # Added only by benchmark-review; latest review replaces these files
-    review.json       # Structured scores, checks and verification limits
-    review.md         # Human-readable findings and reproduction steps
+  prompt.md           # Exact task used for this attempt
+  output/index.html   # Generated artifact; local resources stay in output/
+  run.json            # Generation settings, measurements, status, and notes
+  reviews/            # Added by the separately invoked review skill
+    review.json
+    review.md
 ```
 
-Benchmark results are stored under [`runs/v1/`](runs/v1/) and tracked in Git.
-Here `v1` identifies the storage layout, not the task version. The saved prompt
-identifies the task, and `review.json` identifies the scoring rubric.
+`runs/v1/` is the storage layout, not the task version. The saved prompt identifies the task; the review identifies its rubric. Runs are tracked in Git. Local `experiments/` content is ignored and is not part of the published run catalog.
 
-The agent component identifies the host, such as `codex` or `claude-code`.
-The run ID is the invocation-start time in Korea (`Asia/Seoul`), formatted as
-`YYYYMMDD-HHmmss`. For example, an illustrative model named `model-a` could create
-`runs/v1/codex-model-a-high-20261002-153000/`. If that path exists, the next run uses
-`-02`, then `-03`, without overwriting it.
+The host component identifies OMP, Codex, or Claude Code, not the model provider. Run IDs use invocation-start time in `Asia/Seoul` as `YYYYMMDD-HHmmss`; collisions receive `-02`, `-03`, and so on. Unknown directory components may use `unknown`, but unknown JSON metadata stays null with a reason, not a placeholder or guessed model version.
 
-Name components use lowercase; spaces and path separators become hyphens.
-The skill automatically checks current-run metadata, explicit user selections,
-and the current host's configuration before naming the run. It resolves model
-and effort separately. When runtime verification is unavailable, it can use
-configuration-derived values and labels their source and unverified overrides
-in `notes`. If model, effort, or current-session identity remains unresolved,
-keep the corresponding JSON values null with reasons and continue implementation.
-Directory components may use `unknown`; JSON metadata may not use placeholders.
-JSON preserves known identifiers or aliases without guessing exact model versions. See
-[automatic settings resolution](skills/benchmark-record/references/settings-resolution.md)
-and the complete
-[directory naming rules](skills/benchmark-record/references/record-format.md#run-directory).
+Current generation records use format **`2.1`**. Measurement starts immediately before implementation and ends after its checks and cleanup. Record processing and the final reply are excluded. Token totals must cover that same work interval, including all delegated work, without double counting. Context-window counters, estimates, and unrelated sessions are not substitutes for usage measurements.
 
-OMP uses explicit current-session runtime metadata and permitted, identity-checked
-usage sources. It never treats an OMP model provider as the host or guesses a
-Codex thread ID. Codex checks applicable configuration when runtime metadata is
-missing. Claude Code checks its active environment and applicable settings.
-No path launches another model or requires a second user request.
+`completed` requires valid `session_id`, `model`, `effort`, `duration_ms`, `input_tokens`, and `output_tokens`; it does not certify bug-free behavior or complete browser coverage. Missing required accounting yields `failed` even when the artifact exists. Deliberately paused unfinished work uses `interrupted`; an abruptly terminated session may leave `running`, because no background service finalizes it. Historical records are not automatically relabeled.
 
-The [record template](skills/benchmark-record/assets/run.json) keeps:
+Detailed contracts:
 
-- Concrete model and effort with source information in notes.
-- The verified current invoking session/thread ID as `session_id`.
-- Complete input and output token totals for the measured work.
-- Elapsed implementation and verification time in milliseconds.
-- A format version, execution status, and notes for sources, verification limits,
-  interruptions, or failure.
+- [Record fields, naming, status, and safe publication](skills/benchmark-record/references/record-format.md)
+- [Settings resolution](skills/benchmark-record/references/settings-resolution.md), [usage accounting](skills/benchmark-record/references/usage-resolution.md), and [delegated usage](skills/benchmark-record/references/delegated-usage.md)
+- Host-specific sources: [OMP](skills/benchmark-record/references/omp.md), [Codex](skills/benchmark-record/references/codex.md), [Claude Code](skills/benchmark-record/references/claude-code.md)
 
-Format `2.1` adds `session_id` to `2.0`. Each host records its actual invoking
-session identity. Missing identity or accounting does not prevent building HTML.
-Finalize such attempts as `failed` with honest nulls and reasons.
-`completed` requires all metadata and measurements, but does not certify bug-free
-behavior or full browser coverage. Record functional defects and verification
-gaps in notes. Resuming retains original identity and measurement bounds.
-See [session identity](skills/benchmark-record/references/record-format.md#session-identity).
+## Local gallery and maintenance
 
-Validate a proposed or saved record without modifying it:
+Run the terminal commands in this section from **`ai-benchmark/`**. From the parent repository:
+
+```sh
+cd ai-benchmark
+```
+
+### Refresh and preview
+
+Regenerate the local catalog after changing records or reviews:
+
+```sh
+node scripts/generate-gallery.mjs
+```
+
+This reads the working tree, including uncommitted records, and replaces only `gallery/data.js`. Reload [`index.html`](index.html) afterward. The snapshot has no generation timestamp; unchanged inputs produce identical output. There is no live file watcher or automatic preview refresh.
+
+To read another collection or write to another destination:
+
+```sh
+node scripts/generate-gallery.mjs --root /absolute/ai-benchmark --output /absolute/data.js
+```
+
+For optional HTTP preview:
+
+```sh
+node scripts/serve-gallery.mjs --port 4173
+```
+
+Open **http://127.0.0.1:4173/** and stop the server with Ctrl+C. It binds only to loopback and serves saved gallery assets and run outputs, not `/api/runs`. `--root DIRECTORY` selects a complete site directory, including its application assets and generated catalog. Use another port if 4173 is occupied; do not stop unrelated processes.
+
+### Validate records and scores
+
+These commands are read-only. Replace `<run>` with an existing run directory:
 
 ```sh
 node skills/benchmark-record/scripts/validate-run.mjs "<run>/run.json"
+node skills/benchmark-review/scripts/score-review.mjs "<run>/reviews/review.json"
 ```
 
-The validator requires `session_id`, `model`, `effort`, `duration_ms`,
-`input_tokens`, and `output_tokens` for a completed run. It rejects missing
-values and placeholder strings, not genuine measured zero. It validates the
-record's structure, not the truth of its sources. The same gate applies to old
-saved records when explicitly validated; this policy does not rewrite them.
+The record validator checks structure and required completion values, not the truth of measurement sources. The scorer validates input and prints normalized JSON; it neither rewrites the review nor executes the artifact. Existing records do not bypass validation because they are historical.
 
-Reserve an empty run directory and publish a running checkpoint before work:
+Normal recording and review invocations handle publication. For manual checkpoint/finalization work, use the [record publication contract](skills/benchmark-record/references/record-format.md#validation-and-publication) and [review publication command](skills/benchmark-review/references/review-format.md#publication-command). Keep drafts outside the target run. Record finalization rejects stale writes and terminal-record overwrites; invalid review proposals do not replace saved reports.
+
+### Optional commit hook
 
 ```sh
-node skills/benchmark-record/scripts/validate-run.mjs --checkpoint "<draft.json>" "<run>"
+node scripts/install-gallery-hooks.mjs
 ```
 
-After work, publish a terminal draft using the SHA-256 of the current record:
+The installer changes only this repository's local `core.hooksPath`, stores private hooks in the Git common directory, and preserves the previous hook chain. It does not edit shared hooks or global Git configuration. Reinstall after changing the hook implementation. Bare repositories and worktree-specific `core.hooksPath` overrides are unsupported.
+
+When staged paths under `ai-benchmark/` change, pre-commit runs the previous hook first, then uses the **staged generator and collector** to build a catalog from the effective Git index. It supports partial staging, staged deletions, and alternate `GIT_INDEX_FILE` values; unstaged edits and untracked files do not enter the snapshot.
+
+The hook updates **only `ai-benchmark/gallery/data.js` in the index**, not the working-tree catalog. Regenerate locally when you want your preview to match working-tree edits. Generation failure stops the commit. Unresolved index entries, symlinks, and submodules inside the project are rejected. Unrelated commits skip generation; the hook never pushes or deploys.
+
+### GitHub Pages deployment
+
+The [Benchmark gallery workflow](../.github/workflows/benchmark-gallery.yml) runs when a push to **`master`** changes `ai-benchmark/**` or the workflow itself. It also supports manual dispatch. Before the first deployment, set **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+
+Actions uses Node.js 22, runs the gallery/hook regression tests, generates the catalog from the checked-out commit, and deploys with the official GitHub Pages actions. The upload contains `index.html`, browser assets in `gallery/`, and each run's `output/` files. It does not upload raw record files, repository configuration, tests, or skills as standalone files, but **prompts, reviews, notes, and normalized run fields are embedded in the public catalog**. Check that content before publishing.
+
+### Verification
+
+Run all bundled regression tests:
 
 ```sh
-node skills/benchmark-record/scripts/validate-run.mjs --finalize "<draft.json>" "<run>" "<expected-sha256>"
+node --test tests/*.test.mjs
 ```
 
-Keep drafts outside the run directory. The command validates before replacement,
-rejects stale writes and terminal-record overwrites, and reads the saved JSON
-back. A completed proposal also requires the saved prompt and HTML entrypoint.
-Use the [publication contract](skills/benchmark-record/references/record-format.md#validation-and-publication)
-for interrupted checkpoints and safe resume.
+> [!WARNING]
+> The full suite currently requires local experiment evidence that is not included in a clean checkout. `tests/benchmark-probes.test.mjs` reads `experiments/observatory-improvement/terra-xhigh/manifest.json` and `evidence/*.json`, but `/experiments/` is Git-ignored. Without those files, that test file fails with `ENOENT` before its test cases run. The Pages workflow runs only `tests/gallery*.test.mjs`; it does not exercise this experiment-dependent test.
 
-There are no response copies, child/turn identifiers, hashes, transcript or
-evidence archives, cache/reasoning breakdowns, or previous-record backups.
-The prompt and HTML are the retained task and result. Runs are tracked in Git;
-local experiments under `experiments/` are ignored, while existing tracked
-archives remain unchanged. Earlier runs retain their original prompts and may
-require a server, so compare them separately from runs using the current prompt.
+Hook tests use temporary Git repositories rather than staging this checkout. Tests cover recording, publication, scoring, gallery behavior, paths, hooks, and probe helpers; they do not certify generated artifacts against the rubric. Artifact verification requires observed browser checks under the applicable [generation](skills/benchmark-record/references/browser-verification.md) or [review](skills/benchmark-review/references/verification.md) policy.
 
-Browser verification uses only connected Aside MCP's direct `repl` tool. The current model
-controls the browser; Aside `exec` and natural-language CLI tasks must not launch
-another model session. Install the [Aside CLI](https://docs.aside.com/help/developers)
-and register MCP before running a benchmark. For Codex:
+## Shared skills and references
 
-```sh
-codex mcp add aside -- /absolute/path/to/aside mcp --host local
-```
-
-Start a new Codex session to load the registered tools. Use a new benchmark tab
-and close only tabs created by the attempt. Do not access unrelated tabs or memory.
-Select the transport before navigation: use `file://` only with confirmed support.
-When local-file support is unavailable or unestablished, use documented,
-host-permitted loopback HTTP. A file navigation failure caused only by missing
-browser local-file capability permits the same fallback; it does not establish
-an OS permission failure.
-
-Serve only the actual run's unchanged `output/` directory as a tracked host process:
-
-```sh
-python3 -m http.server 8765 --bind 127.0.0.1 --directory "<run>/output"
-```
-
-Replace `<run>/output` with the real path, or use `output` from the run directory.
-Wait for startup, then open `http://127.0.0.1:8765/index.html` through Aside's
-direct REPL. If the port is occupied, use another available port in both the
-command and URL; do not stop unrelated processes. Stop the temporary server on
-every exit, including failure, before measurement ends.
-
-The artifact must still run directly without a server. Record HTTP interaction
-checks separately from static `file://` compatibility; neither proves direct-file
-execution. See [browser verification](skills/benchmark-record/references/browser-verification.md).
-
-This fallback never overrides an explicit host or tool security policy. Stop a
-denied operation without retrying it, changing permissions, or switching tools
-to bypass it. Continue independent implementation and checks only where permitted.
-Unavailable Aside or an unsupported input operation is a verification gap, not
-a command to abandon implementation. Use available static checks without claiming
-they prove browser behavior. Record the exact limitation and unperformed checks.
-Finalize writable JSON before replying. A denied output write is an explicit
-publication failure, never a successful save.
-
-## Measurement Boundary
-
-Measurement starts immediately before implementation and ends after its checks.
-Record processing and the final user-facing reply are outside that interval.
-Time includes the model's implementation work, tools and verification, not only
-API latency. The task does not pin a Three.js version; delivery must work via
-`file://`.
-
-The agent uses normal clock and host inspection tools. It automatically checks
-current-run usage and existing current-session files, following
-[usage resolution](skills/benchmark-record/references/usage-resolution.md).
-OMP can use a permitted current-session usage API or explicitly supplied journal;
-Codex can use App Server usage or its current rollout; Claude Code can use its
-current session transcript. Runtime identity selects the source. The agent never
-substitutes the newest session or another conversation from the project.
-The Claude discovery entrypoint also passes its native session substitution to
-the shared skill for hosts that do not expose a session ID in the tool environment.
-
-It uses scoped final request usage or matching cumulative counter differences.
-Input totals include cache categories and output totals include reasoning,
-without double counting. Claude's repeated response rows are deduplicated;
-status-line context-window values are not cumulative spend. A small read-only
-inline JSON query is allowed; no maintained provider parser or new hook is needed.
-
-For delegated work, the agent retains child identities at dispatch and checks
-only usage sources linked to that work, including resumed work and descendants.
-It uses a proven inclusive interval counter once, deduplicates complete linked
-request usage, or combines proven disjoint counter deltas and final-request sums.
-Missing counts in a delegation tool result alone do not end lookup. See
-[delegated usage collection](skills/benchmark-record/references/delegated-usage.md).
-
-If current-session identity or a usable usage source cannot be established during
-setup, retain nulls and continue the task. A context-window counter is not interval
-usage. An environment without reliable accounting can produce an artifact and a
-valid finalized record, but not a `completed` format `2.1` benchmark record.
-
-If final usage, clock bounds, or full delegated coverage cannot be established
-after work starts, preserve the artifact and save the attempt as `failed`.
-Keep unknown values null with precise reasons. Valid partial parent counts may
-remain in notes but cannot replace full-work totals. Do not substitute estimates,
-zero, or another session's values, and do not claim completion because the HTML
-was built. The skill finalizes the failure and replies in the same invocation.
-
-Use `failed` when implementation cannot finish or required metadata and
-measurements remain unavailable. A functional defect or browser coverage gap
-alone does not make a finished, measured attempt failed. Use `interrupted` for
-unfinished work that was deliberately paused. An abrupt process termination can
-still leave `running`; no background service finalizes a dead session.
-These rules govern new work. Historical statuses are not relabeled.
-
-### Validating skill changes
-
-For runtime regression comparisons, create new attempts using the current `2.1` template,
-the identical fixed task, matching host/model/effort, and the same permitted Aside verification method.
-Check all task requirements and its acceptance scenario, and compare scoped measurements only when their boundaries and coverage are proven.
-Historical `2.0` records or Playwright observations do not establish equivalence under the current schema and browser policy; preserve them unchanged.
-Fresh-context instruction evaluations and static checks are narrower evidence, not substitutes for an observed browser run.
-
-## Shared Skill Setup
-
-| Host | Project entrypoint |
+| Host | Project discovery files |
 | --- | --- |
 | Codex | `.agents/skills/benchmark-record/SKILL.md`, `.agents/skills/benchmark-review/SKILL.md` |
 | Claude Code | `.claude/skills/benchmark-record/SKILL.md`, `.claude/skills/benchmark-review/SKILL.md` |
+| OMP / manual loading | Read the corresponding shared `skills/benchmark-record/SKILL.md` or `skills/benchmark-review/SKILL.md` explicitly. |
 
-These are ordinary files containing discovery metadata and a relative link to
-the corresponding shared skill under `skills/`. Resources resolve from that
-shared skill directory. The Claude recording entrypoint includes current-session
-context; workflow rules remain in shared skills. There are no symlinks.
+The Codex and Claude Code entrypoints are ordinary files, not symlinks. They point to shared workflows under `skills/`; resources resolve from the shared directory. Claude's recording entrypoint also supplies current-session context. Reopen the project or start a new session if newly installed skills are not discovered.
 
-### Skill document layout
+For another project or a personal installation, copy the **complete** recording or review skill directory, including assets, references, and scripts. Copying only a discovery entrypoint is insufficient. See the host's [Codex skill guide](https://learn.chatgpt.com/docs/build-skills) or [Claude Code skill guide](https://code.claude.com/docs/en/skills) for installation locations.
 
-The shared `SKILL.md` contains the workflow; references separate the detailed rules by role.
-Read the shared [record format](skills/benchmark-record/references/record-format.md),
-[settings](skills/benchmark-record/references/settings-resolution.md), [usage](skills/benchmark-record/references/usage-resolution.md)
-and [browser verification](skills/benchmark-record/references/browser-verification.md), then only the current host's
-[OMP](skills/benchmark-record/references/omp.md),
-[Codex](skills/benchmark-record/references/codex.md), or [Claude Code](skills/benchmark-record/references/claude-code.md) document.
-Read Shared procedure and the current-host section of [delegated usage](skills/benchmark-record/references/delegated-usage.md) only when delegating.
-The run record schema, settings precedence and token calculations are unchanged.
-The fixed task is versioned separately. Authoring Sources are not runtime inputs.
-
-The review skill separates its workflow, scoring rubric, browser checks and
-record format. Its versioned JSON template is independent of `run.json`; adding
-a review does not migrate generation records or change their measurement bounds.
-
-For another project or a personal installation, copy the complete
-`skills/benchmark-record/` or `skills/benchmark-review/` folder, including its assets
-and references, into the host's skill directory. Do not copy only a discovery entrypoint. The official
-[Codex guide](https://learn.chatgpt.com/docs/build-skills) and
-[Claude Code guide](https://code.claude.com/docs/en/skills) describe discovery
-locations and invocation.
-
-This project provides execution with automatic minimal recording and a separately
-invoked, single-run review. Batch ranking and cross-run comparison are not included.
-Neither skill switches models, launches a second model, installs hooks, or runs
-a separate benchmark CLI.
-
-- [Current architecture](docs/adr/0001-use-a-shared-recording-skill.md)
-- [Record fields and accounting](skills/benchmark-record/references/record-format.md)
+- [Recording workflow](skills/benchmark-record/SKILL.md)
+- [Review workflow](skills/benchmark-review/SKILL.md)
+- [Current rubric](skills/benchmark-review/references/rubric.md) and [review schema](skills/benchmark-review/references/review-format.md)
+- [Task and scoring design](docs/benchmark-v2.md)
+- [Shared-skill architecture](docs/adr/0001-use-a-shared-recording-skill.md)
