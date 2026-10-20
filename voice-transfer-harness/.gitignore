@@ -1,7 +1,0 @@
-.venv/
-.venv-kokoro/
-.runtime/
-models/
-outputs/
-__pycache__/
-.DS_Store
