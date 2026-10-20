@@ -32,7 +32,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.wonjinsin.smoketap",
-      "buildNumber": "2",
+      "buildNumber": "5",
       "config": {
         "usesNonExemptEncryption": false
       }

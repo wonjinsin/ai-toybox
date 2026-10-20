@@ -80,6 +80,18 @@ npm start              # Metro / Expo dev server
 npx expo start --clear # clear Metro cache
 ```
 
+### Renew an Expired TestFlight Build
+
+TestFlight builds expire after 90 days. Upload a new build; an expired build cannot be extended.
+
+1. Check the latest build number in App Store Connect, then set a higher `expo.ios.buildNumber` in `app.json`. The app version can stay unchanged.
+2. Run `npm run prebuild:ios` to regenerate the app and widget with matching build numbers and apply all three patches.
+3. Open `ios/SmokeTap.xcworkspace`, archive the `SmokeTap` scheme for an iOS device, and distribute it to App Store Connect using the existing Apple Developer team.
+4. Wait for processing, then confirm the new build is available to the existing `Internal` TestFlight group. This group automatically distributes Xcode builds.
+
+If signing fails with `PLA_NOT_ACCEPTED`, the account holder must accept the latest Program License Agreement at <https://developer.apple.com/account/> before retrying.
+Update the existing installation through TestFlight rather than deleting the app, to preserve locally stored records.
+
 ## ✦ Commands
 
 | Command | Purpose |
