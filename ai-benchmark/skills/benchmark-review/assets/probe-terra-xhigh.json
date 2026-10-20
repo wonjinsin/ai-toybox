@@ -1,0 +1,23 @@
+{
+  "id": "terra-xhigh-observatory-2",
+  "storage_key": "solar-system-observatory-2-snapshots",
+  "time": "#timeSlider",
+  "speed": "#speedSlider",
+  "pause": "#pauseButton",
+  "tracking": "#trackingButton",
+  "overview": "#overviewButton",
+  "camera": "#cameraReadout",
+  "selection": "#planetList button[aria-pressed=\"true\"]",
+  "planet": "[aria-label=\"Select Cinder, ID cinder\"]",
+  "capture": "#captureButton",
+  "rows": "#snapshotList .snapshot",
+  "restore": "#snapshotList .snapshot:first-child button[aria-label^=\"Restore snapshot\"]",
+  "delete": "#snapshotList .snapshot:first-child button[aria-label^=\"Delete snapshot\"]",
+  "snapshot_notice": "#snapshotNotice",
+  "json_notice": "#jsonNotice",
+  "json": "#jsonArea",
+  "export": "#exportButton",
+  "import": "#importButton",
+  "canvas": "#scene",
+  "seed": {"version":1,"snapshots":[{"id":"probe-A","time":17.25,"speed":1.5,"selectedPlanet":"cinder","viewMode":"tracking"},{"id":"probe-B","time":73,"speed":0.25,"selectedPlanet":null,"viewMode":"overview"}]}
+}

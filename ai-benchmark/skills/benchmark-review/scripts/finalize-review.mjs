@@ -30,7 +30,8 @@ function literal(value) {
 
 function markdown(review, registry) {
   const value = item => item === null ? 'Unscored' : literal(item);
-  const current = review.format_version === '4.0';
+  const current = review.format_version === '5.0';
+  const bounded = current || review.format_version === '4.0';
   const range = (lower, upper) => lower === upper ? lower.toFixed(2) : `${lower.toFixed(2)} to ${upper.toFixed(2)}`;
   const definitions = registry.rubrics[review.rubric_version].checks;
   const missingChecks = review.checks.filter(check => check.status === 'unverified').map(check => check.id);
@@ -39,16 +40,30 @@ function markdown(review, registry) {
     `Status: ${literal(review.status)}.`,
     `Mandatory verdict: ${literal(review.requirements_verdict)}.`,
     current
-      ? `Published total: ${review.total_score.toFixed(2)} / 100. ${review.total_score === review.total_score_upper_bound ? 'Determined score' : 'Conservative lower bound'}. Range: ${range(review.total_score, review.total_score_upper_bound)}.`
-      : `Published total: ${value(review.total_score)}.`,
+      ? `Quality total: ${review.total_score.toFixed(2)} / 100. ${review.total_score === review.total_score_upper_bound ? 'Determined score' : 'Conservative lower bound'}. Range: ${range(review.total_score, review.total_score_upper_bound)}.`
+      : bounded
+        ? `Published total: ${review.total_score.toFixed(2)} / 100. ${review.total_score === review.total_score_upper_bound ? 'Determined score' : 'Conservative lower bound'}. Range: ${range(review.total_score, review.total_score_upper_bound)}.`
+        : `Published total: ${value(review.total_score)}.`,
   ];
   if (current) {
+    const mandatory = status => definitions
+      .filter((definition, index) => definition.mandatory && review.checks[index].status === status)
+      .map(definition => definition.id);
+    const failed = mandatory('fail');
+    const unknown = mandatory('unverified');
+    lines.push('Quality is uncapped. The mandatory verdict is independent of the quality score.',
+      `Mandatory failures (${failed.length}): ${failed.length ? failed.join(', ') : 'None'}.`,
+      `Mandatory unverified (${unknown.length}): ${unknown.length ? unknown.join(', ') : 'None'}.`);
+  }
+  if (bounded && !current) {
     lines.push(`Raw total: ${range(review.raw_total_score, review.raw_total_score_upper_bound)}.`,
       `Confirmed cap: ${review.score_cap === null ? 'None' : review.score_cap}.`);
     if (review.score_cap !== null) lines.push('The confirmed 69 cap is existing review policy for a mandatory failure, not a calibrated quality measurement.');
     else if (definitions.some((definition, index) => definition.mandatory && review.checks[index].status === 'unverified')) {
       lines.push('An unverified mandatory check may fail. The lower endpoint includes the possible 69 cap; no failure or cap is confirmed.');
     }
+  }
+  if (bounded) {
     const missingMetadata = [
       ...(review.reviewed_at === null ? ['reviewed_at'] : []),
       ...Object.entries(review.reviewer).filter(([, item]) => item === null).map(([field]) => `reviewer.${field}`),
@@ -65,8 +80,8 @@ function markdown(review, registry) {
   );
   for (const category of review.categories) {
     const ids = definitions.filter(check => check.category === category.id).map(check => check.id);
-    const categoryScore = current ? range(category.score, category.score_upper_bound) : category.score === null ? 'Unverified' : category.score;
-    const basis = current
+    const categoryScore = bounded ? range(category.score, category.score_upper_bound) : category.score === null ? 'Unverified' : category.score;
+    const basis = bounded
       ? category.score === category.score_upper_bound ? 'determined score; full category denominator' : 'conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator'
       : category.score === null ? 'incomplete evidence' : 'mean of observed ratings';
     lines.push(`| ${literal(category.id)} | ${categoryScore} | ${category.weight} | ${ids.join(', ')}; ${basis} |`);

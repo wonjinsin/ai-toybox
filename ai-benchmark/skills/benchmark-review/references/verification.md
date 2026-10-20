@@ -101,6 +101,94 @@ Record the actual document sizes and disclose embedded-frame verification in
 notes and Markdown. It is not top-level viewport or touch-device proof.
 Close the fixture tabs and stop both review-created servers on every exit.
 
+## Focused regression automation
+
+For artifacts matching `assets/probe-terra-xhigh.json`, use the bundled probe for
+the repeated overview, persistence, malformed-storage and quota scenarios. Its
+control selectors are explicit, not a universal adapter for arbitrary generated
+pages. A different interface needs its own observed control mapping before use.
+The probe does not replace the saved acceptance scenario or the complete rubric.
+
+`scripts/prepare-probe.mjs` prints a JSON input for connected Aside's direct
+`repl` tool. It does not launch a browser. The host must be allowed to supply the
+owned script and profile as tool input. Do not use it to bypass an access denial.
+Start the output-only and viewport servers described above, then run:
+
+```sh
+node skills/benchmark-review/scripts/prepare-probe.mjs \
+  --artifact "<run>/output" \
+  --url http://127.0.0.1:8765/index.html \
+  --fixture http://127.0.0.1:8766/ \
+  --size mobile --scenario quota
+```
+
+Pass the emitted object to the direct REPL unchanged. Supported scenarios are
+`overview`, `persistence`, `invalid-storage`, `quota` and `diagnostics`.
+`overview` also accepts `--time 5.2` and `--playing false`. Use `desktop` for
+1440x900 or `mobile` for 390x844. The preparer rejects a served artifact that
+differs from the selected directory. The browser checks served file hashes before
+and after each scenario. These are endpoint byte checks on the owned stable
+server, not captured navigation-response bodies.
+
+The `OBSERVATORY_PROBE_JSON=` line contains the report. Read its observations,
+not the fact that the script returned. Setup must reach the requested state.
+Restoration is tested only after changing live state. Reloads wait for the owned
+iframe's load event. Storage fixtures restore the exact original raw value and
+remove their own quota key without a later reload changing that restoration.
+The preparer closes its tab, including on errors. Stop the owned servers afterward.
+
+Framing stays `unverified` in automated output. Inspect the actual rendered
+screenshot separately. Diagnostics test both deliberate console and exception
+signals before trusting an empty stream; an unavailable signal stays unverified.
+A passing transport test alone does not establish an error-free artifact.
+Do not promote any focused pass to an entire T4, D6 or D3 pass without the
+remaining required observations. During a normal review, keep only the approved
+two review files and incorporate supported findings into their evidence.
+
+### Maintenance experiment
+
+A user-requested repair comparison can retain reports outside `runs/`. The
+recorded experiment is
+`experiments/observatory-improvement/terra-xhigh/manifest.json`. Its candidate is
+an engineering derivative of one saved artifact, not a new model generation.
+To check its existing evidence and independently recalculate historical policy
+effects, run from the repository root:
+
+```sh
+node skills/benchmark-review/scripts/compare-probes.mjs \
+  experiments/observatory-improvement/terra-xhigh/manifest.json
+```
+
+This command does not rerun a browser. It checks the original inventory and hashes,
+the current candidate and probe identities, served-byte evidence, every required
+paired observation, actual viewports, and storage cleanup. It rejects stale visual
+judgments by their exact report-file SHA-256. Missing observations cannot shrink
+the comparison. A remaining failure, lost coverage, unverified required framing,
+or absence of any repaired scenario causes a nonzero exit.
+
+For fresh evidence, run all eight cases on both outputs. Use separate owned
+output-only origins and the same viewport wrapper:
+
+- `mobile` with `quota`, `persistence`, `invalid-storage` and `diagnostics`.
+- `mobile` with `overview --time 5.2 --playing false`.
+- `desktop` with `overview --time 73 --playing false`.
+- `desktop` with `overview --time 120 --playing false`.
+- `mobile` with `overview --time 17 --playing true`.
+
+Save only the parsed report JSON under the manifest's `evidence/` directory,
+using `baseline-` or `candidate-`, the size, and the scenario. Overview filenames
+also end in `-<time>-<playing>.json`; other filenames end in `.json`.
+After inspecting each new overview screenshot, update its separate manifest
+observation and `report_sha256`, obtainable with `shasum -a 256 <report.json>`.
+Never update a visual hash without repeating the visual judgment.
+
+Exit zero certifies only the listed repair scenarios. D3 transport can remain
+unverified and is disclosed separately. The output's `full_benchmark_score` is
+null. Policy-only projections use existing saved observations and cannot serve
+as a new score for the candidate. No direct-file compatibility, touch-device
+coverage, storage read-denial recovery or complete 27-check review is claimed.
+
+
 ## Observe the saved task
 
 Run the saved eight-step scenario in order: automatic motion; scene selection

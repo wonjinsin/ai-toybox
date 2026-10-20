@@ -6,16 +6,16 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
 
-import { normalize } from '../skills/benchmark-review/scripts/score-review.mjs';
+import { normalize, projectCurrentPolicy } from '../skills/benchmark-review/scripts/score-review.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const scorer = path.join(root, 'skills/benchmark-review/scripts/score-review.mjs');
-const templatePath = path.join(root, 'skills/benchmark-review/assets/review.json');
+const templatePath = path.join(root, 'skills/benchmark-review/assets/review-4.0.json');
 const registry = JSON.parse(await readFile(
   path.join(root, 'skills/benchmark-review/assets/check-registry.json'), 'utf8'));
 
 async function completeReview(format = '4.0') {
-  const review = JSON.parse(await readFile(format === '4.0' ? templatePath
-    : path.join(root, 'skills/benchmark-review/assets/review-2.0.json'), 'utf8'));
+  const review = JSON.parse(await readFile(path.join(root, 'skills/benchmark-review/assets',
+    format === '5.0' ? 'review.json' : `review-${format}.json`), 'utf8'));
   if (format === '2.0') {
     const registry = JSON.parse(await readFile(
       path.join(root, 'skills/benchmark-review/assets/check-registry.json'), 'utf8'));
@@ -326,7 +326,7 @@ test('metadata-only partial review can have an exact uncapped score', async t =>
   assert.equal(result.value.coverage.unverified, 0);
 });
 
-test('current scoring rejects missing, nullable, nonfinite, and out-of-range endpoints', async () => {
+test('frozen format 4 rejects missing, nullable, nonfinite, and out-of-range endpoints', async () => {
   const endpoints = ['total_score', 'total_score_upper_bound', 'raw_total_score', 'raw_total_score_upper_bound'];
   for (const field of endpoints) {
     for (const invalid of [undefined, null, NaN, Infinity, -Infinity, -0.01, 100.01, '0', false]) {
@@ -423,7 +423,7 @@ test('obsolete current-policy version is rejected instead of silently reinterpre
   assert.equal(result.stdout, '');
 });
 
-test('blocked current review recomputes stale numeric fields rather than retaining an earlier score', async () => {
+test('blocked format 4 recomputes stale numeric fields rather than retaining an earlier score', async () => {
   const review = JSON.parse(await readFile(templatePath, 'utf8'));
   review.status = 'blocked';
   review.total_score = 69;
@@ -481,4 +481,210 @@ test('frozen historical partial evidence keeps nullable totals and observed cate
   assert.ok(result.value.categories.filter(category => category.id !== 'delivery').every(category => category.score === 5));
   review.total_score = 95;
   assert.notEqual((await score(t, review)).status, 0);
+});
+
+test('current quality remains uncapped while mandatory failure and unknown proof stay separate', async t => {
+  const review = await completeReview('5.0');
+  review.status = 'partial';
+  Object.assign(review.checks.find(check => check.id === 'S7'), { status: 'fail', rating: 0 });
+  Object.assign(review.checks.find(check => check.id === 'D6'), { status: 'unverified', rating: null });
+  const before = structuredClone(review);
+  const result = await score(t, review);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual([result.value.total_score, result.value.total_score_upper_bound], [94.88, 96.88]);
+  assert.equal(result.value.requirements_verdict, 'fail');
+  assert.equal(result.value.status, 'partial');
+  assert.deepEqual(result.value.coverage, { passed: 25, failed: 1, unverified: 1 });
+  for (const field of ['raw_total_score', 'raw_total_score_upper_bound', 'score_cap']) {
+    assert.equal(Object.hasOwn(result.value, field), false);
+  }
+  const projection = projectCurrentPolicy(review, registry);
+  assert.equal(projection.kind, 'current');
+  assert.equal(projection.rubric, 'solar-system-5.0');
+  assert.deepEqual(projection.quality.mandatory_failed, ['S7']);
+  assert.deepEqual(projection.quality.mandatory_unverified, ['D6']);
+  assert.deepEqual([projection.quality.lower, projection.quality.upper], [94.88, 96.88]);
+  assert.deepEqual(normalize(result.value, registry), result.value);
+  assert.deepEqual(review, before);
+});
+
+for (const [id, verdict, mandatory] of [['D3', 'pass', []], ['D6', 'unverified', ['D6']]]) {
+  test(`current unknown ${id} keeps quality at 98 to 100 without a possible-failure cap`, async () => {
+    const review = await completeReview('5.0');
+    review.status = 'partial';
+    Object.assign(review.checks.find(check => check.id === id), { status: 'unverified', rating: null });
+    const { quality } = projectCurrentPolicy(review, registry);
+    assert.deepEqual([quality.lower, quality.upper], [98, 100]);
+    assert.equal(quality.requirements_verdict, verdict);
+    assert.deepEqual(quality.mandatory_unverified, mandatory);
+    assert.deepEqual(quality.mandatory_failed, []);
+    assert.deepEqual(quality.categories.find(category => category.id === 'delivery'),
+      { id: 'delivery', weight: 10, score: 4, score_upper_bound: 5 });
+  });
+}
+
+test('current score distinguishes no observations, observed zero, and missing metadata', async () => {
+  const blocked = JSON.parse(await readFile(path.join(root, 'skills/benchmark-review/assets/review.json'), 'utf8'));
+  blocked.status = 'blocked';
+  const result = normalize(blocked, registry);
+  assert.deepEqual([result.total_score, result.total_score_upper_bound], [0, 100]);
+  assert.equal(result.requirements_verdict, 'unverified');
+  assert.deepEqual(result.coverage, { passed: 0, failed: 0, unverified: 27 });
+  const zero = await completeReview('5.0');
+  for (const check of zero.checks) Object.assign(check, { status: 'fail', rating: 0 });
+  const observed = normalize(zero, registry);
+  assert.deepEqual([observed.total_score, observed.total_score_upper_bound], [0, 0]);
+  assert.equal(observed.status, 'complete');
+  assert.equal(observed.requirements_verdict, 'fail');
+  const metadataOnly = await completeReview('5.0');
+  metadataOnly.status = 'partial';
+  metadataOnly.reviewer.model = null;
+  const partial = normalize(metadataOnly, registry);
+  assert.deepEqual([partial.total_score, partial.total_score_upper_bound], [100, 100]);
+  assert.equal(partial.status, 'partial');
+  assert.equal(partial.requirements_verdict, 'pass');
+});
+
+test('policy-only projection recalculates stale totals without changing historical observations or identity', async () => {
+  const historical = await completeReview('4.0');
+  historical.status = 'partial';
+  Object.assign(historical.checks.find(check => check.id === 'T4'), { status: 'fail', rating: 0 });
+  Object.assign(historical.checks.find(check => check.id === 'D6'), { status: 'fail', rating: 0 });
+  Object.assign(historical.checks.find(check => check.id === 'D3'), { status: 'unverified', rating: null });
+  historical.total_score = 1;
+  historical.raw_total_score = 1;
+  const before = structuredClone(historical);
+  const projected = projectCurrentPolicy(historical, registry);
+  assert.deepEqual({
+    kind: projected.kind, source_format: projected.source_format, source_rubric: projected.source_rubric,
+    target_rubric: projected.target_rubric, basis: projected.basis,
+  }, {
+    kind: 'policy-only', source_format: '4.0', source_rubric: 'solar-system-4.0',
+    target_rubric: 'solar-system-5.0', basis: 'existing-observations',
+  });
+  assert.deepEqual([projected.quality.lower, projected.quality.upper], [92, 94]);
+  assert.equal(projected.quality.requirements_verdict, 'fail');
+  assert.deepEqual(projected.quality.mandatory_failed, ['T4', 'D6']);
+  assert.deepEqual(projected.quality.mandatory_unverified, []);
+  assert.deepEqual(projected.quality.coverage, { passed: 24, failed: 2, unverified: 1 });
+  const published = normalize(historical, registry);
+  assert.deepEqual([published.total_score, published.total_score_upper_bound], [69, 69]);
+  assert.deepEqual(historical, before);
+  for (const key of ['reviewed_at', 'reviewer', 'checks', 'notes', 'format_version']) {
+    assert.equal(Object.hasOwn(projected, key), false);
+  }
+});
+
+test('policy projection and current reviews agree for every check outcome without inventing partial credit', async () => {
+  for (const definition of registry.rubrics['solar-system-5.0'].checks) {
+    const review = await completeReview('5.0');
+    const check = review.checks.find(check => check.id === definition.id);
+    Object.assign(check, { status: 'unverified', rating: null });
+    review.status = 'partial';
+    const unknown = projectCurrentPolicy(review, registry).quality;
+    for (const rating of definition.qualitative ? [0, 1, 2, 3, 4, 5] : [0, 5]) {
+      Object.assign(check, { rating, status: (definition.qualitative ? rating >= 3 : rating === 5) ? 'pass' : 'fail' });
+      review.status = 'complete';
+      const current = projectCurrentPolicy(review, registry).quality;
+      assert.ok(current.lower >= unknown.lower);
+      assert.ok(current.upper <= unknown.upper);
+      assert.equal(current.lower, current.upper);
+      const old = await completeReview('4.0');
+      old.checks = structuredClone(review.checks);
+      assert.deepEqual(projectCurrentPolicy(old, registry).quality, current);
+      assert.deepEqual(current.mandatory_failed, definition.mandatory && check.status === 'fail' ? [check.id] : []);
+    }
+  }
+});
+
+test('historical task is validated but cannot acquire a current-policy score', async () => {
+  const historical = await completeReview('2.0');
+  const before = structuredClone(historical);
+  const projection = projectCurrentPolicy(historical, registry);
+  assert.equal(projection.kind, 'historical');
+  assert.equal(projection.quality, undefined);
+  assert.equal(projection.assessment.total_score, 100);
+  assert.deepEqual(historical, before);
+  historical.checks.pop();
+  assert.throws(() => projectCurrentPolicy(historical, registry));
+});
+
+test('historical presentation recomputes stale verdicts and scores without changing the saved review', async () => {
+  const historical = await completeReview('2.0');
+  Object.assign(historical.checks.find(check => check.id === 'S1'), { status: 'fail', rating: 0 });
+  historical.total_score = 100;
+  historical.requirements_verdict = 'pass';
+  historical.coverage = { passed: 19, failed: 0, unverified: 0 };
+  const before = structuredClone(historical);
+  const projection = projectCurrentPolicy(historical, registry);
+  assert.equal(projection.assessment.requirements_verdict, 'fail');
+  assert.equal(projection.assessment.coverage.failed, 1);
+  assert.ok(projection.assessment.total_score < 100);
+  assert.equal(projection.quality, undefined);
+  assert.deepEqual(historical, before);
+});
+
+test('current schema and projections reject malformed evidence and obsolete score fields', async () => {
+  const mutations = [
+    review => { review.rubric_version = 'solar-system-4.0'; },
+    review => { review.raw_total_score = 100; },
+    review => { review.raw_total_score_upper_bound = 100; },
+    review => { review.score_cap = null; },
+    review => { review.checks[0].rating = 4; },
+    review => { review.checks[0].evidence = 'An unsupported generic observation.'; },
+    review => { review.checks[0].evidence = 'Action: Check. Expected: Works. Observed: Not observed.'; },
+    review => { review.checks[0].method = 'static'; },
+    review => { review.verification.viewports = ['1440x900']; },
+    review => { review.reviewer.model = null; },
+    review => { review.reviewer.effort = 'unknown'; },
+    review => { review.reviewed_at = null; },
+  ];
+  for (const mutate of mutations) {
+    const review = await completeReview('5.0');
+    mutate(review);
+    assert.throws(() => normalize(review, registry));
+    assert.throws(() => projectCurrentPolicy(review, registry));
+  }
+  for (const field of ['total_score', 'total_score_upper_bound']) {
+    for (const invalid of [undefined, null, NaN, Infinity, -1, 101, '0']) {
+      const review = await completeReview('5.0');
+      if (invalid === undefined) delete review[field];
+      else review[field] = invalid;
+      assert.throws(() => projectCurrentPolicy(review, registry));
+    }
+  }
+});
+
+test('current rounding uses unrounded category means and recomputes stale derived values', async () => {
+  const review = await completeReview('5.0');
+  Object.assign(review.checks.find(check => check.id === 'S7'), { status: 'fail', rating: 0 });
+  Object.assign(review.checks.find(check => check.id === 'U3'), { status: 'fail', rating: 1 });
+  review.total_score = 100;
+  review.total_score_upper_bound = 0;
+  review.requirements_verdict = 'pass';
+  const result = normalize(review, registry);
+  assert.equal(result.categories[0].score, 4.38);
+  assert.deepEqual([result.total_score, result.total_score_upper_bound], [94.48, 94.48]);
+  assert.equal(result.requirements_verdict, 'fail');
+  assert.deepEqual(normalize(result, registry), result);
+});
+
+test('policy-only projection removes the possible-failure cap without resolving unknown evidence', async () => {
+  const review = await completeReview('4.0');
+  review.status = 'partial';
+  Object.assign(review.checks.find(check => check.id === 'D6'), {
+    status: 'unverified', rating: null, method: 'none', evidence: 'Synthetic missing storage observation.',
+  });
+  const before = structuredClone(review);
+  const published = normalize(review, registry);
+  assert.deepEqual([published.total_score, published.total_score_upper_bound], [69, 100]);
+  assert.equal(published.score_cap, null);
+  const projected = projectCurrentPolicy(review, registry);
+  assert.equal(projected.kind, 'policy-only');
+  assert.deepEqual([projected.quality.lower, projected.quality.upper], [98, 100]);
+  assert.equal(projected.quality.requirements_verdict, 'unverified');
+  assert.deepEqual(projected.quality.mandatory_failed, []);
+  assert.deepEqual(projected.quality.mandatory_unverified, ['D6']);
+  assert.deepEqual(projected.quality.coverage, { passed: 26, failed: 0, unverified: 1 });
+  assert.deepEqual(review, before);
 });

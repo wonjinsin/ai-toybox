@@ -1,11 +1,12 @@
 # Review record format
 
 Use [task routing](rubric.md#route-the-saved-task) before selecting a format.
-Current task `solar-system-observatory-2` uses format `4.0`, rubric
-`solar-system-4.0`, and the [27-check template](../assets/review.json).
+Current task `solar-system-observatory-2` uses format `5.0`, rubric
+`solar-system-5.0`, and the [27-check template](../assets/review.json).
+Saved format 4 records use the [frozen format 4 schema](#frozen-format-4-schema)
+and [template](../assets/review-4.0.json).
 The original task uses [frozen format 2.0](review-format-2.0.md) and its
-[historical template](../assets/review-2.0.json). Do not add format 4 fields to an
-old-task record or apply the new cap to historical scores.
+[historical template](../assets/review-2.0.json). Never convert the original task.
 
 Each run has only `reviews/review.json` and `reviews/review.md` as the latest
 attempt. Re-review replaces those two files, including on a blocker. Leave
@@ -17,8 +18,8 @@ infrastructure blocker. Never repair the artifact to finish a review.
 
 The current record has exactly these fields. No additional fields are allowed.
 
-- `format_version` is `4.0`.
-- `rubric_version` is `solar-system-4.0`.
+- `format_version` is `5.0`.
+- `rubric_version` is `solar-system-5.0`.
 - `reviewed_at` is an actual valid ISO 8601 timestamp with timezone. Only partial
   or blocked records may use null with a note.
 - `reviewer` has exactly `model` and `effort`, each a concrete nonempty string.
@@ -46,15 +47,11 @@ The current record has exactly these fields. No additional fields are allowed.
   Method is `http`, `static`, or `none`; verified D2 requires `static`, and every
   other verified check requires `http`. HTTP check evidence requires the review's
   browser method to be `http`. L1 and L2 passes require their actual viewports.
-- `raw_total_score` and `raw_total_score_upper_bound` are finite lower and upper
-  bounds on the uncapped weighted score, rounded to two decimals.
-- `score_cap` is 69 when at least one mandatory check fails, otherwise null.
-  It records only a confirmed failure, not the possible cap from an unknown check.
 - `total_score` and `total_score_upper_bound` are finite lower and upper bounds on
-  the published score. The lower endpoint accounts for either a confirmed or
-  possible mandatory failure. The upper endpoint applies the cap only for a
-  confirmed failure. See the [exact formulas](rubric.md#ratings-and-totals).
-  Equal endpoints establish a determined rounded score, not complete evidence.
+  uncapped quality, rounded to two decimals. The mandatory verdict never caps
+  either endpoint. See the [exact formulas](rubric.md#ratings-and-totals).
+  Equal endpoints establish a determined rounded score, not complete evidence
+  or satisfaction of mandatory requirements.
 - `coverage` has integer `passed`, `failed`, and `unverified` counts totaling 27.
 - `notes` is an array of nonempty strings. Record metadata sources and their
   limits, missing metadata, task mismatch, preregistered tolerances, environment
@@ -62,7 +59,7 @@ The current record has exactly these fields. No additional fields are allowed.
   setup/restoration, and cleanup gaps. Notes cannot waive completion requirements.
 
 Evidence is a nonempty string, not a Boolean or an invented measurement. A
-verified format 4 check uses `Action: ... Expected: ... Observed: ...` in that
+verified format 5 or 4 check uses `Action: ... Expected: ... Observed: ...` in that
 order. Describe the actual input, expected outcome, and observed result with
 values where available. For failures provide reproducible steps; for qualitative
 checks explain the chosen anchor. Put any incomplete clauses after the actual
@@ -84,11 +81,11 @@ sources and limits in notes. Do not use generator metadata, folder names, earlie
 review identities, or invented values. Do not launch another model to fill a gap.
 Unresolved required metadata remains null with reasons. Continue independently
 permitted inspection and finalize `partial`. Missing metadata does not change
-format 4 arithmetic or authorize inventing an identity. The same rule applies if
+format 5 arithmetic or authorize inventing an identity. The same rule applies if
 metadata becomes unavailable during review. Save only at a resolved safe target.
 
 For `blocked`, all checks remain unverified with null ratings. Category bounds
-are 0..5; raw and published total bounds are 0..100; `score_cap` is null.
+are 0..5 and quality total bounds are 0..100.
 The headline 0 is a lower bound with no established credit, not observed zero
 quality. Verdict is unverified and coverage is 0/0/27. Explain why no usable
 evaluation was possible. An unresolved task's range establishes no task identity.
@@ -102,12 +99,28 @@ unknown state.
 No generation token/time metrics, hashes, copied source, screenshots, or historical
 reviews belong in the record. Source-preservation hashes stay only in working
 memory. Maintenance alone does not authorize rewriting saved reviews.
-An explicit scoring-policy migration may recalculate existing current-task
-evidence. Preserve its check ratings, statuses, methods, observations, reviewer,
-and observation timestamp. Add a migration note and do not claim a fresh review.
-Format 3.0 is replaced by 4.0 rather than accepted as a silent alias.
-Frozen format 2.0 retains its schema and arithmetic. Missing completion metadata
-still fails validation. Never fabricate metadata or convert the old task.
+Current-policy projections reuse existing observations without rewriting saved
+reviews. They are policy-only comparisons, not fresh browser reviews.
+Format 3.0 is unsupported rather than accepted as a silent alias.
+Frozen formats 4.0 and 2.0 retain their schemas and arithmetic. Missing completion
+metadata still fails validation. Never fabricate metadata or convert the old task.
+
+## Frozen format 4 schema
+
+Format `4.0` pairs only with rubric `solar-system-4.0`. It uses the same fields,
+27 checks, category bounds, and evidence rules as format 5, plus exactly these
+three fields:
+
+- `raw_total_score` and `raw_total_score_upper_bound` hold finite uncapped bounds.
+- `score_cap` is 69 for a confirmed mandatory failure, otherwise null.
+
+Its `total_score` and `total_score_upper_bound` are capped published bounds,
+not format 5 quality bounds. A confirmed failure caps both endpoints at 69.
+An unknown mandatory check caps only the lower endpoint when none has failed.
+The [frozen policy](rubric.md#frozen-format-4-policy) defines the arithmetic.
+Blocked format 4 records have raw and published ranges 0..100 and no cap.
+The scorer and finalizer retain this schema. They never change a supplied
+version to the current version. Format 5 rejects all three obsolete fields.
 
 ## Read-only scoring command
 
@@ -129,23 +142,48 @@ in the run.
 
 It rejects unsupported or mismatched format/rubric pairs, unknown or duplicate
 IDs, wrong order, weights, fields, ratings, statuses, evidence shape, methods,
-missing viewport proof, and incompatible partial/blocked records. Both supported
+missing viewport proof, and incompatible partial/blocked records. All supported
 formats reject complete records without concrete reviewer model, effort, and a
 valid timestamp, even if notes explain the missing values. The CLI validates
 metadata structure, not its truth or provenance. For otherwise valid records it
 derives category scores, coverage, verdict, status, and totals.
 Well-formed stale derived values are replaced in stdout; it does not treat those
 values as evidence. A partial record requires missing evidence or metadata and
-retains all observed ratings and the derived mandatory verdict. Format 4 scores
-and upper bounds must be finite, including in partial and blocked drafts.
+retains all observed ratings and the derived mandatory verdict. Format 5 and 4
+scores and upper bounds must be finite, including in partial and blocked drafts.
 Historical format 2 accepts its original nonempty evidence strings and 19-check
 shape, retains nullable uncapped arithmetic, and never gains new fields.
 Use the publication command to generate Markdown from normalized JSON and
 validate the saved pair.
 
 One declarative registry owns check membership and weights. The normalizer owns
-both versioned scoring policies and evidence validation. Browser judgments remain
+all versioned scoring policies and evidence validation. Browser judgments remain
 in the rubric and evidence matrix because arithmetic cannot prove them.
+
+## Read-only current-policy projection
+
+The scorer also exports `projectCurrentPolicy(review, registry)`. It validates
+through `normalize` and returns one of these shapes:
+
+- Format 5 returns `{kind:'current', rubric:'solar-system-5.0', quality}`.
+- Format 4 returns `{kind:'policy-only', source_format:'4.0',
+  source_rubric:'solar-system-4.0', target_rubric:'solar-system-5.0',
+  basis:'existing-observations', quality}`.
+- Format 2 returns `{kind:'historical', source_format:'2.0',
+  reason:'Different task and check set; no current-policy projection.'}`.
+
+`quality` contains `lower`, `upper`, `categories`, `requirements_verdict`,
+`coverage`, `mandatory_failed`, and `mandatory_unverified`. The last two fields
+are arrays of check IDs in registry order. Categories retain their numeric bounds.
+Format 4 projections use normalized uncapped bounds, not trusted saved totals.
+The check set and quality arithmetic are identical to format 5.
+
+The function does not mutate the input or create a review with a new timestamp,
+reviewer, or observations. Malformed sources throw. Consumers must expose the
+validation issue instead of falling back to an unvalidated numeric score.
+The projection is not a finalizer input. Retain original published scores and
+source provenance separately when displaying a policy-only comparison.
+
 
 ## Publication command
 
@@ -188,7 +226,7 @@ than claiming the current contents are validated. Never retry a denied operation
 or claim successful rollback.
 
 Publish an all-unverified checkpoint before inspection, with notes that evaluation
-has not occurred. Format 4 shows a 0..100 score range at that point. Publish the
+has not occurred. Format 5 shows a 0..100 score range at that point. Publish the
 final record after all independently permitted checks, including partial and
 blocked outcomes. Existing saved reviews are not fresh evidence.
 
@@ -197,10 +235,10 @@ blocked outcomes. Existing saved reviews are not fresh evidence.
 
 Write the report in English with these sections:
 
-1. **Conclusion.** Evidence status, mandatory verdict, published and raw score
-   bounds, confirmed failure cap or `None`, timestamp, and reviewer. Identify a
+1. **Conclusion.** Evidence status, mandatory verdict, uncapped quality bounds,
+   mandatory failed and unverified IDs, timestamp, and reviewer. Identify a
    determined total or a conservative lower bound independently of evidence
-   completeness. Explain a 69 cap as policy, not a calibrated quality measurement.
+   completeness. Frozen format 4 retains published/raw bounds and cap explanation.
 2. **Scores.** One table of six category bounds, weights, and short reasons.
    Unknown ratings span 0..5 without becoming observed failures. Include all
    registered checks rather than renormalizing only observed ones.

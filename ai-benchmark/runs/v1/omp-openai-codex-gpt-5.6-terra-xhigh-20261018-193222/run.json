@@ -1,0 +1,22 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-5.6-terra",
+  "effort": "xhigh",
+  "duration_ms": 471248.25,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "benchmark-record applied as explicitly selected; aside-browser additionally applied because the host requires it for browser verification.",
+    "Model and effort are user-declared for this invocation; no concrete current-execution OMP runtime metadata was exposed to verify runtime overrides or assess a mismatch.",
+    "Session ID is null because no explicit current OMP session metadata or runtime-linked journal locator was exposed.",
+    "Duration is 471248.25 ms, calculated from same-host wall-clock nanosecond readings captured immediately before implementation and immediately after checks and attempt cleanup.",
+    "Input and output token totals are null because no scoped current-session OMP usage endpoint, request-boundary source, request IDs, or runtime-linked journal locator was exposed; full interval coverage and finality could not be proven.",
+    "Terminal status is failed solely because the required session identity and complete same-interval token totals are unprovable; the completed HTML artifact is preserved.",
+    "Connected Aside direct REPL checked the loopback HTTP artifact on port 8833: local Three.js r160 loaded with HTTP 200, WebGL rendered, no observed page or console errors, motion, scene/list selection, tracking, deterministic seeking, speed, bounds, camera orbit/zoom, snapshot lifecycle, JSON validation, persistence, reload recovery, and available keyboard controls were exercised.",
+    "Direct file:// execution is unverified because local-file navigation capability was not explicitly established. The artifact uses a local non-module Three.js script and no fetch or XHR, but static inspection is not execution proof.",
+    "Exact 1440x900 and 390x844 CSS-pixel viewport checks are unverified: the connected browser reported 1600x1000 CSS pixels and its page object lacked setViewportSize. At the available desktop viewport no horizontal overflow and keyboard control traversal were observed, which does not prove the required viewport sizes.",
+    "The persistence unavailable/write-failure path is unverified; ordinary storage persistence, deletion, capture, valid import, and invalid saved-data recovery were exercised."
+  ]
+}

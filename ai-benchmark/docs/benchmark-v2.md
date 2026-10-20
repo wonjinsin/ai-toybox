@@ -40,47 +40,75 @@ of imported state.
 
 ## Scoring changes
 
-Rubric `solar-system-4.0` retains the 27 current-task checks introduced in 3.0,
-including genuine Three.js rendering and snapshot behavior. Its six category
-weights remain unchanged. The declarative
+Rubric `solar-system-5.0` keeps the 27 current-task checks, category weights, and
+evidence requirements of format 4. The declarative
 [check registry](../skills/benchmark-review/assets/check-registry.json) owns check
-membership and mandatory-versus-qualitative status.
+membership and mandatory-versus-qualitative status. New current-task reviews use
+format `5.0` and the [current template](../skills/benchmark-review/assets/review.json).
 
-Format 4 separates evidence completeness from score uncertainty. The review stores
-numeric category, raw-total, and published-total lower endpoints with matching
-`*_upper_bound` fields. An unknown rating stays null and contributes the possible
-interval 0..5. Each category uses its full registered denominator, not only
-observed checks. Totals use unrounded means before two-decimal half-up rounding.
+Format 5 separates quality, mandatory conformance, and evidence completeness.
+`total_score` and `total_score_upper_bound` are uncapped quality bounds.
+`requirements_verdict` is fail if any mandatory check fails, otherwise unverified
+if any mandatory check is unknown, otherwise pass. A score above 69 can accompany
+a fail verdict. Failures and missing proof must remain visible beside the score.
 
-A confirmed mandatory failure sets `score_cap` to 69 and caps both total
-endpoints. An unknown mandatory check can cap only the lower endpoint, without
-changing the verdict to fail or setting the confirmed cap. Equal total endpoints
-give a determined score even when evidence is incomplete. Otherwise the headline
-must be labeled as a conservative lower bound with its range.
+An unknown rating stays null and contributes the possible interval 0..5. Each
+category uses every registered check in its denominator, not only observed
+checks. Totals use unrounded means before two-decimal half-up rounding.
+Objective ratings remain 0, 5, or null. The policy does not invent partial credit
+for grouped clauses that old evidence did not measure separately.
 
-Missing reviewer metadata affects completion status, not format 4 arithmetic.
+Missing reviewer metadata affects completion status, not quality arithmetic.
 All-unverified blocked records carry 0..100 total bounds. Their zero headline
-means no established credit, not observed zero quality. Unknown observations
-remain distinct from failures. Frozen format 2 keeps its original null behavior.
+means no established credit, not observed zero quality. A fully observed review
+can be complete and fail mandatory requirements. Format 5 omits the obsolete
+`raw_total_score`, `raw_total_score_upper_bound`, and `score_cap` fields.
 
-The cap is a policy choice. It means that 70 or above requires all in-scope
-mandatory behavior to pass. It is not a measured difficulty threshold. Keeping
-the raw score makes the policy visible and preserves diagnostic information.
-Simply making the task harder would not prevent another broken feature from
-receiving a high weighted average. Lowering visual ratings to reach a desired
-model ranking would bias the evaluation and is not part of this change.
+### Policy-only projections preserve history
 
-The original saved task continues to use rubric `solar-system-2.0` and review
-format `2.0`. No existing score is capped retroactively. A new task score cannot
-be compared numerically with an old task score as if they measured the same work.
-`runs/v1/` remains the storage layout, not the task version. The gallery can still
-sort different rubric versions together, so use its displayed rubric identifier
-before interpreting that order.
+`projectCurrentPolicy(review, registry)` in the
+[review scorer](../skills/benchmark-review/scripts/score-review.mjs) validates the
+source and computes the current quality view without modifying it. Format 5
+returns a current result. Format 4 returns a policy-only result labeled
+`existing-observations`, with uncapped bounds, category bounds, coverage, the
+mandatory verdict, and mandatory failed and unverified IDs. Malformed sources
+throw instead of acquiring a trusted numeric projection.
 
-The explicit current-task scoring migration replaces format 3 with 4. It does not
-change task requirements, check ratings, observed evidence, reviewer identity,
-or observation time. A migration note identifies recalculation rather than a
-fresh browser review. It never authorizes converting an original-task review.
+The gallery retains the original published score and original output URL.
+Its derived current-policy view records the SHA-256 of the source review bytes
+separately from the review. A policy-only score difference is not new behavior
+credit. No reviewer, timestamp, observation, run record, prompt, or saved output
+is rewritten.
+
+Format 2 reviews measure the original task with a different check set. They
+receive no current-policy projection and remain separate from current-policy
+score ordering. `runs/v1/` is the storage layout, not a scoring-policy version.
+
+A controlled artifact repair belongs in a separate copy with its own identity
+and fresh focused observations. Historical passes cannot become fresh evidence
+for that copy. Passing focused checks does not establish a full 27-check score.
+Keep policy-only differences separate from any demonstrated behavior changes.
+
+### Frozen format 4 and 2 policies
+
+Format 4 retains numeric category, raw-total, and published-total bounds.
+A confirmed mandatory failure sets `score_cap` to 69 and caps both published
+endpoints. An unknown mandatory check can cap only the lower endpoint without
+changing the verdict to fail or setting a confirmed cap. Equal published bounds
+can therefore hide uncertain uncapped quality. The cap is a declared policy,
+not a calibrated difficulty or quality threshold.
+
+Saved format 4 records retain those semantics through normalization and
+publication. The [frozen template](../skills/benchmark-review/assets/review-4.0.json)
+and [historical schema](../skills/benchmark-review/references/review-format.md#frozen-format-4-schema)
+remain available. Original-task reviews still use rubric `solar-system-2.0` and
+format `2.0`, including nullable partial scores and no bounds or cap fields.
+Neither frozen format silently becomes format 5.
+
+The earlier explicit current-task migration from format 3 to 4 preserved check
+ratings, observations, reviewer identity, and observation time. Its verification
+below describes that earlier migration, not validation of format 5 or a fresh
+browser review.
 
 ### Format 4 verification
 
@@ -109,7 +137,7 @@ execution completion, not artifact quality.
 
 A complete review must include reviewer model, effort, and review timestamp in
 addition to verified checks. Missing metadata does not block inspection. Preserve
-same-attempt evidence in `partial`; format 4 still publishes numeric bounds,
+same-attempt evidence in `partial`; formats 5 and 4 still publish numeric bounds,
 while frozen format 2 keeps null totals. Missing browser capabilities leave the
 affected checks unverified. Use `blocked` for no usable evaluation or incompatible
 task routing. Never bypass an access denial to continue.
@@ -120,11 +148,11 @@ these completion requirements. Notes cannot waive required values. Placeholder
 strings and invented zeros are not acceptable substitutes. The tools validate
 structure, not the truth of a claimed measurement or source.
 
-Unknown metadata and check ratings remain null in incomplete records. Format 4
-scores are numeric bounds instead. A null `score_cap` means no confirmed mandatory
-failure, although an unknown mandatory check can constrain the lower endpoint.
-Original saved artifacts are not changed by scoring migration. Older complete
-records missing required metadata fail validation instead of receiving an exception.
+Unknown metadata and check ratings remain null in incomplete records. Formats 5
+and 4 use numeric score bounds instead. Only frozen format 4 has `score_cap`;
+format 5 keeps mandatory conformance independent of quality. Original saved
+artifacts are not changed by policy projection. Older complete records missing
+required metadata fail validation instead of receiving an exception.
 
 ## Reliable publication
 
@@ -156,10 +184,11 @@ node --test tests/benchmark-*.test.mjs
 ```
 
 The cases exercise completed, running, failed, interrupted, partial, blocked,
-malformed, and historical inputs through the real CLIs. They cover metadata gaps,
-retained findings, zero measurements, stale writes, unsafe paths, source
-preservation, and JSON/Markdown agreement. They do not prove browser behavior,
-measurement provenance, or model separation.
+malformed, and historical inputs through the real CLIs and projection API. They
+cover uncapped quality with mandatory failures, unknown bounds, frozen scoring,
+immutable projection inputs, metadata gaps, retained findings, zero measurements,
+stale writes, unsafe paths, source preservation, and JSON/Markdown agreement.
+They do not prove browser behavior, measurement provenance, or model separation.
 Reviewers must still obtain actual observations and accounting sources.
 
 The continuation/publication repair passed `node --test tests/*.test.mjs` with

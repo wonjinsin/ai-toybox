@@ -1,0 +1,22 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-5.6-terra",
+  "effort": "max",
+  "duration_ms": 1970243.365,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Applied the user-selected benchmark-record skill.",
+    "Applied the higher-priority aside-browser skill because the host required its direct Aside REPL for browser verification; Aside exec was not used.",
+    "Model openai-codex/gpt-5.6-terra and effort max are user-declared for this invocation; current OMP runtime metadata was not exposed, so runtime overrides and a runtime mismatch could not be checked.",
+    "No concrete current OMP session identity was exposed, so session_id is null and this finished attempt cannot be completed.",
+    "No current-session OMP interval usage API, runtime-linked journal locator, boundary request IDs, or finality/coverage evidence was exposed; input_tokens and output_tokens are null.",
+    "duration_ms is 1970243.365 from host real-clock boundaries immediately before implementation and after permitted checks and cleanup; record finalization and reply are excluded.",
+    "Browser checks used a temporary loopback HTTP server and a direct Aside REPL tab, both cleaned up before finalization. Three.js r160 was observed as a loaded resource, and a visible 3D scene, perspective changes after camera orbit/zoom, automatic playback, canvas/list selection, deterministic angles, pause/seek/speed, tracking/overview, snapshots, JSON validation, persistence/reload/recovery, and keyboard controls were exercised without observed page, console, or failed-resource errors.",
+    "Browser measurement tolerances were displayed paused time equality to 0.001 simulation seconds, displayed angle equality to 0.001 degrees, playback rate within 0.30x over a measured interval of at least one second, and exact canvas screenshot equality after standard-frame restore. Observed 2x playback was 1.9908713692946065x over 1205 ms; restored paused canvas frames matched exactly.",
+    "Direct file navigation capability was not established, so file:// runtime and persistence remain unverified; source inspection found no local module, fetch, or XHR dependency.",
+    "Exact 1440x900 and 390x844 viewport checks remain unverified because the direct Aside REPL exposed no setViewportSize capability; its available 1600x1000 viewport had no horizontal overflow. The saving-unavailable/write-failure browser path was not exercised."
+  ]
+}

@@ -47,9 +47,11 @@ export function normalize(review, registry) {
   requireValue(typeof review.rubric_version === 'string' && Object.hasOwn(registry.rubrics, review.rubric_version), 'unsupported rubric_version');
   const rubric = registry.rubrics[review.rubric_version];
   requireValue(review.format_version === rubric.format_version, 'format_version and rubric_version do not match');
-  const current = review.format_version === '4.0';
+  const bounded = rubric.scoring === 'bounded-capped' || rubric.scoring === 'bounded-quality';
+  const capped = rubric.scoring === 'bounded-capped';
   const fields = ['format_version', 'rubric_version', 'reviewed_at', 'reviewer', 'status', 'requirements_verdict', 'verification', 'categories', 'checks', 'total_score', 'coverage', 'notes'];
-  if (current) fields.push('raw_total_score', 'raw_total_score_upper_bound', 'total_score_upper_bound', 'score_cap');
+  if (bounded) fields.push('total_score_upper_bound');
+  if (capped) fields.push('raw_total_score', 'raw_total_score_upper_bound', 'score_cap');
   object(review, fields, 'review');
   requireValue(['complete', 'partial', 'blocked'].includes(review.status), 'invalid status');
   requireValue(['pass', 'fail', 'unverified'].includes(review.requirements_verdict), 'invalid requirements_verdict');
@@ -74,16 +76,16 @@ export function normalize(review, registry) {
   requireValue(Array.isArray(review.categories) && review.categories.length === registry.categories.length, 'categories must contain the six registered categories');
   registry.categories.forEach((definition, index) => {
     const category = review.categories[index];
-    object(category, current ? ['id', 'weight', 'score', 'score_upper_bound'] : ['id', 'weight', 'score'], `categories[${index}]`);
+    object(category, bounded ? ['id', 'weight', 'score', 'score_upper_bound'] : ['id', 'weight', 'score'], `categories[${index}]`);
     requireValue(category.id === definition.id && category.weight === definition.weight, `invalid category ID, order or weight at ${index}`);
-    requireValue(score(category.score, 5, !current), `invalid category score for ${category.id}`);
-    if (current) requireValue(score(category.score_upper_bound, 5, false), `invalid category score_upper_bound for ${category.id}`);
+    requireValue(score(category.score, 5, !bounded), `invalid category score for ${category.id}`);
+    if (bounded) requireValue(score(category.score_upper_bound, 5, false), `invalid category score_upper_bound for ${category.id}`);
   });
-  requireValue(score(review.total_score, 100, !current), 'invalid total_score');
-  if (current) {
+  requireValue(score(review.total_score, 100, !bounded), 'invalid total_score');
+  if (bounded) requireValue(score(review.total_score_upper_bound, 100, false), 'invalid total_score_upper_bound');
+  if (capped) {
     requireValue(score(review.raw_total_score, 100, false), 'invalid raw_total_score');
     requireValue(score(review.raw_total_score_upper_bound, 100, false), 'invalid raw_total_score_upper_bound');
-    requireValue(score(review.total_score_upper_bound, 100, false), 'invalid total_score_upper_bound');
     requireValue(review.score_cap === null || review.score_cap === rubric.mandatory_failure_cap, 'invalid score_cap');
   }
   object(review.coverage, ['passed', 'failed', 'unverified'], 'coverage');
@@ -109,7 +111,7 @@ export function normalize(review, registry) {
       const expectedStatus = definition.qualitative ? (check.rating >= 3 ? 'pass' : 'fail') : (check.rating === 5 ? 'pass' : 'fail');
       requireValue((definition.qualitative || check.rating === 0 || check.rating === 5) && check.status === expectedStatus, `rating and status disagree for ${check.id}`);
       requireValue(check.method === definition.method, `${check.id} requires ${definition.method} evidence`);
-      if (current) {
+      if (bounded) {
         const sections = /^Action:\s*([\s\S]+?)\s+Expected:\s*([\s\S]+?)\s+Observed:\s*([\s\S]+)$/i.exec(check.evidence.trim());
         requireValue(sections && sections.slice(1).every(text), `${check.id} evidence requires Action:, Expected:, and Observed: sections`);
         requireValue(!/^(?:not observed|unverified|unknown|todo|tbd|placeholder)\b/i.test(sections[3].trim()), `${check.id} has no observed evidence`);
@@ -130,12 +132,12 @@ export function normalize(review, registry) {
   if (status === 'blocked') {
     requireValue(coverage.unverified === rubric.checks.length && review.notes.length > 0, 'blocked reviews require all checks unverified and a blocker note');
     requireValue(review.requirements_verdict === 'unverified', 'blocked reviews cannot retain a verdict');
-    if (!current) requireValue(review.total_score === null && review.categories.every(category => category.score === null), 'blocked reviews cannot retain scores');
-    if (!current) requireValue(review.coverage.passed === 0 && review.coverage.failed === 0 && review.coverage.unverified === rubric.checks.length, 'blocked reviews cannot retain coverage');
+    if (!bounded) requireValue(review.total_score === null && review.categories.every(category => category.score === null), 'blocked reviews cannot retain scores');
+    if (!bounded) requireValue(review.coverage.passed === 0 && review.coverage.failed === 0 && review.coverage.unverified === rubric.checks.length, 'blocked reviews cannot retain coverage');
   }
   const verdict = mandatoryFailure ? 'fail' : mandatoryUnknown ? 'unverified' : 'pass';
-  const cap = mandatoryFailure ? rubric.mandatory_failure_cap : null;
-  if (current) {
+  const cap = capped && mandatoryFailure ? rubric.mandatory_failure_cap : null;
+  if (bounded) {
     const scale = [...categoryRatings.values()].reduce((product, ratings) => product * ratings.length, 1);
     let lowerNumerator = 0;
     let upperNumerator = 0;
@@ -157,17 +159,19 @@ export function normalize(review, registry) {
       };
     });
     const denominator = scale * 5;
-    const lower = mandatoryFailure || mandatoryUnknown
+    const lower = capped && (mandatoryFailure || mandatoryUnknown)
       ? Math.min(lowerNumerator, rubric.mandatory_failure_cap * denominator) : lowerNumerator;
-    const upper = mandatoryFailure ? Math.min(upperNumerator, cap * denominator) : upperNumerator;
+    const upper = capped && mandatoryFailure ? Math.min(upperNumerator, cap * denominator) : upperNumerator;
     return {
       ...review,
       status,
       requirements_verdict: verdict,
       categories,
-      raw_total_score: roundRatio(lowerNumerator, denominator),
-      raw_total_score_upper_bound: roundRatio(upperNumerator, denominator),
-      score_cap: cap,
+      ...(capped ? {
+        raw_total_score: roundRatio(lowerNumerator, denominator),
+        raw_total_score_upper_bound: roundRatio(upperNumerator, denominator),
+        score_cap: cap,
+      } : {}),
       total_score: roundRatio(lower, denominator),
       total_score_upper_bound: roundRatio(upper, denominator),
       coverage,
@@ -195,6 +199,48 @@ export function normalize(review, registry) {
     total_score: raw === null ? null : cap === null ? raw : Math.min(raw, cap),
     coverage,
   };
+}
+
+export function projectCurrentPolicy(review, registry) {
+  const normalized = normalize(review, registry);
+  if (normalized.format_version === '2.0') {
+    return {
+      kind: 'historical',
+      source_format: '2.0',
+      reason: 'Different task and check set; no current-policy projection.',
+      assessment: {
+        format_version: normalized.format_version,
+        total_score: normalized.total_score,
+        categories: normalized.categories,
+        requirements_verdict: normalized.requirements_verdict,
+        coverage: normalized.coverage,
+      },
+    };
+  }
+  const current = normalized.format_version === '5.0';
+  const definitions = registry.rubrics[normalized.rubric_version].checks;
+  const mandatory = status => definitions
+    .filter((definition, index) => definition.mandatory && normalized.checks[index].status === status)
+    .map(definition => definition.id);
+  const quality = {
+    lower: current ? normalized.total_score : normalized.raw_total_score,
+    upper: current ? normalized.total_score_upper_bound : normalized.raw_total_score_upper_bound,
+    categories: normalized.categories,
+    requirements_verdict: normalized.requirements_verdict,
+    coverage: normalized.coverage,
+    mandatory_failed: mandatory('fail'),
+    mandatory_unverified: mandatory('unverified'),
+  };
+  return current
+    ? { kind: 'current', rubric: 'solar-system-5.0', quality }
+    : {
+      kind: 'policy-only',
+      source_format: '4.0',
+      source_rubric: 'solar-system-4.0',
+      target_rubric: 'solar-system-5.0',
+      basis: 'existing-observations',
+      quality,
+    };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

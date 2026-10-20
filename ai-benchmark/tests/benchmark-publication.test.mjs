@@ -30,7 +30,7 @@ async function fixture(t, format = '4.0') {
   t.after(() => rm(directory, { recursive: true, force: true }));
   const run = path.join(directory, 'run');
   await mkdir(path.join(run, 'output'), { recursive: true });
-  const prompt = format === '4.0' ? 'solar-system-prompt.md' : 'solar-system-prompt-v1.md';
+  const prompt = format === '2.0' ? 'solar-system-prompt-v1.md' : 'solar-system-prompt.md';
   await copyFile(path.join(recordRoot, 'assets', prompt), path.join(run, 'prompt.md'));
   await writeFile(path.join(run, 'output/index.html'), '<!doctype html><title>Publication fixture</title>');
   await writeFile(path.join(run, 'run.json'), JSON.stringify(runRecord()));
@@ -38,7 +38,7 @@ async function fixture(t, format = '4.0') {
 }
 
 async function reviewRecord(format = '4.0') {
-  const template = format === '4.0' ? 'review.json' : 'review-2.0.json';
+  const template = format === '5.0' ? 'review.json' : `review-${format}.json`;
   const review = JSON.parse(await readFile(path.join(reviewRoot, 'assets', template), 'utf8'));
   const registry = JSON.parse(await readFile(path.join(reviewRoot, 'assets/check-registry.json'), 'utf8'));
   review.status = 'complete';
@@ -57,7 +57,7 @@ async function sourceBytes(run) {
   return Promise.all(['run.json', 'prompt.md', 'output/index.html'].map(file => readFile(path.join(run, file), 'utf8')));
 }
 
-for (const format of ['2.0', '4.0']) {
+for (const format of ['2.0', '4.0', '5.0']) {
   test(`review publication produces consistent format ${format} reports without changing the artifact`, async t => {
     const { run, draft } = await fixture(t, format);
     const before = await sourceBytes(run);
@@ -68,9 +68,14 @@ for (const format of ['2.0', '4.0']) {
     const saved = JSON.parse(await readFile(path.join(run, 'reviews/review.json'), 'utf8'));
     assert.equal(saved.status, 'complete');
     assert.equal(saved.total_score, 100);
-    if (format === '4.0') {
+    if (format !== '2.0') {
       assert.equal(saved.total_score_upper_bound, 100);
-      assert.equal(saved.raw_total_score_upper_bound, 100);
+      if (format === '4.0') assert.equal(saved.raw_total_score_upper_bound, 100);
+      else {
+        assert.equal(Object.hasOwn(saved, 'raw_total_score'), false);
+        assert.equal(Object.hasOwn(saved, 'raw_total_score_upper_bound'), false);
+        assert.equal(Object.hasOwn(saved, 'score_cap'), false);
+      }
     } else {
       assert.equal(Object.hasOwn(saved, 'total_score_upper_bound'), false);
     }
@@ -247,9 +252,10 @@ test('a safe target with missing artifacts still receives a complete blocked rev
   assert.equal(saved.status, 'blocked');
   assert.equal(saved.total_score, 0);
   assert.equal(saved.total_score_upper_bound, 100);
-  assert.equal(saved.raw_total_score, 0);
-  assert.equal(saved.raw_total_score_upper_bound, 100);
-  assert.equal(saved.score_cap, null);
+  assert.equal(saved.format_version, '5.0');
+  assert.equal(Object.hasOwn(saved, 'raw_total_score'), false);
+  assert.equal(Object.hasOwn(saved, 'raw_total_score_upper_bound'), false);
+  assert.equal(Object.hasOwn(saved, 'score_cap'), false);
   assert.deepEqual(saved.coverage, { passed: 0, failed: 0, unverified: 27 });
   assert.equal(await readFile(path.join(run, 'run.json'), 'utf8'), '{');
   assert.match(await readFile(path.join(run, 'reviews/review.md'), 'utf8'), /output is missing/);
@@ -338,6 +344,60 @@ for (const scenario of [
     const scored = invoke(path.join(reviewRoot, 'scripts/score-review.mjs'), path.join(run, 'reviews/review.json'));
     assert.equal(scored.status, 0, scored.stderr);
     assert.deepEqual(JSON.parse(scored.stdout), saved);
+    assert.deepEqual(await sourceBytes(run), before);
+  });
+}
+
+for (const scenario of [
+  { name: 'optional unknown', unknown: 'D3', total: [98, 100], verdict: 'pass', failed: [], mandatoryUnknown: [] },
+  { name: 'mandatory unknown', unknown: 'D6', total: [98, 100], verdict: 'unverified', failed: [], mandatoryUnknown: ['D6'] },
+  { name: 'mandatory failure and unknown', unknown: 'D6', total: [94.88, 96.88], verdict: 'fail', failed: ['S7'], mandatoryUnknown: ['D6'] },
+  { name: 'complete mandatory failure', total: [96.88, 96.88], verdict: 'fail', failed: ['S7'], mandatoryUnknown: [], complete: true },
+  { name: 'metadata only', total: [100, 100], verdict: 'pass', failed: [], mandatoryUnknown: [] },
+]) {
+  test(`current publication exposes uncapped quality and independent verdict for ${scenario.name}`, async t => {
+    const { run, draft } = await fixture(t, '5.0');
+    const before = await sourceBytes(run);
+    const review = await reviewRecord('5.0');
+    review.status = scenario.complete ? 'complete' : 'partial';
+    if (!scenario.complete) review.reviewer.effort = null;
+    for (const check of review.checks) {
+      if (scenario.failed.includes(check.id)) Object.assign(check, { status: 'fail', rating: 0 });
+      if (check.id === scenario.unknown) Object.assign(check, {
+        status: 'unverified', rating: null, method: 'none', evidence: 'Synthetic observation unavailable.',
+      });
+    }
+    const draftBytes = JSON.stringify(review);
+    await writeFile(draft, draftBytes);
+    const published = invoke(path.join(reviewRoot, 'scripts/finalize-review.mjs'), run, draft);
+    assert.equal(published.status, 0, published.stderr);
+    assert.equal(JSON.parse(published.stdout).ok, true);
+    const saved = JSON.parse(await readFile(path.join(run, 'reviews/review.json'), 'utf8'));
+    assert.deepEqual([saved.total_score, saved.total_score_upper_bound], scenario.total);
+    assert.equal(saved.requirements_verdict, scenario.verdict);
+    assert.equal(saved.status, review.status);
+    assert.deepEqual(saved.checks, review.checks);
+    assert.deepEqual(saved.reviewer, review.reviewer);
+    assert.equal(saved.reviewed_at, review.reviewed_at);
+    assert.deepEqual(saved.notes, review.notes);
+    for (const field of ['raw_total_score', 'raw_total_score_upper_bound', 'score_cap']) {
+      assert.equal(Object.hasOwn(saved, field), false);
+    }
+    const markdown = (await readFile(path.join(run, 'reviews/review.md'), 'utf8'))
+      .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
+    const lines = markdown.split('\n');
+    const headline = lines.find(line => line.startsWith('Quality total: '));
+    assert.ok(headline);
+    assert.equal(Number(headline.match(/[\d.]+/)[0]), scenario.total[0]);
+    const range = (headline.split('Range: ')[1].match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
+    assert.deepEqual(range, scenario.total[0] === scenario.total[1] ? [scenario.total[0]] : scenario.total);
+    assert.ok(lines.includes(`Mandatory verdict: ${scenario.verdict}.`));
+    assert.ok(lines.includes(`Mandatory failures (${scenario.failed.length}): ${scenario.failed.join(', ') || 'None'}.`));
+    assert.ok(lines.includes(`Mandatory unverified (${scenario.mandatoryUnknown.length}): ${scenario.mandatoryUnknown.join(', ') || 'None'}.`));
+    assert.match(markdown, /Quality is uncapped/);
+    assert.doesNotMatch(markdown, /Raw total:|Confirmed cap:/);
+    assert.ok(lines.includes(`Coverage: ${saved.coverage.passed} passed, ${saved.coverage.failed} failed, ${saved.coverage.unverified} unverified.`));
+    assert.equal(await readFile(draft, 'utf8'), draftBytes);
     assert.deepEqual(await sourceBytes(run), before);
   });
 }

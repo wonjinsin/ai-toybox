@@ -13,11 +13,11 @@ The saved `output/index.html` must run directly in a browser without a server or
 build step. The [original task](skills/benchmark-record/assets/solar-system-prompt-v1.md)
 remains available only to interpret historical runs.
 
-## Current results
+## Published score snapshot
 
-As of October 18, 2026, the catalog contains **six saved OMP attempts** for
+The October 18, 2026 snapshot below lists **six saved OMP attempts** for
 `solar-system-observatory-2`, each with an HTML artifact and a format `4.0` review
-using `solar-system-4.0`. Browse them in the
+using the frozen `solar-system-4.0` policy. Browse the current catalog in the
 [published gallery](https://wonjinsin.github.io/ai-toybox/) or open the local
 [`index.html`](index.html).
 
@@ -30,11 +30,12 @@ using `solar-system-4.0`. Browse them in the
 | GPT-6 Luna | xhigh | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-xhigh-20261018-110643/reviews/review.md) |
 | GPT-6 Luna | max | 69–69 | [Partial](runs/v1/omp-openai-codex-gpt-6-luna-max-20261018-110659/reviews/review.md) |
 
-These are saved review results, not new verification or a model ranking.
-The lower endpoint is established credit; a partial review still has missing
-proof or reviewer metadata. Confirmed mandatory failures cap published scores
-at 69, so equal endpoints at that cap do not imply identical raw scores or
-complete coverage.
+These are original published review results, not new verification or a model
+ranking. Under the frozen 4.0 policy, confirmed mandatory failures cap published
+scores at 69. Equal endpoints at that cap do not imply identical quality or
+complete coverage. The gallery now shows uncapped 5.0 quality projections from
+these same observations, with the original published scores retained in detail.
+A policy-only score change is not an artifact improvement.
 
 All six generation records are `failed`, with unavailable full-interval token
 totals and, in most cases, unavailable session identity. That recording status
@@ -52,12 +53,52 @@ when the site is hosted below a repository path.
 
 The explorer keeps model navigation, search, latest and score sorting,
 score-state filters, bookmarkable details, prompts, review findings, duration,
-tokens, recording notes, and output previews. A missing review or historical null
-score is **unscored**, not zero. Current format 4 reviews always provide numeric
-scores with explicit bounds. A lower bound is not a completed evaluation.
-Incomplete or malformed metadata appears with warnings. The gallery displays
-saved scores without evaluating or modifying runs. Literally empty directories
-are not runs and are omitted; nonempty incomplete records remain visible.
+tokens, recording notes, and output previews. Format 5 reviews use current quality
+bounds. Valid format 4 reviews receive a clearly labeled **policy-only projection**
+under the same 5.0 policy, based only on their existing observations.
+
+Cards, detail headlines, and current score sorting use these uncapped quality
+bounds. Requirements verdicts, failed-check counts, and unverified-check counts
+remain visible independently, including mandatory failures and unknowns. A high
+quality score does not turn a requirement failure into a pass. Statistics exclude
+historical format 2 scores, and score sorting places those scores in a labeled,
+separate ranking because their task and check set differ.
+
+Detail views retain the original published score, original review, and a SHA-256
+hash of the source `review.json` bytes. Missing reviews, historical null scores,
+and invalid projections are **unscored**, not zero. Invalid reviews show warnings
+and never fall back to raw numeric fields as trusted quality scores. The generator
+uses the shared scorer without changing saved reviews or performing new browser
+verification. Literally empty directories are omitted; nonempty incomplete
+records remain visible.
+
+### Verified repair experiment
+
+The [Terra xhigh engineering copy](experiments/observatory-improvement/terra-xhigh/output/index.html)
+repairs overview framing and persistence-failure notices without changing the
+saved model output. Its [comparison result](experiments/observatory-improvement/terra-xhigh/comparison.json)
+separates policy-only score projections from fresh paired browser observations.
+All 69 original `runs/v1` files retain their recorded hashes.
+
+The focused comparison contains 21 paired scenarios. Seven reproduced failures
+become passes, covering four overview situations and three quota-failure notices.
+Thirteen existing passing scenarios remain passing. One diagnostic-transport
+scenario remains unverified. These are scenario counts, not seven independent
+root causes or a new complete benchmark score.
+
+Run the evidence gate from this directory:
+
+```sh
+node skills/benchmark-review/scripts/compare-probes.mjs experiments/observatory-improvement/terra-xhigh/manifest.json
+```
+
+See [probe execution and scope](skills/benchmark-review/references/verification.md#focused-regression-automation)
+to collect fresh evidence through connected Aside. The gate checks saved evidence,
+not a new browser run. For example, the original Terra xhigh review remains
+69/100 under policy 4.0; its unchanged observations project to 86.30–88.30 under
+policy 5.0, still with a failed requirements verdict. That increase is policy-only.
+The repaired copy has no published full-review score.
+
 
 ### Refresh the local catalog
 
@@ -249,38 +290,45 @@ categories: simulation/time correctness (25), selection/tracking consistency (20
 controls and interaction (15), visual quality (15), responsive usability (15),
 and delivery stability (10). Category scores range from 0 to 5.
 
-New task reviews use `solar-system-4.0` and review format `4.0`. Every category,
-raw total, and published total has a numeric lower endpoint and an explicit
-`*_upper_bound`. Unknown check ratings remain null and span 0..5 for arithmetic.
-All registered checks stay in the denominator. The headline is a **conservative
-lower bound** unless its endpoints coincide, in which case the rounded score is
-determined even if the review remains partial.
+New task reviews use `solar-system-5.0` and review format `5.0`. Every category
+and total has a numeric lower endpoint and an explicit `*_upper_bound`.
+Unknown check ratings remain null and span 0..5 for arithmetic. All registered
+checks stay in the denominator. The headline is a **conservative lower bound**
+unless its endpoints coincide, in which case the rounded score is determined
+even if the review remains partial.
 
-A confirmed mandatory failure caps both published endpoints at **69**, recorded
-in `score_cap`. An unknown mandatory check can impose that cap on the lower
-endpoint without becoming a confirmed failure. Raw bounds remain visible.
-The threshold is declared policy, not an empirically calibrated model ranking.
-The gallery distinguishes numeric score availability from completed evaluation
-and keeps missing-proof notices visible beside finite scores.
+Quality scores have no mandatory-failure cap. The separate requirements verdict
+still fails when a mandatory check fails. Coverage and mandatory failure or
+unverified IDs remain available alongside quality bounds. Format 5 removes
+`raw_total_score`, `raw_total_score_upper_bound`, and `score_cap` because total
+bounds already express uncapped quality.
+
+Frozen format 4 reviews retain their original policy. A confirmed mandatory
+failure caps both published endpoints at 69. An unknown mandatory check can cap
+only the lower endpoint without becoming a confirmed failure. The gallery
+projects validated format 4 observations through the shared 5.0 scoring API,
+without rewriting those reviews. This policy comparison supplies no new evidence
+and makes no claim of improved artifact behavior.
 
 Review the saved prompt before choosing a rubric. The original 11-requirement
 task keeps frozen `solar-system-2.0` and format `2.0`, including its nullable,
 uncapped arithmetic. An incompatible current-task attempt is blocked with no
 established credit and a 0..100 range, not a zero-quality verdict. Format 3 is
-replaced rather than silently reinterpreted. The five current-task reviews in
-`runs/v1/` were explicitly migrated to format 4 without changing observations
-or original artifacts. Compare only the same task and rubric, and inspect the
-score ranges. The gallery does not prevent cross-version score sorting.
+replaced rather than silently reinterpreted. Earlier current-task reviews were
+explicitly migrated to format 4 without changing observations or original
+artifacts. Format 4 records are now frozen, not rewritten to format 5. Compare
+only compatible tasks and policies, and inspect score ranges. The gallery keeps
+format 2 scores separate from the current-policy ranking.
 
 Direct-file execution and file-protocol compatibility remain outside review
 scope. Generation still requires direct-file delivery. Review checks use HTTP
 and do not certify that excluded generation requirement.
 
 Checks distinguish pass, fail and unverified. Numeric bounds do not turn missing
-observations into passes or failures. Both supported formats require concrete
+observations into passes or failures. All supported formats require concrete
 reviewer model, effort, and timestamp before `status: complete` is accepted.
 Missing metadata stays null with a reason and does not prevent independent
-checks. It makes the review `partial`, but does not withhold format 4 scores.
+checks. It makes the review `partial`, but does not withhold format 4 or 5 bounds.
 An all-unverified current checkpoint has a 0..100 range and a lower bound of 0,
 meaning no established credit, not a completed grade.
 Aside's direct REPL is the only permitted browser tool. Reviews use documented,

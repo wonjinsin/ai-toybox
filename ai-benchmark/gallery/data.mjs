@@ -1,5 +1,5 @@
 import { constants } from 'node:fs';
-import { lstat, open, readdir, realpath } from 'node:fs/promises';
+import { lstat, open, readFile, readdir, realpath } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 
@@ -62,16 +62,25 @@ const textOrNull = value => typeof value === 'string' && value.trim() ? value : 
 const numberOrNull = value => Number.isFinite(value) && value >= 0 ? value : null;
 const strings = value => Array.isArray(value) ? value.filter(item => typeof item === 'string') : [];
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+let scoringPolicy;
+
+function loadScoringPolicy() {
+  scoringPolicy ??= Promise.all([
+    import('../skills/benchmark-review/scripts/score-review.mjs'),
+    readFile(new URL('../skills/benchmark-review/assets/check-registry.json', import.meta.url), 'utf8').then(JSON.parse),
+  ]);
+  return scoringPolicy;
+}
 
 export function collectionRevision(runs) {
   return hash(runs);
 }
 
-async function readOptional(root, segments, issues, required = false) {
+async function readOptional(root, segments, issues, required = false, encoding = 'utf8') {
   let handle;
   try {
     ({ handle } = await openRegularFile(root, segments));
-    return await handle.readFile('utf8');
+    return await handle.readFile(encoding);
   } catch (error) {
     if (error.code !== 'ENOENT' || required) {
       issues.push(`${segments.join('/')}: ${error.code ?? error.message}`);
@@ -84,6 +93,10 @@ async function readOptional(root, segments, issues, required = false) {
 
 async function readRecord(root, segments, issues, required = false) {
   const text = await readOptional(root, segments, issues, required);
+  return parseRecord(text, segments, issues);
+}
+
+function parseRecord(text, segments, issues) {
   if (text === null) return null;
   try {
     const value = JSON.parse(text);
@@ -164,7 +177,19 @@ async function collectRun(root, id) {
     issues.push(`${prefix.join('/')}: ${error.code ?? error.message}`);
   }
   const record = await readRecord(root, [...prefix, 'run.json'], issues, true);
-  const review = await readRecord(root, [...prefix, 'reviews', 'review.json'], issues);
+  const reviewPath = [...prefix, 'reviews', 'review.json'];
+  const reviewBytes = await readOptional(root, reviewPath, issues, false, null);
+  const sourceReviewSha256 = reviewBytes === null ? null : createHash('sha256').update(reviewBytes).digest('hex');
+  const review = parseRecord(reviewBytes?.toString('utf8') ?? null, reviewPath, issues);
+  let policyProjection = null;
+  if (review) {
+    try {
+      const [{ projectCurrentPolicy }, registry] = await loadScoringPolicy();
+      policyProjection = projectCurrentPolicy(review, registry);
+    } catch (error) {
+      issues.push(`${reviewPath.join('/')}: policy projection unavailable: ${error.message}`);
+    }
+  }
   const prompt = await readOptional(root, [...prefix, 'prompt.md'], issues);
   const reviewMarkdown = await readOptional(root, [...prefix, 'reviews', 'review.md'], issues);
   const artifact = await collectArtifact(root, prefix, issues);
@@ -186,6 +211,8 @@ async function collectRun(root, id) {
     notes: strings(record?.notes),
     prompt,
     review,
+    policyProjection,
+    sourceReviewSha256,
     reviewMarkdown,
     ...artifact,
     issues,

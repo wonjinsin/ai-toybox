@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORRERY / Orbital Observatory</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+<script defer src="vendor/three.min.js"></script>
+<script defer src="vendor/OrbitControls.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<header class="masthead"><a class="brand" href="#main">ORRERY<span> / </span></a><div class="mast-title">ORBITAL OBSERVATORY<br><small>A SMALL SYSTEM. AN INFINITE PERSPECTIVE.</small></div><span class="edition">INTERACTIVE ATLAS <b>NO. 003</b></span></header>
+<main id="main">
+<section class="workspace" aria-label="Orbital observation">
+<div class="section-heading"><h1>Three worlds,<br><em>one shared star.</em></h1><p>Explore motion. Collect a moment.<br>Return to a different point of view.</p></div>
+<div class="scene-shell">
+<div class="scene-top"><span><i class="live-dot"></i> <span id="play-status">LIVE SIMULATION</span></span><span id="mode-status">SYSTEM OVERVIEW</span></div>
+<div id="scene" aria-label="Interactive 3D solar system. Drag to orbit and scroll to zoom."></div>
+<div class="scene-bottom"><span>DRAG TO ORBIT <b>·</b> SCROLL TO ZOOM</span><span>THREE.JS / 3D</span></div>
+<div class="scene-key"><span class="key-sun"></span>SOL<span class="key-line"></span>ORBITAL PATH</div>
+</div>
+<section class="transport" aria-label="Simulation controls">
+<div class="transport-top"><button id="play" class="primary">Pause</button><div class="clock"><span id="time-readout">000.00</span><small> / 120 s</small></div><label class="speed-label" for="speed">SPEED <output id="speed-readout">1×</output><input id="speed" aria-label="Global speed" type="range" min="0.25" max="4" step="0.05" value="1"></label></div>
+<label class="timeline-label" for="timeline">SIMULATION TIME <span>SEEK TO PAUSE</span></label><input id="timeline" type="range" min="0" max="120" step="0.01" value="0" aria-label="Simulation time"><div class="ticks"><span>0 s</span><span>30</span><span>60</span><span>90</span><span>120 s</span></div>
+</section>
+</section>
+<aside class="inspector" aria-label="Observation controls">
+<section class="panel planet-panel"><div class="eyebrow"><span>01 / CELESTIAL BODIES</span><span>3 PLANETS</span></div><h2>Choose your world</h2><div class="planet-list" role="group" aria-label="Planet selection"><button data-planet="cinder" aria-pressed="false"><span class="orb cinder"></span><span><b>Cinder</b><small>ID: cinder</small></span><span class="period">12 s <span>↗</span></span></button><button data-planet="azure" aria-pressed="false"><span class="orb azure"></span><span><b>Azure</b><small>ID: azure</small></span><span class="period">24 s <span>↗</span></span></button><button data-planet="ochre" aria-pressed="false"><span class="orb ochre"></span><span><b>Ochre</b><small>ID: ochre</small></span><span class="period">48 s <span>↗</span></span></button></div>
+<div id="planet-info" class="planet-info"><b>No planet selected</b><p>Choose a world above or directly in the scene.</p></div><div class="camera-actions"><button id="track" disabled>Track planet</button><button id="overview">Overview</button></div><p class="fine-print">Periods are simulation values, not astronomical measurements.</p></section>
+<section class="panel notebook"><div class="eyebrow"><span>02 / FIELD NOTES</span><span id="capacity">0 / 3</span></div><div class="title-row"><h2>Saved observations</h2><button id="capture" class="capture">+ Capture</button></div><p class="intro">Keep a moment. Restore its orbit, not your camera.</p><div id="snapshots"></div><p id="notice" role="status" aria-live="polite">Ready to observe.</p><p id="storage-notice" role="status" aria-live="polite"></p>
+<details id="json-panel"><summary>Import / export JSON <span>↗</span></summary><label for="json">Observation JSON · version 1</label><textarea id="json" rows="5" spellcheck="false" placeholder='{"version":1,"snapshots":[]}'></textarea><div class="json-actions"><button id="export">Export list</button><button id="import">Import list</button></div><p class="fine-print">Planet IDs: cinder · azure · ochre. Import replaces saved observations only.</p></details></section>
+</aside>
+</main><footer><span>ORRERY / AN EXERCISE IN PERSPECTIVE</span><span>12 : 24 : 48 <b> / </b> FIXED ORBITAL PERIODS</span></footer>
+</body>
+</html>

@@ -1,10 +1,10 @@
 {
-  "format_version": "4.0",
-  "rubric_version": "solar-system-4.0",
-  "reviewed_at": "2026-10-18T16:27:55.952229+09:00",
+  "format_version": "5.0",
+  "rubric_version": "solar-system-5.0",
+  "reviewed_at": "2026-10-20T21:39:35+09:00",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": "high"
+    "effort": null
   },
   "status": "partial",
   "requirements_verdict": "fail",
@@ -25,8 +25,8 @@
     {
       "id": "selection",
       "weight": 20,
-      "score": 4,
-      "score_upper_bound": 4
+      "score": 3,
+      "score_upper_bound": 3
     },
     {
       "id": "usability",
@@ -43,8 +43,8 @@
     {
       "id": "responsive",
       "weight": 15,
-      "score": 0,
-      "score_upper_bound": 0
+      "score": 5,
+      "score_upper_bound": 5
     },
     {
       "id": "delivery",
@@ -59,214 +59,209 @@
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Observed initial live motion of all three bodies, then sought 0, 12, 24, 48, 17, 30 and 73 while inspecting each selected angle and full rendered scene. Expected: One sun and three differently sized/colored planets on circular 12/24/48-second orbits with fixed phases. Observed: Small tan Mercury, medium gold Venus and larger blue Earth moved around one sun on perspective-projected circular rings. Initial phases were 10.3/64.2/124.9 degrees (source phases 0.18/1.12/2.18 radians). At 12 the angles were 10.3/244.2/214.9; at 24, 10.3/64.2/304.9; at 48 all returned to initial angles and the complete scene image was identical to time 0. Mercury returned each 12 seconds, Venus changed to the opposite side at 12 and returned at 24, and Earth traversed quarter/half/full positions at 12/24/48. Live images also showed all three moving, not only changing readouts."
+      "evidence": "Action: Observed the moving desktop scene, selected each rendered planet, and sought 0, 17, 30, 73 and 120 seconds while reading each planet information panel. Expected: One sun and exactly three distinct 3D planets on circular, fixed-phase 12/24/48-second orbits. Observed: One gold sun, small tan Mercury, medium amber Venus and larger blue Earth travel along three circular orbit paths seen in perspective. At t=0 their angles were 10.3/64.2/124.9 degrees; at 17, 160.3/319.2/252.4; at 30, 190.3/154.2/349.9; at 73, 40.3/79.2/312.4; at 120, 10.3/64.2/304.9. These match phases 0.18/1.12/2.18 radians and periods 12/24/48 within preregistered rounding tolerance. Predicted projected locations were corroborated by successful native scene clicks and visible motion, not just constants."
     },
     {
       "id": "S2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Opened a fresh HTTP scene and reloaded after importing, deleting and capturing snapshots. Expected: Live initialization at time 0, speed 1x, running, no selection and overview rather than automatic snapshot restore. Observed: Each fresh scene showed overview/live, 1x, explicit no-selection information, disabled tracking and no highlight. Early post-load samples were 4.7, 5.0 and 4.9 seconds, reflecting navigation elapsed time rather than saved 17.25/30/120-second states. Initial source time is 0 and subsequent observed live time advanced 21.9 to 25.0 over 3.105 wall seconds at 1x. Persisted snapshots loaded independently of live defaults."
+      "evidence": "Action: Opened the page and performed same-origin load-event-barrier reloads after import, deletion and capture. Expected: Time zero, speed 1x, running, no selection and overview, followed by motion. Observed: Reload samples showed 0.0 s, 1x, OVERVIEW LIVE, empty selected set and explicit No planet selected; subsequent visible time/positions advanced. Initial navigation snapshots at about 5 seconds were ordinary load elapsed time, not treated as reset failures. Stored snapshots did not auto-restore the live scene."
     },
     {
       "id": "S3",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Paused during motion, waited 3.1 seconds, selected planets and orbited/zoomed while paused, then resumed from sought states. Expected: Time and every orbital position freeze; selection/camera remain usable and resume continues without reset. Observed: At paused 30.3 seconds the full state and scene screenshot remained identical across the wait. All three canvas/list selections and camera operations worked while paused. Resumed samples continued from 17 and 30 seconds at the selected rate without resetting or jumping to another orbital phase."
+      "evidence": "Action: Paused motion, sought 30, waited 3.1 real seconds, selected planets and orbited/zoomed while paused, then resumed. Expected: Frozen time and all positions with usable camera/selection and continuous resumption. Observed: Paused readouts remained unchanged; a same-canvas decoded screenshot comparison reported 0 changed pixels out of 414594. Each paused selection/camera action worked. Resume advanced continuously from the paused state; the ordered 2x sample advanced 6.2 simulation seconds over 3.1083 real seconds without a jump."
     },
     {
       "id": "S4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Set 0.25x, 2x and 4x while paused at 17, resumed each, and changed rates during playback including 2x. Expected: No seek or position change on speed adjustment and correct common time scaling. Observed: Every paused adjustment retained 17.0 seconds and byte-identical scene images. Single-call visible 1440x900 measurements were 17.1 to 17.8 in 3.109 s at 0.25x, 17.4 to 23.6 in 3.105 s at 2x, and 17.8 to 30.3 in 3.107 s at 4x. A playing change to 2x gave 17.8 to 24.0 in 3.102 s. These meet the preregistered tolerance. Playing changes retained selection/mode/playback and continuous positions; all-body angle/position comparisons retained 12:24:48 period relationships."
+      "evidence": "Action: Changed speed to 0.25x, 2x and 4x while paused and playing, resumed each paused speed, and measured uninterrupted visible-page samples with only this review scene running. Expected: Preserved current positions/time, proportional rates and fixed relative periods. Observed: Paused changes at 17 seconds produced 0 changed canvas pixels for all three speeds. Samples were 0.7/3.1025 and 0.8/3.1014 simulation/real seconds at 0.25x; 6.2/3.1030 and 6.3/3.1006 at 2x; 12.5/3.1006 and 12.4/3.0998 at 4x. All fit preregistered tolerance. Paused waits had zero simulation delta; playing changes preserved ongoing motion and the orbital angle relationships."
     },
     {
       "id": "S5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Sought 0, 30, 120, 17 and 73 with the real slider; revisited 30/17/73 after speed, playback and selection changes, and after reload. Restored imported time 17.25. Expected: Immediate paused deterministic positions and matching information at any valid time. Observed: All seeks paused. Mercury/Venus/Earth angles were 190.3/154.2/349.9 at 30, 160.3/319.2/252.4 at 17, 40.3/79.2/312.4 at 73 and 10.3/64.2/304.9 at 120. Same-view repeat-seek crops were identical before reload; full rendered all-body layouts and angles returned after reload. Fractional 17.25 yielded 167.8/322.9/254.3 degrees, with time readout rounded to 17.3. Scroll-offset comparisons were excluded rather than treated as camera changes."
+      "evidence": "Action: Used the real time slider at 0, 17, 30, 73 and 120, revisited 30/17/73 after playback, speed and selection changes, and repeated after reload. Restored a valid fractional 17.25-second import. Expected: Immediate paused deterministic time, positions and information including tracking updates. Observed: All integer seeks displayed the exact requested paused time and phase-correct angles; 17.25 restored as rounded 17.3 s with angles 167.8/322.9/254.3 degrees. Six repeat-seek/reload canvas comparisons at identical overview/Earth selection/desktop framing each had 0 changed pixels of 414594. Tracking seeks immediately recentered the selection."
     },
     {
       "id": "S6",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Sought 119, set 4x, resumed across the endpoint, waited two 3.1-second intervals, then sought 17 and resumed. Expected: Stop exactly at 120 without wrapping or overshoot; earlier seeking permits playback. Observed: Both endpoint samples were 120.0, overview/paused and Earth 304.9 degrees. Subsequent playing 2x observation advanced 17.8 to 24.0 in 3.102 wall seconds."
+      "evidence": "Action: Sought 119, set 4x, resumed across the endpoint, waited over three seconds, then sought 17 and resumed. Expected: Stop at 120 without overshoot/wrap and allow earlier resumption. Observed: Time reached 120.0 and playback became paused, with no wrap or overshoot during the wait; the endpoint sample advanced only the remaining 0.1 second. Earlier resumption then advanced 12.4 simulation seconds over 3.1018 real seconds at 4x."
     },
     {
       "id": "S7",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Inspected the local Three.js dependency and renderer/mesh/camera implementation, observed loaded HTTP resources and dragged/zoomed the actual scene in both camera modes. Expected: Genuine 3D Three.js rendering rather than a flat proxy. Observed: three.min.js loaded from the output-only origin and the scene reported r160. SphereGeometry, torus selection meshes, perspective camera and WebGLRenderer source correlate with shaded spheres, front/back ring occlusion and changing sphere/ring orientation, perspective and scale during camera orbit/zoom. The sun and planets occluded each other in tracking views. No claim is based on isolated-world visibility of THREE."
+      "evidence": "Action: Inspected the loaded local Three.js r160 resource and renderer/geometry/camera source, then dragged and zoomed the rendered scene in both modes. Expected: Actual Three.js 3D geometry with changing depth, occlusion and perspective. Observed: The HTTP resource entry loaded three.min.js; source uses WebGLRenderer, PerspectiveCamera, SphereGeometry, TorusGeometry and circular 3D line loops. Rendered shaded spheres, white selection torus and orbit ellipses changed perspective and relative occlusion under camera drag/zoom, including enlarged tracking views. This was not inferred from the library label alone."
     },
     {
       "id": "S8",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Captured paused A at 30/2x/Venus/tracking, changed live time/speed/selection/view and resumed, then restored/exported it. Captured while playing and checked later reloads and fractional imported angles. Expected: Stable unique ID, every captured field and all three derived angles remain immutable; capture does not alter live state. Observed: A kept ID obs-mvdhfxgi-1-rnj0j2 and 30/2x/Venus/tracking with angles 190.3/154.2/349.9 despite unrelated live edits. Live capture obs-mvdi3eeo-1-s2kmnh exported exact time 30.38805000007154, speed 1.5, Mercury, overview, with displayed derived angles 202.0/160.0/352.8; playback continued 30.3 to 36.2 over the 3.930-second capture/export/delete interval. Another playing capture retained ID obs-mvdhrsvi-1-i1anze and values after reload. Imported 17.25 angles were derived as 167.8/322.9/254.3, ignoring supplied angles; exact IDs and values survived export/import/reload."
+      "evidence": "Action: Captured paused A at 30 s/2x/Venus/tracking and captured while playing; changed live time, speed, selection and mode; exported, imported and reloaded a captured ID; restored fractional imported data containing bogus extra angles. Expected: Stable unique IDs and immutable captured fields with all three derived displayed angles and no live-state mutation. Observed: A ID obs-mvgourvf-1-zdds58 retained time 30, speed 2, Venus, tracking and angles 190.3/154.2/349.9 degrees through live edits. A playing capture exported precise time 73.54919999990464 and matching rounded display/angles. Captured-ID export/import/reload text was exactly equal. Fractional 17.25 yielded 167.8/322.9/254.3, unchanged after reload; supplied 999-degree angles were ignored. Paused capture preserved state and aligned canvas pixels exactly."
     },
     {
       "id": "T1",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Selected Mercury, Venus and Earth from the labeled list and by actual sphere clicks, both paused and playing. Expected: Shared selection, information and visible highlight. Observed: Paused canvas clicks at time 30 selected Mercury 190.3, Venus 154.2 and Earth 349.9 degrees. Repeated clicks at playing 0.25x selected the corresponding bodies at about time 30.1. Each route updated the same list selection/info and white orbital marker. Paused selection stayed usable."
+      "evidence": "Action: Executed all twelve combinations of Mercury/Venus/Earth, labeled-list/native-canvas selection, and paused/playing states; changed to another list selection before each canvas click. Expected: Both routes share selection, information and visible highlight. Observed: Every combination selected the requested stable ID, showed the corresponding information, and visibly placed the white torus on that planet. All six paused cases remained OVERVIEW PAUSED and all six playing cases remained OVERVIEW LIVE. Native mouse coordinates used observed canvas bounds; no locator-coordinate assumption was used."
     },
     {
       "id": "T2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Inspected every planet at fixed seeks and during playback, then restored an unselected overview snapshot. Expected: Correct name, period, angle, rendered position and explicit empty information when unselected. Observed: Mercury/Venus/Earth showed periods 12/24/48 and the angle matrix documented under S1/S5. Earth playback info advanced from 354.4 through 19.8 to 46.0 degrees while its tracked scene moved. Null restore cleared the marker, planet name/period/angle, showed No planet selected and disabled tracking."
+      "evidence": "Action: Inspected each selection during playback and the 0/17/30/73/120 seek matrix, then restored the null-selection overview entry after tracking. Expected: Correct name, period, angle and rendered selection; explicit empty information and no highlight when unselected. Observed: Mercury/Venus/Earth showed periods 12/24/48 and angles matching the fixed-phase calculation and clicked rendered spheres. Readouts advanced during playback and immediately on seek. Null restore showed No planet selected, cleared the selected buttons and scene torus, and disabled tracking."
     },
     {
       "id": "T3",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Tracked Earth while playing and paused, sought 30/73 and selected different planets while tracking; attempted tracking with no selection. Expected: Actual centering and synchronized highlight/info/target, with preserved time/speed/playback on selection and rejected null tracking. Observed: Across 3.438 real seconds at 2x, Earth remained near image center (about 406,497 in a rendered scene spanning x35..778,y218..776) at live times 30.6,34.0,37.5, well inside the 62-CSS-pixel tolerance for the 826x621 scene. Seek 73 kept it centered immediately. Mercury and Venus switched target/info/highlight together; switching selection did not seek or change speed/playback. Null-selection restores disabled Track planet without changing live state."
+      "evidence": "Action: Tracked Earth while playing for three samples spanning more than 3.2 seconds, switched to Mercury then Venus, sought 30 and 73 while tracking, and examined no-selection tracking availability. Expected: Centered target, synchronized highlight/info and preserved playback/speed/time except requested seeking; tracking unavailable without selection. Observed: In the approximately 826x621 CSS canvas, each selected sphere remained visually centered at about canvas-relative (413,310), within the 62.1-pixel threshold, over motion and immediately after seeks. List switches moved target/highlight/info together and continued live playback at the current speed/time. Null-selection startup/restore disabled Track planet without changing other state."
     },
     {
       "id": "T4",
       "status": "fail",
       "rating": 0,
       "method": "http",
-      "evidence": "Action: Returned from tracking to overview in paused and playing states, including at the required 390x844 size, then sought 0 and pressed Overview. Expected: Full system visible and selection/time/speed/playback preserved. Observed: Desktop overview preserved state and showed the complete system. At mobile default overview time 0, the blue outer Earth is visibly cut off by the left canvas edge while the sun and inner planets are visible; the 347x363 canvas cannot show the complete system with this standard framing. Reproduction uses ordinary seek 0 and Overview, not manual zoom. Source keeps overview distance 21 with vertical FOV 45 despite the narrow aspect ratio (index.html 95,139-146,222-225). This fails full-system overview."
+      "evidence": "Action: Returned from tracking to overview at desktop and mobile sizes and sought 30 seconds in the mobile overview. Expected: Full-system visibility while preserving selection, time, speed and playback. Observed: Desktop returns preserved state and showed the full system. At actual 390x844, canvas about 347x363 CSS pixels, the standard 30-second overview visibly cut off the right portion of Earth at the right canvas border; the outer orbit also reaches/crosses that border. Time 30, speed 1.5x, Earth selection and paused playback were preserved, but full-system framing failed. Cause supported by index.html:139-146 and 222-225: resize changes camera aspect while standard overview distance remains fixed at 21, independent of narrow aspect ratio."
     },
     {
       "id": "T5",
-      "status": "pass",
-      "rating": 5,
+      "status": "fail",
+      "rating": 0,
       "method": "http",
-      "evidence": "Action: Restored captured Venus tracking A after editing every live field, then imported/restored null-selection overview at 30/1.5x and Earth tracking at 17.25/1.5x. Dragged and zoomed tracking and restored again. Expected: Atomic paused restore, correct positions/info/target, cleared null selection, deterministic standard framing. Observed: A returned to 30/2x/Venus/tracking paused. Null restore showed no highlight, explicit No planet selected, disabled tracking and overview. Fractional tracking showed Earth 254.3 degrees centered, with saved Mercury/Venus angles 167.8/322.9. Repeated null and tracking scene screenshot buffers were identical at 1440x900 after manual camera changes."
+      "evidence": "Action: Restored tracking and null-selection overview snapshots after unrelated time/speed/selection changes and manual orbit/zoom, repeated desktop restores, and restored null overview time 30 at mobile size. Expected: Atomic paused state and deterministic standard full-system overview or selected-planet tracking framing. Observed: Fields, angles, information clearing and target were correct. Repeated desktop overview and tracking renders had 0 changed pixels after manual camera/live edits. However, the mobile null-selection 30-second overview restore again visibly clipped Earth at the right canvas edge, so its required standard full-system framing was not met. The fixed distance 21 in standardCamera is used by restoreSnapshot at index.html:293-305; narrow-aspect resize does not compensate."
     },
     {
       "id": "U1",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Dragged 70-pixel camera orbits and scrolled to zoom in overview/tracking, playing/paused. Expected: Each camera operation visibly responds without unintended simulation changes. Observed: Overview rings changed from shallow ellipses to higher-angle ellipses and the sun/planets enlarged; tracking changed the sphere lighting/torus orientation and scale. Paused before/after remained 30.0/0.25x/Earth in the selected mode. Playing samples continued naturally around 30.1 to 30.2 at 0.25x. Both modes and both playback states responded."
+      "evidence": "Action: Dragged and wheel-zoomed in all four overview/tracking and playing/paused combinations. Expected: Responsive orbit/zoom around the current target without changing simulation state. Observed: Each drag changed ellipse orientation and 3D sphere/torus perspective, and wheel zoom changed apparent size. The selected target stayed centered in tracking. Paused time stayed fixed and playing motion continued; no camera operation changed selected ID, speed or playback."
     },
     {
       "id": "U2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Started a fast drag on Mercury, reset overview, then dragged 36 CSS pixels in 24 small pointer moves starting on Mercury; exercised list, sliders, buttons, snapshots and JSON. Expected: Drags never become planet clicks; DOM controls do not leak input into scene selection/camera. Observed: Earth remained selected after both fast and slow Mercury-start drags while camera orientation changed. DOM interactions changed only their intended fields; paused speed and snapshot/import comparisons retained positions and camera, and keyboard controls did not select a different canvas body or unexpectedly orbit/zoom."
+      "evidence": "Action: Began a fast drag on Mercury while Earth was selected, then reset framing and performed 25 native 2-CSS-pixel moves from Mercury before pointer-up. Exercised every list/slider/button/snapshot/JSON control. Expected: Drags do not select planets and DOM interactions do not leak scene selection or unintended camera movement. Observed: Both fast and cumulative 50-pixel drags left Earth selected while rotating the view. All named DOM operations had only their intended effects. Properly aligned canvas comparisons across paused import, capture, deletion and export each reported 0 changed pixels; speed changes likewise left pixels unchanged. A preliminary unaligned import image comparison was discarded after observing different scroll positions, then repeated with each image cropped using its own observed canvas bounds."
     },
     {
       "id": "U3",
       "status": "pass",
       "rating": 4,
       "method": "http",
-      "evidence": "Action: Used the full observation, snapshot, validation, keyboard and recovery flows. Expected: Understandable purpose, current state and feedback. Observed: Simulation/selection/snapshot/JSON cards, live/paused mode pill, speed/time outputs, stable planet-ID mapping, named snapshot actions and clear capacity/validation/storage notices make the tool easy to operate. Rating 4 reflects polished hierarchy and explicit feedback, with dense snapshot details and rounded fractional time as minor limitations. Responsive overflow is owned by L1/L2 rather than deducted again here."
+      "evidence": "Action: Used simulation, selection, tracking, snapshot and JSON controls across normal, capacity, malformed-data and quota states at both sizes. Expected: Understandable purpose, current state and feedback. Observed: Named grouped panels, explicit LIVE/PAUSED and overview/tracking pills, time/speed readouts, stable planet-ID mapping, per-snapshot values/angles, capacity rejection, validation errors and saving-unavailable notices make the workflow clear. Long IDs and dense snapshot details require reading and vertical scrolling, so the execution is polished with minor shortcomings rather than exceptional (4/5)."
     },
     {
       "id": "U4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Captured A at 30/2x/Venus/tracking, appended 17-second and 73-second records, attempted a fourth, deleted the middle record, and captured again. Expected: Capacity rejection preserves all three records; deletion preserves remaining order and a new capture appends with a unique ID without changing live state. Observed: Capacity message appeared and the list text was exactly unchanged. Export order was A (obs-mvdhfxgi-1-rnj0j2), original third (obs-mvdhgmgs-3-bi22oe), new fourth (obs-mvdhgn3e-4-37zuwb). Their values and IDs survived; paused 73/2x/Mercury/overview stayed unchanged."
+      "evidence": "Action: Captured three distinct entries, attempted a fourth, deleted the middle entry, then captured again while playing and exported. Expected: Visible capacity rejection, stable existing values/IDs/order, append behavior, no collision and no unintended live changes. Observed: The fourth attempt displayed Capacity reached: delete a snapshot before capturing another and retained all three entries. Deleting the middle left the first and third unchanged in order; the new unique obs-mvgov7cv-4-5ibqeo appended after them. Paused state stayed fixed during capacity/deletion checks; playing capture preserved playback with natural advancement."
     },
     {
       "id": "U5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: At 1440x900 and 390x844 used Tab/Shift+Tab, Enter on native buttons, Home/End/arrows on both ranges, and keyboard text entry plus Enter import/export. Expected: Every primary DOM control has a meaningful name, visible focus, normal keyboard activation and no trap. Observed: Keyboard selection, pause/resume, speed, seek, tracking/overview, capture, restore, delete and textarea export/edit/import all executed. Tab traversed every control, escaped the iframe controls and returned; Shift+Tab reversed normally. Named active controls matched :focus-visible with solid outlines, confirmed in screenshots. Mobile and desktop captures/restore/deletion succeeded in secure HTTP frames. No unused Space-key transport failure was treated as an application failure."
+      "evidence": "Action: At each measured viewport, navigated with Tab and Shift+Tab and activated selection, pause/resume, tracking/overview, capture/restore/delete, export/import with Enter; adjusted time/speed with arrows; selected and typed textarea JSON using keyboard input. Expected: Meaningful names, visible focus, normal activation and no keyboard trap for every primary DOM control. Observed: Twenty-eight retained control activations across the two sizes produced the requested states, including a mobile fractional tracking import/restore/delete. Observed focus outlines and accessible names identified the active controls; Tab reached each target and Shift+Tab left the final control. Native keyboard operation remained usable with vertical scrolling and did not leak scene actions."
     },
     {
       "id": "V1",
       "status": "pass",
       "rating": 4,
       "method": "http",
-      "evidence": "Action: Inspected overview, tracking, selected/unselected states and both sizes while moving and paused. Expected: Readable scene with helpful rather than obscuring effects. Observed: The dark background, thin orbit guides, shaded differently sized planets and white selection torus make depth and selection clear without excessive effects. Rating 4 reflects clear, restrained presentation with subdued tan/gold contrast. Mobile overview clipping is recorded as the concrete T4 layout/framing failure, not an extra visual penalty."
+      "evidence": "Action: Visually inspected overview/tracking, selected/unselected, camera rotations and both viewport sizes. Expected: Readable scene and selection with supportive effects. Observed: Distinct blue/amber/tan shaded spheres, restrained sun glow, quiet orbit guides and a clear white selection torus support inspection. Dark hemispheres and thin small-screen orbit lines are modest readability limits. The scene is polished and legible (4/5); the concrete mobile full-system framing failure is reported under T4/T5 rather than compensated by an extra visual penalty."
     },
     {
       "id": "V2",
       "status": "pass",
       "rating": 4,
       "method": "http",
-      "evidence": "Action: Inspected complete control panels, snapshots and JSON feedback at both CSS sizes. Expected: Coherent legible typography, spacing, colors and hierarchy. Observed: Consistent dark cards, cyan primary controls/readouts, restrained headings, aligned labels and separate green/red feedback establish a polished hierarchy. Rating 4 allows for compact secondary snapshot/JSON text. The long-ID overflow is separately recorded under responsiveness."
+      "evidence": "Action: Inspected desktop side-by-side panels and mobile stacked simulation, selection, snapshot and JSON panels including focus/error states. Expected: Coherent legible typography, spacing, color and hierarchy. Observed: Navy cards, cyan accents, clear headings, consistent borders and spacing, tabular state values and distinct error/success colors form a polished hierarchy. Compact snapshot/JSON text and long IDs are denser than the main controls but remain readable with vertical scrolling (4/5)."
     },
     {
       "id": "L1",
-      "status": "fail",
-      "rating": 0,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Action: At actual 1440x900 exercised every primary control, then imported a legal one-record payload with id equal to 2000 q characters, time 17, speed 1, null selection and overview, and restored it. Expected: No horizontal scrolling or horizontally hidden controls for valid snapshot data. Observed: Normal records had clientWidth=scrollWidth=1423 and every control worked. Restoring the valid long ID expanded scrollWidth to 15712 while clientWidth stayed 1423; the Restore status had scrollWidth 14792, cards expanded and JSON buttons extended beyond the viewport. A horizontal scrollbar was visible. Source writes the entire ID into snapshotMessage without overflow wrapping (index.html 305 and .status CSS line 8). This is a valid-ID boundary, independently repeated after quota cleanup."
+      "evidence": "Action: Measured the embedded desktop document and exercised selection, tracking/overview, seek, speed, pause/resume, capture/restore/delete and textarea import/export by pointer and keyboard. Expected: Usable scene and all primary controls at 1440x900 without horizontal scrolling or panel occlusion. Observed: innerWidth/innerHeight were 1440/900, clientWidth and scrollWidth both 1423. Scene and side controls were usable; lower snapshot/JSON controls were reached by allowed vertical scrolling. No panel blocked a primary control."
     },
     {
       "id": "L2",
-      "status": "fail",
-      "rating": 0,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Action: Verified actual secure 390x844 child viewport and operated selection, tracking/overview, seek/speed, pause/resume, capture/restore/delete and JSON by keyboard. Repeated the valid 2000-character-ID import and restore. Expected: Same usable controls without horizontal scrolling. Observed: Normal records had clientWidth=scrollWidth=373 and all listed actions succeeded with vertical scrolling. Long-ID restore expanded document scrollWidth to 14835 with clientWidth 373; the 14792-wide status forced cards/JSON controls offscreen and exposed a horizontal scrollbar. Separately, default overview at time 0 clipped Earth at the left edge. L2 fails despite successful ordinary keyboard/control coverage."
+      "evidence": "Action: Repeated all primary controls and the full keyboard sequence in the embedded mobile document. Expected: Usable controls and scene at 390x844 without horizontal scrolling or control-blocking panels. Observed: innerWidth/innerHeight were 390/844; clientWidth and scrollWidth both 373. Stacked panels kept selection, tracking, seeking, speed, playback, capture/restore/delete and JSON import/export reachable by vertical scrolling, including a fractional tracking restore. No horizontal page overflow or blocked control was observed. The separate standard overview framing defect is documented under T4/T5; manual scene camera controls remained usable."
     },
     {
       "id": "D2",
       "status": "pass",
       "rating": 5,
       "method": "static",
-      "evidence": "Action: Inspected output/index.html and the output directory, then served output alone. Expected: All local dependencies resolve without a build or repository-root dependency. Observed: The only referenced local dependency is ./three.min.js, present under output; inline CSS/scripts need no further local resources. HTTP resource timing recorded three.min.js with 670184 transferred bytes and the 3D scene rendered. File-protocol execution is excluded."
+      "evidence": "Action: Inspected output/index.html, its local script reference, and complete output directory containing index.html and three.min.js. Expected: Every required local resource resides beneath the output-only HTTP root without build or repository dependencies. Observed: The sole referenced asset ./three.min.js exists, is the bundled Three.js r160 classic runtime; geometry, styling and app logic are inline. No application external asset, build, fetch or repository-root dependency exists. Direct-file execution is excluded."
     },
     {
       "id": "D3",
       "status": "unverified",
       "rating": null,
       "method": "http",
-      "evidence": "Unverified: The shared fresh diagnostic positive control, including an actual main-world script console.error and asynchronous throw on a reviewer-owned HTTP scratch page after subscriptions, returned empty console/pageerror arrays. Thus those subscriptions do not establish diagnostic coverage. Required Three.js resource and scene render were observed, but startup errors and ordinary console.error calls cannot be certified absent with this transport."
+      "evidence": "HTTP rendering and the required local Three.js resource operated throughout the observed sequences without a visible fatal artifact failure. Complete console/page-error coverage was unavailable: the current shared Aside transport positive control did not deliver deliberate console.error or asynchronous thrown-error events. Empty subscriptions therefore cannot prove this quality check. No alternative browser, raw CDP or source-only substitute was used."
     },
     {
       "id": "D4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Exported empty and populated lists, round-tripped through the labeled textarea and explicit import button, and exported while paused and playing. Expected: Exact versioned contract, stable values/order/IDs and no list/live-state mutation; no file picker. Observed: Empty export was {version:1,snapshots:[]}. Populated output contained only numeric version and the five required snapshot fields, preserving types, order and IDs including spaces and case-distinct A/a. No angles, camera offsets or playback fields appeared. Visible mapping named mercury/venus/earth. Paused export left state unchanged; during combined import/export at 2x, time naturally advanced 17.4 to 25.0 over 3.791 seconds with selection, overview and manual framing retained."
+      "evidence": "Action: Exported empty and populated lists through the labeled textarea, imported/exported captured and user-supplied records, compared exact identity/order/types, and repeated while playing. Expected: Only version and the five required snapshot fields, stable IDs and visible planet mapping, no list/live/camera mutation and actual UI round-trip without an OS picker. Observed: Empty export was version 1 with snapshots []; populated exports contained only id/time/speed/selectedPlanet/viewMode in current order. IDs mercury/venus/earth are shown beside names and JSON controls. Captured-ID export/import/reload text matched exactly; imported space/case IDs and fractional values survived export. Angles, playback and camera offsets were absent. Paused aligned export pixels and state were unchanged; playing export preserved live playback."
     },
     {
       "id": "D5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Against a nonempty paused list submitted 35 separate invalid payload classes through the textarea, then valid empty/two/three-entry lists, endpoints, fractional time/speed, selected/unselected modes, extra keys, supplied angles, case-distinct and space-only IDs. Repeated valid import while playing with manual overview framing. Expected: Entire-payload validation and atomic list-only replacement, preserving live state/camera and deriving angles. Observed: Malformed JSON; null/array roots and entries; missing version/snapshots/each entry field; wrong/string version; non-array snapshots; empty/non-string IDs; time/speed strings, booleans and range errors; overflow 1e400; invalid/numeric/string-null/empty planet references; invalid mode; null tracking; duplicate IDs; four entries; and valid-prefix/invalid-later payload all showed errors with exact unchanged list and live DOM state. Fixed-view images retained all-body geometry/camera; 34 of the initial 35 scene captures were byte-identical, and the malformed case was additionally inspected with full before/after images after excluding document-scroll differences. Valid inputs retained exact IDs including A, a, surrounding spaces and a single-space ID; ignored extra keys and supplied angles; endpoint 0/0.25 and 120/4 and fractional 17.25/1.5 restored correctly. Paused valid import changed only the list, retaining all three positions and manually orbited/zoomed framing. During playing import/export all three bodies continued moving on the unchanged manually oriented orbit planes, with 17.4 to 25.0 over 3.791 s at 2x. Empty import cleared only snapshots."
+      "evidence": "Action: Exercised 38 separate invalid inputs against a nonempty existing list, including malformed JSON, root null/array, missing root/all entry fields, null/array entries, string/unsupported version, wrong numeric types, range errors, 1e400, non-array/four-entry snapshots, duplicate/empty/nonstring IDs, unknown/numeric/empty/string-null planets, invalid modes and mixed valid-first/invalid-later entries. Then imported valid empty/two/three-entry payloads paused and playing, with endpoints 0/120 and 0.25/4, time 17.25/speed 1.5, exact IDs including a single space and case-distinct A/a, null/selected overview and tracking, plus extra keys and bogus angles. Expected: Atomic rejection or list-only replacement with exact IDs/order and derived angles. Observed: All 38 rejections showed a specific visible error and preserved the full list and live state. All valid payloads restored/exported correct values, ignored extra keys/angles, preserved exact IDs/order and changed only the list; aligned paused import canvas comparison was pixel-identical. Playing import continued tracking/playback with natural time advancement; empty import cleared only snapshots."
     },
     {
       "id": "D6",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Reloaded separately after valid import, deletion and playing capture on the same HTTP origin/context; tested malformed and mixed-validity schema-invalid persisted payloads; filled only a unique quota key within an 8 MiB bound and attempted a larger valid import. Expected: Snapshot identity/order/values/derived angles persist independently of default live startup; corrupt data recovers visibly; actual write failure is reported while memory controls work. Observed: Import IDs/fields and fractional angles survived reload. Deletion persisted exactly; captured obs-mvdhrsvi-1-i1anze retained its 5.1-second displayed record and all angles/ID after reload. Live scenes restarted 1x/overview/no selection/running rather than restoring snapshots. Malformed and invalid-later persisted data yielded empty lists and explicit recovery notices; pause and planet selection worked. A 5242599-character filler reached QuotaExceededError. The actual larger UI import retained its new in-memory snapshot but left the previous persisted payload unchanged and displayed Saving unavailable; snapshots remain in memory only. Playback, selection and Restore remained usable. Removed only the filler and restored the exact saved app-key bytes, verified true. This exercised write failure, not storage read denial."
+      "evidence": "Action: Reloaded after valid import, deletion and capture; compared IDs/order/values/derived angles and live defaults; replaced only the app snapshot key with each of the 38 malformed/schema-invalid classes; exercised a real quota-write failure with a unique bounded filler key. Expected: Same versioned persistence/validation, empty visible recovery, defaults on reload, and visible saving-unavailable with usable memory after a failed write. Observed: Each successful mutation survived reload with exact records/angles while live state reset to 0/1x/playing/null/overview. All 38 invalid saved inputs yielded an empty list, visible recovery notice and running defaults; controls remained usable. A bounded 8-MiB search filled 5242544 characters, encountered eight QuotaExceededError results, and a subsequent real capture left persisted snapshots [] while the new snapshot existed in memory and Saving unavailable; snapshots remain in memory only was visible. Playback, selection and restore still worked. This establishes the allowed failed-write branch; storage read denial was not exercised or required as an additional clause. Original key absence was restored and the filler removed in finally and final cleanup."
     }
   ],
-  "raw_total_score": 75.4,
-  "score_cap": 69,
-  "total_score": 69,
+  "total_score": 86.4,
+  "total_score_upper_bound": 88.4,
   "coverage": {
-    "passed": 23,
-    "failed": 3,
+    "passed": 24,
+    "failed": 2,
     "unverified": 1
   },
   "notes": [
-    "User-requested scoring-only migration to solar-system-4.0 at 2026-10-18T08:19:55.883Z. All check observations, ratings, statuses, methods, reviewer identity, and observation timestamp are unchanged. Numeric scores are guaranteed lower endpoints with explicit upper endpoints, not newly observed passes or failures. This recalculation is not a fresh browser review.",
-    "Fresh review of only the assigned saved solar-system-observatory-2 run against solar-system-3.0. Existing reviews were not used as evidence. prompt.md, run.json and every output file were preserved, confirmed by before/after working-memory hashes; no hashes or generation measurements are included here.",
-    "Reviewer model openai-codex/gpt-6-astra comes from current host metadata. Effort high comes from applicable .omp/agents/benchmark-astra-review.md configuration, corroborated by this reviewer session metadata, not inferred from the generator or prior review. Timestamp comes from the current host clock.",
-    "Applied benchmark-review, mandatory aside-browser and explicitly selected poteto-mode under its OMP adapter. Prove It Works changed the review to actual rendered/control evidence instead of source-only inference. Explain the Number changed speed observations to uninterrupted >=3-second measured intervals with visibility and CSS dimensions. No other model, descendant, generation task, build, test, lint or formatter was launched.",
-    "Preregistered tolerances before observations: speed interval >=3 s, error max(0.15 s,5% expected delta)+0.1 s display increment; paused 0.1 s/1 degree; angle 2 degrees+0.1 degree rounding; repeated framing 2 CSS pixels; tracking center within 10% smaller scene dimension. Exact identity/state preservation except natural timed advance.",
-    "Used only connected Aside direct REPL with unchanged output served at 127.0.0.1:9215 and reviewer-only secure viewport wrappers at 127.0.0.1:9225. Children were exactly 1440x900 and 390x844 with isSecureContext=true. This establishes real embedded CSS viewport behavior, not top-level resizing or physical touch-device coverage. No file:// execution, security-setting change or app runtime mutation was used.",
-    "Saved eight-step scenario observed initial all-body motion, scene Earth selection and tracking, pause/seek 30, 2x while paused, 30.5 to 36.6 over 3.103 real seconds on resume, Venus list switch while tracking, overview, and repeat seek 30. An initial pause was inserted to locate the sphere precisely; playing tracking and scene clicks were subsequently observed explicitly. All six saved additional sequences were exercised: immutable A/restore; capacity/delete/export; separate invalid imports; valid null/tracking and playing/empty imports; persistence/corruption/write failure; keyboard operation at both sizes.",
-    "Speed observations were each contained in one REPL call, used the explicit owned tab/frame, and reported document.visibilityState=visible and 1440x900. Samples at 0.25/2/4x met the originally declared tolerance. A parent-reserved hold was respected while another lane timed its scene; no cross-call elapsed-time inference was used. Later measurements used only one owned live artifact tab.",
-    "Diagnostic limitation is the sole unverified check, D3. The fresh shared scratch positive control tested both evaluation-world and actual main-world script console.error/throw after page.on subscriptions. The executed/reached script markers were present but both arrays stayed empty. Therefore empty diagnostic arrays cannot certify clean startup/runtime console or page errors. Required-resource/rendering success was observed independently. No diagnostic pass or numeric total is invented.",
-    "Observed transport limitations were handled as observation issues, not artifact failures. Reload retained stale child frame handles, so fresh snapshots and the newest actual frame were used. Locator screenshots did not reliably crop the requested canvas. Full scene screenshots were used instead. Whole-image comparisons affected by document scrolling/macOS overscroll were excluded; rendered body positions were compared relative to stable scene geometry. Exact same-view repeat restore/seek buffers were used only when the viewport and scroll framing matched.",
-    "D6 boundary fixtures touched only solar-system-observatory-2-snapshots and unique rxm-review-quota-20261018 on this isolated origin. The original app-key value at fixture setup was held in memory. The quota filler was bounded by 8 MiB; actual UI write failure was confirmed by unchanged stored bytes and saving-unavailable feedback. Filler removal and exact saved-key restoration were verified, including final cleanup. Read denial was not forced and is not claimed.",
-    "Concrete mandatory failures are full-system mobile overview clipping (T4) and legal long-ID Restore status causing horizontal overflow and hiding JSON controls at both required sizes (L1,L2). The long-ID failure was first exposed during quota testing and then repeated after quota removal; valid IDs have no maximum-length restriction. Other quality ratings were not reduced to duplicate these functional penalties.",
-    "Cleanup completed. Closed only the two review-created artifact/viewport tabs used sequentially, stopped both owned servers, removed all 53 distinct transient screenshots identified in this reviewer transcript, and retained no evidence directory or log. Only reviews/review.json and reviews/review.md are published. The working draft is removed after publication."
-  ],
-  "raw_total_score_upper_bound": 77.4,
-  "total_score_upper_bound": 69
+    "Saved prompt independently confirms solar-system-observatory-2, all 15 requirements, eight ordered steps and six additional sequences; format 5.0 and rubric solar-system-5.0 apply. Generation status is not quality evidence. Existing reviews and generator verification notes are not evidence for this fresh attempt.",
+    "Reviewer model openai-codex/gpt-6-astra is the current host project-context selection. Host environment exposes no concrete effort and no applicable current-session selection API was supplied; effort remains null, preventing complete status. Timestamp is from host date -Iseconds. Generator metadata was not used to infer reviewer identity.",
+    "Applied agents/benchmark-review shared resources and mandatory aside-browser guide/repl instructions. User explicitly requested parallel worker review; host dispatch overrides the skill prohibition on another-model review orchestration. This is not isolated single-reviewer orchestration. No descendants or additional models launched by this worker.",
+    "Preregistered before browser observations: rate sample >=3 real seconds, tolerance max(0.15 simulation seconds, 5% expected delta)+0.1-second display increment; paused allowance 0.1 seconds and 1 degree; predicted angles within 2 degrees plus 0.1-degree rounding; repeat centers within 2 CSS pixels with identical viewport/framing; tracking center within 10% of smaller canvas dimension over >=3 seconds and after seeking. Exact identity/order/state preservation except natural playing advance.",
+    "Browser diagnostics shared capability positive control failed to deliver console.error and async throw events. Empty streams therefore cannot establish D3; no raw CDP or alternative browser will be used.",
+    "Fresh runtime review used only connected Aside direct REPL after explicit BROWSER_GRANTED, the assigned output-only http://127.0.0.1:8923 origin and parent-owned viewport wrapper at port 8890. Actual child viewports were 1440x900 (client/scroll width 1423) and 390x844 (373); both secure contexts. This is embedded CSS-viewport verification, not top-level viewport or touch-device proof. Only one review scene ran during timing.",
+    "Ordered saved steps completed: automatic motion; Earth canvas selection/tracking; pause/30-second seek; paused 2x change; resume measured 6.2 simulation seconds in 3.1083 real seconds; Venus list switch while tracking; overview with state preserved; pause/reseek 30. Six additional sequences followed in order: immutable A and repeated restore; capacity/delete/recapture/export; rejection matrix; valid null/fractional tracking imports/playing/empty/round-trip; persistence/recovery/quota; full keyboard operation at desktop then mobile. Remaining fixed matrix checks followed, including all twelve planet selection cases.",
+    "Image evidence was transient. Decoded canvas crops compared repeat seeks after reload, paused stability, speed changes, list-only operations and repeated restores. Repeats with matching framing gave zero changed pixels. One preliminary import comparison used different scroll alignments and was invalid; an aligned repeat using each observed canvas rectangle gave zero changed pixels. No screenshot, log, collector or evidence file is retained in the run.",
+    "Confirmed shared cause for T4 and T5: the mobile aspect ratio changes without fitting the fixed 21-unit standard overview camera distance. At 30 seconds both overview and a null-selection overview restore visibly clip Earth at the right edge. Desktop and tracking framing worked. This is not inferred solely from source and is not a generic CSS horizontal-overflow failure.",
+    "Cleanup completed before BROWSER_RELEASED: exact original absence of solar-system-observatory-2-snapshots restored at the isolated origin, unique __review_luna_max_20261020_quota key absent, all worker-owned tabs closed, transient image references cleared, and rr-luna-max-parallel stopped. Shared viewport service and unrelated tabs/storage were untouched. Prompt, generation record and output were only read/served, never edited. Parent owns source-hash preservation verification.",
+    "D6 is credited for its explicitly allowed actual failed-write recovery branch, not withheld for unexercised storage-read denial. Browser diagnostic transport is the sole remaining unverified check (D3). Reviewer effort remains null independently of quality bounds."
+  ]
 }

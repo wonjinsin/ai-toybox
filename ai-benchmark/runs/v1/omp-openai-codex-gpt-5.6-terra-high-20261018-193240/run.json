@@ -1,0 +1,19 @@
+{
+  "format_version": "2.1",
+  "status": "failed",
+  "session_id": null,
+  "model": "openai-codex/gpt-5.6-terra",
+  "effort": "high",
+  "duration_ms": 947400,
+  "input_tokens": null,
+  "output_tokens": null,
+  "notes": [
+    "Model resolved from supplied OMP workstation runtime metadata; effort is user-declared because no concrete current-execution OMP effort metadata was exposed.",
+    "No concrete invoking OMP session identity or scoped current-session usage source was exposed; session_id and token totals are null. No OMP boundary request IDs, cumulative counters, or runtime-linked journal locator were supplied, so interval token coverage cannot be proven.",
+    "Implementation/check interval used same-host Date.now boundaries: start 1792319626660 and end 1792320574060, yielding duration_ms 947400. The interval included required serialized browser-grant waiting, construction, checks, cleanup, and excluded final record processing/reply.",
+    "Aside browser skill was applied because the host-required direct browser verification workflow requires it. Direct Aside REPL verified the HTTP-served artifact at http://127.0.0.1:8832/index.html; attempt tab was closed and the tracked output-only server was stopped before the end boundary.",
+    "HTTP browser checks observed a loaded Three.js runtime, three rendered planets plus sun and orbit geometry, scene-click selection, tracking, paused seeking, 2x playback advance, snapshots, capacity/deletion, transactional import rejection, valid import/restore, persistence/recovery, keyboard DOM controls, camera drag/zoom, and no page errors or failed network requests on the final reload.",
+    "Direct file navigation was not established by the connected Aside session, so file:// execution and its separate storage context remain unverified. The permitted browser page lacked setViewportSize (TypeError), so the specified 1440x900 and 390x844 viewport checks remain unverified; the available 1600px viewport had body scroll width 1583px. The storage-unavailable/write-failure path was not exercised because no permitted capability exposed it.",
+    "Terminal status is failed solely because required OMP session identity and same-interval input/output token measurements are unprovable; the finished HTML artifact is preserved."
+  ]
+}

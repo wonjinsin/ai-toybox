@@ -31,15 +31,42 @@
   }
 
   function scoreRange(review, lowerKey = 'total_score', upperKey = 'total_score_upper_bound', maximum = 100) {
-    if (!['2.0', '4.0'].includes(review?.format_version)) return null;
+    if (!['2.0', '4.0', '5.0'].includes(review?.format_version)) return null;
     const lower = review?.[lowerKey];
-    const upper = review?.format_version === '4.0' ? review[upperKey] : lower;
+    const upper = review?.format_version === '2.0' ? lower : review[upperKey];
     return Number.isFinite(lower) && Number.isFinite(upper) && lower >= 0 && lower <= upper && upper <= maximum
       ? { lower, upper } : null;
   }
 
+  function quality(run) {
+    return ['current', 'policy-only'].includes(run.policyProjection?.kind) ? run.policyProjection.quality : null;
+  }
+
+  function headlineRange(run) {
+    return quality(run) ?? (run.policyProjection?.kind === 'historical' ? scoreRange(run.policyProjection.assessment) : null);
+  }
+
   function score(run) {
-    return scoreRange(run.review)?.lower ?? null;
+    return headlineRange(run)?.lower ?? null;
+  }
+
+  function scoreGroup(run) {
+    return quality(run) ? 0 : run.policyProjection?.kind === 'historical' ? 1 : 2;
+  }
+
+  function policyLabel(run) {
+    if (run.policyProjection?.kind === 'policy-only') return '품질 · 새 정책 5.0 · 기존 관찰 근거';
+    if (run.policyProjection?.kind === 'current') return '품질 · 현행 정책 5.0';
+    if (run.policyProjection?.kind === 'historical') return '과거 과제 2.0 · 별도 점수';
+    return run.review ? '정책 적용 불가 · 기록 확인 필요' : '평가 없음';
+  }
+
+  function conformanceText(run) {
+    const assessment = quality(run) ?? run.policyProjection?.assessment;
+    if (!assessment) return '요구사항 판정·검증 범위 확인 불가';
+    const coverage = assessment.coverage;
+    const mandatory = quality(run);
+    return `요구사항 ${checkStatuses[assessment.requirements_verdict]} · 실패 ${coverage.failed}개 · 미검증 ${coverage.unverified}개${mandatory ? ` · 필수 실패 ${mandatory.mandatory_failed.length}개 · 필수 미검증 ${mandatory.mandatory_unverified.length}개` : ''}`;
   }
 
   function rangeText(range) {
@@ -47,12 +74,9 @@
   }
 
   function scoreDescription(run) {
-    const range = scoreRange(run.review);
-    if (!range) return `미채점 · ${reviewLabel(run)}`;
-    const basis = run.review.format_version === '4.0'
-      ? range.lower === range.upper ? '확정 점수' : '보수적 하한'
-      : '저장된 점수';
-    return `${number.format(range.lower)}점 / 100 · ${basis}${range.lower !== range.upper ? ` · 가능 범위 ${rangeText(range)}` : ''} · ${reviewLabel(run)}`;
+    const range = headlineRange(run);
+    const headline = range ? `${number.format(range.lower)}점 / 100${range.lower !== range.upper ? ` · 가능 범위 ${rangeText(range)}` : ''}` : '미채점';
+    return `${headline} · ${policyLabel(run)} · ${conformanceText(run)} · ${reviewLabel(run)}`;
   }
 
   function date(value) {
@@ -84,15 +108,16 @@
 
   function scoreBlock(run, className = 'run-score') {
     const wrapper = element('div', className);
-    const range = scoreRange(run.review);
+    const range = headlineRange(run);
     wrapper.setAttribute('role', 'group');
     wrapper.setAttribute('aria-label', scoreDescription(run));
     wrapper.append(element('span', `score${range === null ? ' unscored' : ''}`, range === null ? '미채점' : number.format(range.lower)));
-    const basis = range && run.review.format_version === '4.0'
-      ? range.lower === range.upper ? '확정 점수' : '보수적 하한'
-      : '저장된 점수';
-    wrapper.append(element('span', 'score-caption', range === null ? reviewLabel(run) : `/ 100 · ${basis} · ${reviewLabel(run)}`));
+    wrapper.append(element('span', 'score-caption', policyLabel(run)));
+    wrapper.append(element('span', 'score-caption', range === null ? reviewLabel(run) : `/ 100 · ${range.lower === range.upper ? '확정값' : '보수적 하한'} · ${reviewLabel(run)}`));
     if (range && range.lower !== range.upper) wrapper.append(element('span', 'score-caption', `가능 범위 ${rangeText(range)}`));
+    const conformance = element('span', 'score-conformance', conformanceText(run));
+    conformance.dataset.verdict = quality(run)?.requirements_verdict ?? run.policyProjection?.assessment?.requirements_verdict ?? 'unverified';
+    wrapper.append(conformance);
     return wrapper;
   }
 
@@ -140,12 +165,12 @@
   }
 
   function renderStats(selectedRuns) {
-    const scored = selectedRuns.filter(run => score(run) !== null);
-    const scores = scored.map(score);
+    const scored = selectedRuns.filter(run => quality(run));
+    const scores = scored.map(run => quality(run).lower);
     const stats = [
       ['실행 기록', selectedRuns.length, '저장된 시도'],
       ['생성된 결과물', selectedRuns.filter(run => run.artifactUrl).length, 'HTML 결과'],
-      ['최고 표시 점수', scores.length ? number.format(Math.max(...scores)) : '—', `${scored.length}개 숫자 점수 · 확정값 또는 보수적 하한 / 100 · 검증 완료와 별개`],
+      ['최고 현행 품질 점수', scores.length ? number.format(Math.max(...scores)) : '—', `${scored.length}개 현행 정책 점수 · 확정값 또는 보수적 하한 / 100 · 과거 과제 제외 · 요구사항 통과와 별개`],
     ];
     $('stats').replaceChildren(...stats.map(([label, value, hint]) => {
       const card = element('div', 'stat');
@@ -170,7 +195,7 @@
       return `${run.model ?? ''} ${run.effort ?? ''} ${run.agent ?? ''} ${run.id}`.toLocaleLowerCase().includes(query);
     });
     if ($('sort').value === 'score') {
-      visible.sort((a, b) => (score(b) ?? -1) - (score(a) ?? -1));
+      visible.sort((a, b) => scoreGroup(a) - scoreGroup(b) || (score(b) ?? -1) - (score(a) ?? -1));
     }
     $('result-count').textContent = `${visible.length}개`;
     if (!visible.length) {
@@ -196,7 +221,23 @@
       card.replaceChildren(element('span', 'run-number', String(index + 1).padStart(2, '0')), info, status, scoreBlock(run), element('span', 'open-arrow', '↗'));
       return card;
     });
-    reconcileChildren($('run-list'), cards);
+    if ($('sort').value === 'score') {
+      const grouped = [];
+      let previousGroup = null;
+      const labels = ['현행 품질 순위 · solar-system-5.0', '과거 과제 점수 · 별도 순위 · solar-system-2.0', '정책 점수 없음 · 순위 제외'];
+      let rank = 0;
+      visible.forEach((run, index) => {
+        const group = scoreGroup(run);
+        if (group !== previousGroup) {
+          grouped.push(element('h3', 'score-group', labels[group]));
+          previousGroup = group;
+          rank = 0;
+        }
+        cards[index].firstChild.textContent = score(run) === null ? '·' : String(++rank).padStart(2, '0');
+        grouped.push(cards[index]);
+      });
+      reconcileChildren($('run-list'), grouped);
+    } else reconcileChildren($('run-list'), cards);
   }
 
   function metrics(run) {
@@ -235,11 +276,23 @@
   function reviewPanel(run, panel) {
     const review = run.review;
     if (!review) {
-      panel.append(element('div', 'empty', '저장된 평가가 없습니다. 이 화면은 점수를 새로 계산하거나 평가를 실행하지 않습니다.'));
+      panel.append(element('div', 'empty', '저장된 평가가 없습니다. 이 화면은 새 관찰이나 브라우저 검증을 수행하지 않습니다.'));
       return;
     }
     const reviewer = review.reviewer && typeof review.reviewer === 'object' ? review.reviewer : {};
     panel.append(element('p', 'review-summary', `${reviewLabel(run)} · 평가 모델: ${reviewer.model ?? '미확인'} · effort: ${reviewer.effort ?? '미확인'}\n평가 기준: ${review.rubric_version ?? '미기록'} · ${date(review.reviewed_at)} KST`));
+    panel.append(element('p', 'review-summary', `${policyLabel(run)}\n${conformanceText(run)}`));
+    const projection = run.policyProjection;
+    if (projection?.kind === 'policy-only') {
+      panel.append(element('p', 'notice', `${projection.source_rubric} → ${projection.target_rubric} 정책 비교입니다. 기존 관찰만 사용하며 새 브라우저 검증이나 결과물 개선을 의미하지 않습니다. 필수 실패는 품질 점수를 제한하지 않지만 요구사항 실패 판정은 유지됩니다.`));
+    } else if (projection?.kind === 'historical') {
+      panel.append(element('p', 'notice', '과거 과제는 요구사항과 검증 항목이 달라 현행 정책으로 환산하지 않습니다. 점수 정렬에서도 별도 순위로 표시합니다.'));
+    } else if (projection?.kind === 'current') {
+      panel.append(element('p', 'score-note', '현행 품질 점수는 필수 실패 상한 없이 계산합니다. 요구사항 판정과 실패·미검증 개수는 점수와 독립적입니다.'));
+    }
+    if (run.sourceReviewSha256) panel.append(element('p', 'source-hash', `근거 review.json 원본 바이트 SHA-256 · ${run.sourceReviewSha256}`));
+    const published = scoreRange(review);
+    panel.append(element('p', 'review-summary', `원본 공개 점수 · ${review.rubric_version ?? '기준 미기록'} · ${published ? `${rangeText(published)} / 100` : '미채점'}${projection ? '' : ' · 원본 수치만 표시, 검증되지 않은 점수이며 순위에서 제외'}`));
     const checks = Array.isArray(review.checks) ? review.checks.filter(value => value && typeof value === 'object') : [];
     const pending = checks.filter(check => check.status === 'unverified').map(check => check.id ?? 'ID 미기록');
     const missing = [['평가 모델', reviewer.model], ['effort', reviewer.effort], ['평가 시각', review.reviewed_at]]
@@ -247,23 +300,24 @@
     if (pending.length) panel.append(element('p', 'notice', `미검증 ${pending.length}개 (${pending.join(', ')}) · 숫자 점수가 있어도 이 항목들의 검증은 완료되지 않았습니다.`));
     if (missing.length) panel.append(element('p', 'notice', `평가 정보 누락 (${missing.join(', ')}) · 점수 확정 여부와 별개로 평가 정보가 불완전합니다.`));
     if (score(run) === null) {
-      panel.append(element('p', 'notice', '유효한 저장 점수가 없어 미채점으로 표시합니다. 미채점은 0점이 아닙니다. 이 화면은 점수를 새로 계산하지 않습니다.'));
+      panel.append(element('p', 'notice', '유효한 정책 점수가 없어 미채점으로 표시합니다. 원본의 숫자를 품질 점수로 대신 사용하지 않습니다. 미채점은 0점이 아닙니다.'));
     }
     const raw = scoreRange(review, 'raw_total_score', 'raw_total_score_upper_bound');
-    if (raw) panel.append(element('p', 'review-summary', `원점수 ${rangeText(raw)} / 100${raw.lower !== raw.upper ? ' · 가능 범위' : ''}`));
+    if (raw) panel.append(element('p', 'review-summary', `원본 정책의 상한 적용 전 점수 ${rangeText(raw)} / 100${raw.lower !== raw.upper ? ' · 가능 범위' : ''}`));
     if (Number.isFinite(review.score_cap)) {
-      panel.append(element('p', 'notice', `확인된 필수 항목 실패로 확정 상한 ${number.format(review.score_cap)}점이 적용됩니다. 기존 필수 항목 정책에 따른 상한이며, 모델 품질에 대한 추가 추정이 아닙니다.`));
+      panel.append(element('p', 'notice', `원본 공개 점수에는 필수 항목 실패로 ${number.format(review.score_cap)}점 상한이 적용되었습니다. 이는 과거 4.0 정책이며 현행 품질 점수에는 적용하지 않습니다.`));
     }
     if (review.format_version === '4.0') {
-      panel.append(element('p', 'score-note', '확정 점수는 가능한 총점이 하나라는 뜻이며 검증 완료를 뜻하지 않습니다. 보수적 하한은 미검증 항목을 포함한 가능 범위의 최솟값이며, 미검증을 실패나 실제 0점으로 판정한 것이 아닙니다. 필수 항목이 미검증이면 실패 가능성을 반영해 하한만 69점 이하로 제한할 수 있으며, 이는 확정 상한이나 실패 판정이 아닙니다.'));
+      panel.append(element('p', 'score-note', '원본 4.0 정책은 필수 실패 시 양쪽 끝점을 69점 이하로 제한했습니다. 필수 항목이 미검증이면 하한만 제한할 수 있었습니다. 원본 점수와 근거는 변경하지 않습니다.'));
     }
+    if (quality(run)) panel.append(element('p', 'score-note', '확정값은 반올림한 가능한 점수가 같다는 뜻이며 검증 완료를 뜻하지 않습니다. 보수적 하한은 미검증 항목을 포함한 가능 범위의 최솟값입니다. 미검증은 실패나 실제 0점 판정이 아닙니다.'));
     if (review.verification) {
-      panel.append(element('p', 'review-summary', `브라우저 검증: ${review.verification.browser_method ?? '미기록'} · 요구사항 판정: ${review.requirements_verdict ?? '미기록'}`));
+      panel.append(element('p', 'review-summary', `원본 브라우저 검증 기록: ${review.verification.browser_method ?? '미기록'} · 원본 요구사항 판정: ${review.requirements_verdict ?? '미기록'}`));
     }
-    const categories = Array.isArray(review.categories) ? review.categories.filter(value => value && typeof value === 'object') : [];
+    const categories = quality(run)?.categories ?? projection?.assessment?.categories ?? [];
     const grid = element('div', 'category-grid');
     for (const category of categories) {
-      const range = scoreRange({ ...category, format_version: review.format_version }, 'score', 'score_upper_bound', 5);
+      const range = scoreRange({ ...category, format_version: quality(run) ? '5.0' : review.format_version }, 'score', 'score_upper_bound', 5);
       const name = categoryNames[category.id] ?? category.id ?? '평가 항목';
       const card = element('div', 'category');
       card.append(element('h3', '', name));

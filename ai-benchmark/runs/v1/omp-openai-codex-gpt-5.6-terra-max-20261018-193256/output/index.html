@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar System Observatory</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #edf5ff;
+      --muted: #a9b9cb;
+      --surface: rgba(12, 24, 45, 0.9);
+      --surface-strong: #101f3a;
+      --line: rgba(163, 198, 239, 0.25);
+      --accent: #66d7ff;
+      --accent-strong: #2f9ee7;
+      --good: #8de3b2;
+      --warning: #ffd479;
+      --danger: #ff9a9a;
+      --focus: #ffdc73;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: #07111f; }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% -10%, rgba(50, 106, 184, 0.34), transparent 40rem),
+        linear-gradient(145deg, #07111f 0%, #0b1730 55%, #08111e 100%);
+      color: var(--ink);
+      font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea { font: inherit; }
+
+    button, input, textarea, summary { touch-action: manipulation; }
+
+    button {
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+      padding: 0.58rem 0.78rem;
+      color: var(--ink);
+      background: #172945;
+      cursor: pointer;
+      min-height: 2.65rem;
+    }
+
+    button:hover:not(:disabled) { background: #24466e; }
+    button:disabled { cursor: not-allowed; opacity: 0.52; }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    input[type="range"] { accent-color: var(--accent); }
+
+    code {
+      padding: 0.08rem 0.28rem;
+      border-radius: 0.25rem;
+      color: #d8efff;
+      background: rgba(131, 197, 244, 0.14);
+      overflow-wrap: anywhere;
+    }
+
+    .app-shell {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: clamp(0.75rem, 2.4vw, 2rem);
+    }
+
+    .masthead {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 0.22rem; font-size: clamp(1.55rem, 3vw, 2.4rem); letter-spacing: -0.03em; }
+    h2 { margin-bottom: 0.65rem; font-size: 1.12rem; }
+    h3 { margin-bottom: 0.35rem; font-size: 0.98rem; }
+    .subtitle, .muted { color: var(--muted); }
+    .subtitle { margin-bottom: 0; }
+
+    .live-badge {
+      flex: 0 0 auto;
+      border: 1px solid rgba(102, 215, 255, 0.44);
+      border-radius: 99px;
+      padding: 0.38rem 0.65rem;
+      color: #c8f2ff;
+      background: rgba(21, 72, 110, 0.44);
+      white-space: nowrap;
+      font-size: 0.88rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.9fr);
+      gap: clamp(0.8rem, 1.8vw, 1.35rem);
+      align-items: start;
+    }
+
+    .scene-column, .control-column { min-width: 0; }
+
+    .card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--surface);
+      box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.2);
+    }
+
+    .scene-card { overflow: hidden; }
+
+    .scene-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      padding: 0.8rem 0.95rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(17, 35, 62, 0.72);
+    }
+
+    .readout-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 1rem;
+      min-width: 0;
+      color: #dcecff;
+      font-size: 0.93rem;
+    }
+
+    .readout-strip strong { color: white; }
+
+    .canvas-wrap {
+      position: relative;
+      min-height: clamp(320px, 52vh, 560px);
+      background: radial-gradient(circle at 50% 45%, #172d51 0%, #07101e 68%);
+    }
+
+    #solarCanvas {
+      display: block;
+      width: 100%;
+      height: clamp(320px, 52vh, 560px);
+      cursor: grab;
+      outline: none;
+    }
+
+    #solarCanvas:active { cursor: grabbing; }
+
+    .canvas-help {
+      position: absolute;
+      right: 0.75rem;
+      bottom: 0.65rem;
+      max-width: calc(100% - 1.5rem);
+      padding: 0.32rem 0.55rem;
+      border: 1px solid rgba(203, 234, 255, 0.25);
+      border-radius: 0.45rem;
+      color: #cde1f4;
+      background: rgba(4, 12, 25, 0.72);
+      font-size: 0.78rem;
+      pointer-events: none;
+    }
+
+    .scene-note {
+      margin: 0;
+      padding: 0.75rem 0.95rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .control-stack { display: grid; gap: 0.8rem; }
+    .card-body { padding: 0.95rem; }
+
+    .control-grid { display: grid; gap: 0.7rem; }
+
+    .control-label {
+      display: grid;
+      gap: 0.35rem;
+      color: #d8e7f6;
+      font-weight: 650;
+    }
+
+    .range-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+
+    .range-row input { width: 100%; min-width: 0; }
+
+    output {
+      min-width: 5.7rem;
+      text-align: right;
+      color: #f8fcff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .button-primary {
+      border-color: rgba(102, 215, 255, 0.7);
+      background: linear-gradient(135deg, #17679e, #1e4b8f);
+    }
+
+    .button-subtle { background: #14243d; }
+
+    .planet-list { display: grid; gap: 0.48rem; }
+
+    .planet-button {
+      display: grid;
+      grid-template-columns: 0.8rem minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.55rem;
+      width: 100%;
+      text-align: left;
+    }
+
+    .planet-button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: #1b5276;
+    }
+
+    .planet-swatch {
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      box-shadow: 0 0 0.6rem currentColor;
+    }
+
+    .planet-id { color: var(--muted); font-size: 0.8rem; }
+
+    .info-panel {
+      padding: 0.7rem;
+      border: 1px solid rgba(151, 199, 244, 0.24);
+      border-radius: 0.65rem;
+      background: rgba(5, 16, 31, 0.45);
+    }
+
+    .info-panel dl {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.25rem 0.75rem;
+      margin: 0;
+    }
+
+    .info-panel dt { color: var(--muted); }
+    .info-panel dd { margin: 0; overflow-wrap: anywhere; }
+
+    .status {
+      min-height: 2.2rem;
+      margin: 0;
+      padding: 0.58rem 0.7rem;
+      border: 1px solid rgba(164, 196, 231, 0.2);
+      border-radius: 0.55rem;
+      color: #dbe9f7;
+      background: rgba(5, 16, 31, 0.4);
+      overflow-wrap: anywhere;
+    }
+
+    .status.success { border-color: rgba(141, 227, 178, 0.48); color: var(--good); }
+    .status.warning { border-color: rgba(255, 212, 121, 0.52); color: var(--warning); }
+    .status.error { border-color: rgba(255, 154, 154, 0.58); color: var(--danger); }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      min-height: 8.8rem;
+      resize: vertical;
+      padding: 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+      color: #eaf3fc;
+      background: #081524;
+      line-height: 1.35;
+    }
+
+    .mapping {
+      margin: 0.15rem 0 0.65rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      overflow-wrap: anywhere;
+    }
+
+    .snapshot-list {
+      display: grid;
+      gap: 0.6rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .snapshot-item {
+      padding: 0.7rem;
+      border: 1px solid rgba(151, 199, 244, 0.24);
+      border-radius: 0.65rem;
+      background: rgba(6, 18, 35, 0.48);
+    }
+
+    .snapshot-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.25rem 0.6rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .snapshot-heading strong, .snapshot-heading code { overflow-wrap: anywhere; }
+    .snapshot-detail { margin: 0.25rem 0 0.55rem; color: #cdddf0; font-size: 0.87rem; overflow-wrap: anywhere; }
+    .empty-list { margin: 0; color: var(--muted); }
+
+    .engine-error {
+      margin: 0.85rem 0;
+      padding: 0.85rem;
+      border: 1px solid rgba(255, 154, 154, 0.65);
+      border-radius: 0.7rem;
+      color: #ffe3e3;
+      background: rgba(105, 19, 32, 0.58);
+    }
+
+    @media (max-width: 850px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .control-column { display: contents; }
+    }
+
+    @media (max-width: 480px) {
+      .app-shell { padding: 0.65rem; }
+      .masthead { flex-direction: column; gap: 0.45rem; }
+      .live-badge { align-self: start; }
+      .scene-toolbar { align-items: start; }
+      .canvas-wrap, #solarCanvas { min-height: 300px; height: 300px; }
+      button { padding-inline: 0.62rem; }
+      .range-row { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
+      output { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="masthead">
+      <div>
+        <h1>Solar System Observatory</h1>
+        <p class="subtitle">A deterministic 3D orbit viewer with saved observation states.</p>
+      </div>
+      <div class="live-badge" id="playbackBadge" aria-live="polite">Playback: running</div>
+    </header>
+
+    <div id="engineError" class="engine-error" hidden></div>
+
+    <section class="layout" aria-label="Solar system observation workspace">
+      <div class="scene-column">
+        <section class="card scene-card" aria-labelledby="sceneHeading">
+          <div class="scene-toolbar">
+            <div>
+              <h2 id="sceneHeading">Interactive Three.js scene</h2>
+              <div class="readout-strip" aria-live="polite">
+                <span>Time: <strong id="sceneTime">0.000 s</strong></span>
+                <span>Speed: <strong id="sceneSpeed">1.000×</strong></span>
+                <span>Target: <strong id="cameraTarget">Sun / full system</strong></span>
+              </div>
+            </div>
+            <button type="button" id="overviewButton" class="button-subtle">Return to overview</button>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="solarCanvas" tabindex="0" aria-label="Interactive 3D solar system. Drag to orbit the camera, use the wheel to zoom, and click a planet to select it."></canvas>
+            <span class="canvas-help">Drag to orbit · wheel to zoom · click a planet to select</span>
+          </div>
+          <p class="scene-note">The scene uses Three.js meshes and a perspective camera. Camera orbit and zoom remain available when playback is paused.</p>
+        </section>
+      </div>
+
+      <aside class="control-column" aria-label="Observation controls">
+        <div class="control-stack">
+          <section class="card card-body" aria-labelledby="playbackHeading">
+            <h2 id="playbackHeading">Playback and time</h2>
+            <div class="control-grid">
+              <div class="button-row">
+                <button type="button" id="pauseButton" class="button-primary" aria-pressed="false">Pause playback</button>
+                <button type="button" id="trackButton" disabled>Track selected planet</button>
+              </div>
+              <label class="control-label" for="speedRange">Global speed
+                <span class="range-row">
+                  <input id="speedRange" type="range" min="0.25" max="4" step="0.01" value="1" aria-describedby="speedReadout">
+                  <output id="speedReadout" for="speedRange">1.000×</output>
+                </span>
+              </label>
+              <label class="control-label" for="timeRange">Simulation time
+                <span class="range-row">
+                  <input id="timeRange" type="range" min="0" max="120" step="0.01" value="0" aria-describedby="timeReadout">
+                  <output id="timeReadout" for="timeRange">0.000 s</output>
+                </span>
+              </label>
+              <p class="muted" style="margin-bottom:0">Seeking pauses playback. Playback stops automatically at 120 seconds.</p>
+            </div>
+          </section>
+
+          <section class="card card-body" aria-labelledby="selectionHeading">
+            <h2 id="selectionHeading">Planet selection</h2>
+            <div class="planet-list" id="planetList" aria-label="Planets"></div>
+            <div class="button-row" style="margin-top:0.65rem">
+              <button type="button" id="clearSelectionButton" class="button-subtle">Clear selection</button>
+            </div>
+            <div class="info-panel" id="infoPanel" aria-live="polite" style="margin-top:0.7rem"></div>
+          </section>
+
+          <section class="card card-body" aria-labelledby="snapshotHeading">
+            <h2 id="snapshotHeading">Observation snapshots</h2>
+            <p class="muted">Capture up to three states. Restore pauses playback and returns to a deterministic standard frame.</p>
+            <div class="button-row" style="margin-bottom:0.7rem">
+              <button type="button" id="captureButton" class="button-primary">Capture snapshot</button>
+            </div>
+            <ol id="snapshotList" class="snapshot-list" aria-live="polite"></ol>
+          </section>
+
+          <section class="card card-body" aria-labelledby="jsonHeading">
+            <h2 id="jsonHeading">Snapshot JSON</h2>
+            <p class="mapping">Stable planet ID mapping: Mercury <code>mercury</code>, Venus <code>venus</code>, Earth <code>earth</code>. A tracking snapshot must select one of those IDs.</p>
+            <label class="control-label" for="jsonArea">Exported or imported snapshot list</label>
+            <textarea id="jsonArea" aria-label="Snapshot JSON text" spellcheck="false" placeholder='{"version":1,"snapshots":[]}'></textarea>
+            <div class="button-row" style="margin-top:0.65rem">
+              <button type="button" id="exportButton">Export snapshots</button>
+              <button type="button" id="importButton" class="button-primary">Import snapshots</button>
+            </div>
+          </section>
+
+          <p id="statusMessage" class="status" role="status" aria-live="polite">Ready. Planets are orbiting from simulation time 0.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const MAX_TIME = 120;
+      const MAX_SNAPSHOTS = 3;
+      const STORAGE_KEY = "solar-system-observatory-2:snapshots";
+      const TWO_PI = Math.PI * 2;
+      const planets = [
+        { id: "mercury", name: "Mercury", period: 12, radius: 4.4, size: 0.48, color: 0xffb36b, phase: 0 },
+        { id: "venus", name: "Venus", period: 24, radius: 7.2, size: 0.72, color: 0x74d6a2, phase: TWO_PI / 3 },
+        { id: "earth", name: "Earth", period: 48, radius: 10.1, size: 0.9, color: 0x68a9ff, phase: (TWO_PI * 2) / 3 }
+      ];
+      const planetById = new Map(planets.map((planet) => [planet.id, planet]));
+
+      const elements = {
+        canvas: document.getElementById("solarCanvas"),
+        engineError: document.getElementById("engineError"),
+        playbackBadge: document.getElementById("playbackBadge"),
+        sceneTime: document.getElementById("sceneTime"),
+        sceneSpeed: document.getElementById("sceneSpeed"),
+        cameraTarget: document.getElementById("cameraTarget"),
+        pauseButton: document.getElementById("pauseButton"),
+        trackButton: document.getElementById("trackButton"),
+        overviewButton: document.getElementById("overviewButton"),
+        speedRange: document.getElementById("speedRange"),
+        speedReadout: document.getElementById("speedReadout"),
+        timeRange: document.getElementById("timeRange"),
+        timeReadout: document.getElementById("timeReadout"),
+        planetList: document.getElementById("planetList"),
+        clearSelectionButton: document.getElementById("clearSelectionButton"),
+        infoPanel: document.getElementById("infoPanel"),
+        captureButton: document.getElementById("captureButton"),
+        snapshotList: document.getElementById("snapshotList"),
+        jsonArea: document.getElementById("jsonArea"),
+        exportButton: document.getElementById("exportButton"),
+        importButton: document.getElementById("importButton"),
+        status: document.getElementById("statusMessage")
+      };
+
+      if (!window.THREE) {
+        elements.engineError.hidden = false;
+        elements.engineError.textContent = "Three.js could not load, so the 3D scene is unavailable. Check the browser network connection and reload this file.";
+        elements.status.className = "status error";
+        elements.status.textContent = "The observation controls remain unavailable until the Three.js runtime loads.";
+        return;
+      }
+
+      const state = {
+        time: 0,
+        speed: 1,
+        playing: true,
+        selectedId: null,
+        viewMode: "overview",
+        snapshots: [],
+        storageAvailable: true
+      };
+
+      const orbit = { yaw: -0.58, pitch: 0.43, distance: 25 };
+      const overviewFrame = { yaw: -0.58, pitch: 0.43, distance: 25 };
+      const trackingFrame = { yaw: -0.52, pitch: 0.32, distance: 8.6 };
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(0x07101e, 20, 46);
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      const renderer = new THREE.WebGLRenderer({ canvas: elements.canvas, antialias: true, alpha: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setClearColor(0x07101e, 1);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      const cameraTarget = new THREE.Vector3();
+      const light = new THREE.HemisphereLight(0xbcdcff, 0x07101e, 1.55);
+      scene.add(light);
+      const sunLight = new THREE.PointLight(0xffd07a, 3.1, 45, 1.8);
+      scene.add(sunLight);
+
+      const sun = new THREE.Mesh(
+        new THREE.SphereGeometry(1.55, 48, 32),
+        new THREE.MeshStandardMaterial({ color: 0xffc75f, emissive: 0xff8a2c, emissiveIntensity: 1.15, roughness: 0.52 })
+      );
+      sun.name = "Sun";
+      scene.add(sun);
+      const sunGlow = new THREE.Mesh(
+        new THREE.SphereGeometry(1.73, 32, 20),
+        new THREE.MeshBasicMaterial({ color: 0xffa94d, transparent: true, opacity: 0.11, depthWrite: false })
+      );
+      scene.add(sunGlow);
+
+      const planetMeshes = [];
+      const planetMeshById = new Map();
+      planets.forEach((planet) => {
+        const guideGeometry = new THREE.RingGeometry(planet.radius - 0.018, planet.radius + 0.018, 128);
+        const guideMaterial = new THREE.MeshBasicMaterial({ color: 0x6f9fca, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+        const guide = new THREE.Mesh(guideGeometry, guideMaterial);
+        guide.rotation.x = Math.PI / 2;
+        scene.add(guide);
+
+        const mesh = new THREE.Mesh(
+          new THREE.SphereGeometry(planet.size, 36, 24),
+          new THREE.MeshStandardMaterial({ color: planet.color, emissive: planet.color, emissiveIntensity: 0.18, roughness: 0.55, metalness: 0.08 })
+        );
+        mesh.name = planet.name;
+        mesh.userData.planetId = planet.id;
+        scene.add(mesh);
+        planetMeshes.push(mesh);
+        planetMeshById.set(planet.id, mesh);
+      });
+
+      const selectionHalo = new THREE.Mesh(
+        new THREE.TorusGeometry(1, 0.07, 12, 48),
+        new THREE.MeshBasicMaterial({ color: 0xffffa4, transparent: true, opacity: 0.95 })
+      );
+      selectionHalo.rotation.x = Math.PI / 2;
+      selectionHalo.visible = false;
+      scene.add(selectionHalo);
+
+      let lastFrameTime = performance.now();
+      let snapshotSequence = 0;
+      let drag = null;
+
+      function own(object, key) {
+        return Object.prototype.hasOwnProperty.call(object, key);
+      }
+
+      function isObject(value) {
+        return value !== null && typeof value === "object" && !Array.isArray(value);
+      }
+
+      function isFiniteNumber(value) {
+        return typeof value === "number" && Number.isFinite(value);
+      }
+
+      function normalizedDegrees(radians) {
+        const raw = (radians * 180) / Math.PI;
+        return ((raw % 360) + 360) % 360;
+      }
+
+      function orbitalAngle(planet, time = state.time) {
+        return planet.phase + (time / planet.period) * TWO_PI;
+      }
+
+      function orbitalDegrees(planet, time = state.time) {
+        return normalizedDegrees(orbitalAngle(planet, time));
+      }
+
+      function planetPosition(planet, time = state.time) {
+        const angle = orbitalAngle(planet, time);
+        return new THREE.Vector3(Math.cos(angle) * planet.radius, 0, Math.sin(angle) * planet.radius);
+      }
+
+      function formatNumber(value) {
+        return Number(value).toFixed(3);
+      }
+
+      function formatSelected(id) {
+        return id ? `${planetById.get(id).name} (${id})` : "No selection";
+      }
+
+      function setStatus(message, kind = "") {
+        elements.status.className = `status${kind ? ` ${kind}` : ""}`;
+        elements.status.textContent = message;
+      }
+
+      function validatePayload(payload) {
+        if (!isObject(payload)) throw new Error("The root must be a JSON object.");
+        if (!own(payload, "version") || !own(payload, "snapshots")) throw new Error("The root must contain version and snapshots.");
+        if (payload.version !== 1 || typeof payload.version !== "number") throw new Error("version must be the JSON number 1.");
+        if (!Array.isArray(payload.snapshots)) throw new Error("snapshots must be an array.");
+        if (payload.snapshots.length > MAX_SNAPSHOTS) throw new Error("At most three snapshots are allowed.");
+
+        const ids = new Set();
+        const cleaned = payload.snapshots.map((snapshot, index) => {
+          if (!isObject(snapshot)) throw new Error(`Snapshot ${index + 1} must be an object.`);
+          const required = ["id", "time", "speed", "selectedPlanet", "viewMode"];
+          if (!required.every((field) => own(snapshot, field))) {
+            throw new Error(`Snapshot ${index + 1} is missing a required field.`);
+          }
+          if (typeof snapshot.id !== "string" || snapshot.id.length < 1) {
+            throw new Error(`Snapshot ${index + 1} needs a nonempty string id.`);
+          }
+          if (ids.has(snapshot.id)) throw new Error(`Snapshot IDs must be unique (duplicate: ${snapshot.id}).`);
+          ids.add(snapshot.id);
+          if (!isFiniteNumber(snapshot.time) || snapshot.time < 0 || snapshot.time > MAX_TIME) {
+            throw new Error(`Snapshot ${index + 1} time must be a finite number from 0 to 120.`);
+          }
+          if (!isFiniteNumber(snapshot.speed) || snapshot.speed < 0.25 || snapshot.speed > 4) {
+            throw new Error(`Snapshot ${index + 1} speed must be a finite number from 0.25 to 4.`);
+          }
+          if (snapshot.selectedPlanet !== null && !planetById.has(snapshot.selectedPlanet)) {
+            throw new Error(`Snapshot ${index + 1} has an unknown selectedPlanet.`);
+          }
+          if (snapshot.viewMode !== "overview" && snapshot.viewMode !== "tracking") {
+            throw new Error(`Snapshot ${index + 1} viewMode must be overview or tracking.`);
+          }
+          if (snapshot.viewMode === "tracking" && snapshot.selectedPlanet === null) {
+            throw new Error(`Snapshot ${index + 1} cannot track without a selected planet.`);
+          }
+          return {
+            id: snapshot.id,
+            time: snapshot.time,
+            speed: snapshot.speed,
+            selectedPlanet: snapshot.selectedPlanet,
+            viewMode: snapshot.viewMode
+          };
+        });
+        return cleaned;
+      }
+
+      function serializedSnapshots() {
+        return {
+          version: 1,
+          snapshots: state.snapshots.map((snapshot) => ({
+            id: snapshot.id,
+            time: snapshot.time,
+            speed: snapshot.speed,
+            selectedPlanet: snapshot.selectedPlanet,
+            viewMode: snapshot.viewMode
+          }))
+        };
+      }
+
+      function loadSnapshots() {
+        let raw;
+        try {
+          raw = window.localStorage.getItem(STORAGE_KEY);
+          state.storageAvailable = true;
+        } catch (error) {
+          state.snapshots = [];
+          state.storageAvailable = false;
+          setStatus("Saving is unavailable. The snapshot list starts empty and remains usable in memory for this session.", "warning");
+          return;
+        }
+        if (raw === null) return;
+        try {
+          state.snapshots = validatePayload(JSON.parse(raw));
+        } catch (error) {
+          state.snapshots = [];
+          setStatus("Saved snapshot data was invalid and was ignored. The snapshot list was recovered as empty; live controls are ready.", "warning");
+        }
+      }
+
+      function persistSnapshots() {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(serializedSnapshots()));
+          state.storageAvailable = true;
+          return true;
+        } catch (error) {
+          state.storageAvailable = false;
+          setStatus("Saving is unavailable. The current snapshot list remains usable in memory but may not survive reload.", "warning");
+          return false;
+        }
+      }
+
+      function updatePlanetPositions() {
+        planets.forEach((planet) => {
+          const mesh = planetMeshById.get(planet.id);
+          const position = planetPosition(planet);
+          mesh.position.copy(position);
+        });
+
+        if (state.selectedId) {
+          const selected = planetById.get(state.selectedId);
+          const mesh = planetMeshById.get(state.selectedId);
+          selectionHalo.visible = true;
+          selectionHalo.position.copy(mesh.position);
+          const scale = selected.size * 1.8;
+          selectionHalo.scale.setScalar(scale);
+        } else {
+          selectionHalo.visible = false;
+        }
+      }
+
+      function currentCameraTarget() {
+        if (state.viewMode === "tracking" && state.selectedId) {
+          return planetMeshById.get(state.selectedId).position;
+        }
+        return sun.position;
+      }
+
+      function updateCamera() {
+        cameraTarget.copy(currentCameraTarget());
+        const cosPitch = Math.cos(orbit.pitch);
+        camera.position.set(
+          cameraTarget.x + orbit.distance * cosPitch * Math.sin(orbit.yaw),
+          cameraTarget.y + orbit.distance * Math.sin(orbit.pitch),
+          cameraTarget.z + orbit.distance * cosPitch * Math.cos(orbit.yaw)
+        );
+        camera.lookAt(cameraTarget);
+      }
+
+      function setStandardFrame(viewMode) {
+        const frame = viewMode === "tracking" ? trackingFrame : overviewFrame;
+        orbit.yaw = frame.yaw;
+        orbit.pitch = frame.pitch;
+        orbit.distance = frame.distance;
+      }
+
+      function updateInfoPanel() {
+        if (!state.selectedId) {
+          elements.infoPanel.innerHTML = "<h3>No planet selected</h3><p class=\"muted\" style=\"margin-bottom:0\">Choose a planet from the list or click one in the 3D scene. No highlight is active.</p>";
+          return;
+        }
+        const planet = planetById.get(state.selectedId);
+        const angle = orbitalDegrees(planet);
+        elements.infoPanel.innerHTML = `
+          <h3>${planet.name} selected</h3>
+          <dl>
+            <dt>Stable ID</dt><dd><code>${planet.id}</code></dd>
+            <dt>Orbital period</dt><dd>${planet.period} simulation seconds</dd>
+            <dt>Current angle</dt><dd>${formatNumber(angle)}°</dd>
+            <dt>Camera mode</dt><dd>${state.viewMode === "tracking" ? "Tracking selected planet" : "Full-system overview"}</dd>
+          </dl>`;
+      }
+
+      function updatePlanetButtons() {
+        Array.from(elements.planetList.querySelectorAll("button[data-planet-id]")).forEach((button) => {
+          const selected = button.dataset.planetId === state.selectedId;
+          button.setAttribute("aria-pressed", String(selected));
+        });
+      }
+
+      function updateControls() {
+        const atEnd = state.time >= MAX_TIME;
+        elements.pauseButton.textContent = state.playing ? "Pause playback" : (atEnd ? "Resume from current time" : "Resume playback");
+        elements.pauseButton.setAttribute("aria-pressed", String(!state.playing));
+        elements.playbackBadge.textContent = state.playing ? "Playback: running" : (atEnd ? "Playback: stopped at 120 s" : "Playback: paused");
+        elements.trackButton.disabled = !state.selectedId;
+        elements.trackButton.textContent = state.viewMode === "tracking" ? "Tracking selected planet" : "Track selected planet";
+        elements.trackButton.setAttribute("aria-pressed", String(state.viewMode === "tracking"));
+        elements.speedRange.value = String(state.speed);
+        elements.timeRange.value = String(state.time);
+        const timeText = `${formatNumber(state.time)} s`;
+        const speedText = `${formatNumber(state.speed)}×`;
+        elements.timeReadout.textContent = timeText;
+        elements.speedReadout.textContent = speedText;
+        elements.sceneTime.textContent = timeText;
+        elements.sceneSpeed.textContent = speedText;
+        elements.cameraTarget.textContent = state.viewMode === "tracking" && state.selectedId
+          ? `${planetById.get(state.selectedId).name} (tracking)`
+          : "Sun / full system";
+        updatePlanetButtons();
+        updateInfoPanel();
+      }
+
+      function renderSnapshotList() {
+        elements.snapshotList.replaceChildren();
+        if (state.snapshots.length === 0) {
+          const item = document.createElement("li");
+          item.className = "empty-list";
+          item.textContent = "No saved snapshots. Capture an observation to begin.";
+          elements.snapshotList.append(item);
+          return;
+        }
+        state.snapshots.forEach((snapshot, index) => {
+          const item = document.createElement("li");
+          item.className = "snapshot-item";
+
+          const heading = document.createElement("div");
+          heading.className = "snapshot-heading";
+          const label = document.createElement("strong");
+          label.textContent = `Snapshot ${index + 1}`;
+          const id = document.createElement("code");
+          id.textContent = snapshot.id;
+          heading.append(label, id);
+
+          const values = document.createElement("p");
+          values.className = "snapshot-detail";
+          values.textContent = `Time ${formatNumber(snapshot.time)} s · Speed ${formatNumber(snapshot.speed)}× · ${formatSelected(snapshot.selectedPlanet)} · ${snapshot.viewMode}`;
+
+          const angles = planets.map((planet) => `${planet.name} ${formatNumber(orbitalDegrees(planet, snapshot.time))}°`).join(" · ");
+          const detail = document.createElement("p");
+          detail.className = "snapshot-detail";
+          detail.textContent = `Captured derived angles: ${angles}`;
+
+          const buttons = document.createElement("div");
+          buttons.className = "button-row";
+          const restore = document.createElement("button");
+          restore.type = "button";
+          restore.textContent = "Restore";
+          restore.setAttribute("aria-label", `Restore snapshot ${snapshot.id}`);
+          restore.addEventListener("click", () => restoreSnapshot(snapshot.id));
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "button-subtle";
+          remove.textContent = "Delete";
+          remove.setAttribute("aria-label", `Delete snapshot ${snapshot.id}`);
+          remove.addEventListener("click", () => deleteSnapshot(snapshot.id));
+          buttons.append(restore, remove);
+          item.append(heading, values, detail, buttons);
+          elements.snapshotList.append(item);
+        });
+      }
+
+      function synchronize() {
+        updatePlanetPositions();
+        updateCamera();
+        updateControls();
+        renderer.render(scene, camera);
+      }
+
+      function setSelection(id) {
+        if (id !== null && !planetById.has(id)) return;
+        state.selectedId = id;
+        if (!id && state.viewMode === "tracking") state.viewMode = "overview";
+        synchronize();
+      }
+
+      function togglePlayback() {
+        if (state.playing) {
+          state.playing = false;
+          setStatus("Playback paused. Camera, selection, speed, and snapshots remain available.");
+        } else {
+          if (state.time >= MAX_TIME) {
+            setStatus("Playback is at 120 seconds. Seek to an earlier time before resuming.", "warning");
+            synchronize();
+            return;
+          }
+          state.playing = true;
+          lastFrameTime = performance.now();
+          setStatus("Playback resumed from the current deterministic simulation time.", "success");
+        }
+        synchronize();
+      }
+
+      function enterTracking() {
+        if (!state.selectedId) {
+          setStatus("Select a planet before enabling tracking. No state was changed.", "warning");
+          return;
+        }
+        state.viewMode = "tracking";
+        setStandardFrame("tracking");
+        setStatus(`Tracking ${planetById.get(state.selectedId).name}. Camera orbit and zoom remain available.`, "success");
+        synchronize();
+      }
+
+      function returnOverview() {
+        state.viewMode = "overview";
+        setStandardFrame("overview");
+        setStatus("Returned to the full-system overview. Selection, time, speed, and playback state were preserved.", "success");
+        synchronize();
+      }
+
+      function seek(time) {
+        state.time = Math.min(MAX_TIME, Math.max(0, time));
+        state.playing = false;
+        lastFrameTime = performance.now();
+        setStatus(`Sought to ${formatNumber(state.time)} seconds and paused playback.`);
+        synchronize();
+      }
+
+      function setSpeed(speed) {
+        state.speed = Math.min(4, Math.max(0.25, speed));
+        setStatus(`Global speed is ${formatNumber(state.speed)}×. Simulation time and planet positions were unchanged.`);
+        synchronize();
+      }
+
+      function createSnapshotId() {
+        let candidate;
+        do {
+          snapshotSequence += 1;
+          candidate = `obs-${Date.now().toString(36)}-${snapshotSequence.toString(36)}`;
+        } while (state.snapshots.some((snapshot) => snapshot.id === candidate));
+        return candidate;
+      }
+
+      function captureSnapshot() {
+        if (state.snapshots.length >= MAX_SNAPSHOTS) {
+          setStatus("Snapshot capacity reached: three snapshots are already saved. Delete one before capturing another.", "warning");
+          return;
+        }
+        const snapshot = {
+          id: createSnapshotId(),
+          time: state.time,
+          speed: state.speed,
+          selectedPlanet: state.selectedId,
+          viewMode: state.viewMode
+        };
+        state.snapshots.push(snapshot);
+        const saved = persistSnapshots();
+        renderSnapshotList();
+        setStatus(saved
+          ? `Captured snapshot ${snapshot.id}. Its time, speed, selection, view, and derived angles are fixed.`
+          : `Captured snapshot ${snapshot.id} in memory. Saving is unavailable, so it may not survive reload.`, saved ? "success" : "warning");
+      }
+
+      function restoreSnapshot(id) {
+        const snapshot = state.snapshots.find((candidate) => candidate.id === id);
+        if (!snapshot) return;
+        state.time = snapshot.time;
+        state.speed = snapshot.speed;
+        state.selectedId = snapshot.selectedPlanet;
+        state.viewMode = snapshot.viewMode;
+        state.playing = false;
+        setStandardFrame(state.viewMode);
+        lastFrameTime = performance.now();
+        setStatus(`Restored ${snapshot.id}: playback is paused and the deterministic ${state.viewMode} frame was applied.`, "success");
+        synchronize();
+      }
+
+      function deleteSnapshot(id) {
+        const index = state.snapshots.findIndex((snapshot) => snapshot.id === id);
+        if (index < 0) return;
+        state.snapshots.splice(index, 1);
+        const saved = persistSnapshots();
+        renderSnapshotList();
+        setStatus(saved
+          ? `Deleted snapshot ${id}. Remaining snapshot order and live state are unchanged.`
+          : `Deleted snapshot ${id} in memory. Saving is unavailable, so the change may not survive reload.`, saved ? "success" : "warning");
+      }
+
+      function exportSnapshots() {
+        elements.jsonArea.value = JSON.stringify(serializedSnapshots());
+        setStatus(`Exported ${state.snapshots.length} snapshot${state.snapshots.length === 1 ? "" : "s"} without changing live state.`, "success");
+      }
+
+      function importSnapshots() {
+        let imported;
+        try {
+          imported = validatePayload(JSON.parse(elements.jsonArea.value));
+        } catch (error) {
+          const reason = error instanceof Error ? error.message : "The JSON could not be validated.";
+          setStatus(`Import rejected: ${reason} Existing snapshots and live state are unchanged.`, "error");
+          return;
+        }
+        state.snapshots = imported;
+        const saved = persistSnapshots();
+        renderSnapshotList();
+        setStatus(saved
+          ? `Imported ${imported.length} valid snapshot${imported.length === 1 ? "" : "s"}. Only the snapshot list changed.`
+          : `Imported ${imported.length} valid snapshot${imported.length === 1 ? "" : "s"} in memory. Saving is unavailable; live state was preserved.`, saved ? "success" : "warning");
+      }
+
+      function resizeRenderer() {
+        const width = Math.max(1, elements.canvas.clientWidth);
+        const height = Math.max(1, elements.canvas.clientHeight);
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        synchronize();
+      }
+
+      function pointerPosition(event) {
+        const rect = elements.canvas.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      }
+
+      elements.pauseButton.addEventListener("click", togglePlayback);
+      elements.trackButton.addEventListener("click", enterTracking);
+      elements.overviewButton.addEventListener("click", returnOverview);
+      elements.speedRange.addEventListener("input", (event) => setSpeed(Number(event.target.value)));
+      elements.timeRange.addEventListener("input", (event) => seek(Number(event.target.value)));
+      elements.clearSelectionButton.addEventListener("click", () => {
+        const wasTracking = state.viewMode === "tracking";
+        setSelection(null);
+        setStatus(wasTracking ? "Selection cleared and tracking returned to overview." : "Selection cleared. No planet is highlighted.");
+      });
+      elements.captureButton.addEventListener("click", captureSnapshot);
+      elements.exportButton.addEventListener("click", exportSnapshots);
+      elements.importButton.addEventListener("click", importSnapshots);
+
+      planets.forEach((planet) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "planet-button";
+        button.dataset.planetId = planet.id;
+        button.setAttribute("aria-pressed", "false");
+        button.setAttribute("aria-label", `Select ${planet.name}, ID ${planet.id}`);
+        const swatch = document.createElement("span");
+        swatch.className = "planet-swatch";
+        swatch.style.color = `#${planet.color.toString(16).padStart(6, "0")}`;
+        swatch.style.background = `#${planet.color.toString(16).padStart(6, "0")}`;
+        const text = document.createElement("span");
+        text.textContent = `${planet.name} — ${planet.period} s orbit`;
+        const id = document.createElement("span");
+        id.className = "planet-id";
+        id.textContent = planet.id;
+        button.append(swatch, text, id);
+        button.addEventListener("click", () => {
+          setSelection(planet.id);
+          setStatus(`Selected ${planet.name} from the planet list.`, "success");
+        });
+        elements.planetList.append(button);
+      });
+
+      elements.canvas.addEventListener("pointerdown", (event) => {
+        drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, yaw: orbit.yaw, pitch: orbit.pitch, moved: false };
+        elements.canvas.setPointerCapture(event.pointerId);
+      });
+
+      elements.canvas.addEventListener("pointermove", (event) => {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+        if (drag.moved) {
+          orbit.yaw = drag.yaw - dx * 0.009;
+          orbit.pitch = Math.max(-1.28, Math.min(1.28, drag.pitch - dy * 0.009));
+          synchronize();
+        }
+      });
+
+      elements.canvas.addEventListener("pointerup", (event) => {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const wasDrag = drag.moved;
+        drag = null;
+        if (elements.canvas.hasPointerCapture(event.pointerId)) elements.canvas.releasePointerCapture(event.pointerId);
+        if (wasDrag) return;
+        pointerPosition(event);
+        raycaster.setFromCamera(pointer, camera);
+        const hits = raycaster.intersectObjects(planetMeshes, false);
+        if (hits.length > 0) {
+          const id = hits[0].object.userData.planetId;
+          setSelection(id);
+          setStatus(`Selected ${planetById.get(id).name} directly in the 3D scene.`, "success");
+        }
+      });
+
+      elements.canvas.addEventListener("pointercancel", () => { drag = null; });
+      elements.canvas.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        orbit.distance = Math.max(4.2, Math.min(38, orbit.distance * Math.exp(event.deltaY * 0.0012)));
+        synchronize();
+      }, { passive: false });
+
+      elements.canvas.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          elements.canvas.blur();
+          setStatus("Canvas focus released. Use the labeled DOM controls for keyboard operation.");
+        }
+      });
+
+      window.addEventListener("resize", resizeRenderer);
+
+      function animate(now) {
+        const elapsed = Math.min((now - lastFrameTime) / 1000, 0.25);
+        lastFrameTime = now;
+        if (state.playing) {
+          const before = state.time;
+          state.time = Math.min(MAX_TIME, state.time + elapsed * state.speed);
+          if (state.time >= MAX_TIME && before < MAX_TIME) {
+            state.playing = false;
+            setStatus("Playback reached 120 seconds and stopped. Seek to an earlier time to resume.", "warning");
+          }
+        }
+        synchronize();
+        window.requestAnimationFrame(animate);
+      }
+
+      loadSnapshots();
+      renderSnapshotList();
+      resizeRenderer();
+      lastFrameTime = performance.now();
+      window.requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>

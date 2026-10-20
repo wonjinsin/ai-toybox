@@ -1,0 +1,257 @@
+{
+  "format_version": "4.0",
+  "rubric_version": "solar-system-4.0",
+  "reviewed_at": null,
+  "reviewer": {
+    "model": null,
+    "effort": null
+  },
+  "status": "partial",
+  "requirements_verdict": "unverified",
+  "verification": {
+    "browser_method": "none",
+    "viewports": []
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": 0,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": 0,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": 0,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": 0,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": 0,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": 0,
+      "score_upper_bound": 5
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S5",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S6",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S7",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "S8",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "T1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "T2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "T3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "T4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "T5",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "U1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "U2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "U3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "U4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "U5",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "V1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "V2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "L1",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "L2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "D2",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "D4",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "D5",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    },
+    {
+      "id": "D6",
+      "status": "unverified",
+      "rating": null,
+      "method": "none",
+      "evidence": "Not observed. Required actions and expected outcomes have not been checked."
+    }
+  ],
+  "raw_total_score": 0,
+  "raw_total_score_upper_bound": 100,
+  "score_cap": null,
+  "total_score": 0,
+  "total_score_upper_bound": 100,
+  "coverage": {
+    "passed": 0,
+    "failed": 0,
+    "unverified": 27
+  },
+  "notes": [
+    "Review time and reviewer metadata are not yet known. No artifact or browser behavior has been observed."
+  ]
+}

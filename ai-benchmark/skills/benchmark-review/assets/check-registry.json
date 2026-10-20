@@ -10,6 +10,7 @@
   "rubrics": {
     "solar-system-2.0": {
       "format_version": "2.0",
+      "scoring": "nullable-legacy",
       "mandatory_failure_cap": null,
       "checks": [
         { "id": "S1", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R1", "R3"], "method": "http" },
@@ -35,7 +36,41 @@
     },
     "solar-system-4.0": {
       "format_version": "4.0",
+      "scoring": "bounded-capped",
       "mandatory_failure_cap": 69,
+      "checks": [
+        { "id": "S1", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R1", "R3"], "method": "http" },
+        { "id": "S2", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R2"], "method": "http" },
+        { "id": "S3", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R4"], "method": "http" },
+        { "id": "S4", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R5"], "method": "http" },
+        { "id": "S5", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R3", "R9"], "method": "http" },
+        { "id": "S6", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R9"], "method": "http" },
+        { "id": "S7", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R1"], "method": "http" },
+        { "id": "S8", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R12"], "method": "http" },
+        { "id": "T1", "category": "selection", "mandatory": true, "qualitative": false, "requirements": ["R7"], "method": "http" },
+        { "id": "T2", "category": "selection", "mandatory": true, "qualitative": false, "requirements": ["R7"], "method": "http" },
+        { "id": "T3", "category": "selection", "mandatory": true, "qualitative": false, "requirements": ["R8", "R9"], "method": "http" },
+        { "id": "T4", "category": "selection", "mandatory": true, "qualitative": false, "requirements": ["R8"], "method": "http" },
+        { "id": "T5", "category": "selection", "mandatory": true, "qualitative": false, "requirements": ["R12"], "method": "http" },
+        { "id": "U1", "category": "usability", "mandatory": true, "qualitative": false, "requirements": ["R4", "R10"], "method": "http" },
+        { "id": "U2", "category": "usability", "mandatory": true, "qualitative": false, "requirements": ["R10"], "method": "http" },
+        { "id": "U3", "category": "usability", "mandatory": false, "qualitative": true, "requirements": [], "method": "http" },
+        { "id": "U4", "category": "usability", "mandatory": true, "qualitative": false, "requirements": ["R12"], "method": "http" },
+        { "id": "U5", "category": "usability", "mandatory": true, "qualitative": false, "requirements": ["R15"], "method": "http" },
+        { "id": "V1", "category": "visual", "mandatory": false, "qualitative": true, "requirements": [], "method": "http" },
+        { "id": "V2", "category": "visual", "mandatory": false, "qualitative": true, "requirements": [], "method": "http" },
+        { "id": "L1", "category": "responsive", "mandatory": true, "qualitative": false, "requirements": ["R11"], "method": "http" },
+        { "id": "L2", "category": "responsive", "mandatory": true, "qualitative": false, "requirements": ["R11"], "method": "http" },
+        { "id": "D2", "category": "delivery", "mandatory": true, "qualitative": false, "requirements": ["R6"], "method": "static" },
+        { "id": "D3", "category": "delivery", "mandatory": false, "qualitative": false, "requirements": [], "method": "http" },
+        { "id": "D4", "category": "delivery", "mandatory": true, "qualitative": false, "requirements": ["R13"], "method": "http" },
+        { "id": "D5", "category": "delivery", "mandatory": true, "qualitative": false, "requirements": ["R13"], "method": "http" },
+        { "id": "D6", "category": "delivery", "mandatory": true, "qualitative": false, "requirements": ["R14"], "method": "http" }
+      ]
+    },
+    "solar-system-5.0": {
+      "format_version": "5.0",
+      "scoring": "bounded-quality",
       "checks": [
         { "id": "S1", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R1", "R3"], "method": "http" },
         { "id": "S2", "category": "simulation", "mandatory": true, "qualitative": false, "requirements": ["R2"], "method": "http" },

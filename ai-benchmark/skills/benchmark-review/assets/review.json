@@ -1,6 +1,6 @@
 {
-  "format_version": "4.0",
-  "rubric_version": "solar-system-4.0",
+  "format_version": "5.0",
+  "rubric_version": "solar-system-5.0",
   "reviewed_at": null,
   "reviewer": {
     "model": null,
@@ -241,9 +241,6 @@
       "evidence": "Not observed. Required actions and expected outcomes have not been checked."
     }
   ],
-  "raw_total_score": 0,
-  "raw_total_score_upper_bound": 100,
-  "score_cap": null,
   "total_score": 0,
   "total_score_upper_bound": 100,
   "coverage": {

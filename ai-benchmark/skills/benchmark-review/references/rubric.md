@@ -1,6 +1,6 @@
 # Solar System review rubric
 
-Rubric version `solar-system-4.0`. Review format `4.0`.
+Rubric version `solar-system-5.0`. Review format `5.0`.
 
 ## Route the saved task
 
@@ -9,18 +9,19 @@ existing review's version. Select exactly one contract before inspecting behavio
 
 | Saved task | Rubric | Format and template |
 | --- | --- | --- |
-| `solar-system-observatory-2`, all R1 through R15 and its acceptance scenario | This rubric, `solar-system-4.0` | [Format 4.0](review-format.md), [template](../assets/review.json) |
+| `solar-system-observatory-2`, all R1 through R15 and its acceptance scenario | This rubric, `solar-system-5.0` | [Format 5.0](review-format.md), [template](../assets/review.json) |
 | Original 11-requirement task and original eight-step scenario, including saved prompts without an explicit task ID | [Frozen rubric 2.0](rubric-2.0.md), `solar-system-2.0` | [Frozen format 2.0](review-format-2.0.md), [frozen template](../assets/review-2.0.json) |
-| Missing, ambiguous, or incompatible behavioral contract | Blocked attempt with no established credit | Use the contract identified by an explicit supported task ID, otherwise format 4.0 as an envelope only; explain the mismatch |
+| Missing, ambiguous, or incompatible behavioral contract | Blocked attempt with no established credit | Use the contract identified by an explicit supported task ID, otherwise format 5.0 as an envelope only; explain the mismatch |
 
 An explicit ID does not override incompatible requirements. Harmless wording
 changes are allowed. An old prompt does not acquire new requirements because a
 new template exists. Historical task behavior, schema, and scoring are frozen,
 with version-specific links where needed. The stricter metadata completion gate
-applies to both formats; old complete files with missing metadata fail validation.
-The frozen template's empty `checks` array must be populated with its 19 registry
-entries before scoring. Never migrate, rescore, or mutate historical records as
-part of skill maintenance.
+applies to all supported formats; old complete files with missing metadata fail validation.
+The format 2 template's empty `checks` array must be populated with its 19 registry
+entries before scoring. Saved format 4 records retain the [frozen scoring policy](#frozen-format-4-policy)
+and [format 4 template](../assets/review-4.0.json). Never mutate historical records
+as part of skill maintenance.
 
 Direct-file execution, no-server delivery, and file-protocol compatibility remain
 excluded from review, including for the new task. Do not test `file://`. R6 is
@@ -192,30 +193,26 @@ and upper mean is `(s + 5u)/n`. Keep every registered check in the denominator.
 An unknown rating remains null, not an observed zero or five. Its possible
 completions define the bounds.
 
-Calculate raw bounds from the unrounded category means times weight/5. Round
+Calculate quality bounds from the unrounded category means times weight/5. Round
 category and final total endpoints to two decimals, half up. Do not calculate
 totals from rounded categories. The bounds enclose possible rounded scores;
 they are not probabilities or a promise that every interior value is attainable.
-Store lower endpoints as `score` and `raw_total_score`, and upper endpoints as
-`score_upper_bound` and `raw_total_score_upper_bound`.
+Store lower endpoints as `score` and `total_score`, and upper endpoints as
+`score_upper_bound` and `total_score_upper_bound`.
 
 `requirements_verdict` is fail if any mandatory check fails, otherwise unverified
-if any mandatory check is unverified, otherwise pass. `score_cap` is 69 only for
-a confirmed mandatory failure; otherwise it is null. Published bounds follow:
+if any mandatory check is unverified, otherwise pass. Quality is uncapped.
+A high quality score does not establish conformance. Display the mandatory
+verdict, failures, and unknown checks beside the score. Format 5 has no
+`raw_total_score`, `raw_total_score_upper_bound`, or `score_cap` fields.
 
-- With a confirmed mandatory failure, cap both raw endpoints at 69.
-- With no confirmed failure but an unknown mandatory check, cap only the lower
-  endpoint at 69. The unknown check could fail; the upper completion passes.
-- With every mandatory check passing, use the raw endpoints without a cap.
+Equal endpoints mean the rounded quality score is determined, even if reviewer
+metadata is missing. Otherwise the headline is a conservative lower bound and
+must be labeled beside its range. A mandatory S7 failure and an unknown D6 with
+all other ratings at 5 give quality 94.88..96.88 and a fail verdict. The failure
+does not collapse the unknown interval or establish a pass.
 
-Store these as `total_score` and `total_score_upper_bound`. Equal endpoints mean
-the rounded published score is determined, even if some checks remain unknown.
-Otherwise the headline is a conservative lower bound and must be labeled beside
-its range. For example, an unknown optional D3 and a confirmed mandatory failure
-can leave raw bounds of 82.2..84.2 but a determined published score of 69.
-The cap is declared policy, not an empirically calibrated quality threshold.
-
-All format 4 category and total endpoints are numeric. Missing reviewer metadata
+All format 5 category and total endpoints are numeric. Missing reviewer metadata
 affects completion status, not arithmetic. Coverage counts all 27 checks by
 status. Complete means every check is observed and required reviewer metadata
 and the timestamp are known, not that every check passes. Partial retains
@@ -226,6 +223,29 @@ zero quality or a compatible task.
 Preserve verified findings when later independent checks cannot run. Arithmetic
 validates consistency, not browser facts or the truth of metadata and prose.
 Frozen format 2 retains its original nullable, uncapped arithmetic and no bound
-fields. Format 3 is replaced, not silently reinterpreted. Only an explicit
-scoring-policy migration may recalculate existing observations under format 4;
-it does not constitute a fresh browser review.
+fields. Format 3 is unsupported, not silently reinterpreted.
+
+## Frozen format 4 policy
+
+Rubric `solar-system-4.0` and format `4.0` retain the same 27 check definitions,
+weights, mandatory flags, and evidence rules as format 5. The policy differs.
+Format 4 stores the uncapped bounds as `raw_total_score` and
+`raw_total_score_upper_bound`. Category bounds use the same formulas above.
+Its published `total_score` and `total_score_upper_bound` follow these rules:
+
+- With a confirmed mandatory failure, cap both raw endpoints at 69.
+- With no confirmed failure but an unknown mandatory check, cap only the lower
+  endpoint at 69. The unknown check could fail; the upper completion passes.
+- With every mandatory check passing, use the raw endpoints without a cap.
+
+`score_cap` is 69 only for a confirmed mandatory failure; otherwise it is null.
+The cap is declared policy, not a calibrated quality threshold. Equal published
+endpoints can hide an uncertain raw score. An optional D3 unknown and a
+mandatory failure can leave raw bounds 82.2..84.2 but published bounds 69..69.
+All-unverified records retain 0..100 bounds and no confirmed cap.
+
+Normalization and publication preserve these semantics for saved format 4.
+`projectCurrentPolicy(review, registry)` exposes the uncapped bounds separately,
+with the same verdict, failures, and unknowns. It labels the result policy-only
+and based on existing observations. It neither rewrites a review nor establishes
+new browser evidence. Format 2 measures a different task and cannot be projected.

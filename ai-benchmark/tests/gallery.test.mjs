@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { once } from 'node:events';
 import { mkdtemp, mkdir, readFile, rm, symlink, utimes, writeFile } from 'node:fs/promises';
 import http from 'node:http';
@@ -11,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { createGalleryServer } from '../scripts/serve-gallery.mjs';
 import { collectRuns } from '../gallery/data.mjs';
 import { generateGallery } from '../scripts/generate-gallery.mjs';
+import { normalize } from '../skills/benchmark-review/scripts/score-review.mjs';
 
 const generator = fileURLToPath(new URL('../scripts/generate-gallery.mjs', import.meta.url));
 
@@ -256,3 +258,196 @@ test('collection skips only literally empty directories and preserves incomplete
   assert.equal(await readFile(path.join(root, 'runs/v1/malformed/run.json'), 'utf8'), '{');
 });
 
+
+async function scoredReview(format = '4.0', outcomes = {}) {
+  const registry = JSON.parse(await readFile(new URL('../skills/benchmark-review/assets/check-registry.json', import.meta.url), 'utf8'));
+  const template = format === '5.0' ? 'review.json' : `review-${format}.json`;
+  const review = JSON.parse(await readFile(new URL(`../skills/benchmark-review/assets/${template}`, import.meta.url), 'utf8'));
+  review.reviewer = { model: 'synthetic-reviewer', effort: 'high' };
+  review.reviewed_at = '2026-10-19T00:00:00Z';
+  review.verification = { browser_method: 'http', viewports: ['1440x900', '390x844'] };
+  review.notes = ['Synthetic gallery fixture, not actual browser observations.'];
+  review.checks = registry.rubrics[review.rubric_version].checks.map(({ id, method }) => ({
+    id, status: 'pass', rating: 5, method,
+    evidence: `Action: Exercise synthetic ${id}. Expected: The fixture outcome. Observed: Synthetic gallery data, not a browser observation.`, ...outcomes[id],
+  }));
+  review.status = review.checks.some(check => check.status === 'unverified') ? 'partial' : 'complete';
+  return normalize(review, registry);
+}
+
+test('collection projects existing observations without changing published review or source bytes', async t => {
+  const { root, save } = await fixture(t);
+  const review = await scoredReview('4.0', {
+    S7: { status: 'fail', rating: 0 },
+    D6: { status: 'unverified', rating: null, method: 'none' },
+  });
+  const source = `${JSON.stringify(review, null, 2)}\n`;
+  const reviewPath = 'runs/v1/projected/reviews/review.json';
+  await save('runs/v1/projected/run.json', { model: 'projected' });
+  await save(reviewPath, source);
+  const [run] = await collectRuns(root);
+  assert.deepEqual(run.review, review);
+  assert.equal(run.review.total_score, 69);
+  assert.equal(run.review.total_score_upper_bound, 69);
+  assert.equal(run.policyProjection.kind, 'policy-only');
+  assert.equal(run.policyProjection.basis, 'existing-observations');
+  assert.equal(run.policyProjection.source_rubric, 'solar-system-4.0');
+  assert.equal(run.policyProjection.target_rubric, 'solar-system-5.0');
+  assert.equal(run.policyProjection.quality.lower, 94.88);
+  assert.equal(run.policyProjection.quality.upper, 96.88);
+  assert.equal(run.policyProjection.quality.requirements_verdict, 'fail');
+  assert.deepEqual(run.policyProjection.quality.coverage, { passed: 25, failed: 1, unverified: 1 });
+  assert.deepEqual(run.policyProjection.quality.mandatory_failed, ['S7']);
+  assert.deepEqual(run.policyProjection.quality.mandatory_unverified, ['D6']);
+  assert.equal(run.sourceReviewSha256, createHash('sha256').update(source).digest('hex'));
+  assert.equal(await readFile(path.join(root, reviewPath), 'utf8'), source);
+  await save(reviewPath, `${source}\n`);
+  const [reformatted] = await collectRuns(root);
+  assert.deepEqual(reformatted.review, run.review);
+  assert.deepEqual(reformatted.policyProjection, run.policyProjection);
+  assert.notEqual(reformatted.sourceReviewSha256, run.sourceReviewSha256);
+});
+
+test('collection separates current, historical, invalid and missing review scores', async t => {
+  const { root, save } = await fixture(t);
+  const reviews = {
+    current: await scoredReview('5.0'),
+    historical: await scoredReview('2.0'),
+    invalid: { format_version: '4.0', rubric_version: 'solar-system-4.0', total_score: 100, total_score_upper_bound: 100 },
+    malformed: '{',
+  };
+  for (const [id, review] of Object.entries(reviews)) {
+    await save(`runs/v1/${id}/run.json`, { model: id });
+    await save(`runs/v1/${id}/reviews/review.json`, review);
+  }
+  await save('runs/v1/missing/run.json', { model: 'missing' });
+  const invalidUtf8 = Buffer.from([0x7b, 0xff]);
+  await save('runs/v1/invalid-utf8/reviews/review.json', '');
+  await writeFile(path.join(root, 'runs/v1/invalid-utf8/reviews/review.json'), invalidUtf8);
+  const runs = new Map((await collectRuns(root)).map(run => [run.id, run]));
+  assert.equal(runs.get('current').policyProjection.kind, 'current');
+  assert.equal(runs.get('current').policyProjection.quality.lower, 100);
+  assert.equal(runs.get('historical').policyProjection.kind, 'historical');
+  assert.equal(runs.get('historical').policyProjection.quality, undefined);
+  assert.equal(runs.get('historical').review.total_score, 100);
+  for (const id of ['invalid', 'malformed', 'invalid-utf8', 'missing']) {
+    assert.equal(runs.get(id).policyProjection, null);
+  }
+  assert.deepEqual(runs.get('invalid').review, reviews.invalid);
+  assert.match(runs.get('invalid').issues.join(' '), /policy projection unavailable/);
+  assert.equal(runs.get('malformed').review, null);
+  assert.equal(runs.get('malformed').sourceReviewSha256, createHash('sha256').update('{').digest('hex'));
+  assert.equal(runs.get('invalid-utf8').sourceReviewSha256, createHash('sha256').update(invalidUtf8).digest('hex'));
+  assert.equal(runs.get('missing').sourceReviewSha256, null);
+});
+
+class GalleryNode {
+  constructor(tagName = '') {
+    this.tagName = tagName;
+    this.children = [];
+    this.dataset = {};
+    this.attributes = {};
+    this.listeners = {};
+    this.value = '';
+    this.text = '';
+    this.parent = null;
+  }
+  get textContent() { return this.text + this.children.map(child => child.textContent).join(''); }
+  set textContent(value) {
+    this.replaceChildren();
+    this.text = String(value);
+  }
+  get firstChild() { return this.children[0] ?? null; }
+  append(...nodes) {
+    for (const node of nodes) this.insertBefore(node, null);
+  }
+  replaceChildren(...nodes) {
+    for (const child of [...this.children]) child.remove();
+    this.text = '';
+    this.append(...nodes);
+  }
+  insertBefore(node, next) {
+    node.remove();
+    const index = next === null ? this.children.length : this.children.indexOf(next);
+    assert.ok(index >= 0);
+    this.children.splice(index, 0, node);
+    node.parent = this;
+  }
+  remove() {
+    if (this.parent) this.parent.children.splice(this.parent.children.indexOf(this), 1);
+    this.parent = null;
+  }
+  setAttribute(name, value) { this.attributes[name] = String(value); }
+  addEventListener(name, callback) { this.listeners[name] = callback; }
+}
+
+async function galleryDocument(runs, hash = '') {
+  const nodes = new Map();
+  const get = id => {
+    if (!nodes.has(id)) nodes.set(id, new GalleryNode());
+    return nodes.get(id);
+  };
+  get('sort').value = 'score';
+  get('review-filter').value = 'all';
+  const document = {
+    getElementById: get,
+    createElement: tag => new GalleryNode(tag),
+    createTextNode: text => Object.assign(new GalleryNode(), { text }),
+    querySelector: selector => get(selector),
+  };
+  const context = vm.createContext({
+    document, location: { hash }, URLSearchParams, Intl,
+    window: new GalleryNode(),
+    BENCHMARK_GALLERY: { revision: 'synthetic-snapshot', runs },
+  });
+  vm.runInContext(await readFile(new URL('../gallery/app.js', import.meta.url), 'utf8'), context);
+  return get;
+}
+
+test('gallery headlines use quality while keeping verdicts, unknowns, historical ranking and published evidence visible', async t => {
+  const { root, save } = await fixture(t);
+  const reviews = {
+    projected: await scoredReview('4.0', {
+      S7: { status: 'fail', rating: 0 },
+      D6: { status: 'unverified', rating: null, method: 'none' },
+    }),
+    current: await scoredReview('5.0'),
+    historical: await scoredReview('2.0'),
+    invalid: { format_version: '4.0', total_score: 100, total_score_upper_bound: 100 },
+  };
+  Object.assign(reviews.historical.checks.find(check => check.id === 'S1'), { status: 'fail', rating: 0 });
+  for (const [id, review] of Object.entries(reviews)) {
+    await save(`runs/v1/${id}/run.json`, { model: id, status: 'completed' });
+    await save(`runs/v1/${id}/reviews/review.json`, review);
+  }
+  const runs = await collectRuns(root);
+  const get = await galleryDocument(runs);
+  const cards = () => get('run-list').children.filter(node => node.className === 'run-card');
+  assert.deepEqual(cards().map(node => node.dataset.focusKey), ['run:current', 'run:projected', 'run:historical', 'run:invalid']);
+  const projected = cards()[1];
+  assert.match(projected.attributes['aria-label'], /94\.88점.*가능 범위 94\.88 ~ 96\.88/);
+  assert.match(projected.textContent, /새 정책 5\.0 · 기존 관찰 근거/);
+  assert.match(projected.textContent, /요구사항 실패 · 실패 1개 · 미검증 1개 · 필수 실패 1개 · 필수 미검증 1개/);
+  assert.equal(cards()[2].firstChild.textContent, '01');
+  assert.match(cards()[2].textContent, /요구사항 실패 · 실패 1개 · 미검증 0개/);
+  assert.equal(runs.find(run => run.id === 'historical').review.requirements_verdict, 'pass');
+  assert.match(cards()[3].textContent, /미채점.*정책 적용 불가/);
+  assert.doesNotMatch(cards()[3].attributes['aria-label'], /100점/);
+  const headings = get('run-list').children.filter(node => node.className === 'score-group');
+  assert.equal(headings.length, 3);
+  assert.match(headings[1].textContent, /과거 과제.*별도 순위/);
+  assert.match(get('stats').textContent, /2개 현행 정책 점수/);
+  get('review-filter').value = 'unscored';
+  get('review-filter').listeners.change();
+  assert.deepEqual(cards().map(node => node.dataset.focusKey), ['run:invalid']);
+
+  const detail = await galleryDocument(runs, '#run=projected');
+  const tabs = detail('detail').children.find(node => node.className === 'detail-tabs');
+  tabs.children.find(node => node.dataset.section === 'review').listeners.click();
+  assert.match(detail('detail').textContent, /원본 공개 점수 · solar-system-4\.0 · 69 \/ 100/);
+  assert.match(detail('detail').textContent, /새 브라우저 검증이나 결과물 개선을 의미하지 않습니다/);
+  assert.ok(detail('detail').textContent.includes(runs.find(run => run.id === 'projected').sourceReviewSha256));
+
+  const historicalOnly = await galleryDocument(runs.filter(run => run.id === 'historical'));
+  assert.match(historicalOnly('stats').textContent, /0개 현행 정책 점수/);
+});
