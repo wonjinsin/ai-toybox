@@ -1,227 +1,227 @@
-# Benchmark review
+# 벤치마크 검토
 
-## Conclusion
+## 결론
 
-Status: complete.
-Mandatory verdict: fail.
-Quality total: 79.80 / 100. Determined score. Range: 79.80.
-Quality is uncapped. The mandatory verdict is independent of the quality score.
-Mandatory failures (4): T4, T5, U2, D6.
-Mandatory unverified (0): None.
-Missing checks (0): None.
-Missing reviewer metadata: None.
-Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;21T22:22:22&#43;09:00.
-Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
-Reviewer effort: high.
+상태: complete.
+필수 요구사항 판정: fail.
+품질 총점: 79.80 / 100. 확정 점수. 범위: 79.80.
+품질 점수에는 상한 제한을 적용하지 않습니다. 필수 요구사항 판정은 품질 점수와 독립적입니다.
+필수 요구사항 실패 (4): T4, T5, U2, D6.
+필수 요구사항 미검증 (0): 없음.
+누락된 검사 (0): 없음.
+누락된 검토자 메타데이터: 없음.
+형식: 5&#46;0. 평가 기준: solar&#45;system&#45;5&#46;0.
+검토 시각: 2026&#45;10&#45;21T22:22:22&#43;09:00.
+검토자 모델: openai&#45;codex/gpt&#45;6&#45;astra.
+검토자 추론 수준: high.
 
-## Scores
+## 점수
 
-| Category | Score / 5 | Weight | Basis |
+| 범주 | 점수 / 5 | 가중치 | 근거 |
 | --- | --- | --- | --- |
-| simulation | 5.00 | 25 | S1, S2, S3, S4, S5, S6, S7, S8; determined score; full category denominator |
-| selection | 3.00 | 20 | T1, T2, T3, T4, T5; determined score; full category denominator |
-| usability | 3.60 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
-| visual | 3.00 | 15 | V1, V2; determined score; full category denominator |
-| responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 4.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
+| simulation | 5.00 | 25 | S1, S2, S3, S4, S5, S6, S7, S8; 확정 점수; 범주 전체를 분모로 사용 |
+| selection | 3.00 | 20 | T1, T2, T3, T4, T5; 확정 점수; 범주 전체를 분모로 사용 |
+| usability | 3.60 | 15 | U1, U2, U3, U4, U5; 확정 점수; 범주 전체를 분모로 사용 |
+| visual | 3.00 | 15 | V1, V2; 확정 점수; 범주 전체를 분모로 사용 |
+| responsive | 5.00 | 15 | L1, L2; 확정 점수; 범주 전체를 분모로 사용 |
+| delivery | 4.00 | 10 | D2, D3, D4, D5, D6; 확정 점수; 범주 전체를 분모로 사용 |
 
-## Findings
+## 검토 결과
 
-### Confirmed failures
+### 확인된 실패
 
 #### T4
 
-Status: fail. Rating: 0. Method: http.
+상태: fail. 평점: 0. 방법: http.
 
-Action: At 390x844 select Dione, track, pause/seek 30, and activate Full&#45;system overview; also return from each playing tracking target&#46; Expected: Entire system visible while preserving selection/time/speed/playback&#46; Observed: State preservation worked, but the standard overview at 30 clipped Dione against the canvas left boundary; its body and outer orbit extended outside the rendered scene&#46; This is canvas clipping, not vertical page scrolling&#46; Source index&#46;html line 47 fixes overview distance at 23 and line 60 changes aspect without fitting horizontal extent&#46;
+Action: 390x844에서 Dione를 선택하고 추적한 뒤 일시정지/30으로 이동하고 Full&#45;system overview를 활성화한다&#46; 재생 중 추적하는 각 대상에서도 돌아온다&#46; Expected: 선택/시간/속도/재생을 유지하면서 전체 시스템이 보인다&#46; Observed: 상태 보존은 작동했지만 30의 표준 전체 보기에서는 Dione가 캔버스 왼쪽 경계에서 잘렸으며 천체와 바깥 궤도가 렌더링 장면 밖으로 나갔다&#46; 이는 세로 페이지 스크롤이 아닌 캔버스 잘림이다&#46; 소스 index&#46;html의 47행은 전체 보기 거리를 23으로 고정하고 60행은 가로 범위를 맞추지 않은 채 종횡비만 바꾼다&#46;
 
 #### T5
 
-Status: fail. Rating: 0. Method: http.
+상태: fail. 평점: 0. 방법: http.
 
-Action: Restore selected tracking and null overview snapshots after time/selection/mode edits and manual orbit/zoom; repeat restores at the same viewport&#46; Expected: Atomic paused state plus deterministic standard tracking/full&#45;system overview framing&#46; Observed: Exact fields, cleared information, angles and pause state restored; repeated aligned image centroids were identical for tracking and null overview&#46; However restoring Null overview at time 30, speed 1&#46;5 at 390x844 again clipped Dione at the left canvas edge, so the required standard full&#45;system overview framing is not achieved&#46; Same fixed overview&#45;distance cause as T4&#46;
+Action: 시간/선택/모드를 수정하고 수동 회전/확대·축소한 뒤 선택된 추적 및 null 전체 보기 스냅샷을 복원한다&#46; 같은 뷰포트에서 복원을 반복한다&#46; Expected: 원자적인 일시정지 상태와 결정론적인 표준 추적/전체 시스템 보기 구도이다&#46; Observed: 정확한 필드, 지워진 정보, 각도 및 일시정지 상태가 복원되었다&#46; 반복하여 정렬한 이미지 중심점은 추적 및 null 전체 보기에서 동일했다&#46; 그러나 390x844에서 시간 30, 속도 1&#46;5의 Null overview를 복원하면 다시 Dione가 캔버스 왼쪽 가장자리에서 잘려 필수 표준 전체 시스템 보기 구도가 달성되지 않는다&#46; T4와 동일한 고정 전체 보기 거리 원인이다&#46;
 
 #### U2
 
-Status: fail. Rating: 0. Method: http.
+상태: fail. 평점: 0. 방법: http.
 
-Action: Restore no&#45;selection overview at time 0; pointer&#45;down on Ceres, move twenty 1&#45;CSS&#45;pixel steps right and twenty back before pointer&#45;up &#40;40 pixels cumulative&#41;; compare fast 60x20 drag and DOM interactions&#46; Expected: A camera drag never selects a planet&#46; Observed: Slow drag changed selection from null to Ceres at unchanged 0&#46;00, while fast drag left selection null&#46; Source line 62 resets drag x/y every move and marks moved only when a single&#45;event Manhattan delta exceeds 3; cumulative motion is therefore misclassified as a click&#46; DOM button/range/snapshot/JSON operations did not leak scene selection&#46;
+Action: 시간 0의 선택 없는 전체 보기를 복원한다&#46; Ceres에서 포인터를 누르고 오른쪽으로 1 CSS 픽셀씩 스무 번, 다시 반대로 스무 번 이동한 뒤 포인터를 놓는다&#40;누적 40픽셀&#41;&#46; 빠른 60x20 드래그 및 DOM 상호작용과 비교한다&#46; Expected: 카메라 드래그로 행성이 선택되어서는 안 된다&#46; Observed: 느린 드래그는 변하지 않은 0&#46;00에서 선택을 null에서 Ceres로 바꿨지만 빠른 드래그는 null을 유지했다&#46; 소스 62행은 이동마다 드래그 x/y를 초기화하고 단일 이벤트의 맨해튼 변화량이 3을 초과할 때만 moved를 설정하므로 누적 이동을 클릭으로 오분류한다&#46; DOM 버튼/범위/스냅샷/JSON 작업은 장면 선택으로 누출되지 않았다&#46;
 
 #### D6
 
-Status: fail. Rating: 0. Method: http.
+상태: fail. 평점: 0. 방법: http.
 
-Action: Reload after valid import, deletion and capture; replace only app key with malformed then schema&#45;invalid JSON; then exhaust isolated&#45;origin localStorage using unique bounded filler and capture via UI&#46; Expected: Stable persisted list with live defaults; recovery notice and usable controls; real write failure visibly says saving unavailable&#46; Observed: Import/delete/capture survived reload with IDs/order/values/angles; live restarted running at 1x/null/overview&#46; Both invalid&#45;storage fixtures yielded empty list and visible recovery notice with working controls&#46; Quota fixture accepted 5,242,848 filler characters; capture added an in&#45;memory row while app storage remained absent, proving the app write did not persist&#46; UI nevertheless showed only Captured obs&#45;mvgq6fkq&#45;1, not saving unavailable&#46; Source line 44 sets warning in persist&#40;&#41;, but line 50 unconditionally overwrites it with capture success&#46; In&#45;memory playback/selection/restore remained usable&#46; Filler removed and exact original app&#45;key absence restored&#46;
+Action: 유효한 가져오기, 삭제 및 캡처 후 새로고침한다&#46; 앱 키만 잘못된 형식 및 스키마 위반 JSON으로 차례로 교체한다&#46; 고유한 제한 크기 채움 데이터로 격리된 출처의 localStorage를 소진한 뒤 UI로 캡처한다&#46; Expected: 실시간 기본값과 함께 안정적으로 영속된 목록, 복구 알림과 사용 가능한 제어, 실제 쓰기 실패 시 눈에 보이는 저장 불가 표시이다&#46; Observed: 가져오기/삭제/캡처는 ID/순서/값/각도를 유지한 채 새로고침을 견뎠고 실시간 상태는 1x/null/overview에서 실행 중으로 재시작했다&#46; 두 잘못된 저장소 픽스처 모두 빈 목록과 눈에 보이는 복구 알림을 생성했으며 제어는 작동했다&#46; 할당량 픽스처는 채움 문자 5,242,848개를 수용했다&#46; 캡처는 앱 저장소가 없는 채로 메모리 내 행을 추가하여 앱 쓰기가 영속되지 않았음을 입증했다&#46; 그런데도 UI는 저장 불가 대신 Captured obs&#45;mvgq6fkq&#45;1만 표시했다&#46; 소스 44행은 persist&#40;&#41;에서 경고를 설정하지만 50행은 무조건 캡처 성공으로 덮어쓴다&#46; 메모리 내 재생/선택/복원은 계속 사용 가능했다&#46; 채움 데이터를 제거하고 원래 앱 키가 정확히 없던 상태를 복구했다&#46;
 
-### Missing proof
+### 입증 누락
 
-None.
+없음.
 
-### Verified passes
+### 검증 통과
 
 #### S1
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Observe the rendered sun/three differently sized blue, gold and purple planets, automatic motion, and seek 0,6,12,24,48 seconds while reading each selected angle and measuring transient screenshot color components&#46; Expected: Circular fixed&#45;phase 12/24/48&#45;second orbits&#46; Observed: Initial angles were 20&#46;05/120&#46;32/260&#46;70 degrees; at 6 seconds 200&#46;05/210&#46;32/305&#46;70&#46; Aurora returned to its identical rendered component at 12 seconds, Ceres at 24, and all three at 48&#46; Loaded source uses radii 4&#46;4/6&#46;8/9&#46;3 and fixed phases &#46;35/2&#46;1/4&#46;55 radians; observed positions and motion agree with those periods, not merely constants&#46;
+Action: 렌더링된 태양과 크기가 다른 파란색, 금색, 보라색 행성 세 개 및 자동 움직임을 관찰하고, 0,6,12,24,48초로 이동하며 각 선택 각도를 읽고 임시 스크린샷 색상 성분을 측정한다&#46; Expected: 고정 위상을 갖는 12/24/48초 주기의 원형 궤도이다&#46; Observed: 초기 각도는 20&#46;05/120&#46;32/260&#46;70도였고 6초에서는 200&#46;05/210&#46;32/305&#46;70도였다&#46; Aurora는 12초, Ceres는 24초에 동일한 렌더링 성분으로 돌아왔으며 48초에는 세 행성 모두 돌아왔다&#46; 로드된 소스는 반지름 4&#46;4/6&#46;8/9&#46;3과 고정 위상 &#46;35/2&#46;1/4&#46;55라디안을 사용한다&#46; 관찰된 위치와 움직임이 해당 주기와 일치하므로 단순한 상수 확인에 그치지 않는다&#46;
 
 #### S2
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Open fresh scene and reload in the same origin after imports/captures&#46; Expected: Time zero initialization, 1x, running, no selection, overview followed by motion&#46; Observed: Reload readouts began at 0&#46;04, 0&#46;05 and 0&#46;08 seconds after load with Pause, 1&#46;00x, explicit no&#45;selection information and disabled tracking; no snapshot auto&#45;restored&#46; Initial uninterrupted visible 1x sample advanced 5&#46;21 to 8&#46;32 seconds in 3&#46;1037 wall seconds&#46;
+Action: 새로운 장면을 열고 가져오기/캡처 후 같은 출처에서 새로고침한다&#46; Expected: 시간 0, 1x, 실행 중, 선택 없음, 전체 보기로 초기화된 뒤 움직인다&#46; Observed: 새로고침 표시값은 로드 후 0&#46;04, 0&#46;05 및 0&#46;08초에서 시작했고 Pause, 1&#46;00x, 명시적인 선택 없음 정보 및 비활성화된 추적을 표시했다&#46; 스냅샷은 자동 복원되지 않았다&#46; 최초의 중단 없는 가시적 1x 표본은 실제 시간 3&#46;1037초 동안 5&#46;21초에서 8&#46;32초로 진행했다&#46;
 
 #### S3
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Pause during tracking, seek 17 and 30, wait at least three seconds, select and orbit while paused, then resume&#46; Expected: Frozen time and orbital positions with usable selection/camera and no resume jump&#46; Observed: Paused 17&#46;00 remained exact through waits at all tested speeds; screenshot planet components were identical before/after 3&#46;1&#45;second waits&#46; Selection and camera drag/zoom worked while paused&#46; Resume began from sought state and measured deltas matched the active speed&#46;
+Action: 추적 중 일시정지하고 17 및 30으로 이동한 뒤 최소 3초 기다리며 일시정지 중 선택과 카메라 회전을 수행한 다음 재개한다&#46; Expected: 시간과 궤도 위치가 고정되고 선택/카메라를 사용할 수 있으며 재개 시 도약이 없다&#46; Observed: 시험한 모든 속도에서 대기 중 일시정지된 17&#46;00이 정확히 유지되었다&#46; 3&#46;1초 대기 전후의 스크린샷 행성 성분은 동일했다&#46; 일시정지 중 선택과 카메라 드래그/확대·축소가 작동했다&#46; 재개는 이동한 상태에서 시작했고 측정 변화량은 활성 속도와 일치했다&#46;
 
 #### S4
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Change 0&#46;25x, 2x and 4x both paused and playing; resume each paused change and measure uninterrupted visible page&#45;clock/time pairs over at least 3&#46;1 seconds&#46; Expected: Current time/positions preserved and common orbital rate changes&#46; Observed: Paused 17&#46;00 and all rendered components stayed identical at every speed&#46; Resume samples were 0&#46;76/3&#46;1029, 6&#46;21/3&#46;1029 and 12&#46;38/3&#46;1033 simulation/wall seconds; playing&#45;change samples were 0&#46;78/3&#46;1031, 6&#46;22/3&#46;1024 and 12&#46;37/3&#46;1015&#46; All meet preregistered tolerances; no reset/jump, and planet information remains consistent with the same fixed&#45;period time formula&#46;
+Action: 일시정지 및 재생 중 모두 0&#46;25x, 2x 및 4x로 변경하고 각 일시정지 중 변경을 재개한 뒤, 최소 3&#46;1초 동안 중단 없이 보이는 페이지 시계/시간 쌍을 측정한다&#46; Expected: 현재 시간/위치가 보존되고 공통 공전 속도가 변경된다&#46; Observed: 일시정지된 17&#46;00과 모든 렌더링 성분은 모든 속도에서 동일하게 유지되었다&#46; 재개 표본은 시뮬레이션/실제 시간 기준 0&#46;76/3&#46;1029, 6&#46;21/3&#46;1029 및 12&#46;38/3&#46;1033초였고, 재생 중 변경 표본은 0&#46;78/3&#46;1031, 6&#46;22/3&#46;1024 및 12&#46;37/3&#46;1015였다&#46; 모두 사전 등록 허용 오차를 충족한다&#46; 초기화/도약이 없고 행성 정보는 동일한 고정 주기 시간 공식과 일치한다&#46;
 
 #### S5
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Use real seek range for 0,30,120,17,73; revisit 30,17,73 after speed/playback/selection changes and after reload; restore fractional 17&#46;25 through valid JSON&#46; Expected: Seeking pauses and immediately synchronizes time/positions/info/tracking with fixed phases&#46; Observed: All integer seeks showed exact requested time and Resume&#46; At 30 angles were 200&#46;05/210&#46;32/125&#46;70, at 17 170&#46;05/15&#46;32/28&#46;20, at 73 50&#46;05/135&#46;32/88&#46;20&#46; Three planets’ rendered color&#45;component centroids repeated exactly in aligned 353x369 scene images before/after reload; fractional restore showed 177&#46;6/19&#46;1/30&#46;1 degrees&#46; Tracking remained centered immediately at seeks&#46;
+Action: 실제 시간 이동 슬라이더로 0,30,120,17,73으로 이동한다&#46; 속도/재생/선택 변경 후 및 새로고침 후 30,17,73을 다시 방문하고 유효한 JSON으로 소수 17&#46;25를 복원한다&#46; Expected: 시간 이동은 일시정지시키고 고정 위상으로 시간/위치/정보/추적을 즉시 동기화한다&#46; Observed: 모든 정수 시간 이동은 정확한 요청 시간과 Resume을 표시했다&#46; 30에서 각도는 200&#46;05/210&#46;32/125&#46;70, 17에서는 170&#46;05/15&#46;32/28&#46;20, 73에서는 50&#46;05/135&#46;32/88&#46;20이었다&#46; 새로고침 전후 정렬된 353x369 장면 이미지에서 세 행성의 렌더링 색상 성분 중심점이 정확히 반복되었다&#46; 소수 복원은 177&#46;6/19&#46;1/30&#46;1도를 표시했다&#46; 시간 이동 직후에도 추적은 중앙 정렬을 유지했다&#46;
 
 #### S6
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Seek 119, set 4x, resume across endpoint, wait again, seek 17 and resume&#46; Expected: Stop at 120 without wrap/overshoot and restart earlier&#46; Observed: Both endpoint reads were 120&#46;00 with Resume; later seek/resume advanced 17&#46;91 to 30&#46;28 in 3&#46;1028 wall seconds at 4x&#46;
+Action: 119로 이동하고 4x로 설정하여 끝점을 지나도록 재개한 뒤 다시 기다리고 17로 이동하여 재개한다&#46; Expected: 되감기/초과 없이 120에서 멈추고 더 이른 시간에서 다시 시작한다&#46; Observed: 두 끝점 표시값은 모두 Resume과 함께 120&#46;00이었다&#46; 이후 시간 이동/재개는 4x에서 실제 시간 3&#46;1028초 동안 17&#46;91에서 30&#46;28로 진행했다&#46;
 
 #### S7
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Inspect loaded CDN/renderer implementation and orbit/zoom rendered scene in overview/tracking, paused/playing&#46; Expected: Genuine Three&#46;js 3D geometry and perspective&#46; Observed: HTTP resource timing identified Three&#46;js 0&#46;160&#46;1; index&#46;html lines 53&#45;57 instantiate WebGLRenderer, PerspectiveCamera, SphereGeometry and 3D circular orbits&#46; Rendered spherical shading, foreground/background overlap, orbit&#45;plane tilt and relative positions changed under native drags; zoom changed apparent body size&#46; This is rendered depth evidence, not an import&#45;only inference&#46;
+Action: 로드된 CDN/렌더러 구현을 살펴보고 전체 보기/추적 및 일시정지/재생 중 렌더링 장면을 회전하고 확대·축소한다&#46; Expected: 실제 Three&#46;js 3D 기하와 원근이다&#46; Observed: HTTP 리소스 타이밍은 Three&#46;js 0&#46;160&#46;1을 확인했다&#46; index&#46;html의 53&#45;57행은 WebGLRenderer, PerspectiveCamera, SphereGeometry 및 3D 원형 궤도를 생성한다&#46; 기본 드래그에 따라 렌더링된 구의 음영, 전경/배경 겹침, 궤도면 기울기 및 상대 위치가 바뀌었고 확대/축소로 천체의 겉보기 크기가 바뀌었다&#46; 이는 가져오기만으로 추론한 것이 아닌 렌더링된 깊이 증거다&#46;
 
 #### S8
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Capture paused A at 30/2x/Dione/tracking, edit every live field and resume, restore; capture while running, export/import/reload, and restore imported 17&#46;25 with bogus supplied angles&#46; Expected: Immutable captured fields/all angles, unique stable IDs, no live mutation and time&#45;derived angles&#46; Observed: A obs&#45;mvgq3hiu&#45;1 retained 30&#46;00/2&#46;00x/Dione/tracking and 200&#46;1/210&#46;3/125&#46;7 degrees through edits&#46; Playing capture retained 0&#46;11/1x/null/overview and its derived angles across reload&#46; Captured three&#45;entry JSON exported, reimported, reloaded and exported byte&#45;identically&#46; Fractional imported 17&#46;25 displayed 177&#46;6/19&#46;1/30&#46;1, ignoring supplied 999&#45;degree angles&#46; All five saved fields, ID and three angles are visible in each row&#46;
+Action: 일시정지된 30/2x/Dione/tracking에서 A를 캡처하고 모든 실시간 필드를 수정하여 재개한 뒤 복원한다&#46; 실행 중 캡처하고 내보내기/가져오기/새로고침을 수행하며 잘못 제공된 각도가 포함된 17&#46;25를 가져와 복원한다&#46; Expected: 불변의 캡처 필드/모든 각도, 고유하고 안정적인 ID, 실시간 상태 불변 및 시간에서 도출한 각도이다&#46; Observed: A obs&#45;mvgq3hiu&#45;1은 수정 중에도 30&#46;00/2&#46;00x/Dione/tracking 및 200&#46;1/210&#46;3/125&#46;7도를 유지했다&#46; 재생 중 캡처는 새로고침 후에도 0&#46;11/1x/null/overview와 그로부터 도출한 각도를 유지했다&#46; 캡처한 세 항목 JSON은 내보내기, 다시 가져오기, 새로고침 및 재내보내기 후 바이트 단위로 동일했다&#46; 가져온 소수 17&#46;25는 제공된 999도 각도를 무시하고 177&#46;6/19&#46;1/30&#46;1을 표시했다&#46; 각 행에 저장 필드 다섯 개, ID 및 각도 세 개가 모두 보인다&#46;
 
 #### T1
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Native canvas&#45;click and labeled&#45;list select Aurora, Ceres and Dione separately while paused and while playing&#46; Expected: Both routes synchronize selection, highlight and information&#46; Observed: Six canvas trials at time 0 or approximately 0&#46;06 seconds selected the intended planet, then list&#45;switch&#45;away/back selected it again&#46; Paused trials retained Resume; playing trials retained Pause&#46; Buttons and brightened/enlarged rendered bodies shared selection; individual info showed the correct stable ID and 12/24/48&#45;second period&#46;
+Action: 일시정지 및 재생 중 각각 기본 캔버스 클릭과 레이블 목록으로 Aurora, Ceres 및 Dione를 개별 선택한다&#46; Expected: 두 경로가 선택, 강조 표시 및 정보를 동기화한다&#46; Observed: 시간 0 또는 약 0&#46;06초의 여섯 캔버스 시도에서 의도한 행성이 선택되었고 목록에서 다른 항목으로 전환했다가 돌아오면 다시 선택되었다&#46; 일시정지 시도는 Resume을, 재생 시도는 Pause를 유지했다&#46; 버튼과 밝아지고 커진 렌더링 천체는 선택 상태를 공유했다&#46; 개별 정보는 올바른 고정 ID와 12/24/48초 주기를 표시했다&#46;
 
 #### T2
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Inspect each selected planet during playback and seeking, startup no selection and null&#45;snapshot restore&#46; Expected: Accurate live name/period/angle and explicit cleared no&#45;selection state&#46; Observed: Selected readouts matched fixed&#45;phase rendered positions and updated continuously; e&#46;g&#46; Dione 125&#46;70 at 30 and 88&#46;20 at 73&#46; Null restore cleared all pressed planet buttons/highlight and showed No planet selected, not stale planet information&#46;
+Action: 재생 및 시간 이동 중 각 선택 행성, 시작 시 선택 없음 및 null 스냅샷 복원을 살펴본다&#46; Expected: 정확한 실시간 이름/주기/각도와 명시적으로 지워진 선택 없음 상태이다&#46; Observed: 선택 표시값은 고정 위상의 렌더링 위치와 일치하며 계속 갱신되었다&#46; 예를 들어 Dione는 30에서 125&#46;70, 73에서 88&#46;20이었다&#46; null 복원은 눌린 행성 버튼/강조 표시를 모두 지우고 오래된 행성 정보가 아닌 No planet selected를 표시했다&#46;
 
 #### T3
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Track all three while playing, switch targets, seek paused 30/73 and inspect disabled tracking with no selection&#46; Expected: Centered selected body and synchronized target/info/highlight without resetting state&#46; Observed: Native rendered&#45;image samples spanning over 3 seconds per planet stayed within 13 CSS pixels of scene center &#40;186&#46;67,184&#46;40&#41;, below 35&#46;31&#45;pixel tolerance; Ceres samples were about &#40;186&#46;20,183&#46;84&#41; and &#40;186&#46;36,183&#46;86&#41;&#46; Dione remained centered at immediate seeks&#46; List switches retained 1x and running playback with only natural time advance&#46; Null startup/restores disabled tracking&#46;
+Action: 재생 중 세 행성을 모두 추적하고 대상을 전환하며 일시정지된 30/73으로 이동하고 선택이 없을 때 비활성화된 추적을 살펴본다&#46; Expected: 상태 초기화 없이 선택 천체가 중앙 정렬되고 대상/정보/강조 표시가 동기화된다&#46; Observed: 행성마다 3초 넘게 걸친 기본 렌더링 이미지 표본은 장면 중심 &#40;186&#46;67,184&#46;40&#41;에서 13 CSS 픽셀 이내에 머물러 35&#46;31픽셀 허용 오차보다 작았다&#46; Ceres 표본은 약 &#40;186&#46;20,183&#46;84&#41; 및 &#40;186&#46;36,183&#46;86&#41;이었다&#46; Dione는 시간 이동 직후에도 중앙을 유지했다&#46; 목록 전환은 자연스러운 시간 진행만 허용하며 1x와 실행 중 재생을 유지했다&#46; null 시작/복원은 추적을 비활성화했다&#46;
 
 #### U1
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Native orbit drags and wheel zoom in overview/tracking both paused and playing&#46; Expected: Both controls operate around current target without changing simulation state&#46; Observed: Four mode/playback combinations changed rendered geometry view, relative planet locations and apparent size&#46; In paused overview Ceres component moved from about &#40;256&#46;3,250&#46;6&#41; to &#40;167&#46;7,210&#46;9&#41; after orbit and &#40;170&#46;4,206&#46;7&#41; after zoom while time stayed 17&#46;00&#46; Paused tracking held Ceres centered while other bodies shifted and its colored area shrank from 3797 to 2240 pixels under zoom&#46; Playing combinations retained Pause and natural advancement&#46;
+Action: 전체 보기/추적 및 일시정지/재생 중 모두 기본 회전 드래그와 휠 확대/축소를 수행한다&#46; Expected: 두 제어가 시뮬레이션 상태를 바꾸지 않고 현재 대상을 중심으로 작동한다&#46; Observed: 모드/재생의 네 조합은 렌더링 기하의 시점, 행성 상대 위치 및 겉보기 크기를 바꿨다&#46; 일시정지된 전체 보기에서 Ceres 성분은 회전 후 약 &#40;256&#46;3,250&#46;6&#41;에서 &#40;167&#46;7,210&#46;9&#41;로, 확대/축소 후 &#40;170&#46;4,206&#46;7&#41;로 이동했으며 시간은 17&#46;00을 유지했다&#46; 일시정지된 추적은 Ceres를 중앙에 유지했고 다른 천체는 이동했으며 확대/축소 중 색상 영역은 3797에서 2240픽셀로 줄었다&#46; 재생 조합은 Pause와 자연스러운 진행을 유지했다&#46;
 
 #### U3
 
-Status: pass. Rating: 3. Method: http.
+상태: pass. 평점: 3. 방법: http.
 
-Action: Inspect controls, status labels and feedback across playback, selection, tracking, capacity, snapshots and JSON operations&#46; Expected: Understandable observation workflow&#46; Observed: Explicit Pause/Resume, numeric speed/time, selected name/ID/period/angle, camera&#45;mode info, captured fields, visible capacity/rejection/import/export messages and stable&#45;ID mapping make ordinary operation clear&#46; Coherent, usable ordinary execution &#40;anchor 3&#41;, rather than exceptional presentation; the separately scored saving&#45;warning defect is not an extra qualitative penalty&#46;
+Action: 재생, 선택, 추적, 용량, 스냅샷 및 JSON 작업 전반에서 제어, 상태 레이블 및 피드백을 살펴본다&#46; Expected: 이해하기 쉬운 관찰 작업 흐름이다&#46; Observed: 명시적인 Pause/Resume, 숫자 속도/시간, 선택 이름/ID/주기/각도, 카메라 모드 정보, 캡처 필드, 눈에 보이는 용량/거부/가져오기/내보내기 메시지 및 고정 ID 매핑이 일반적인 조작을 명확하게 만든다&#46; 탁월한 표현보다는 일관되고 사용 가능한 보통 수준의 구현&#40;기준점 3&#41;이다&#46; 별도로 채점한 저장 경고 결함은 추가적인 정성 감점이 아니다&#46;
 
 #### U4
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Capture three differing entries, attempt fourth, delete middle and capture replacement&#46; Expected: At most three, visible rejection, stable existing entries and append order, no ID collision/live mutation&#46; Observed: Fourth capture showed Snapshot capacity reached: delete one before capturing another and preserved every row plus 17&#46;00/2x/Aurora/overview/paused&#46; Deleting obs&#45;mvgq4mfy&#45;2 retained A then obs&#45;mvgq4mvw&#45;3; replacement obs&#45;mvgq4njz&#45;4 appended with a new ID and existing values unchanged&#46;
+Action: 서로 다른 항목 세 개를 캡처하고 네 번째를 시도한 뒤 중간 항목을 삭제하고 대체 항목을 캡처한다&#46; Expected: 최대 세 개, 눈에 보이는 거부, 안정적인 기존 항목과 추가 순서, ID 충돌/실시간 상태 변경 없음이다&#46; Observed: 네 번째 캡처는 Snapshot capacity reached: delete one before capturing another를 표시했고 모든 행과 17&#46;00/2x/Aurora/overview/paused를 유지했다&#46; obs&#45;mvgq4mfy&#45;2를 삭제해도 A와 그 뒤의 obs&#45;mvgq4mvw&#45;3은 유지되었다&#46; 대체 obs&#45;mvgq4njz&#45;4는 새 ID로 끝에 추가되었고 기존 값은 변하지 않았다&#46;
 
 #### U5
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: At both actual viewports operate all primary DOM controls using Tab/Shift&#43;Tab, Enter, Home/ArrowRight and textarea keyboard typing&#46; Expected: Meaningful accessible names, visible focus, normal operation and no trap&#46; Observed: Pause/resume, all planet buttons, tracking/overview, speed/time, capture/restore/delete, export, typing JSON and import all worked&#46; Focus moved forward/back and out of final control; focused controls had solid visible outlines and screenshot showed cyan restore focus&#46; Deleted button disappears rather than trapping focus&#46; Native action names and labels were meaningful; no canvas keyboard camera requirement was imposed&#46;
+Action: 두 실제 뷰포트에서 Tab/Shift&#43;Tab, Enter, Home/ArrowRight 및 textarea 키보드 입력으로 모든 주요 DOM 제어를 조작한다&#46; Expected: 의미 있는 접근 가능한 이름, 눈에 보이는 포커스, 정상 동작 및 함정 없음이다&#46; Observed: 일시정지/재개, 모든 행성 버튼, 추적/전체 보기, 속도/시간, 캡처/복원/삭제, 내보내기, JSON 입력 및 가져오기가 모두 작동했다&#46; 포커스는 앞뒤 및 마지막 제어 밖으로 이동했다&#46; 포커스된 제어에는 뚜렷한 외곽선이 보였으며 스크린샷에는 청록색 복원 포커스가 보였다&#46; 삭제된 버튼은 포커스를 가두는 대신 사라진다&#46; 기본 동작 이름과 레이블은 의미 있었고 캔버스 키보드 카메라 요구사항은 부과하지 않았다&#46;
 
 #### V1
 
-Status: pass. Rating: 3. Method: http.
+상태: pass. 평점: 3. 방법: http.
 
-Action: Inspect live overview/tracking, highlighting, orbit/zoom and both sizes&#46; Expected: Readable scene/selection without obscuring effects&#46; Observed: Distinct blue/gold/purple spheres, sparse stars and restrained orbit lines keep bodies readable; selection enlarges/brightens clearly&#46; Shading provides depth but the scene remains visually simple, with faint orbit lines and some tiny distant bodies: clear ordinary execution, anchor 3&#46; Functional standard&#45;framing clipping is scored under T4/T5, not an additional visual penalty&#46;
+Action: 실시간 전체 보기/추적, 강조 표시, 회전/확대·축소 및 두 크기를 살펴본다&#46; Expected: 가리는 효과 없이 장면/선택을 읽을 수 있다&#46; Observed: 구분되는 파란색/금색/보라색 구, 드문 별 및 절제된 궤도선으로 천체를 읽기 쉽고 선택 시 크기/밝기가 명확하게 증가한다&#46; 음영이 깊이를 제공하지만 옅은 궤도선과 일부 작고 먼 천체로 장면은 시각적으로 단순하다&#46; 명확한 보통 수준의 구현으로 기준점 3이다&#46; 기능상의 표준 구도 잘림은 T4/T5에서 채점하며 추가 시각 감점은 하지 않는다&#46;
 
 #### V2
 
-Status: pass. Rating: 3. Method: http.
+상태: pass. 평점: 3. 방법: http.
 
-Action: Inspect desktop and mobile panels including populated snapshots and JSON&#46; Expected: Coherent legible hierarchy&#46; Observed: Consistent blue&#45;bordered dark panels, readable white/muted&#45;blue text, grouped headings, wrapping rows and matching button styling remain legible when vertically scrolled&#46; Snapshot text is dense but usable; hierarchy is coherent ordinary execution &#40;anchor 3&#41;&#46;
+Action: 채워진 스냅샷과 JSON을 포함하여 데스크톱 및 모바일 패널을 살펴본다&#46; Expected: 일관되고 읽기 쉬운 계층 구조이다&#46; Observed: 일관된 파란 테두리의 어두운 패널, 읽기 쉬운 흰색/차분한 파란색 텍스트, 묶인 제목, 줄바꿈 행 및 통일된 버튼 스타일이 세로 스크롤 중에도 읽기 쉽다&#46; 스냅샷 텍스트는 조밀하지만 사용 가능하며 계층 구조는 일관된 보통 수준의 구현이다&#40;기준점 3&#41;&#46;
 
 #### L1
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Measure real 1440x900 child document and operate playback, selection, tracking/overview, range controls, snapshots and JSON by mouse/keyboard&#46; Expected: Accessible scene/primary controls without horizontal scrolling or panel obstruction&#46; Observed: Actual 1440x900, document scrollWidth 1423, secure context&#46; All primary controls were reachable and operable; vertical scrolling exposed lower snapshot/JSON controls without overlays blocking them&#46;
+Action: 실제 1440x900 하위 문서를 측정하고 마우스/키보드로 재생, 선택, 추적/전체 보기, 범위 제어, 스냅샷 및 JSON을 조작한다&#46; Expected: 가로 스크롤이나 패널 방해 없이 장면/주요 제어에 접근할 수 있다&#46; Observed: 실제 1440x900, 문서 scrollWidth 1423, 보안 컨텍스트였다&#46; 모든 주요 제어에 접근하여 조작할 수 있었다&#46; 세로 스크롤로 하단 스냅샷/JSON 제어를 노출했으며 이를 막는 오버레이는 없었다&#46;
 
 #### L2
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Repeat all primary controls and keyboard sequence at real 390x844 child document, inspect scene and scrolled panels&#46; Expected: Usable controls without horizontal scrolling/occlusion&#46; Observed: Actual 390x844, document scrollWidth 373, secure context; single&#45;column layout supported selection, tracking, seek/speed, pause/resume, capture/restore/delete and typed import/export&#46; Vertical scrolling was necessary and worked; no horizontally hidden or panel&#45;blocked control&#46; Standard camera fit fails T4/T5 but the scene remains interactive&#46;
+Action: 실제 390x844 하위 문서에서 모든 주요 제어와 키보드 순서를 반복하고 장면과 스크롤된 패널을 살펴본다&#46; Expected: 가로 스크롤/가림 없이 제어를 사용할 수 있다&#46; Observed: 실제 390x844, 문서 scrollWidth 373, 보안 컨텍스트였다&#46; 단일 열 배치에서 선택, 추적, 시간 이동/속도, 일시정지/재개, 캡처/복원/삭제 및 직접 입력한 가져오기/내보내기를 지원했다&#46; 세로 스크롤이 필요했고 작동했다&#46; 가로로 숨겨지거나 패널에 막힌 제어는 없었다&#46; 표준 카메라 맞춤은 T4/T5에서 실패하지만 장면은 계속 상호작용 가능하다&#46;
 
 #### D2
 
-Status: pass. Rating: 5. Method: static.
+상태: pass. 평점: 5. 방법: static.
 
-Action: Inspect all files under output and every script/link reference in index&#46;html&#46; Expected: Complete self&#45;contained HTTP&#45;root artifact with permitted CDN dependencies&#46; Observed: Only index&#46;html exists; CSS and application JavaScript are inline, favicon is data:, and Three&#46;js loads from explicit jsDelivr HTTPS URL&#46; No missing local assets, build step or repository&#45;root dependency&#46;
+Action: output 아래 모든 파일과 index&#46;html의 모든 script/link 참조를 살펴본다&#46; Expected: 허용된 CDN 의존성을 갖춘 완전한 독립형 HTTP 루트 산출물이다&#46; Observed: index&#46;html만 존재한다&#46; CSS와 애플리케이션 JavaScript는 인라인이고 favicon은 data:이며 Three&#46;js는 명시적인 jsDelivr HTTPS URL에서 로드된다&#46; 누락된 로컬 자산, 빌드 단계 또는 저장소 루트 의존성은 없다&#46;
 
 #### D3
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: On an owned scratch origin enable Runtime and demonstrate both deliberate console&#46;error and asynchronous thrown&#45;exception signals, then enable Runtime and Network before unchanged top&#45;level HTTP artifact navigation and exercise desktop/mobile playback, selection/tracking/overview, seeks, speeds, native canvas inputs, snapshots, JSON rejection/roundtrip, reload, malformed persisted data, real quota&#45;write failure and keyboard control families&#46; Expected: No artifact&#45;caused console/page errors or failed required resources prevent intended operation&#46; Observed: Both scratch controls produced Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown&#46; At actual 1440x900 and 390x844, the artifact startup and exercised sequences produced only the Three&#46;js legacy&#45;build deprecation warning; no artifact console&#46;error, Runtime&#46;exceptionThrown, Network&#46;loadingFailed or HTTP error response appeared in collected diagnostic batches&#46; Initial HTML and CDN script both completed, and seven artifact reloads completed with their required resources&#46; All 32 exercised invalid JSON cases showed handled rejection, snapshot and reload operations remained usable, and the deliberately failed storage write was caught without an unhandled runtime error&#46; Its overwritten warning is the retained D6 defect, not a new D3 failure&#46; A reviewer&#45;side range&#45;position guard interrupted one script; inspection and native keyboard continuation recovered it without changing the artifact&#46; This focused diagnostic result does not freshly certify visual framing, timing rates or the full 27&#45;check matrix&#46;
+Action: 소유한 임시 출처에서 Runtime을 활성화하고 의도적인 console&#46;error 및 비동기 발생 예외 신호를 모두 입증한 다음, 변경하지 않은 최상위 HTTP 산출물 탐색 전에 Runtime과 Network를 활성화한다&#46; 데스크톱/모바일 재생, 선택/추적/전체 보기, 시간 이동, 속도, 기본 캔버스 입력, 스냅샷, JSON 거부/왕복 처리, 새로고침, 잘못된 형식의 영속 데이터, 실제 할당량 쓰기 실패 및 키보드 제어 계열을 조작한다&#46; Expected: 산출물로 인한 콘솔/페이지 오류나 필수 리소스 실패가 의도한 동작을 막지 않는다&#46; Observed: 두 임시 대조군은 Runtime&#46;consoleAPICalled와 Runtime&#46;exceptionThrown을 생성했다&#46; 실제 1440x900 및 390x844에서 산출물 시작과 실행한 순서는 Three&#46;js 구형 빌드 사용 중단 예정 경고만 생성했다&#46; 수집한 진단 배치에 산출물 console&#46;error, Runtime&#46;exceptionThrown, Network&#46;loadingFailed 또는 HTTP 오류 응답은 없었다&#46; 초기 HTML과 CDN 스크립트가 모두 완료되었고 산출물 새로고침 일곱 번이 필수 리소스와 함께 완료되었다&#46; 실행한 잘못된 JSON 32건은 모두 처리된 거부를 표시했고 스냅샷 및 새로고침 작업은 계속 사용 가능했으며 의도적으로 실패시킨 저장 쓰기는 처리되지 않은 런타임 오류 없이 포착되었다&#46; 덮어쓴 경고는 유지한 D6 결함이며 새로운 D3 실패가 아니다&#46; 검토자 측 범위 위치 보호 장치가 스크립트 하나를 중단했으나 산출물을 바꾸지 않고 점검과 기본 키보드 후속 조작으로 복구했다&#46; 이 집중 진단 결과는 시각 구도, 시간 속도 또는 전체 27검사 행렬을 새로 인증하지 않는다&#46;
 
 #### D4
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Export empty/populated lists, round&#45;trip through labeled textarea and explicit import/export controls, including while playing&#46; Expected: Only version/snapshots and five required entry fields, stable exact IDs/order/types and no live/list mutation&#46; Observed: Empty output was &#123;&#34;version&#34;:1,&#34;snapshots&#34;:&#91;&#93;&#125;; captured three&#45;entry export survived import/reload/export byte&#45;identically&#46; IDs with spaces, case distinctions and whitespace&#45;only string survived exactly&#46; Export omitted angles, playback and camera keys&#46; Name/ID mapping is visible&#46; Playing import/export advanced 17&#46;59 to 18&#46;45 over 0&#46;5761 wall seconds at 1&#46;5x, preserving selection, mode and playback&#46; No OS picker&#46;
+Action: 빈/채워진 목록을 내보내고 재생 중을 포함해 레이블이 있는 textarea와 명시적인 가져오기/내보내기 제어로 왕복 처리한다&#46; Expected: version/snapshots와 필수 항목 필드 다섯 개만 있고, 정확한 ID/순서/형식이 안정적이며 실시간/목록 변경이 없다&#46; Observed: 빈 출력은 &#123;&#34;version&#34;:1,&#34;snapshots&#34;:&#91;&#93;&#125;였다&#46; 캡처한 세 항목 내보내기는 가져오기/새로고침/내보내기 후 바이트 단위로 동일했다&#46; 공백, 대소문자 구분 및 공백만 있는 문자열 ID가 정확히 유지되었다&#46; 내보내기는 angles, playback 및 camera 키를 생략했다&#46; 이름/ID 매핑이 보인다&#46; 재생 중 가져오기/내보내기는 1&#46;5x에서 실제 시간 0&#46;5761초 동안 17&#46;59에서 18&#46;45로 진행했고 선택, 모드 및 재생을 유지했다&#46; OS 선택기는 없다&#46;
 
 #### D5
 
-Status: pass. Rating: 5. Method: http.
+상태: pass. 평점: 5. 방법: http.
 
-Action: Through actual textarea/buttons test 36 separate invalid payloads against a nonempty list, then valid empty/two/three&#45;entry, endpoints, fractional time/speed, null/selected overview and tracking, extra keys, exact case/space IDs, paused/playing imports and every imported restore&#46; Expected: Atomic validation and list&#45;only replacement with unchanged live state/camera&#46; Observed: All 36 invalid classes visibly rejected and preserved exact paused state and rows, including valid&#45;first/invalid&#45;second&#46; Classes covered malformed/root null/array, missing root/all entry fields, null/array entries, string/unsupported version, nonarray list, numeric strings/booleans, lower/upper ranges, 1e400, four entries, duplicate/empty/nonstring IDs, unknown/numeric/empty/string&#45;null planet and invalid/tracking&#45;null mode&#46; Rendered camera/positions stayed aligned: 35 image pairs exact; first malformed pair differed only by 190&#45;pixel page scroll, with identical canvas&#45;relative components&#46; Valid 0/120 and &#46;25/4 endpoints, 17&#46;25/1&#46;5, IDs A/a/ A /single space and ignored supplied angles round&#45;tripped exactly; import altered only list, including while playing&#46;
+Action: 실제 textarea/버튼으로 비어 있지 않은 목록에 대해 잘못된 페이로드 36개를 개별 시험한 다음 유효한 빈/두 항목/세 항목, 끝점, 소수 시간/속도, null/선택된 전체 보기 및 추적, 추가 키, 정확한 대소문자/공백 ID, 일시정지/재생 중 가져오기 및 가져온 모든 항목 복원을 시험한다&#46; Expected: 원자적 검증과 실시간 상태/카메라를 유지하는 목록 전용 교체이다&#46; Observed: 유효한 첫 항목/잘못된 두 번째 항목을 포함해 잘못된 36개 유형 모두 눈에 보이게 거부하고 정확한 일시정지 상태와 행을 유지했다&#46; 잘못된 형식/루트 null/배열, 누락된 루트/모든 항목 필드, null/배열 항목, 문자열/미지원 버전, 배열이 아닌 목록, 숫자 문자열/불리언, 하한/상한 범위, 1e400, 네 항목, 중복/빈/문자열이 아닌 ID, 알 수 없는/숫자/빈/문자열 null 행성 및 잘못된/추적 null 모드를 다뤘다&#46; 렌더링된 카메라/위치는 정렬을 유지했다&#46; 이미지 쌍 35개는 정확히 같았고 첫 잘못된 형식 쌍은 페이지 스크롤 190픽셀만 달랐으며 캔버스 상대 성분은 동일했다&#46; 유효한 0/120 및 &#46;25/4 끝점, 17&#46;25/1&#46;5, ID A/a/ A /공백 한 개 및 무시된 제공 각도는 정확히 왕복 처리되었다&#46; 재생 중을 포함하여 가져오기는 목록만 변경했다&#46;
 
-## Verification and limits
+## 검증 및 한계
 
-Browser method: http.
-Viewports: 1440x900, 390x844.
-Coverage: 23 passed, 4 failed, 0 unverified.
+브라우저 검증 방식: http.
+뷰포트: 1440x900, 390x844.
+검증 범위: 23개 통과, 4개 실패, 0개 미검증.
 
-### Notes
+### 참고 사항
 
-- Focused amendment authorized by the user on 2026&#45;10&#45;21: only originally unverified D3 is newly evaluated&#46; All other 26 check objects are retained verbatim as historical observations from 2026&#45;10&#45;20T21:39:36&#43;09:00, reviewer openai&#45;codex/gpt&#45;6&#45;astra with effort null&#46; The prior full&#45;review/early&#45;all&#45;unverified workflow was explicitly waived&#46; This is mixed provenance, not a fresh full review&#46; The current reviewer owns the new D3 observation, current metadata and recalculation&#46; Complete is the aggregate schema evidence status, not fresh recertification of the retained findings&#46;
-- The following original notes are preserved verbatim as historical provenance&#46; Their earlier Aside transport, iframe viewports, unresolved effort and failed diagnostic positive controls describe that prior attempt only; the current amendment notes after them supersede those limits only for the newly exercised D3 work&#46;
-- Applied benchmark&#45;review and host&#45;required aside&#45;browser; using&#45;harness&#45;flow subagent&#45;stop applies&#46; Explicit user&#45;requested parallel review dispatch overrides the skill no&#45;other&#45;model&#45;review orchestration restriction; this is not isolated single&#45;reviewer orchestration&#46; No descendants or extra models launched by this worker&#46;
-- Reviewer model comes from current host workstation metadata&#46; No concrete current&#45;session effort is exposed, no explicit review effort was declared, and no applicable session configuration was supplied; effort remains null rather than inferred from generator metadata, folder name, parent, or generic defaults&#46; Timestamp is from date &#45;Iseconds on this host&#46;
-- Saved prompt independently confirms solar&#45;system&#45;observatory&#45;2, R1&#45;R15, original eight steps and six additional sequences&#46; Generation failure status is not quality evidence&#46; Initial all&#45;unverified checkpoint was already published by parent; previous findings were not consulted&#46;
-- Preregistered tolerances: speed samples &#62;=3 wall seconds, max&#40;0&#46;15 simulation seconds,5% expected delta&#41;&#43;0&#46;01 displayed second; paused time 0&#46;01 s and angles 1 degree; predicted angles 2 degrees plus rounding; repeat position 2 CSS pixels at identical view/framing; tracking within 10% smaller canvas dimension over &#62;=3 seconds and immediately after seeking&#46; JSON/state identity exact except natural playing advancement&#46;
-- Source inspection: output contains only index&#46;html, inline CSS/script and a Three&#46;js 0&#46;160&#46;1 jsDelivr CDN dependency&#46; No local resource/build/repository dependency&#46; Bundled terra&#45;xhigh profile does not match this artifact selectors &#40;e&#46;g&#46; &#35;time versus &#35;timeSlider&#41;; direct observed&#45;selector checks required&#46;
-- Fresh ordered eight&#45;step scenario completed: automatic motion; native scene Dione selection and tracking; pause/seek 30; paused 2x; measured 2x resume; list Aurora switch while tracking; overview preserving state; repeated 30 state&#46; The six saved additional sequences were then exercised in order: snapshot A/restore, capacity/deletion/export, rejection matrix, valid/null/tracking roundtrip, persistence/recovery/quota, and keyboard controls at both sizes&#46; Fixed evidence&#45;matrix extensions followed&#46;
-- Browser used only connected Aside direct REPL on unchanged output served by rr&#45;terra&#45;high&#45;parallel at 127&#46;0&#46;0&#46;1:8926&#46; Shared 8890 fixed&#45;iframe fixtures provided actual CSS viewports; this is embedded&#45;frame verification, not top&#45;level viewport or touch&#45;device certification&#46; Browser use was serialized under explicit parent grant and no duplicate review scene ran during rate samples&#46;
-- Transient screenshot color&#45;component measurements were performed only on reviewer&#45;owned screenshot buffers decoded in the wrapper, never application runtime objects&#46; They establish repeated rendered appearance, not geometric sphere centers: lighting biases component centroids&#46; Tracking offsets were comfortably below tolerance; repeated&#45;seek components were identical&#46; Apparent 190&#45;pixel malformed&#45;input image difference was page&#45;scroll alignment, not camera movement; canvas&#45;relative locations were identical&#46; Tiny one&#45;pixel color components while bodies were occluded were not treated as measured planets&#46;
-- Aside navigation to mobile timed out despite loading; a fresh snapshot and current live frame resolved it&#46; frames&#40;&#41; retained the old destroyed frame, so the active final frame was used&#46; Range fill of &#46;25 reported Malformed value; canonical 0&#46;25 input worked and was confirmed by readout&#46; A module&#45;detector false positive on a helper property named import was reported to tool QA and avoided by renaming the reviewer helper, not modifying artifact&#46; No access/security denial was bypassed&#46;
-- No effort metadata was inferred; effort null independently prevents complete status&#46; D3 diagnostic transport is the sole unverified check&#46; A genuine quota failed&#45;write fixture satisfies the unavailable&#45;storage OR failed&#45;write alternative; storage read denial was not tested and is not an invented additional mandatory gate&#46;
-- Cleanup completed before releasing browser: exact original app storage absence restored and verified; unique terra&#45;high&#45;review&#45;quota&#45;20261020 filler absent; owned tab closed including wrapper diagnostic listeners; rr&#45;terra&#45;high&#45;parallel stopped; shared viewport service untouched&#46; No retained screenshots, logs, probe scripts or evidence files were created inside the run&#46; Prompt, run&#46;json and output/index&#46;html were read only and never edited&#46;
-- Current amendment skills: benchmark&#45;review and mandatory ego&#45;browser were applied; using&#45;harness&#45;flow explicitly exempts dispatched subagents&#46; No Aside, alternate browser, descendant agent or model call was used by this worker&#46; The explicit parallel assignment was prepared concurrently but browser interaction used an exclusive parent&#45;authorized lease&#46;
-- Current reviewer model is supplied by host workstation metadata as openai&#45;codex/gpt&#45;6&#45;astra&#46; Current effort high is selected by the applicable &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md thinking&#45;level configuration, not inferred from generator identity or the old null effort&#46; The timestamp comes from the actual host timezone&#45;aware clock&#46; Historical null effort remains historical and was not retroactively filled&#46;
-- Fresh transport: ego&#45;browser nodejs documented TaskSpace/Page/CDP APIs, owned TaskSpace21&#46; Unchanged output&#45;only HTTP root at 127&#46;0&#46;0&#46;1:8964 and reviewer&#45;owned scratch at 127&#46;0&#46;0&#46;1:9064, no iframe and no file:// navigation&#46; Top&#45;level Emulation metrics were applied and verified in every browser invocation: 1440x900 and 390x844&#46; D3 positive controls succeeded for console&#46;error and asynchronous uncaught exception before artifact navigation&#46; Runtime and Network were enabled before initial navigation/reloads and each interaction invocation; collected batches contained only the known harmless Three&#46;js deprecation warning, including replayed cached warnings on Runtime enable&#46; No diagnostic API failure or security denial occurred&#46;
-- Fresh D3 exercise coverage: initial running defaults and pause; planet list switches, tracking and overview; 30/17/73 seeks; 0&#46;25x, 2x and 4x changes paused/playing; 119&#45;to&#45;120 endpoint and earlier resume; native center&#45;canvas clicks, orbit drags and wheel input; selected tracking and null overview restores, capture after edits, capacity&#45;four rejection, deletion/replacement; populated/empty export/import, 32 individually handled invalid JSON cases, mixed&#45;validity payload, fractional 17&#46;25/1&#46;5 values and playing import/export; reload after import/delete/capture; malformed and unsupported&#45;version persisted payload recovery; bounded real quota write failure; keyboard selection, time/speed, playback, modes, capture/restore/delete, textarea/import/export and Tab/Shift&#43;Tab at both sizes&#46; The first control&#45;family sequence was interrupted by a reviewer coordinate guard at 32&#46;1 instead of intended 30; DOM inspection established paused state, and native Home/PageUp/arrow inputs resumed at 30&#46; This was reviewer input plumbing, not an artifact exception&#46; No historical speed or framing ratings were remeasured or changed&#46; No screenshot or fresh visual certification was attempted; this is not a claim that the entire old matrix or its exact scene&#45;picking order was rerun&#46;
-- Fresh storage boundary: malformed and version&#45;2 saved data produced visible recovery notices and usable controls&#46; An isolated, uniquely named quota filler accepted 5,242,785 characters; real UI capture added an in&#45;memory row while persisted JSON remained the empty list, establishing a caught failed write&#46; UI showed capture success rather than saving unavailable, consistent with retained D6 failure; D6 evidence/status is intentionally unchanged&#46; Storage read denial was not exercised&#46; Only the app&#45;owned key and review&#45;owned filler were touched; exact original app&#45;key absence and filler absence were restored and confirmed before leaving&#46;
-- Cleanup and preservation: Emulation override cleared; TaskSpace21 finish&#40;&#123;keep:&#91;&#93;&#125;&#41; succeeded once; owned output and scratch servers stopped before BROWSER&#95;RELEASED and the successor grant&#46; No screenshots were created&#46; All temporary reviewer scripts, scratch state and draft are removed after publication&#46; Prompt&#46;md, run&#46;json, and the complete output inventory/bytes matched the pre&#45;inspection working&#45;memory inventory; no source repairs, builds, lint, tests or formatters were run&#46; Publication uses the required finalizer to replace only reviews/review&#46;json and reviews/review&#46;md&#46;
+- 2026&#45;10&#45;21에 사용자가 승인한 집중 보완: 원래 미검증이었던 D3만 새로 평가했다&#46; 다른 검사 객체 26개는 모두 2026&#45;10&#45;20T21:39:36&#43;09:00의 과거 관찰로서 그대로 유지하며 당시 검토자는 openai&#45;codex/gpt&#45;6&#45;astra, 추론 수준은 null이다&#46; 이전 전체 검토/조기 전체 미검증 작업 흐름은 명시적으로 면제되었다&#46; 이는 새로운 전체 검토가 아닌 혼합 출처다&#46; 현재 검토자는 새 D3 관찰, 현재 메타데이터 및 재계산을 책임진다&#46; complete는 스키마 증거의 종합 상태이며 유지한 검토 결과를 새로 재인증한 것이 아니다&#46;
+- 다음 원래 참고 사항은 과거 출처로서 그대로 보존한다&#46; 이전 Aside 전송, iframe 뷰포트, 미확정 추론 수준 및 실패한 진단 양성 대조군은 이전 시도만 설명한다&#46; 그 뒤의 현재 보완 참고 사항은 새로 실행한 D3 작업에 대해서만 해당 한계를 대체한다&#46;
+- benchmark&#45;review 및 호스트 필수 aside&#45;browser를 적용했으며 using&#45;harness&#45;flow의 subagent&#45;stop이 적용된다&#46; 사용자가 명시적으로 요청한 병렬 검토 배정은 스킬의 다른 모델 검토 금지 오케스트레이션 제한보다 우선한다&#46; 이는 격리된 단일 검토자 오케스트레이션이 아니다&#46; 이 작업자는 하위 에이전트나 추가 모델을 실행하지 않았다&#46;
+- 검토자 모델은 현재 호스트 워크스테이션 메타데이터에서 제공한다&#46; 구체적인 현재 세션 추론 수준이 노출되지 않았고 명시적인 검토 추론 수준 선언이나 적용할 세션 구성도 제공되지 않았다&#46; 따라서 생성기 메타데이터, 폴더명, 상위 에이전트 또는 일반 기본값으로 추론하지 않고 null을 유지한다&#46; 타임스탬프는 이 호스트의 date &#45;Iseconds에서 얻었다&#46;
+- 저장된 프롬프트는 solar&#45;system&#45;observatory&#45;2, R1&#45;R15, 원래 단계 8개 및 추가 순서 6개를 독립적으로 확인한다&#46; 생성 실패 상태는 품질 증거가 아니다&#46; 초기 전체 미검증 체크포인트는 상위 에이전트가 이미 게시했으며 이전 검토 결과는 참조하지 않았다&#46;
+- 사전 등록 허용 오차: 속도 표본 &#62;=3 실제 초, max&#40;0&#46;15 시뮬레이션 초,5% 예상 변화량&#41;&#43;0&#46;01 표시 초; 일시정지 시간 0&#46;01 s 및 각도 1도; 예측 각도 2도에 반올림 오차를 더함; 동일 시점/구도에서 반복 위치 2 CSS 픽셀; &#62;=3초 동안 및 시간 이동 직후 추적은 캔버스의 더 작은 치수의 10% 이내&#46; JSON/상태 동일성은 자연스러운 재생 진행을 제외하고 정확해야 한다&#46;
+- 소스 점검: output에는 index&#46;html, 인라인 CSS/스크립트 및 Three&#46;js 0&#46;160&#46;1 jsDelivr CDN 의존성만 있다&#46; 로컬 리소스/빌드/저장소 의존성은 없다&#46; 번들 terra&#45;xhigh 프로필은 이 산출물의 선택자와 일치하지 않으므로&#40;예: &#35;time 대 &#35;timeSlider&#41; 직접 관찰한 선택자 검사가 필요하다&#46;
+- 새로운 순차 8단계 시나리오를 완료했다&#46; 자동 움직임; 기본 장면 Dione 선택 및 추적; 일시정지/30으로 이동; 일시정지 중 2x; 측정된 2x 재개; 추적 중 목록에서 Aurora로 전환; 상태 보존 전체 보기; 30 상태 반복&#46; 이후 저장된 추가 순서 6개를 스냅샷 A/복원, 용량/삭제/내보내기, 거부 행렬, 유효/null/추적 왕복 처리, 영속성/복구/할당량 및 두 크기의 키보드 제어 순으로 실행했다&#46; 이후 고정 증거 행렬 확장을 수행했다&#46;
+- 브라우저는 127&#46;0&#46;0&#46;1:8926에서 rr&#45;terra&#45;high&#45;parallel이 제공한 변경 없는 출력에 연결된 Aside 직접 REPL만 사용했다&#46; 공유 8890 고정 iframe 픽스처가 실제 CSS 뷰포트를 제공했다&#46; 이는 임베디드 프레임 검증이며 최상위 뷰포트 또는 터치 기기 인증이 아니다&#46; 브라우저 사용은 상위 에이전트의 명시적 승인으로 직렬화했으며 속도 표본 수집 중 중복 검토 장면은 실행하지 않았다&#46;
+- 임시 스크린샷 색상 성분 측정은 래퍼에서 디코딩한 검토자 소유 스크린샷 버퍼에만 수행했고 애플리케이션 런타임 객체에는 수행하지 않았다&#46; 이는 기하학적 구 중심이 아닌 반복 렌더링 외형을 입증한다&#46; 조명이 성분 중심점을 편향시키기 때문이다&#46; 추적 편차는 허용 오차보다 충분히 작았고 반복 시간 이동 성분은 동일했다&#46; 잘못된 형식 입력 이미지의 겉보기 190픽셀 차이는 카메라 이동이 아닌 페이지 스크롤 정렬이었고 캔버스 상대 위치는 동일했다&#46; 천체가 가려졌을 때의 작은 1픽셀 색상 성분은 측정된 행성으로 취급하지 않았다&#46;
+- Aside의 모바일 탐색은 로드되었음에도 시간 초과되었으나 새 스냅샷과 현재 활성 프레임으로 해결했다&#46; frames&#40;&#41;가 파괴된 이전 프레임을 유지하여 마지막 활성 프레임을 사용했다&#46; 범위에 &#46;25를 채우면 Malformed value를 보고했으며 정규 0&#46;25 입력은 작동하고 표시값으로 확인했다&#46; import라는 도우미 속성명에 대한 모듈 감지기의 오탐을 도구 QA에 보고했으며 산출물 수정이 아닌 검토자 도우미 이름 변경으로 피했다&#46; 접근/보안 거부를 우회하지 않았다&#46;
+- 추론 수준 메타데이터는 추론하지 않았다&#46; 추론 수준 null만으로도 complete 상태를 막는다&#46; D3 진단 전송이 유일한 미검증 검사다&#46; 실제 할당량 쓰기 실패 픽스처는 저장소 사용 불가 또는 쓰기 실패 중 하나라는 대안을 충족한다&#46; 저장소 읽기 거부는 시험하지 않았으며 추가 필수 관문으로 만들어 내지 않는다&#46;
+- 브라우저 해제 전 정리를 완료했다&#46; 원래 앱 저장소의 부재를 정확히 복원하고 확인했다&#46; 고유한 terra&#45;high&#45;review&#45;quota&#45;20261020 채움 데이터는 없으며 래퍼 진단 리스너를 포함해 소유 탭을 닫고 rr&#45;terra&#45;high&#45;parallel을 중지했다&#46; 공유 뷰포트 서비스는 건드리지 않았다&#46; 실행 폴더 안에 보존 스크린샷, 로그, 탐침 스크립트 또는 증거 파일을 만들지 않았다&#46; 프롬프트, run&#46;json 및 output/index&#46;html은 읽기 전용으로 취급했고 수정하지 않았다&#46;
+- 현재 보완 스킬: benchmark&#45;review 및 필수 ego&#45;browser를 적용했다&#46; using&#45;harness&#45;flow는 배정된 하위 에이전트를 명시적으로 면제한다&#46; 이 작업자는 Aside, 대체 브라우저, 하위 에이전트 또는 모델 호출을 사용하지 않았다&#46; 명시적인 병렬 배정은 동시에 준비했지만 브라우저 상호작용은 상위 에이전트가 승인한 독점 임대를 사용했다&#46;
+- 현재 검토자 모델은 호스트 워크스테이션 메타데이터에서 openai&#45;codex/gpt&#45;6&#45;astra로 제공된다&#46; 현재 추론 수준 high는 적용되는 &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md의 thinking&#45;level 구성이 선택한 것이며 생성기 신원이나 과거 null 추론 수준에서 추론하지 않았다&#46; 타임스탬프는 실제 호스트의 시간대 인식 시계에서 얻었다&#46; 과거 null 추론 수준은 과거 상태로 남기며 소급하여 채우지 않았다&#46;
+- 새 전송: ego&#45;browser nodejs의 문서화된 TaskSpace/Page/CDP API와 소유한 TaskSpace21을 사용했다&#46; 변경 없는 출력 전용 HTTP 루트 127&#46;0&#46;0&#46;1:8964 및 검토자 소유 임시 환경 127&#46;0&#46;0&#46;1:9064를 사용했으며 iframe이나 file:// 탐색은 없었다&#46; 모든 브라우저 호출에서 최상위 Emulation 지표 1440x900 및 390x844를 적용하고 확인했다&#46; 산출물 탐색 전 console&#46;error 및 비동기 미포착 예외에 대한 D3 양성 대조군이 성공했다&#46; 최초 탐색/새로고침과 각 상호작용 호출 전에 Runtime 및 Network를 활성화했다&#46; 수집한 배치에는 Runtime 활성화 시 재전달된 캐시 경고를 포함하여 알려진 무해한 Three&#46;js 사용 중단 예정 경고만 있었다&#46; 진단 API 실패나 보안 거부는 발생하지 않았다&#46;
+- 새 D3 실행 범위: 초기 실행 기본값과 일시정지; 행성 목록 전환, 추적 및 전체 보기; 30/17/73 시간 이동; 일시정지/재생 중 0&#46;25x, 2x 및 4x 변경; 119에서 120 끝점 및 더 이른 시간 재개; 기본 캔버스 중앙 클릭, 회전 드래그 및 휠 입력; 선택된 추적 및 null 전체 보기 복원, 수정 후 캡처, 네 번째 용량 거부, 삭제/대체; 채워진/빈 목록 내보내기/가져오기, 개별 처리된 잘못된 JSON 32건, 혼합 유효성 페이로드, 소수 17&#46;25/1&#46;5 값 및 재생 중 가져오기/내보내기; 가져오기/삭제/캡처 후 새로고침; 잘못된 형식 및 미지원 버전의 영속 페이로드 복구; 제한 크기의 실제 할당량 쓰기 실패; 두 크기에서 키보드 선택, 시간/속도, 재생, 모드, 캡처/복원/삭제, textarea/가져오기/내보내기 및 Tab/Shift&#43;Tab&#46; 첫 제어 계열 순서는 의도한 30이 아닌 32&#46;1에서 검토자 좌표 보호 장치로 중단되었다&#46; DOM 점검으로 일시정지 상태를 확인하고 기본 Home/PageUp/화살표 입력으로 30에서 계속했다&#46; 이는 산출물 예외가 아닌 검토자 입력 연결 문제다&#46; 과거 속도 또는 구도 평점은 재측정하거나 변경하지 않았다&#46; 스크린샷이나 새로운 시각 인증은 시도하지 않았다&#46; 이전 행렬 전체 또는 정확한 장면 선택 순서를 재실행했다는 주장이 아니다&#46;
+- 새 저장 경계: 잘못된 형식 및 버전 2 저장 데이터는 눈에 보이는 복구 알림과 사용 가능한 제어를 생성했다&#46; 격리된 고유 이름의 할당량 채움 데이터가 문자 5,242,785개를 수용했다&#46; 실제 UI 캡처는 영속 JSON이 빈 목록을 유지한 채 메모리 내 행을 추가하여 포착된 쓰기 실패를 입증했다&#46; UI는 저장 불가 대신 캡처 성공을 표시했으며 유지한 D6 실패와 일치한다&#46; D6 증거/상태는 의도적으로 변경하지 않았다&#46; 저장소 읽기 거부는 실행하지 않았다&#46; 앱 소유 키와 검토 소유 채움 데이터만 건드렸다&#46; 떠나기 전에 원래 앱 키 부재 및 채움 데이터 부재를 정확히 복구하고 확인했다&#46;
+- 정리 및 보존: Emulation 재정의를 해제했다&#46; TaskSpace21 finish&#40;&#123;keep:&#91;&#93;&#125;&#41;는 한 번 성공했다&#46; BROWSER&#95;RELEASED 및 후속 승인 전에 소유한 출력/임시 서버를 중지했다&#46; 스크린샷은 만들지 않았다&#46; 모든 임시 검토자 스크립트, 임시 상태 및 초안은 게시 후 제거한다&#46; Prompt&#46;md, run&#46;json 및 전체 출력 목록/바이트는 점검 전 작업 메모리 목록과 일치했다&#46; 소스 수정, 빌드, 린트, 테스트 또는 포매터를 실행하지 않았다&#46; 게시에는 필수 최종 처리기를 사용하여 reviews/review&#46;json 및 reviews/review&#46;md만 교체한다&#46;

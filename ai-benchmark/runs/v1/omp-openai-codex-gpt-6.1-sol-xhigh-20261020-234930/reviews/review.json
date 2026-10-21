@@ -59,189 +59,189 @@
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Observe rendered automatic motion, seek 0/12/24/48 and 17/30/73, and read each selected angle. Expected: One sun, three distinct circular-orbit planets with periods 12/24/48 s and fixed phases. Observed: Orange small Ember, green medium Verdant, blue large Azure and one glowing sun; shaded spheres moved on projected circular tracks. At 0 angles were 15/135/255 degrees; Ember repeated at 12, Verdant at 24, Azure at 48, with identical projected centers for each completed orbit. At 30 angles were 195/225/120; at 17, 165/30/22.5; at 73, 45/150/82.5. These match the fixed phase-plus-time formulas and visible motion."
+      "evidence": "Action: 렌더링된 자동 움직임을 관찰하고 0/12/24/48 및 17/30/73으로 이동하며 선택한 각 각도를 읽는다. Expected: 태양 하나, 주기 12/24/48초 및 고정 위상의 서로 다른 원형 궤도 행성 세 개이다. Observed: 작은 주황색 Ember, 중간 크기 녹색 Verdant, 큰 파란색 Azure와 빛나는 태양 하나가 있었고 음영 구체들이 투영된 원형 경로를 따라 움직였다. 0의 각도는 15/135/255도였으며 Ember는 12, Verdant는 24, Azure는 48에서 반복되어 각 완전한 공전 후 투영 중심이 동일했다. 30의 각도는 195/225/120, 17에서는 165/30/22.5, 73에서는 45/150/82.5였다. 이는 고정 위상에 시간을 더하는 공식 및 눈에 보이는 움직임과 일치한다."
     },
     {
       "id": "S2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Open fresh unchanged scene and reload after saved-data operations. Expected: Start at zero, 1x, running, null selection, overview, then move. Observed: Earliest reload sample was 0.320 s at document clock 0.352 s, 1x, Pause button, System overview, explicit No planet selected and disabled tracking. Later fresh-page sample advanced 23.413 to 26.520 s over 3.104 real seconds with all three projected positions changing. Startup elapsed loading time was not mistaken for a reset defect."
+      "evidence": "Action: 변경되지 않은 새 장면을 열고 저장 데이터 작업 후 새로고침한다. Expected: 0, 1x, 재생 중, null 선택, 전체 보기로 시작한 뒤 움직인다. Observed: 가장 이른 새로고침 표본은 문서 시계 0.352초에서 0.320초였으며 1x, Pause 버튼, System overview, 명시적인 No planet selected 및 비활성화된 추적이었다. 이후 새 페이지 표본은 실제 3.104초 동안 23.413에서 26.520초로 진행하며 세 투영 위치가 모두 변했다. 시작 시 경과한 로딩 시간을 초기화 결함으로 오인하지 않았다."
     },
     {
       "id": "S3",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Pause moving scene, seek 30, wait during paused speed trials, use selection/camera, then resume. Expected: Frozen time/orbital positions, usable controls, continuous restart. Observed: Paused 30.000 and all planet centers stayed exact across speed change; each 3.1-second paused endpoint trial also retained identical time/positions. Canvas/list selection and orbit/zoom worked paused. Resume continued from 30 at 2x, with subsequent 30.416 to 36.629 over 3.1035 s rather than resetting or jumping to another phase."
+      "evidence": "Action: 움직이는 장면을 일시정지하고 30으로 이동한 뒤 일시정지 속도 시험 중 기다리며 선택/카메라를 사용하고 재개한다. Expected: 시간/궤도 위치가 고정되고 컨트롤을 사용할 수 있으며 연속적으로 재시작된다. Observed: 속도 변경 전후 일시정지 30.000과 모든 행성 중심이 정확히 유지되었고 3.1초 일시정지 끝점 시험 각각도 동일한 시간/위치를 유지했다. 일시정지 중 캔버스/목록 선택과 궤도 회전/확대·축소가 작동했다. 재개는 30에서 2x로 계속되었고 이후 3.1035초 동안 30.416에서 36.629로 진행하여 초기화되거나 다른 위상으로 도약하지 않았다."
     },
     {
       "id": "S4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Set 0.25x, 2x, 4x paused at 17, wait 3.1 s, resume and measure; switch presets while playing. Expected: No seek or geometry reset and proportional rates with fixed relative orbits. Observed: Every paused before/after time and three centers matched exactly. Rates were 0.776 simulation s / 3.1067 wall s at 0.25x, 6.203 / 3.1031 at 2x, and 12.432 / 3.1076 at 4x, within preregistered tolerances. Playing switches preserved playback/selection/mode and continued current time; all planet angles remained derived from that common time."
+      "evidence": "Action: 17에서 일시정지한 채 0.25x, 2x, 4x를 설정하고 3.1초 기다린 뒤 재개하여 측정하며 재생 중 프리셋을 전환한다. Expected: 시간 이동이나 기하 구조 초기화 없이 고정된 상대 궤도와 비례하는 속도이다. Observed: 모든 일시정지 전후 시간과 세 중심이 정확히 일치했다. 속도는 0.25x에서 시뮬레이션 0.776초 / 실제 3.1067초, 2x에서 6.203 / 3.1031, 4x에서 12.432 / 3.1076으로 사전 등록한 허용 오차 이내였다. 재생 중 전환은 재생/선택/모드를 유지하고 현재 시간을 계속 진행했으며 모든 행성 각도는 그 공통 시간에서 계속 산출되었다."
     },
     {
       "id": "S5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Seek 0,30,120,17,73, repeat after speed/playback/selection changes, and repeat 30/17/73 after reload. Expected: Immediate paused time/positions and stable phases. Observed: All seeks paused at exact requested readout. Mobile 30-second centers were (129.668,142.909),(138.192,118.286),(47.2845,220.522); 17-second centers (117.766,157.234),(241.992,208.898),(292.388,224.499); 73-second centers (197.245,192.104),(76.5495,169.688),(131.796,263.843). Repeats and reload reproduced each exactly at unchanged overview/viewport. Fractional 17.25 restore displayed 172.5/33.75/24.375 degrees. Tracking seek immediately recentered the selection."
+      "evidence": "Action: 0,30,120,17,73으로 이동하고 속도/재생/선택 변경 후 반복하며 새로고침 후 30/17/73을 반복한다. Expected: 즉시 일시정지한 시간/위치와 안정적인 위상이다. Observed: 모든 시간 이동은 요청한 정확한 표시값에서 일시정지했다. 모바일 30초 중심은 (129.668,142.909),(138.192,118.286),(47.2845,220.522), 17초 중심은 (117.766,157.234),(241.992,208.898),(292.388,224.499), 73초 중심은 (197.245,192.104),(76.5495,169.688),(131.796,263.843)이었다. 전체 보기/뷰포트를 유지한 반복 및 새로고침에서 각 값이 정확히 재현되었다. 소수 17.25 복원은 172.5/33.75/24.375도를 표시했다. 추적 중 시간 이동은 선택을 즉시 다시 중앙에 맞췄다."
     },
     {
       "id": "S6",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Seek 119, set 4x, resume and observe after 3.1 s; seek 73 and resume. Expected: Stop at 120 without wrap/overshoot, then permit earlier playback. Observed: Time was exactly 120.000 with Resume button and stable endpoint angles. Earlier seek resumed; a later 1.5x restart advanced 73.000 to 77.652 during a 3.1-second observation."
+      "evidence": "Action: 119로 이동하고 4x를 설정하여 재개한 뒤 3.1초 후 관찰하며 73으로 이동하여 재개한다. Expected: 순환/초과 없이 120에서 멈춘 뒤 이전 시점 재생을 허용한다. Observed: 시간은 Resume 버튼 및 안정적인 끝점 각도와 함께 정확히 120.000이었다. 이전 시점 이동은 재개되었고 이후 1.5x 재시작은 3.1초 관찰 동안 73.000에서 77.652로 진행했다."
     },
     {
       "id": "S7",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Inspect local renderer implementation/resource and orbit/zoom rendered scene in both modes. Expected: Genuine Three.js 3D geometry and perspective, not a flat imitation. Observed: index.html loads bundled three.min.js and constructs WebGLRenderer, PerspectiveCamera, SphereGeometry meshes, torus halo and lights (lines 95-118). Browser resource entry loaded three.min.js and direct same-origin GET returned 200, 669884 bytes. Transient views showed shaded spheres, depth overlap, oblique orbit rings and perspective/occlusion changes under actual pointer orbit and wheel zoom. No application internals were exposed or mutated."
+      "evidence": "Action: 로컬 렌더러 구현/리소스를 검사하고 두 모드에서 렌더링 장면을 궤도 회전/확대·축소한다. Expected: 평면 모방이 아닌 실제 Three.js 3D 기하 구조와 원근이다. Observed: index.html은 번들 three.min.js를 불러오고 WebGLRenderer, PerspectiveCamera, SphereGeometry 메시, 토러스 후광과 조명을 생성한다(95-118행). 브라우저 리소스 항목에서 three.min.js가 로드되었고 직접 동일 오리진 GET은 200, 669884바이트를 반환했다. 일시적 화면에서는 실제 포인터 궤도 회전과 휠 확대·축소에 따라 음영 구체, 깊이 겹침, 비스듬한 궤도 링, 원근/가림 변화가 나타났다. 애플리케이션 내부를 노출하거나 변경하지 않았다."
     },
     {
       "id": "S8",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Capture paused A at 30/2x/Verdant/tracking; change every live field, restore, export/reload; also capture while playing and import fractional time. Expected: Stable nonempty unique IDs, all captured fields and three derived angles, no live mutation. Observed: A ID obs-mvgufdky-1 retained 30/2/Verdant/tracking and 195/225/120 degrees through unrelated edits. Playing capture obs-mvgum2v8-2 held 17.25/1.5/Verdant/tracking and 172.5/33.75/24.375 while live advanced to 21.907. Captures did not pause or reset live state. IDs persisted in UI/export/reload; supplied angles were ignored and all saved values were displayed."
+      "evidence": "Action: 일시정지 A를 30/2x/Verdant/tracking에서 캡처하고 모든 실시간 필드를 바꾼 뒤 복원, 내보내기/새로고침하며 재생 중에도 캡처하고 소수 시간을 가져온다. Expected: 안정적인 비어 있지 않은 고유 ID, 모든 캡처 필드와 산출된 세 각도를 제공하고 실시간 상태를 변경하지 않는다. Observed: A ID obs-mvgufdky-1은 관련 없는 편집에도 30/2/Verdant/tracking 및 195/225/120도를 유지했다. 재생 중 캡처 obs-mvgum2v8-2는 실시간이 21.907로 진행하는 동안 17.25/1.5/Verdant/tracking과 172.5/33.75/24.375를 유지했다. 캡처는 실시간 상태를 일시정지하거나 초기화하지 않았다. ID는 UI/내보내기/새로고침에서 유지되었으며 제공 각도는 무시되고 모든 저장 값이 표시되었다."
     },
     {
       "id": "T1",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Click each actual rendered sphere while paused and playing, then use all three labeled list buttons in both states. Expected: Shared selected body and visible highlight. Observed: Direct canvas clicks selected Ember, Verdant and Azure at 30 s and during 0.25x playback, matching each name/period/angle panel. List activation updated the same selection and gold halo/list border. All three list routes also worked during fresh 1x playback and paused keyboard sequences."
+      "evidence": "Action: 일시정지 및 재생 중 각 실제 렌더링 구체를 클릭한 뒤 두 상태에서 레이블이 있는 목록 버튼 세 개를 모두 사용한다. Expected: 공유 선택 천체와 보이는 강조 표시이다. Observed: 직접 캔버스 클릭은 30초 및 0.25x 재생 중 Ember, Verdant, Azure를 선택했고 각 이름/주기/각도 패널과 일치했다. 목록 활성화는 동일한 선택과 금색 후광/목록 테두리를 갱신했다. 세 목록 경로 모두 새로운 1x 재생 및 일시정지 키보드 순서에서도 작동했다."
     },
     {
       "id": "T2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Inspect each selected information panel during seeking/playback and restore null selection after tracking. Expected: Matching name, period and orbital angle; explicit empty information and no halo without selection. Observed: Ember/Verdant/Azure displayed 12/24/48 s respectively and the measured phase formulas; angles changed during playback. Null overview restore showed No planet selected, removed selected list state and halo, and disabled Track planet; prior selected information did not remain."
+      "evidence": "Action: 시간 이동/재생 중 선택된 각 정보 패널을 검사하고 추적 후 null 선택을 복원한다. Expected: 이름, 주기, 궤도 각도가 일치하고 선택이 없으면 정보가 명시적으로 비워지며 후광이 없다. Observed: Ember/Verdant/Azure는 각각 12/24/48초 및 측정한 위상 공식을 표시했으며 각도는 재생 중 변했다. null 전체 보기 복원은 No planet selected를 표시하고 선택 목록 상태와 후광을 제거하며 Track planet을 비활성화했고 이전 선택 정보는 남지 않았다."
     },
     {
       "id": "T3",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Track moving Azure for four samples over 3.3 s, seek 73, switch planets, and test null selection. Expected: Centered target with synchronized info/highlight and preserved clock/rate/playback; no null tracking. Observed: Mobile selected center stayed (171.563,160) in a 343.125x320 scene at 30.000/30.275/30.551/30.828 and immediately at sought 73. Desktop selected centers were (497.569,232.5) in 995.139x465 for each body. Selection switches preserved rate/playback and naturally advancing time. Tracking was disabled on startup and null restore. Center error was effectively zero, below the 10% threshold."
+      "evidence": "Action: 움직이는 Azure를 3.3초 동안 네 번 표본으로 추적하고 73으로 이동하며 행성을 전환하고 null 선택을 시험한다. Expected: 정보/강조 표시가 동기화된 중앙 대상과 시계/속도/재생 보존이며 null 추적은 없다. Observed: 모바일 선택 중심은 343.125x320 장면에서 30.000/30.275/30.551/30.828 및 73 이동 직후 모두 (171.563,160)에 유지되었다. 데스크톱 선택 중심은 995.139x465에서 각 천체 모두 (497.569,232.5)였다. 선택 전환은 속도/재생 및 자연스럽게 진행하는 시간을 보존했다. 시작 및 null 복원에서 추적은 비활성화되었다. 중심 오차는 사실상 0으로 10% 기준보다 작았다."
     },
     {
       "id": "T4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Return from each selected tracking mode to overview, paused and during the saved playing scenario. Expected: Whole system and preserved selected body/time/speed/playback. Observed: Paused returns for Ember, Verdant, Azure each retained 73.000/1.5x/paused and selection, with all three bodies/full orbit system visible. Playing scenario returned at 37.747/2x with Verdant selected and playback continuing. Standard overview at both measured sizes showed the full system rather than retaining a close tracking crop."
+      "evidence": "Action: 일시정지 및 저장된 재생 시나리오 중 선택된 각 추적 모드에서 전체 보기로 돌아간다. Expected: 전체 시스템이 보이고 선택 천체/시간/속도/재생을 보존한다. Observed: Ember, Verdant, Azure의 각 일시정지 복귀는 73.000/1.5x/일시정지 및 선택을 유지했고 세 천체/전체 궤도 시스템이 보였다. 재생 시나리오는 Verdant 선택과 재생을 계속하며 37.747/2x에서 돌아왔다. 측정한 두 크기의 표준 전체 보기는 가까운 추적 잘림을 유지하지 않고 전체 시스템을 보여주었다."
     },
     {
       "id": "T5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Restore selected tracking and null overview snapshots after unrelated live time/speed/selection/play changes and actual manual orbit/zoom; restore again at the same viewport. Expected: Exact saved fields, paused playback, synchronized geometry/info and deterministic framing. Observed: A restored 30/2/Verdant/tracking. Mobile repeated null overview 30/1.5 and selected Ember tracking 17.25/0.25 produced exact matching full state and all projected centers after manual camera gestures and unrelated live edits. Null restore cleared information/highlight; tracking restore put Ember at (171.563,160)."
+      "evidence": "Action: 관련 없는 실시간 시간/속도/선택/재생 변경 및 실제 수동 궤도 회전/확대·축소 후 선택된 추적 및 null 전체 보기 스냅샷을 복원하고 같은 뷰포트에서 다시 복원한다. Expected: 정확한 저장 필드, 일시정지 재생, 동기화된 기하 구조/정보 및 결정적 구도이다. Observed: A는 30/2/Verdant/tracking을 복원했다. 모바일에서 null 전체 보기 30/1.5와 선택된 Ember 추적 17.25/0.25를 반복하면 수동 카메라 제스처와 관련 없는 실시간 편집 후 전체 상태 및 모든 투영 중심이 정확히 일치했다. null 복원은 정보/강조 표시를 지웠으며 추적 복원은 Ember를 (171.563,160)에 위치시켰다."
     },
     {
       "id": "U1",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Orbit with actual pointer down/moves/up and wheel zoom in overview/tracking, both paused/playing. Expected: Camera response around current target, without unintended simulation changes. Observed: All four combinations changed non-target projected geometry and zoom scale. Paused overview Ember center changed (129.668,142.909) to (122.753,150.302) after drag and (116.12,148.984) after zoom, while time stayed 30.000. Tracking kept Azure centered while other centers changed. Playing variants continued naturally and retained selection."
+      "evidence": "Action: 일시정지/재생 중 전체 보기/추적에서 실제 포인터 누르기/이동/놓기로 궤도 회전하고 휠로 확대·축소한다. Expected: 의도하지 않은 시뮬레이션 변경 없이 현재 대상 주위로 카메라가 반응한다. Observed: 네 조합 모두 대상이 아닌 투영 기하 구조와 확대 배율을 바꾸었다. 일시정지 전체 보기의 Ember 중심은 드래그 후 (129.668,142.909)에서 (122.753,150.302), 확대·축소 후 (116.12,148.984)로 변했으며 시간은 30.000을 유지했다. 추적은 다른 중심들이 변하는 동안 Azure를 중앙에 유지했다. 재생 조합은 자연스럽게 계속되고 선택을 유지했다."
     },
     {
       "id": "U2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Begin fast and slow cumulative drags on a planet; use list, speed, seek, buttons, snapshot and JSON controls. Expected: No drag-as-click and no DOM-to-canvas input leakage. Observed: With Azure selected, dragging from Ember through 25 small 1.5px horizontal/0.5px vertical moves exceeded 37 CSS px and changed camera without selecting Ember. Fast 50x30px drag also kept Azure selected. Paused DOM operations preserved scene centers unless their explicit function was seek/restore/camera-mode change; JSON rejection/import/export, capture/deletion and rate changes did not move the camera or create canvas selection."
+      "evidence": "Action: 행성에서 빠른 드래그와 느린 누적 드래그를 시작하고 목록, 속도, 시간 이동, 버튼, 스냅샷과 JSON 컨트롤을 사용한다. Expected: 드래그가 클릭으로 처리되거나 DOM 입력이 캔버스로 누출되지 않는다. Observed: Azure를 선택한 상태에서 Ember로부터 가로 1.5px/세로 0.5px의 작은 이동 25회를 드래그하면 37 CSS px를 넘었고 Ember 선택 없이 카메라를 바꾸었다. 빠른 50x30px 드래그도 Azure 선택을 유지했다. 일시정지 DOM 작업은 명시적 기능이 시간 이동/복원/카메라 모드 변경이 아닌 한 장면 중심을 보존했으며 JSON 거부/가져오기/내보내기, 캡처/삭제, 속도 변경은 카메라를 움직이거나 캔버스 선택을 만들지 않았다."
     },
     {
       "id": "U3",
       "status": "pass",
       "rating": 4,
       "method": "http",
-      "evidence": "Action: Inspect labels and feedback through playback, tracking, snapshots, invalid JSON, capacity and quota failure. Expected: Clear purpose/current state and understandable feedback. Observed: Explicit live/paused, time/rate, tracking body, no-selection state, log count, planet-ID mapping and actionable import/capacity/saving messages make the tool polished and understandable. Rating 4: persistent last-action notices can remain after later live changes, and compact technical details require attention; not exceptionally consistent enough for 5."
+      "evidence": "Action: 재생, 추적, 스냅샷, 잘못된 JSON, 용량 및 할당량 실패 전반의 레이블과 피드백을 검사한다. Expected: 목적/현재 상태가 명확하고 피드백을 이해할 수 있다. Observed: 명시적 재생 중/일시정지, 시간/속도, 추적 천체, 선택 없음 상태, 로그 개수, 행성 ID 매핑과 행동을 안내하는 가져오기/용량/저장 메시지가 세련되고 이해하기 쉬운 도구를 이룬다. 평점 4: 마지막 동작 안내가 이후 실시간 변경 후에도 남을 수 있고 압축된 기술 세부 정보에 주의를 기울여야 하므로 5를 받을 만큼 특별히 일관되지는 않다."
     },
     {
       "id": "U4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Capture three, attempt fourth, delete middle and capture again. Expected: Visible capacity rejection, immutable survivors, append order and collision-free ID without live mutation. Observed: Fourth showed The log is full (3 of 3) and left all IDs/fields, 73.000/2x/Azure/overview/paused and positions unchanged. Deleting obs-mvgufnro-2 preserved first/third values and order; new obs-mvgufovo-4 appended with no collision. Keyboard/mobile capture and chosen deletion also worked."
+      "evidence": "Action: 세 개를 캡처하고 네 번째를 시도한 뒤 가운데 항목을 삭제하고 다시 캡처한다. Expected: 보이는 용량 거부, 불변의 남은 항목, 추가 순서 및 충돌 없는 ID이며 실시간 상태를 변경하지 않는다. Observed: 네 번째는 The log is full (3 of 3)을 표시하고 모든 ID/필드, 73.000/2x/Azure/overview/일시정지 및 위치를 그대로 유지했다. obs-mvgufnro-2 삭제는 첫 번째/세 번째 값과 순서를 보존했고 새 obs-mvgufovo-4는 충돌 없이 추가되었다. 키보드/모바일 캡처와 선택한 삭제도 작동했다."
     },
     {
       "id": "U5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: At both sizes use Tab/Shift+Tab, Enter for buttons, arrows for range/number, and keyboard textarea editing/import/export. Expected: Every primary DOM control operable, meaningfully named, visible focus, no trap. Observed: Selection, pause/resume, time ArrowRight, speed ArrowUp and all four presets, tracking/overview, capture/restore/delete, export/import and textarea ControlOrMeta+A plus typing all produced intended results. Focus returned through Shift+Tab and left each control with Tab; observed solid approximately 2.22 CSS-px focus outline and screenshots showed gold focus. Inputs have explicit associated labels; action buttons have meaningful names. No alternative Space-key support is claimed."
+      "evidence": "Action: 두 크기에서 Tab/Shift+Tab, 버튼의 Enter, 범위/숫자 입력의 방향키와 키보드 텍스트 영역 편집/가져오기/내보내기를 사용한다. Expected: 모든 주요 DOM 컨트롤을 조작할 수 있고 의미 있는 이름과 보이는 포커스가 있으며 갇힘이 없다. Observed: 선택, 일시정지/재개, 시간 ArrowRight, 속도 ArrowUp 및 프리셋 네 개 모두, 추적/전체 보기, 캡처/복원/삭제, 내보내기/가져오기, 텍스트 영역 ControlOrMeta+A 및 입력 모두 의도한 결과를 만들었다. Shift+Tab으로 포커스가 돌아오고 Tab으로 각 컨트롤을 벗어났다. 약 2.22 CSS px의 실선 포커스 윤곽선을 관찰했고 스크린샷에는 금색 포커스가 보였다. 입력에는 명시적인 연결 레이블이 있고 동작 버튼은 의미 있는 이름을 갖는다. 대체 Space 키 지원은 주장하지 않는다."
     },
     {
       "id": "V1",
       "status": "pass",
       "rating": 4,
       "method": "http",
-      "evidence": "Action: Inspect scene/selection at desktop/mobile, overview/tracking and changed camera angles. Expected: Legible bodies and selection with supportive effects. Observed: Distinct sphere colors/sizes, quiet orbit paths, restrained stars/sun glow and clear gold halo support observation. Rating 4: small Ember and compact labels are less prominent in mobile overview and some labels approach neighboring bodies, but selection/tracking remains readable."
+      "evidence": "Action: 데스크톱/모바일, 전체 보기/추적 및 바꾼 카메라 각도에서 장면/선택을 검사한다. Expected: 천체와 선택을 읽기 쉽고 효과가 이를 보조한다. Observed: 구별되는 구체 색/크기, 조용한 궤도, 절제된 별/태양 빛 번짐, 명확한 금색 후광이 관찰을 돕는다. 평점 4: 모바일 전체 보기에서 작은 Ember와 압축된 레이블이 덜 두드러지고 일부 레이블이 이웃 천체에 가까워지지만 선택/추적은 여전히 읽을 수 있다."
     },
     {
       "id": "V2",
       "status": "pass",
       "rating": 4,
       "method": "http",
-      "evidence": "Action: Inspect both responsive layouts including filled log, JSON and focus states. Expected: Coherent legible typography, spacing, colors and hierarchy. Observed: Dark blue-green panels, warm gold actions, serif titles, restrained uppercase captions and aligned cards form a polished consistent field-station design. Rating 4: snapshot angle/ID text is small, and mobile time/unit/button labels wrap, although they remain readable and controls usable."
+      "evidence": "Action: 채워진 로그, JSON과 포커스 상태를 포함하여 두 반응형 레이아웃을 검사한다. Expected: 일관되고 읽기 쉬운 글꼴, 간격, 색과 계층 구조이다. Observed: 어두운 청록색 패널, 따뜻한 금색 동작, 세리프 제목, 절제된 대문자 캡션, 정렬된 카드가 세련되고 일관된 현장 관측소 디자인을 이룬다. 평점 4: 스냅샷 각도/ID 글자가 작고 모바일 시간/단위/버튼 레이블이 줄바꿈되지만 읽기 쉽고 컨트롤도 사용할 수 있다."
     },
     {
       "id": "L1",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Measure actual desktop child viewport and exercise full controls including snapshots/JSON and keyboard. Expected: Usable scene/controls at 1440x900 without horizontal scroll/occlusion. Observed: innerWidth/Height 1440x900, document clientWidth=scrollWidth=1423 with vertical scrollbar; every button/input/textarea stayed within viewport bounds. Selection, timeline, speed, playback, camera modes, capture/restore/delete and textarea/export/import worked. Transient upper/lower screenshots showed no overlapping panels or blocked primary controls; vertical scrolling accesses the log."
+      "evidence": "Action: 실제 데스크톱 자식 뷰포트를 측정하고 스냅샷/JSON과 키보드를 포함한 전체 컨트롤을 조작한다. Expected: 1440x900에서 가로 스크롤/가림 없이 장면/컨트롤을 사용할 수 있다. Observed: innerWidth/Height 1440x900, 세로 스크롤바가 있는 문서 clientWidth=scrollWidth=1423이며 모든 button/input/textarea가 뷰포트 경계 내에 머물렀다. 선택, 타임라인, 속도, 재생, 카메라 모드, 캡처/복원/삭제, 텍스트 영역/내보내기/가져오기가 작동했다. 일시적인 상단/하단 스크린샷에서 겹친 패널이나 가려진 주요 컨트롤이 없었고 세로 스크롤로 로그에 접근한다."
     },
     {
       "id": "L2",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Repeat complete primary-control keyboard/input operations in the fixed mobile child. Expected: Usable scene and every control at 390x844 without horizontal scrolling. Observed: innerWidth/Height 390x844, clientWidth=scrollWidth=373 and secure context. Scene was approximately 343x320. All selections, tracking/overview, seek/speed/playback, capture/restore/delete and JSON editing/export/import succeeded using vertical scroll. Scene and lower log/JSON screenshots showed no panel obstruction or horizontally hidden controls. This is embedded CSS-viewport evidence, not native touch-device proof."
+      "evidence": "Action: 고정 모바일 자식 프레임에서 전체 주요 컨트롤의 키보드/입력 작업을 반복한다. Expected: 390x844에서 가로 스크롤 없이 장면과 모든 컨트롤을 사용할 수 있다. Observed: innerWidth/Height 390x844, clientWidth=scrollWidth=373, 보안 컨텍스트였다. 장면은 약 343x320이었다. 모든 선택, 추적/전체 보기, 시간 이동/속도/재생, 캡처/복원/삭제, JSON 편집/내보내기/가져오기가 세로 스크롤을 사용하여 성공했다. 장면 및 하단 로그/JSON 스크린샷에서 패널 방해나 가로로 숨겨진 컨트롤이 없었다. 이는 내장 CSS 뷰포트 증거이지 실제 터치 기기 입증이 아니다."
     },
     {
       "id": "D2",
       "status": "pass",
       "rating": 5,
       "method": "static",
-      "evidence": "Action: Resolve all artifact resource paths under output as the HTTP root. Expected: Complete local assets, no build/repository-root dependency. Observed: index.html references only local classic three.min.js; that file and THREE-LICENSE.txt are present under output. Styles/scripts/graphics are inline or procedurally generated. No local module/build/fetch dependency exists. Browser served the same artifact and bundled library successfully. Direct-file compatibility is excluded."
+      "evidence": "Action: output을 HTTP 루트로 하여 모든 결과물 리소스 경로를 해석한다. Expected: 완전한 로컬 자산과 빌드/저장소 루트 의존성 없음이다. Observed: index.html은 로컬 클래식 three.min.js만 참조하며 해당 파일과 THREE-LICENSE.txt가 output 아래에 있다. 스타일/스크립트/그래픽은 인라인이거나 절차적으로 생성된다. 로컬 모듈/빌드/fetch 의존성은 없다. 브라우저는 동일한 결과물과 번들 라이브러리를 성공적으로 제공했다. 파일 직접 실행 호환성은 제외한다."
     },
     {
       "id": "D3",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Validate Runtime.consoleAPICalled and Runtime.exceptionThrown with deliberate console.error and asynchronous throw on the owned scratch origin, then enable Runtime and Network before navigating unchanged output over HTTP. Observe startup, the saved eight-step interaction, snapshot capture/restore/capacity/deletion, invalid and valid/empty/playing JSON imports and exports, reload persistence, malformed and schema-invalid storage recovery, real quota-write failure, keyboard controls at actual top-level 1440x900 and 390x844, and the 120-second boundary. Expected: No artifact-caused console/page errors or failed required resources prevent intended operation. Observed: Both scratch positive controls arrived through page.events(). Artifact diagnostics contained the bundled Three.js deprecation warning but no Runtime console error, uncaught exception or Network.loadingFailed event. index.html and three.min.js returned HTTP 200 through startup and reloads; the optional browser-requested favicon returned 404 and did not affect operation. Scene/list selection, tracking, seek30, paused2x/resume, overview, immutable restore, capacity feedback, 11 invalid-import cases, fractional/null restores, playing/empty imports, persistence, keyboard actions and recovery controls remained operable. Quota exhaustion produced visible Saving unavailable feedback and usable in-memory capture/restore rather than an uncaught error. Final endpoint input reached 120.000 paused and an earlier seek resumed to 0.549. No operation-blocking artifact diagnostic failure was observed."
+      "evidence": "Action: 소유한 임시 오리진에서 의도적인 console.error와 비동기 throw로 Runtime.consoleAPICalled 및 Runtime.exceptionThrown을 검증한 뒤 변경되지 않은 출력을 HTTP로 탐색하기 전에 Runtime과 Network를 활성화한다. 시작, 저장된 8단계 상호작용, 스냅샷 캡처/복원/용량/삭제, 잘못된 및 유효한/빈/재생 중 JSON 가져오기와 내보내기, 새로고침 영속 저장, 잘못된 JSON 및 스키마 위반 저장소 복구, 실제 할당량 쓰기 실패, 실제 최상위 1440x900 및 390x844의 키보드 컨트롤과 120초 경계를 관찰한다. Expected: 결과물이 유발한 콘솔/페이지 오류나 필수 리소스 실패가 의도한 동작을 막지 않는다. Observed: 임시 페이지 양성 대조 신호 두 개가 page.events()로 도착했다. 결과물 진단에는 번들 Three.js 지원 중단 예정 경고가 있었으나 Runtime 콘솔 오류, 처리되지 않은 예외, Network.loadingFailed 이벤트는 없었다. index.html과 three.min.js는 시작 및 새로고침 전반에서 HTTP 200을 반환했고 선택적인 브라우저 요청 favicon은 404였으나 동작에 영향이 없었다. 장면/목록 선택, 추적, 30 이동, 일시정지 2x/재개, 전체 보기, 불변 복원, 용량 피드백, 잘못된 가져오기 11개, 소수/null 복원, 재생 중/빈 가져오기, 영속 저장, 키보드 동작과 복구 컨트롤은 계속 조작할 수 있었다. 할당량 소진은 처리되지 않은 오류 대신 보이는 Saving unavailable 피드백과 사용 가능한 메모리 캡처/복원을 제공했다. 최종 끝점 입력은 일시정지 120.000에 도달했고 이전 시간 이동은 0.549까지 재개되었다. 동작을 막는 결과물 진단 실패는 관찰되지 않았다."
     },
     {
       "id": "D4",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Export empty and populated lists, round-trip actual textarea import, and export while playing. Expected: Exact required schema, fields/types/order/IDs with no list/live mutation and visible planet-ID mapping. Observed: Empty export was version:1/snapshots:[]; populated exports contained only id,time,speed,selectedPlanet,viewMode in ordered snapshots, never angles/playback/camera. Names map visibly to ember/verdant/azure. Imported IDs including spaces and case distinctions survived. Playing populated export kept 73.002/1.5x/Azure/overview/running and positions unchanged in the observed frame; no picker was used."
+      "evidence": "Action: 빈 목록과 항목 있는 목록을 내보내고 실제 텍스트 영역 가져오기로 왕복하며 재생 중 내보낸다. Expected: 정확한 필수 스키마, 필드/유형/순서/ID, 목록/실시간 변경 없음 및 보이는 행성 ID 매핑이다. Observed: 빈 내보내기는 version:1/snapshots:[]였고 항목 있는 내보내기는 순서가 있는 snapshots에 id,time,speed,selectedPlanet,viewMode만 포함했으며 각도/재생/카메라는 없었다. 이름은 ember/verdant/azure에 매핑됨이 보였다. 공백 및 대소문자 구분을 포함한 가져온 ID는 보존되었다. 재생 중 항목 있는 내보내기는 관찰한 프레임에서 73.002/1.5x/Azure/overview/재생 중 및 위치를 유지했으며 선택기는 사용하지 않았다."
     },
     {
       "id": "D5",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Apply 36 separate invalid payloads against a nonempty paused list, then valid empty/two/three-entry imports paused/playing and restore each valid entry. Expected: Whole-payload rejection or list-only replacement, exact ID/order/types, derived angles. Observed: All 36 rejected visibly with exact unchanged live fields, positions and rows: malformed JSON; root null/array; missing version/snapshots/entry fields; wrong version; nonarray list; null/array entries; empty/numeric/duplicate IDs; numeric strings/booleans; time/speed range errors; 1e400; invalid planet references including 0, empty and string null; unknown mode; null tracking; four entries; valid-first invalid-later. Valid endpoints 0/120 and 0.25/4, fractional 17.25/1.5, selected overview/tracking and null overview all restored correctly. Case/case and whitespace-only ID were preserved exactly. Extra keys/angles were ignored. Playing valid import retained playback/target/rate and natural time advance; empty import only cleared list."
+      "evidence": "Action: 비어 있지 않은 일시정지 목록에 잘못된 페이로드 36개를 각각 적용한 뒤 일시정지/재생 중 유효한 빈/두 항목/세 항목 가져오기를 수행하고 유효 항목을 각각 복원한다. Expected: 전체 페이로드 거부 또는 목록만 교체, 정확한 ID/순서/유형 및 산출 각도이다. Observed: 36개 모두 보이는 거부와 함께 실시간 필드, 위치, 행을 정확히 유지했다: 잘못된 JSON; 루트 null/배열; version/snapshots/항목 필드 누락; 잘못된 version; 배열이 아닌 목록; null/배열 항목; 빈/숫자/중복 ID; 숫자 문자열/불리언; 시간/속도 범위 오류; 1e400; 0, 빈 값, 문자열 null을 포함한 잘못된 행성 참조; 알 수 없는 모드; null 추적; 네 항목; 유효한 앞 항목과 잘못된 뒤 항목. 유효한 끝점 0/120 및 0.25/4, 소수 17.25/1.5, 선택된 전체 보기/추적과 null 전체 보기 모두 올바르게 복원되었다. Case/case 및 공백만 있는 ID는 정확히 유지되었다. 추가 키/각도는 무시되었다. 재생 중 유효 가져오기는 재생/대상/속도 및 자연스러운 시간 진행을 보존했고 빈 가져오기는 목록만 지웠다."
     },
     {
       "id": "D6",
       "status": "pass",
       "rating": 5,
       "method": "http",
-      "evidence": "Action: Reload separately after import, deletion and successful capture; replace only app snapshot key with malformed and schema-invalid data; exercise bounded real quota exhaustion, then restore fixtures. Expected: Versioned validated persistence, default live startup, visible recovery/saving-unavailable notices and usable in-memory tool. Observed: Imported IDs/order/values/derived angles, deletion and confirmed capture obs-mvguhomb-1 survived reload with 1x/running/null/overview startup. Both malformed JSON and null-selection tracking persisted payload recovered to empty log with explicit recovery notice and usable seek/selection. Quota filler reached 5242401 characters (8 MiB bound); actual capture appended in memory while stored app value stayed exact and Saving unavailable...may not survive reload appeared. Playback and selection still worked. Filler removal and exact original app-key restoration both returned true. Read-denial was not simulated; this is real write-failure coverage."
+      "evidence": "Action: 가져오기, 삭제, 성공한 캡처 후 각각 새로고침하고 앱 스냅샷 키만 잘못된 JSON 및 스키마 위반 데이터로 교체하며 제한된 실제 할당량 소진을 실행한 뒤 픽스처를 복원한다. Expected: 버전이 있는 검증된 영속 저장, 기본 실시간 시작, 보이는 복구/저장 불가 안내와 사용 가능한 메모리 도구이다. Observed: 가져온 ID/순서/값/산출 각도, 삭제, 확인된 캡처 obs-mvguhomb-1이 새로고침 후 보존되었고 시작 상태는 1x/재생/null/전체 보기였다. 잘못된 JSON과 null 선택 추적 저장 페이로드 모두 명시적인 복구 안내가 있는 빈 로그로 복구되었고 시간 이동/선택을 사용할 수 있었다. 할당량 채움 데이터는 5242401자에 도달했고(8 MiB 한도), 실제 캡처는 저장된 앱 값을 정확히 유지하면서 메모리에 추가되고 Saving unavailable...may not survive reload를 표시했다. 재생과 선택도 계속 작동했다. 채움 데이터 제거 및 정확한 원래 앱 키 복원은 모두 true를 반환했다. 읽기 거부는 모의하지 않았으며 이는 실제 쓰기 실패 범위이다."
     }
   ],
   "total_score": 96.4,
@@ -252,22 +252,22 @@
     "unverified": 0
   },
   "notes": [
-    "Focused mixed-provenance amendment authorized by the user on 2026-10-21: only previously unverified D3 was freshly assessed and changed; all other 26 check objects, ratings and evidence remain verbatim historical observations from 2026-10-20T15:43:04.327Z, reviewer openai-codex/gpt-6-astra, effort high. The current reviewer owns the new D3 evidence and score recalculation, not a fresh full review. The user waived the full-fresh-review and early-all-unverified checkpoint rules for this focused amendment. The following original notes are retained unchanged as historical provenance; their fresh-review, old transport and D3-unknown statements describe that original attempt, not this amendment.",
-    "Fresh review of only the explicitly assigned saved run. Full saved solar-system-observatory-2 contract matches rubric solar-system-5.0 and format 5.0. Early all-unverified checkpoint was published before implementation inspection; no prior review or generator self-report was used as behavioral evidence.",
-    "Reviewer model openai-codex/gpt-6-astra comes from current host runtime metadata; effort high comes from applicable explicit worker configuration in assignment/shared contract. No concrete runtime effort override was exposed. These are reviewer-session sources, not generator metadata. reviewed_at is the actual host-clock ISO timestamp at final drafting.",
-    "Preregistered tolerances: rate interval >=3 real seconds; allowed max(0.15 simulation s,5% expected delta)+one displayed increment. Paused comparisons permit one time increment and 1 degree; phase comparisons 2 degrees plus rounding. Repeated framing permits 2 CSS px at identical viewport/mode/selection; tracking within 10% smaller scene dimension for >=3 seconds. State/JSON order/ID/type comparisons exact except measured natural playback. Observed display precision: 0.001 s and 0.001 degree.",
-    "Only connected Aside MCP direct repl drove browser checks. Host-required aside-browser skill and actual Aside/repl guides were applied in addition to selected benchmark-review. No other model, descendant, exec, CLI REPL, raw CDP, source patch or application-state mutation was used. The bundled terra-xhigh probe control profile does not match this artifact (different IDs/storage/planet mapping); its supported scenarios were executed through observed native controls instead.",
-    "Exclusive ReviewSolXhigh browser lease held for all browser operations. Output-only HTTP 127.0.0.1:8924 and fixture-only 127.0.0.1:8934 served unchanged files. Both required sizes were real secure iframe CSS viewports measured inside the child; not top-level native resizing or touch-device coverage. Duplicate owned scene tabs were closed before timing. All rate samples were single-call before/wait/after observations with only target scene running.",
-    "An initial unversioned browser URL displayed stale cached document content unlike current served bytes. Same-origin no-store GET matched the target byte identity; a fresh query URL loaded the correct Orbit Observatory and all scored observations began there. Stale content was not scored. Frame enumeration retained obsolete handles after reload; resolving the current loaded child restored evaluation. Some early pointer/activation attempts did not produce an accepted change and were not counted as success; fresh snapshots and actual keyboard/direct-pointer outcomes resolved them.",
-    "Saved eight-step scenario was performed in order: automatic motion; scene Azure selection/tracking; pause/seek30; paused2x; measured2x resume; list Verdant switch; overview; pause/seek30. Then six additional sequences ran in order: immutable restore; capacity/delete/export; invalid imports; valid/null/fractional/playing imports; persistence/recovery/quota; keyboard at desktop then mobile. Remaining fixed-matrix probes covered endpoints, noncanonical seeks/reload phases, complete selection/camera matrices, slow drag, valid three-entry JSON, framing and diagnostics. Initial missed camera gesture while scrolled offscreen was not credited; later visible actual drag/zoom and repeated restores supplied evidence.",
-    "D6 boundary fixtures touched only orbit-observatory-v1-snapshots and unique reviewer filler reviewSolXhigh-quota-20261020 on the isolated owned loopback origin. Original app raw value was saved before each fixture and restored exactly; filler was confirmed absent before use and removed afterward. Quota used bounded binary search <=8 MiB, actual QuotaExceededError, and actual UI capture failure evidence, not prototype monkeypatching. No unrelated storage was read/cleared. Storage read-access denial was not tested.",
-    "D3 is the only unknown check because diagnostic subscriptions failed positive controls; no functional or mandatory failure was confirmed. Empty diagnostics are not clean-console proof. All 27 registry checks remain in scoring; quality bounds are independent of the mandatory pass verdict and partial evidence status.",
-    "All review-created desktop/mobile/scratch tabs were closed; both tracked servers stopped; exclusive lease released successfully. No retained screenshots, logs, helpers or evidence files were created in the run. Source-preservation comparison confirmed prompt.md, run.json, output/index.html, three.min.js and THREE-LICENSE.txt unchanged byte-for-byte; hashes stayed in working memory only. No direct-file test, repository build, lint, formatter or source repair was performed.",
-    "Current amendment metadata: model openai-codex/gpt-6-astra is explicit current host metadata. Effort high is explicit applicable .omp/agents/benchmark-astra-review.md configuration; no concrete runtime effort override was exposed. reviewed_at is an actual timezone-qualified host-clock timestamp. No identity was inferred from generator records. The saved solar-system-observatory-2 task still routes to solar-system-5.0 / format 5.0.",
-    "Current amendment transport supersedes the historical D3 limitation only: installed ego-browser v2.1.0 guide was read completely and ego-browser nodejs/documented Page APIs alone drove owned TaskSpace10. Fresh scratch controls observed both required Runtime events. Runtime and Network were enabled before artifact navigation and collected throughout interactions and reloads. Both required viewports were verified as actual top-level CSS sizes in each exercising invocation. This is desktop browser CSS emulation, not touch-device or file-protocol certification. No full fixed-matrix remeasurement or fresh certification of retained checks is claimed.",
-    "Current D3 coverage: the eight-step sequence selected Azure directly in the scene, tracked, paused/searched 30, used paused 2x, resumed, switched list selection to Verdant, returned to overview, then paused/sought 30 again. Additional acceptance families exercised immutable selected restore after live edits and a slow camera drag/wheel; capacity/replacement/export; 11 separate invalid import classes including valid-first/invalid-last; null and fractional tracking restores, playing/empty imports; capture/delete/import persistence plus malformed/schema-invalid storage and quota recovery; DOM keyboard operations at both sizes. Historical timing and geometry ratings were not remeasured or changed. Early brief endpoint sampling still showed 119.990 running; a later visible boundary observation reached exactly 120.000 paused, and earlier resume reached 0.549.",
-    "Current boundary fixtures touched only orbit-observatory-v1-snapshots and unique reviewer-owned FocusSolXhigh-quota-20261021 at isolated http://127.0.0.1:8955. Original app key was absent. Malformed and null-tracking stored payloads produced visible recovery notices. Bounded quota fill reached 5242794 characters; actual capture left the stored payload unchanged, appended one in-memory row and displayed Saving unavailable. The filler was removed, the pre-quota value restored, and final cleanup restored the original app-key absence; both final absences were confirmed. Storage read denial was not exercised; no prototypes, application state or source were patched.",
-    "Current applied skills: selected agents/benchmark-review and shared benchmark-review resources; host-required ego-browser and its installed guide for browser tasks, including storage safeguards; host-required caveman affected concise communication only. using-harness-flow was read and its subagent-stop honored. No Aside MCP, descendants, other model launch, builds, lint, tests, formatters or source repairs occurred.",
-    "Current cleanup and preservation: TaskSpace10 successfully finished once with keep:[] after clearing viewport overrides and restoring original storage. Output-only 127.0.0.1:8955 and scratch-only 127.0.0.1:9055 tracked servers stopped; BROWSER_RELEASED was broadcast and the parent-authorized successor received BROWSER_GRANTED. Transient scripts and screenshots were removed. Before/after inventory and byte comparisons confirmed prompt.md, run.json, and all three output files unchanged; comparison material remains in working memory only. Only reviews/review.json and reviews/review.md are published through the finalizer; no retained evidence files. The finalizer reports actual per-output save/readback states separately."
+    "2026-10-21에 사용자가 승인한 출처 혼합의 집중 수정: 이전에 미검증이었던 D3만 새로 평가하여 변경했고 다른 검사 객체 26개, 평점과 증거는 검토자 openai-codex/gpt-6-astra, 추론 수준 high의 2026-10-20T15:43:04.327Z 과거 관찰 그대로 유지된다. 현재 검토자는 새 D3 증거와 점수 재계산을 담당하며 새 전체 검토를 수행한 것은 아니다. 사용자는 이번 집중 수정의 전체 신규 검토 및 초기 전체 미검증 체크포인트 규칙을 면제했다. 다음 원래 참고 사항은 과거 출처로 변경 없이 유지하며 그 신규 검토, 이전 전송 수단 및 D3 미확인 진술은 이번 수정이 아닌 원래 시도를 설명한다.",
+    "명시적으로 할당된 저장 실행만 새로 검토했다. 저장된 전체 solar-system-observatory-2 계약은 평가 기준 solar-system-5.0 및 형식 5.0과 일치한다. 구현 검사 전에 초기 전체 미검증 체크포인트를 게시했으며 이전 검토나 생성기 자체 보고를 동작 증거로 사용하지 않았다.",
+    "검토자 모델 openai-codex/gpt-6-astra는 현재 호스트 런타임 메타데이터에서, 추론 수준 high는 과제/공유 계약의 적용 가능한 명시적 작업자 설정에서 확인했다. 구체적인 런타임 추론 수준 재정의는 노출되지 않았다. 이는 생성기 메타데이터가 아닌 검토자 세션의 출처다. reviewed_at은 최종 작성 시 실제 호스트 시계 ISO 타임스탬프다.",
+    "사전 등록한 허용 오차: 속도 구간은 실제 >=3초이며 허용치는 max(시뮬레이션 0.15초,예상 변화량의 5%)+표시 증분 하나다. 일시정지 비교는 시간 증분 하나와 1도를 허용하고 위상 비교는 2도에 반올림을 더한다. 반복 구도는 같은 뷰포트/모드/선택에서 2 CSS px를 허용하고 추적은 >=3초 동안 장면 짧은 변의 10% 이내이다. 상태/JSON 순서/ID/유형 비교는 측정한 자연스러운 재생 외에는 정확하다. 관찰한 표시 정밀도는 0.001초 및 0.001도다.",
+    "연결된 Aside MCP 직접 repl만으로 브라우저 검사를 수행했다. 선택한 benchmark-review 외에 호스트 필수 aside-browser 스킬과 실제 Aside/repl 가이드를 적용했다. 다른 모델, 하위 에이전트, exec, CLI REPL, 원시 CDP, 소스 패치나 애플리케이션 상태 변경은 사용하지 않았다. 번들 terra-xhigh 검사 컨트롤 프로필은 이 결과물과 맞지 않는다(ID/저장소/행성 매핑이 다름). 지원되는 시나리오는 대신 관찰한 기본 컨트롤로 실행했다.",
+    "모든 브라우저 작업 동안 독점 ReviewSolXhigh 브라우저 임대를 유지했다. 출력 전용 HTTP 127.0.0.1:8924와 픽스처 전용 127.0.0.1:8934에서 변경하지 않은 파일을 제공했다. 두 필수 크기 모두 자식 내부에서 측정한 실제 보안 iframe CSS 뷰포트이며 최상위 기본 크기 조정이나 터치 기기 범위가 아니다. 측정 전 중복 소유 장면 탭을 닫았다. 모든 속도 표본은 대상 장면만 실행하면서 단일 호출의 이전/대기/이후 관찰로 얻었다.",
+    "최초 버전 없는 브라우저 URL은 현재 제공 바이트와 다른 오래된 캐시 문서를 표시했다. 동일 오리진 no-store GET은 대상 바이트 동일성과 일치했고 새 쿼리 URL로 올바른 Orbit Observatory를 불러온 후 모든 채점 관찰을 시작했다. 오래된 내용은 채점하지 않았다. 새로고침 후 프레임 열거가 폐기된 핸들을 유지했으나 현재 로드된 자식 프레임을 찾아 평가를 복구했다. 일부 초기 포인터/활성화 시도는 수용된 변경을 만들지 않아 성공으로 세지 않았고 새 스냅샷과 실제 키보드/직접 포인터 결과로 해결했다.",
+    "저장된 8단계 시나리오를 순서대로 수행했다: 자동 움직임; 장면 Azure 선택/추적; 일시정지/30 이동; 일시정지 2x; 2x 재개 측정; 목록 Verdant 전환; 전체 보기; 일시정지/30 이동. 이어 추가 순서 여섯 개를 차례로 실행했다: 불변 복원; 용량/삭제/내보내기; 잘못된 가져오기; 유효한/null/소수/재생 중 가져오기; 영속 저장/복구/할당량; 데스크톱 다음 모바일 키보드. 나머지 고정 행렬 검사는 끝점, 비정형 시간 이동/새로고침 위상, 전체 선택/카메라 행렬, 느린 드래그, 유효한 세 항목 JSON, 구도와 진단을 다뤘다. 화면 밖으로 스크롤된 상태에서 처음 빗나간 카메라 제스처는 인정하지 않았고 이후 보이는 실제 드래그/확대·축소 및 반복 복원이 증거를 제공했다.",
+    "D6 경계 픽스처는 격리된 소유 루프백 오리진의 orbit-observatory-v1-snapshots와 고유 검토 채움 키 reviewSolXhigh-quota-20261020만 건드렸다. 각 픽스처 전에 원래 앱 원시 값을 저장하고 정확히 복원했으며 채움 키는 사용 전 부재를 확인하고 이후 제거했다. 할당량에는 <=8 MiB 제한 이진 탐색, 실제 QuotaExceededError, 실제 UI 캡처 실패 증거를 사용했고 프로토타입 임시 패치는 하지 않았다. 관련 없는 저장소는 읽거나 비우지 않았다. 저장소 읽기 접근 거부는 시험하지 않았다.",
+    "진단 구독이 양성 대조에 실패하여 D3만 미확인 검사이며 기능 또는 필수 실패는 확인되지 않았다. 빈 진단은 콘솔이 깨끗하다는 입증이 아니다. 등록 검사 27개 모두 채점에 남으며 품질 범위는 필수 pass 판정 및 부분 증거 상태와 독립적이다.",
+    "검토에서 만든 모든 데스크톱/모바일/임시 탭을 닫고 추적한 서버 두 개를 중지했으며 독점 임대를 성공적으로 해제했다. 실행 폴더에 보존할 스크린샷, 로그, 보조 파일, 증거 파일은 만들지 않았다. 소스 보존 비교로 prompt.md, run.json, output/index.html, three.min.js, THREE-LICENSE.txt가 바이트 단위로 변경되지 않았음을 확인했으며 해시는 작업 메모리에만 남았다. 파일 직접 실행 시험, 저장소 빌드, 린트, 포매터, 소스 수정은 수행하지 않았다.",
+    "현재 수정 메타데이터: 모델 openai-codex/gpt-6-astra는 명시적인 현재 호스트 메타데이터다. 추론 수준 high는 적용되는 .omp/agents/benchmark-astra-review.md의 명시적 설정이며 구체적인 런타임 추론 수준 재정의는 노출되지 않았다. reviewed_at은 시간대가 명시된 실제 호스트 시계 타임스탬프다. 생성기 기록에서 신원을 추론하지 않았다. 저장된 solar-system-observatory-2 과제는 여전히 solar-system-5.0 / 형식 5.0으로 분류된다.",
+    "현재 수정 전송 수단은 과거 D3 한계만 대체한다. 설치된 ego-browser v2.1.0 가이드를 전부 읽고 ego-browser nodejs/문서화된 Page API만으로 소유 TaskSpace10을 조작했다. 새 임시 페이지 대조에서 필수 Runtime 이벤트 두 개를 모두 관찰했다. 결과물 탐색 전에 Runtime과 Network를 활성화하고 상호작용/새로고침 전반에 걸쳐 수집했다. 두 필수 뷰포트는 조작하는 각 호출에서 실제 최상위 CSS 크기로 확인했다. 이는 데스크톱 브라우저 CSS 에뮬레이션이지 터치 기기나 파일 프로토콜 인증이 아니다. 전체 고정 행렬 재측정이나 보존 검사에 대한 신규 인증을 주장하지 않는다.",
+    "현재 D3 범위: 8단계 순서에서 장면의 Azure를 직접 선택하고 추적한 뒤 일시정지/30 탐색, 일시정지 2x, 재개, 목록 Verdant 선택 전환, 전체 보기 복귀, 다시 일시정지/30 이동을 수행했다. 추가 수용 조건 동작군은 실시간 편집과 느린 카메라 드래그/휠 이후 불변의 선택 복원; 용량/대체/내보내기; 앞은 유효하고 마지막은 잘못된 경우를 포함한 별개 잘못된 가져오기 유형 11개; null 및 소수 추적 복원, 재생 중/빈 가져오기; 캡처/삭제/가져오기 영속 저장과 잘못된 JSON/스키마 위반 저장소 및 할당량 복구; 두 크기의 DOM 키보드 작업을 다뤘다. 과거 타이밍 및 기하 구조 평점은 재측정하거나 바꾸지 않았다. 초기에 짧게 표본 측정한 끝점은 아직 119.990 재생 중이었으나 이후 보이는 경계 관찰에서는 정확히 120.000 일시정지에 도달했고 이전 시점 재개는 0.549에 도달했다.",
+    "현재 경계 픽스처는 격리된 http://127.0.0.1:8955에서 orbit-observatory-v1-snapshots와 고유 검토 소유 FocusSolXhigh-quota-20261021만 건드렸다. 원래 앱 키는 없었다. 잘못된 JSON 및 null 추적 저장 페이로드는 보이는 복구 안내를 만들었다. 제한된 할당량 채우기는 5242794자에 도달했고 실제 캡처는 저장 페이로드를 유지하며 메모리 행 하나를 추가하고 Saving unavailable을 표시했다. 채움 데이터를 제거하고 할당량 적용 전 값을 복원했으며 최종 정리는 원래 앱 키 부재를 복원했다. 최종 두 부재를 모두 확인했다. 저장소 읽기 거부는 실행하지 않았고 프로토타입, 애플리케이션 상태, 소스를 패치하지 않았다.",
+    "현재 적용 스킬: 선택된 agents/benchmark-review 및 공유 benchmark-review 자료; 저장소 보호 조치를 포함한 호스트 필수 ego-browser 및 브라우저 작업용 설치 가이드; 간결한 소통에만 영향을 준 호스트 필수 caveman을 적용했다. using-harness-flow를 읽고 subagent-stop을 준수했다. Aside MCP, 하위 에이전트, 다른 모델 실행, 빌드, 린트, 테스트, 포매터, 소스 수정은 없었다.",
+    "현재 정리 및 보존: 뷰포트 재정의를 해제하고 원래 저장소를 복원한 후 TaskSpace10을 keep:[]로 한 번 성공적으로 완료했다. 추적한 출력 전용 127.0.0.1:8955 및 임시 페이지 전용 127.0.0.1:9055 서버를 중지하고 BROWSER_RELEASED를 방송했으며 상위 에이전트가 승인한 후속 작업은 BROWSER_GRANTED를 받았다. 일시적 스크립트와 스크린샷은 제거했다. 전후 목록/바이트 비교로 prompt.md, run.json과 출력 파일 세 개 모두 변경되지 않았음을 확인했으며 비교 자료는 작업 메모리에만 남는다. 최종 처리 도구로 reviews/review.json과 reviews/review.md만 게시하고 증거 파일은 보존하지 않는다. 최종 처리 도구는 출력별 실제 저장/재읽기 상태를 각각 보고한다."
   ]
 }
