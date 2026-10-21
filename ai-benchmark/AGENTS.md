@@ -34,9 +34,16 @@ host skill selection for repository investigation or maintenance.
 
 ## Browser verification
 
-- Use only connected Aside MCP's direct REPL for browser verification when
-  available and permitted. If unavailable, perform static checks and report the
-  browser verification gap.
+- By default, use connected Aside MCP's direct REPL for browser verification
+  when available and permitted. If unavailable, perform static checks and report
+  the browser verification gap.
+- Outside benchmark execution and review, an explicit user request to use
+  ego-browser permits its documented browser APIs, including a local-file
+  capability probe on a task-owned HTML fixture. Read its installed usage guide
+  first and clean up only task-created tabs and fixtures afterward.
+- Benchmark execution and review retain the selected skill's browser restrictions;
+  this exception does not authorize changing saved benchmark results or bypassing
+  an active host access policy.
 - Choose a permitted verification method from documented browser capabilities
   before navigation. For local HTML, prefer the actual file:// entrypoint.
 - If file:// is unsupported but loopback HTTP is permitted, verify through a
