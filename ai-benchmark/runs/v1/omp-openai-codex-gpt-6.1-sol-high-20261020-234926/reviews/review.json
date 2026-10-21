@@ -1,0 +1,269 @@
+{
+  "format_version": "5.0",
+  "rubric_version": "solar-system-5.0",
+  "reviewed_at": "2026-10-20T15:13:02.999478+00:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6-astra",
+    "effort": "high"
+  },
+  "status": "partial",
+  "requirements_verdict": "fail",
+  "verification": {
+    "browser_method": "http",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ]
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": 3,
+      "score_upper_bound": 3
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": 4.8,
+      "score_upper_bound": 4.8
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": 4,
+      "score_upper_bound": 4
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": 4,
+      "score_upper_bound": 5
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Observe the rendered sun and three moving planets, select each, measure orbital readouts over 3.10-second intervals, and seek 0/17/30/73/120. Expected: distinct spheres on fixed circular 12/24/48-second orbits. Observed: one gold sun and orange small Aurelia, cyan medium Pelagos, lavender larger Nivalis; changing perspective showed spheres on circular orbital paths. Fixed phases were 15/145/260 degrees. At 1x Aurelia moved 171.26 to 264.44 degrees as time 17.21 to 20.31 in 3.103 wall seconds; Pelagos 43.33 to 89.75 as 17.22 to 20.32 in 3.108; Nivalis 29.09 to 52.39 as 17.21 to 20.32 in 3.107. These agree with 30/15/7.5 degrees per simulation second within preregistered precision. Predicted projected planet locations also accepted actual scene clicks."
+    },
+    {
+      "id": "S2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Load fresh fixtures and reload after persistence operations. Expected: time-zero initialization, running at 1x, null selection, overview, subsequent motion. Observed: reload samples at 0.04, 0.05 and 0.06 seconds showed 1x, Pause playback, no selected planet and Full-system overview; later readouts and rendered positions advanced. The tiny elapsed startup times are loading delay, not evidence of nonzero initialization. Tracking was disabled and no highlight was present."
+    },
+    {
+      "id": "S3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Pause motion, seek, wait 3.1 seconds, select/orbit while paused, then resume. Expected: frozen time/positions and continuous restart. Observed: time 73 remained 73 with byte-identical full rendered screenshots after 3.1 seconds. Paused planet selection and orbit/zoom worked. Resume from 30 at 2x began at 30.42 and reached 36.82 over 3.203 seconds, with no reset or observed positional jump."
+    },
+    {
+      "id": "S4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Set 0.25x, 2x and 4x paused at 17, resume and measure each, and change between those speeds while playing. Expected: preserved current position/time, proportional rates, no resume jump. Observed: paused samples remained 17 at all three speeds. Measured deltas were 0.80 in 3.211 wall seconds at 0.25x, 6.40 in 3.203 at 2x, and 12.80 in 3.203 at 4x, with visible document and only this review scene running. Playing speed changes preserved the sampled time to display precision (17.86 to 17.86, 23.82 to 23.84, 30.64 to 30.64); a separate 1x-to-2x change was 17.21 to 17.21 and remained playing. Relative orbit rates and positions agreed with the fixed-period angle checks."
+    },
+    {
+      "id": "S5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Seek 0/17/30/73/120, change speed/playback/selection, repeat 30/17/73, and reload then seek 73 again. Expected: immediate paused, deterministic positions and information. Observed: all seeks paused. Aurelia/Pelagos/Nivalis angles were respectively 15/145/260 at 0, 165/40/27.5 at 17, 195/235/125 at 30, 45/160/87.5 at 73, and 15/145/80 at 120. Repeated same-framing screenshots at 30/17/73 were byte-identical; the 73-second screenshot after reload also matched exactly. Imported time 17.25 restored angles 172.50/43.75/29.38, not supplied fake angles."
+    },
+    {
+      "id": "S6",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Seek 119, play at 4x across the endpoint, wait again, seek 17 and resume. Expected: stop exactly at 120 without wrapping and allow earlier playback. Observed: 120 with Resume playback after 1.1 seconds and still 120 after an additional wait; subsequent 17-second seek/resume advanced to 19.28 at 4x."
+    },
+    {
+      "id": "S7",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Inspect local renderer/geometry dependency and actual HTTP resources, then orbit and zoom the scene in both modes. Expected: genuine Three.js 3D rendering. Observed: output/index.html loads local three.min.js and constructs WebGLRenderer, PerspectiveCamera, SphereGeometry, torus highlights and circular line geometry (lines 83-92). Browser resource timing recorded the local three.min.js request and the scene-error display stayed empty. Transient rendered images showed shaded spheres, front/back overlap of highlight rings, changing orbit-plane perspective and changing apparent sphere size under orbit/zoom, not a flat drawing."
+    },
+    {
+      "id": "S8",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Capture paused and playing observations, change every live field, restore/export/import/reload records, and inspect all displayed snapshot fields. Expected: immutable instant values/angles and stable unique IDs with no capture mutation. Observed: paused capture aba97eb1-5880-4e03-9051-96b5793654d3 retained 30 seconds, 2x, Aurelia, tracking and 195/235/125 degrees after live edits and playback. Playing capture 348709d0-4984-4b32-b2a1-4d84bf68494f at 0.107 seconds retained its ID, fields and 18.20/146.60/260.80 angles across reload. Capture preserved live playback and selection. Exported fields retained IDs; imported stable IDs including spaces and case survived export/reload. Fractional 17.25 derived 172.50/43.75/29.38 despite injected angles 999."
+    },
+    {
+      "id": "T1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Select every planet through both canvas and directory while paused and playing. Expected: one shared selection, visible highlight and matching information. Observed: actual canvas clicks selected Aurelia/Pelagos/Nivalis at paused time 17 with angles 165/40/27.50 and again during 0.25x playback with corresponding evolving angles. Directory clicks and keyboard activation selected all three. Gold rings and pressed directory buttons followed the selected sphere, including paused states."
+    },
+    {
+      "id": "T2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Inspect all selected names, periods and live angles during playback and seeks, then restore a null-selection record after tracking. Expected: information agrees with the rendered planet; no-selection clears prior information/highlight. Observed: 12/24/48 periods and phase-derived angles matched the selected orange/cyan/lavender spheres and changed during playback; 30-second readouts were 195/235/125. Restoring null overview displayed No planet selected, removed highlight and disabled tracking, rather than retaining previous planet details."
+    },
+    {
+      "id": "T3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Track moving Nivalis over more than three seconds, seek to 30 and 73, switch all planet selections while paused and switch to Aurelia while playing; inspect initial null-selection tracking control. Expected: synchronized target/highlight/info centered without changing unrelated state; null tracking unavailable. Observed: mobile scene was approximately 343x355 CSS pixels; the tracked sphere remained at its scene center, within roughly 2 CSS pixels versus the 34.3-pixel tolerance, across 30-second pause, playback from about 31 to 44.29 over 3.365 wall seconds, and seek 73. Paused switches at 17 retained 1.5x and pause while each sphere centered. Playing switch retained 1.5x and running, advancing naturally to 17.74. Null-selection startup/restores disabled Track planet."
+    },
+    {
+      "id": "T4",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: At 390x844 select Nivalis, seek 30, enable tracking, then press Full overview. Expected: full system visible with unchanged time/speed/selection/playback. Observed: state remained 30, 4x, Nivalis, paused, but most of Nivalis was cut off by the left canvas boundary; the outer orbit also extended outside the scene. Desktop overview was fully visible. This violates full-system framing, not state preservation. Source support: standardFraming uses distance 32 irrespective of aspect ratio (line 59), while resize changes only camera aspect (line 91)."
+    },
+    {
+      "id": "T5",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Import null overview at time 30/speed 1.5 and selected tracking at 17.25, restore after unrelated live edits and manual orbit/zoom, repeat at the same viewport, then restore the null record at 390x844. Expected: atomic paused state and deterministic standard full-system or selected-planet framing. Observed: restored fields, positions, target and cleared information were correct; repeated desktop tracking and overview screenshots matched exactly once scroll framing matched. However mobile null-overview restore at 30 clipped most of Nivalis at the left canvas boundary, so its standard overview is not full-system framing. The same fixed-distance camera cause as T4 affects this separate restore requirement."
+    },
+    {
+      "id": "U1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Drag and wheel-zoom in overview/tracking both paused and playing. Expected: actual camera orbit and zoom around current target without simulation mutation. Observed: all four combinations changed orbit-plane perspective and sphere apparent size. Paused examples stayed time 17, 4x, Nivalis selected; playing examples advanced naturally to 18.43 while mode and selection remained unchanged. Tracking kept its selected sphere centered as the background geometry changed."
+    },
+    {
+      "id": "U2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Begin drags on Aurelia while Nivalis is selected, including a fast 100x40-pixel drag and a 36-pixel drag in 24 small moves with 20-ms spacing; exercise all DOM control types. Expected: no drag-as-click or leaked scene interaction. Observed: both planet-started drags left Nivalis selected while changing perspective, and slow tracking/overview drags also preserved selection. List, ranges, buttons, snapshot operations and JSON interactions produced only their intended selection/mode/time changes; paused import/export camera-region screenshots were identical before/after, and keyboard traversal did not move the camera."
+    },
+    {
+      "id": "U3",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: Use playback, tracking, directory, snapshots and JSON through normal and error states. Expected: understandable purpose/current state and feedback. Observed: clear observation sections, explicit Pause/Resume labels, live time/speed, gold selected buttons/rings, visible count, capacity message, validation rejection reasons, restore-paused explanation, and honest saving-unavailable notice. Rating 4: polished hierarchy and specific feedback; snapshot IDs/angles and helper text are small and dense rather than exceptionally effortless."
+    },
+    {
+      "id": "U4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Capture three observations, attempt a fourth, delete middle, recapture and export. Expected: visible rejection, no replacement, append order and collision-free IDs, no live changes. Observed: fourth capture displayed Capacity reached: three observations maximum; full paused state/list comparison stayed equal. Deleting middle a60135ef-cfda-4266-a383-3d281d96a553 retained aba97eb1-5880-4e03-9051-96b5793654d3 then d83cbdea-2b7a-4971-b8cf-d73e19fd30ba; replacement 739642b3-272c-4c1e-812b-c7898bdd95cf appended third without collision. Remaining values stayed fixed and live state stayed at 73, 2x, Pelagos overview paused."
+    },
+    {
+      "id": "U5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: At both required viewports use actual Tab/Shift+Tab, Enter, Home/End/arrows and textarea typing across all primary DOM controls. Expected: meaningful names, visible focus, normal keyboard actions and no trap. Observed: time Home/Right sought 0.01 and paused; speed keys reached 0.2875 desktop and 3.9625 mobile; Tab/Enter operated pause/resume, all planets, tracking, overview, capture, restore, delete, export and import. Textarea accepted typed versioned JSON. Native ranges and buttons had accessible labels; textarea had its associated Snapshot JSON version 1 label. Focus visibly outlined controls (reported solid 2.22222 CSS-pixel outline at browser scaling), Shift+Tab returned to preceding controls and Tab left final import. Deletion deliberately moved focus to capture, from which navigation continued."
+    },
+    {
+      "id": "V1",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: Inspect rendered overview/tracking and selection at desktop/mobile through motion, seeks and camera changes. Expected: readable scene and supporting effects. Observed: restrained stars, understated orbit lines, distinct shaded planet colors/sizes and high-contrast gold selection rings made the selected world easy to identify; close tracking rendered convincing sphere shading and ring occlusion. Rating 4 for polished clarity with faint orbit lines/small helper labels. Mandatory mobile full-system framing defects are scored under T4/T5, not an additional compensatory visual penalty."
+    },
+    {
+      "id": "V2",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: Inspect all panels and keyboard-focused controls at both sizes, including snapshot and JSON sections. Expected: coherent legible typography/spacing/color/hierarchy. Observed: navy panels, muted borders, gold primary controls, numbered section labels and cyan feedback form a consistent hierarchy; mobile stacks panels with useful spacing and readable controls. Rating 4: polished, with small monospaced IDs/angles and dense secondary annotations as minor weaknesses."
+    },
+    {
+      "id": "L1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Verify actual iframe CSS viewport and operate every primary control at 1440x900, including capture/restore/delete and textarea import/export. Expected: usable scene/controls with no horizontal scrolling or panel occlusion. Observed: innerWidth/innerHeight 1440/900, document scrollWidth 1423 (vertical scrollbar), secure context; all controls worked, vertical scrolling reached lower panels, no horizontal overflow or blocked controls. Overview contained all planets at the tested standard framing."
+    },
+    {
+      "id": "L2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Repeat primary-control operation and keyboard sequence at 390x844 with vertical scrolling. Expected: usable scene and all primary controls without horizontal overflow or panels covering controls. Observed: inner dimensions 390/844, scrollWidth 373, secure context; selection/tracking, seek/speed/pause, capture/restore/delete and JSON all worked and were accessible by vertical scrolling. Camera drag/zoom worked. No panel blocked a control or required horizontal scrolling. Standard overview crops an outer planet at time 30; that specific full-system-framing violation is recorded under T4/T5 rather than treated as an inaccessible DOM control."
+    },
+    {
+      "id": "D2",
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Action: Inspect all output files and resolve local references from output as HTTP root. Expected: complete assets with no build/repository-root dependency. Observed: output/index.html references only adjacent three.min.js; inline application CSS/script require no additional local assets. three.min.js and its THREE-LICENSE.txt exist under output. Procedural geometry/colors/stars require no textures. Direct-file execution is excluded."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "http",
+      "evidence": "Diagnostic coverage is not established. On an owned scratch fixture, console and pageerror subscriptions were registered, then a deliberate console.error and asynchronous thrown exception were emitted; the collected array stayed empty. Therefore empty diagnostics cannot certify a clean artifact. The rendered scene and controls operated and scene-error text remained empty; local Three.js appeared in resource timing, but startup console/page-error coverage and a reliable complete error stream remain unavailable. No artifact-caused failure was inferred from this transport limitation."
+    },
+    {
+      "id": "D4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Export empty/populated lists, inspect textarea structure and visible planet-ID mapping, round-trip valid lists through explicit UI controls paused and playing. Expected: only required versioned fields, stable ordered IDs/types and no live/list mutation. Observed: empty export was version 1 with snapshots []; populated export included only id/time/speed/selectedPlanet/viewMode with correct numeric/null/string types, no angles/playback/camera data. IDs aurelia/pelagos/nivalis were shown beside names and JSON controls. Captured order survived export; imported IDs including spaces and case-distinct A/a round-tripped exactly. Paused camera-region screenshots before/after export matched, and running import/export/empty clearing retained playback and mode with natural elapsed time. No file picker was used."
+    },
+    {
+      "id": "D5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Execute 36 separate invalid payloads against a nonempty paused list, then valid two/three/empty lists, endpoint and fractional values, extra keys, case/space IDs, and playing import. Expected: atomic rejection with visible errors; valid list-only replacement. Observed: all 36 invalid cases displayed Import rejected and preserved the full sampled list/live DOM state. Cases included malformed JSON, null/array roots and entries, every missing field, missing root fields, string/unsupported version, nonarray snapshots, numeric strings/booleans, both time/speed bounds, overflow 1e400, duplicate/empty/nonstring IDs, unknown/numeric/empty/string-null planet references, bad mode, null tracking, four entries and earlier-valid/later-invalid entries. Valid A/a/space-only IDs preserved exact spelling/order, time 0/120 and speed .25/4 restored correctly, 17.25/1.5 tracking derived angles rather than accepting 999s, and extra keys were absent from exports. Paused import left time 17 and camera-region screenshot exactly unchanged. Playing import retained running Nivalis tracking at 1.5x (17.56 to 18.00 naturally), and empty import cleared only the list."
+    },
+    {
+      "id": "D6",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Reload after valid import, deletion and capture; replace only the app storage key with malformed and schema-invalid data; exhaust bounded origin quota using one reviewer filler key and capture through UI. Expected: persistent validated list with default live state, visible recovery/saving-unavailable feedback, usable memory state. Observed: each successful operation survived reload with IDs/order/values/derived angles retained and live time near zero, 1x/running/null/overview. Malformed JSON and time 121 persisted payloads each produced empty list and Saved observations could not be recovered notice; selection and playback remained usable. Filler accepted 5,242,553 characters within the fixed 8 MiB bound. Capture then created an in-memory entry while the persisted empty payload stayed unchanged and Saving unavailable...unsaved changes may not survive reload appeared, establishing an actual failed app write. Selection/playback continued. Filler was removed, exact fixture-original app value restored, and both cleanup predicates were true. This is quota-write recovery, not storage-read-denial testing."
+    }
+  ],
+  "total_score": 86.4,
+  "total_score_upper_bound": 88.4,
+  "coverage": {
+    "passed": 24,
+    "failed": 2,
+    "unverified": 1
+  },
+  "notes": [
+    "Fresh review of the saved solar-system-observatory-2 contract. An all-unverified checkpoint was published before source/browser inspection. No earlier review or generator check was used as evidence.",
+    "Reviewer model comes from current host workstation metadata; effort high comes from the explicit review-worker configuration supplied in the assignment. No generator metadata used. Timestamp from host timezone-qualified clock.",
+    "Applied benchmark-review and host-required aside-browser skill; Aside guide and direct REPL guide read. Extra browser skill required by host policy, not a generator requirement.",
+    "Preregistered tolerances: speed measured >=3 wall seconds; max(0.15 simulation seconds,5% expected delta)+0.1 displayed increment. Paused time 0.1 seconds and angle 1 degree, one frame around pause. Predicted angle 2 degrees plus displayed rounding. Repeated centers 2 CSS pixels with identical viewport/camera/selection. Tracking within 10% smaller scene dimension across >=3 seconds and seek. State, ID, order and types exact.",
+    "Executed saved eight-step sequence in order: automatic motion; canvas Nivalis selection and tracking; pause/30 seek; paused 2x; measured 2x resume; list switch to Aurelia; overview; repeated 30. Then six additional sequences in order: immutable capture/restore, capacity/order/export, invalid import matrix, valid import/restore/roundtrip, reload/recovery/quota, keyboard desktop and mobile. Remaining registry probes followed, including rates/endpoints, all-planet canvas routes, slow/fast drags, repeated-seek images, camera matrix and fractional/boundary imports.",
+    "Browser transport: connected Aside direct MCP REPL only, exclusive lease ReviewSolHigh. Output-only HTTP 127.0.0.1:8923 and fixture-only HTTP 127.0.0.1:8933. Actual secure iframe CSS viewports were measured; this is embedded-frame evidence, not top-level resize or touch-device certification. Screenshot output is browser-scaled (devicePixelRatio about 0.9); comparisons used unchanged CSS dimensions and framing.",
+    "Initial navigation displayed an unrelated stale cached document at the target URL; a same-origin no-store read returned the correct target. No observations from that mismatched document were scored. A fresh query navigation loaded the target Orbital title and Aurelia/Pelagos/Nivalis controls. The navigation tool timed out readiness once although the subsequent settled snapshot showed the correct target. No access/security denial occurred. A locator-position scene click missed; raw supported mouse coordinates then produced verified canvas selections. An attempted read of renderer in frame evaluation returned ReferenceError; no app internals were exposed or patched, and all subsequent evidence used DOM/readouts, rendered images and actual controls.",
+    "Bundled terra-xhigh probe profile does not match this artifact: its selectors/planet IDs/storage key differ. Used directly observed Orbital controls rather than pretending the profile applies. No repository build/lint/tests/formatters were run.",
+    "Only D3 remains unverified: deliberate console/error positive-control signals were not delivered. Diagnostic absence is not treated as proof. Review is partial despite substantial functional coverage and complete metadata.",
+    "Fixed image checks: pause at 73 remained byte-identical after 3.1 seconds; repeated 17/30/73 seeks and post-reload 73 matched. One initial overview-restore full-image comparison differed because scroll framing differed; repeating with matched time-control scroll framing matched exactly. Tracking repeated restore also matched. No tolerance was widened.",
+    "Mobile standard overview and null-overview restore clip Nivalis at 30 seconds. T4 and T5 fail their distinct full-system framing clauses. DOM layout/control usability remains observed at both sizes; vertical scrolling is allowed. No extra numeric penalty was applied beyond registered check ratings.",
+    "Storage fixtures touched only orbital-observatory-snapshots-v1 and reviewSolHigh-quota-fixture on this isolated review origin. The original raw value for each fixture was retained in memory, quota filler removed, and fixture-original app payload restored exactly without a subsequent reload overwriting it. Unrelated storage was not inspected or cleared. Read denial was not simulated; the allowed actual quota-write failure exercised the saving-unavailable clause.",
+    "Cleanup: every review-created scene/viewport/scratch tab was closed, both tracked review servers stopped with exited status, then exclusive browser lease released successfully. No source repair, extra review evidence files or descendants/model calls. All five generation-source files (prompt.md, run.json, and three output files) had identical before/after inventories and SHA-256 values; hashes remain only in working memory."
+  ]
+}

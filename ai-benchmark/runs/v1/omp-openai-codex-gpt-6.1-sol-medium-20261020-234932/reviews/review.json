@@ -1,0 +1,269 @@
+{
+  "format_version": "5.0",
+  "rubric_version": "solar-system-5.0",
+  "reviewed_at": "2026-10-20T16:01:19.472296+00:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6-astra",
+    "effort": "high"
+  },
+  "status": "partial",
+  "requirements_verdict": "fail",
+  "verification": {
+    "browser_method": "http",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ]
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": 4.8,
+      "score_upper_bound": 4.8
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": 4,
+      "score_upper_bound": 4
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": 3,
+      "score_upper_bound": 4
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Inspect the final bundled-renderer overview, seek 0/17/30/73/120, and sample each selected orbital angle during playback. Expected: one sun, three differently sized/colored planets, circular fixed-phase 12/24/48-second orbits. Observed: gold sun and small mint Aster, medium blue Azure, larger orange Ember on three circular paths; perspective projection and scene clicks agreed with their positions. At time 0 the angles were 0/80/190 degrees; at 30 they were 180/170/55; at 17 they were 150/335/317.50. Playback samples: Aster 6.38 to 99.57 degrees over 0.21 to 3.32 simulation s (3.102 wall s); Azure 83.20 to 129.81 over 0.21 to 3.32 (3.103 wall s); Ember 191.71 to 215.01 over 0.23 to 3.34 (3.103 wall s), matching 30/15/7.5 degrees per simulation second. Final shaded rendering and changing orbital positions were directly inspected, not inferred solely from constants."
+    },
+    {
+      "id": "S2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Reload the same-origin artifact and observe immediately and after 3.106 wall seconds. Expected: time starts at 0, 1x, running, no selection, overview, followed by automatic motion. Observed: earliest completed-load readouts were 0.02–0.04 s, speed 1, Pause button, empty selected list, explicit No planet selected, and FULL SYSTEM overview. Final replay advanced from 0.04 to 3.15 s in 3.106 wall s with rendered motion. The small initial elapsed interval is normal load time; inspected initialization starts at zero."
+    },
+    {
+      "id": "S3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Pause during playback, wait 3.1 seconds, select/orbit while paused, and resume. Expected: frozen time and all positions, usable selection/camera, continuous resumption. Observed: paused 73.00-s scene-region image was byte-identical after 3.1 seconds and selected information unchanged; paused 17.00-s rate setups also stayed exactly 17.00. Canvas/list selection and orbit/zoom remained usable. Resuming the sought 30-s state advanced smoothly through 30.40 to 36.61 s at 2x without a reset or visible position jump."
+    },
+    {
+      "id": "S4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Set 0.25x, 2x and 4x paused and playing, then resume each paused setting and measure at least 3 seconds. Expected: rate changes only, preserved positions/time on speed changes, unchanged relative speeds. Observed: at paused 73.00 s every setting preserved identical rendered scene bytes. Paused-resume samples over 3.104 wall s were 17.06→17.83 at 0.25x, 17.43→23.64 at 2x and 17.85→30.28 at 4x. After refreshing the exact bundled dependency, playing-change samples were 17.22→17.99 over 3.105 s, 17.99→24.21 over 3.106 s and 24.26→36.69 over 3.107 s respectively. Transition reads differed only by natural frame advance; orbital information remained consistent with fixed phases and periods."
+    },
+    {
+      "id": "S5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Use the actual time slider for 0,30,120,17,73; revisit 30/17/73 after speed, playback and selection changes, then reload and revisit; restore imported 17.25. Expected: seeking pauses and updates time, positions, selected angle and active tracking immediately; fixed phases survive reload. Observed: all seeks paused at the requested value. All-three angle vectors were 0:[0,80,190], 30:[180,170,55], 120:[0,80,10], 17:[150,335,317.50], 73:[30,95,17.50]. Final exact-bundle scene images at 30/17/73 were identical both after intervening edits and after reload at matched overview/selection/viewport. Tracking sought 73 immediately centered Azure with angle 95.00. Imported 17.25 displayed derived [157.50,338.75,319.38]."
+    },
+    {
+      "id": "S6",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Seek 119, set 4x, resume, wait 3.1 seconds; seek 73 and resume. Expected: stop exactly at 120 without wrapping and allow earlier playback. Observed: 120.00 s, Resume button and Ember 10.00 degrees remained at the endpoint; earlier playback resumed to 73.85 s at 4x, then paused at 74.12. No overshoot or wrap was observed."
+    },
+    {
+      "id": "S7",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Inspect the loaded local Three.js dependency and index renderer/geometry/camera code, verify exact HTTP bytes, and orbit/zoom the final rendered scene. Expected: genuine Three.js 3D geometry, perspective and occlusion. Observed: index.html:35–54 constructs WebGLRenderer, PerspectiveCamera, spheres and torus highlights. Exact served index and bundled library matched the saved files; final loaded resource size matched the bundle after cache refresh. Orbiting changed orbital ellipse perspective, shaded sphere lighting and torus front/back occlusion; zoom changed apparent sphere size while the selected target remained centered. This was live rendering rather than a flat image or import-only claim."
+    },
+    {
+      "id": "S8",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Capture paused snapshot A at 30/2x/Ember/tracking, change every live field and play, restore it; capture while playing; export, re-import and reload captured IDs; restore fractional imported time. Expected: immutable complete captured values, unique stable IDs, derived displayed angles, no live mutation. Observed: A ID obs-mvguskr6-1 retained 30.00 s, 2x, ember, tracking and [180,170,55] degrees after unrelated edits. Captured values and IDs survived actual export/import/reload equality checks and A restored the same fields. A playing capture at approximately 0.10 s retained its displayed angles across reload. Later paused capture at 17.29 s preserved exact live fields and identical camera/scene bytes; snapshot list showed every field and all three angles. Fractional 17.25 imports ignored supplied angles and displayed [157.50,338.75,319.38]."
+    },
+    {
+      "id": "T1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Select Aster, Azure and Ember through both labeled list and canvas, paused and playing. Expected: one shared selection with visible highlight. Observed: final exact-bundle canvas clicks at predicted and visually inspected centers changed from a different prior selection to select-aster, select-azure and select-ember in both playback states. List buttons selected the same IDs. Information and mint highlight rings agreed; each planet’s tracking highlight was visually inspected."
+    },
+    {
+      "id": "T2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Inspect each selected information panel during playback and seeks, then restore a null-selection overview snapshot. Expected: correct name, period and rendered angle; explicit cleared no-selection state. Observed: Aster/Azure/Ember showed 12/24/48 simulation s, their live angles advanced at the measured rates, and at 30 s showed 180/170/55 degrees matching rendered locations. Startup and null restore showed No planet selected, no pressed planet button, no highlight and disabled tracking; prior Azure information was cleared."
+    },
+    {
+      "id": "T3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Track Azure over more than 3 seconds at 2x, seek 73 while tracking, switch planets, and inspect no-selection tracking control. Expected: actual selected center stays within 10% of scene’s smaller dimension; target/info/highlight switch without live resets; no-selection tracking unavailable. Observed: in the 347.12x340 CSS-pixel scene, Azure’s visible center stayed at approximately the scene center (visually within about 3 CSS pixels, versus 34 allowed) at displayed times 30.53,33.89,37.25 and after seeking 73.00. Aster, Ember and Azure each centered with matching information/highlight. Playing switch to Ember retained 2x and running time 37.20; paused switches retained 73.00/2x. No-selection tracking was disabled."
+    },
+    {
+      "id": "T4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Return from tracking each planet to overview, including while playing. Expected: full system visible and selection/time/speed/playback preserved. Observed: all three orbits, the sun and planets fit standard overview at both requested CSS sizes. Each paused return retained 73.00 s/2x/Resume and the chosen planet. In the ordered playing scenario, Ember remained selected, speed 2 and playback running while time naturally advanced 37.20→37.76. Overview reset framing without clearing selection."
+    },
+    {
+      "id": "T5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Restore selected tracking and unselected overview snapshots after changing live fields and manually orbiting/zooming; repeat at the same viewport. Expected: atomic captured-state restore, paused playback, correct positions/info/target and deterministic standard framing. Observed: overview restored 30.00/1.5x/null with explicit no-selection information; tracking restored 17.25/0.25x/Azure and angle 338.75. In final exact-bundle checks, both repeated restored scene-region images were byte-identical after camera/time/selection changes. Original captured A also restored 30/2x/Ember/tracking after export/import/reload."
+    },
+    {
+      "id": "U1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Orbit by real pointer drags and zoom by wheel in overview and tracking, both playing and paused. Expected: camera responds in all four combinations without unintended simulation mutation. Observed: final exact-bundle images changed in every combination; orbit changed path perspective and sphere/ring occlusion, and zoom visibly enlarged/reduced planets. Paused cases stayed at 30.00 s; playing cases advanced naturally to 31.47 and 31.44 at 2x while selection and view mode stayed correct."
+    },
+    {
+      "id": "U2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Start a fast drag on unselected Aster and a 36-CSS-pixel cumulative drag on unselected Ember using 24 small moves with 15-ms intervals, with Azure selected; exercise list/range/button/snapshot/JSON controls. Expected: drags do not select planets; DOM actions do not leak into scene input. Observed: both final-bundle drags left Azure selected while changing camera framing. Paused capture/delete/export and all 35 invalid imports preserved exact live fields and scene-region image bytes; valid import also preserved them. List and seeking produced only their intended selection/position changes. Tracking/overview changed camera only as requested."
+    },
+    {
+      "id": "U3",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: Inspect playback, speed, selection, mode, snapshot and JSON feedback throughout both viewport workflows. Expected: clear purpose and understandable current state and action results. Observed: numbered observation panels, Pause/Resume, two-decimal clock, numeric speed, explicit selected/no-selection information, named tracking banner, captured values/angles, capacity message and detailed import rejection messages form a polished and coherent tool. Rating 4: feedback is strong, but storage-ID recovery is misleading as detailed under D6, and selection/information require considerable vertical travel on the narrow layout. No separate mobile obstruction penalty is applied here."
+    },
+    {
+      "id": "U4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Capture three distinct observations, attempt a fourth, delete the middle entry, recapture and export. Expected: append-only capacity three, visible rejection without replacement, stable remaining order/values, unique replacement ID and no live changes. Observed: fourth capture displayed Capacity reached: delete an observation before capturing a fourth; all three cards were unchanged. Deleting obs-mvgut4ye-2 preserved A then obs-mvgut5ed-3; recapture appended obs-mvgut62q-4 without collision. Live paused fields remained stable, and independent final exact-bundle capture/delete checks also preserved the rendered scene and live state."
+    },
+    {
+      "id": "U5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: At both actual viewports, navigate by Tab and Shift+Tab and activate all primary controls with Enter, ranges with Home/End/ArrowRight, and textarea with keyboard select-all/type. Expected: meaningful names, visible focus, working actions and no trap. Observed: selection, both pause/resume transitions, seek, speed, tracking/overview, capture/restore/delete and JSON export/edit/import all worked. Seek reached 0 then 0.01, speed reached 4, restore returned 30/1.5x/null, and JSON import restored two entries. Focus-visible was true with a solid visible outline for each control; Shift+Tab exited import to Export. Accessible snapshots supplied meaningful names for the label-associated ranges, textarea and numbered snapshot buttons."
+    },
+    {
+      "id": "V1",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: Inspect exact bundled-renderer overview/tracking, selected/unselected states, orbit/zoom and both CSS sizes. Expected: readable scene and selection, supportive effects. Observed: distinct shaded mint/blue/orange spheres, subtle orbit paths and stars, warm sun and high-contrast mint selection rings stayed readable. Tracking makes the selected sphere prominent and demonstrates depth. Rating 4: polished and unobscured, but the smallest overview planet is quite small and some dark unlit surfaces have limited contrast."
+    },
+    {
+      "id": "V2",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: Inspect desktop and narrow layouts, controls, information, three-card snapshots, textarea and visible keyboard focus. Expected: coherent legible typography, spacing, colors and panel hierarchy. Observed: consistent dark panels, mint numeric accents, muted uppercase section labels, rounded controls and clear observation-card hierarchy. Mobile cards stack and labels wrap legibly; desktop cards share a row. Rating 4: cohesive and polished with minor density/small-text limitations in detailed snapshot and JSON content rather than exceptionally refined typography."
+    },
+    {
+      "id": "L1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Verify child viewport and exercise every primary control, including keyboard snapshot/JSON operations, at desktop size; inspect scene and scrolled panels. Expected: usable 1440x900 CSS-pixel layout without horizontal scrolling or blocked controls. Observed: inner size 1440x900, clientWidth=scrollWidth=1423 (vertical scrollbar), secure context, scene approximately 1007x510. Selection, tracking, pause/resume, seek, speed, capture/restore/delete, export and textarea import all operated. Vertical scrolling exposed the log and JSON; no control was covered or horizontally hidden."
+    },
+    {
+      "id": "L2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Load a fresh fixed-size mobile iframe and operate every primary control, including the full keyboard sequence and JSON round-trip. Expected: usable 390x844 CSS-pixel layout without horizontal scrolling or blocked controls. Observed: inner size 390x844, clientWidth=scrollWidth=373, secure context and scene approximately 347x340. Controls wrapped into a single column and snapshots stacked. Selection, tracking, seek, speed, pause/resume, capture/restore/delete and JSON edit/export/import worked via real input; vertical scrolling was necessary but no panel blocked the controls."
+    },
+    {
+      "id": "D2",
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Action: Inspect output/index.html and all local dependency paths beneath output/. Expected: complete HTTP-root artifact without build or repository-root dependencies. Observed: the only referenced local asset is three.min.js, present alongside index.html. Styles and application code are inline; no other local assets or build outputs are required. Final HTTP reads of both files matched saved bytes. Direct-file execution is deliberately outside review scope."
+    },
+    {
+      "id": "D3",
+      "status": "unverified",
+      "rating": null,
+      "method": "http",
+      "evidence": "Console/page-error coverage is unverified. A reviewer-owned scratch page registered console and pageerror subscriptions, then deliberately called console.error and threw an asynchronous exception; the diagnostic array remained empty. Therefore empty subscriptions cannot prove a clean artifact, and startup/ordinary-console coverage was unavailable. A brief post-load listener experiment cannot supply the missing startup coverage and was discarded on reload. Required local resources were observed rendering and returned HTTP 200 with matching final source bytes; no qualifying artifact error was established. Review-triggered stale-frame, navigation-readiness and isolated-world ReferenceError messages were tool/evaluation limitations, not artifact errors."
+    },
+    {
+      "id": "D4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Export empty/populated lists through the labeled textarea, inspect fields/types/order/IDs, re-import and export while paused and playing. Expected: only version and five required snapshot fields, stable actual IDs, no file picker or live/list mutation. Observed: empty export was version 1 with an empty snapshots array. Populated captured IDs and order round-tripped exactly through import/export/reload. Exports omitted derived angles, playback and camera fields; Aster=aster/Azure=azure/Ember=ember mapping was visible. Paused export preserved exact scene bytes; playing export/import continued naturally, and an exact-time comparison at 17.25 confirmed camera framing preservation."
+    },
+    {
+      "id": "D5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Submit 35 separate invalid payload classes against a nonempty list; valid empty/two/three-entry payloads paused and playing; restore imported entries and export. Expected: atomic complete validation, visible errors without list/live/camera changes, exact ID/order preservation, endpoints/fractions and extra keys accepted, angles derived. Observed: malformed JSON; null/array roots and entries; every missing required field; string/unsupported version; non-array snapshots; empty/numeric IDs; numeric-string/boolean time or speed; both time/speed range violations; numeric overflow; unknown/numeric/empty/string-null planet references; bad mode; null tracking; four entries; duplicate IDs; and valid-prefix/invalid-suffix all rejected visibly with unchanged cards/live state. Final exact-bundle repeats also preserved complete scene-region bytes for every rejection. Valid IDs Case, case and a single space survived exactly in order, with time 0/120/17.25 and speeds 0.25/4/1.5; null/selected overview and tracking restored correctly. Extra keys and supplied angles were ignored. Empty import cleared only the list; playing import retained playback and custom camera (confirmed by returning to the same exact time)."
+    },
+    {
+      "id": "D6",
+      "status": "fail",
+      "rating": 0,
+      "method": "http",
+      "evidence": "Action: Reload after capture, deletion and valid import; replace only orbit-observatory-v1 with each invalid-payload class; exercise bounded real quota exhaustion and restore fixtures. Expected: stable persisted IDs/order/values/angles with fresh live defaults; every invalid saved payload produces an empty log plus a recovery notice; failed writes visibly report saving unavailable while memory controls work. Observed: normal capture/delete/import persistence and defaults passed, and all 35 invalid saved payloads produced empty lists. However saved empty-string IDs, numeric IDs and duplicate IDs displayed Saving unavailable; observations are in memory only. They did not display an invalid-data recovery notice, although storage was available. Reproduce with version 1 and a snapshot whose id is empty (other fields valid), or duplicate two valid IDs, then reload. index.html:24,34 misclassifies the ID-validation error; other tested invalid classes showed Recovered invalid saved observations; the log is empty. Quota fixture reached 5,242,405 filler characters under the 8-MiB bound; a real capture failed to persist, kept the prior raw payload, added an in-memory card and visibly said Saving unavailable; changes remain in memory only. Playback, selection and deletion remained usable. Exact original storage absence was restored and filler removed. Read-denial itself was not induced; the permitted real write-failure fixture covered saving unavailability."
+    }
+  ],
+  "total_score": 92.4,
+  "total_score_upper_bound": 94.4,
+  "coverage": {
+    "passed": 25,
+    "failed": 1,
+    "unverified": 1
+  },
+  "notes": [
+    "Reviewer identity: current host metadata names openai-codex/gpt-6-astra. Effort high is the explicit applicable worker configuration supplied for this review session; no independent runtime override telemetry was available. Host clock supplied the timezone-qualified review timestamp. Generator identity and recording measurements were not used as review evidence.",
+    "Scope: saved prompt matches solar-system-observatory-2, all R1–R15, the eight-step scenario and six additional sequences. Rubric solar-system-5.0 / format 5.0 applied. An all-unverified 0..100 checkpoint was finalized before artifact source or browser inspection. No previous review was used.",
+    "Applied skills: benchmark-review plus host-required aside-browser; read the actual Aside and direct-REPL guides. Connected Aside MCP direct repl only, no other model or descendants, no exec/CLI browser session, no security changes, no file:// test, and no repository build/lint/tests/formatters. The Terra-focused control profile does not match this artifact; observed control selectors were used instead.",
+    "Preregistered before browser observations: rates measured for >=3 wall seconds away from endpoint, tolerance max(0.15 simulation seconds, 5% expected delta)+0.01 displayed seconds; pause tolerance 0.01 s and 1 degree with one-frame transition allowance; angle predictions phases Aster 0, Azure 80, Ember 190 degrees and periods 12/24/48, tolerance 2 degrees+0.01 rounding; repeat seek/restore centers 2 CSS px at identical camera/viewport; tracking within 10% of smaller scene dimension at several samples over >=3 s and immediately after seek; JSON/state identity exact except natural measured playback advance. Probe profile selectors and storage key do not match this artifact; use observed native control mapping, not the Terra profile.",
+    "Browser setup: exclusive lease ReviewSolMedium held for all browser work, one target scene at a time. Output-only HTTP origin 127.0.0.1:8922 and fixture-only server 127.0.0.1:8932. Fresh iframe CSS viewports were measured at 1440x900 and 390x844 with isSecureContext=true. Desktop client/scroll widths were 1423/1423 and mobile 373/373; vertical scrollbars explain the difference from innerWidth. This is real embedded-document CSS layout verification, not top-level viewport or touch-device proof.",
+    "Ordered acceptance replay: automatic 1x motion; canvas Azure selection and tracking; pause/seek 30; set 2x paused; resume and measure 30.40→36.61 over 3.103 wall seconds; switch to Ember while tracking without reset; return to full overview preserving Ember/2x/running; pause and repeat 30. Subsequent matched-camera comparisons established identical 30-second positions. The full sequence was replayed after the cache identity issue described below was resolved.",
+    "Additional sequences ran in saved order: (1) immutable A capture, unrelated live edits and repeated restore; (2) three snapshots, fourth-capacity rejection, middle deletion, unique recapture and export; (3) invalid import rejection/atomicity matrix; (4) fractional/null/tracking valid import, restore, round-trip, playing import and empty-list clearing; (5) capture/delete/import reloads, malformed/schema-invalid storage and real bounded quota failure; (6) full keyboard controls at both CSS sizes. The remaining fixed matrix then covered endpoint rates, noncanonical seeks, phase reload stability, all canvas/list selections, slow drag separation, camera mode/playback combinations, extended validation and diagnostic capability. Confirmed D6 failure did not stop independent checks.",
+    "Fresh-cache limitation and correction: the first owned navigation showed a stale cached document inconsistent with the served index; it was excluded. A cache-busted index navigation loaded the assigned artifact. Later a default library fetch exposed a stale cached dependency; no-store byte checks identified the exact saved files, then a cache-reload GET refreshed that owned-origin library and a document reload reported the correct loaded resource size. No source or browser security setting was changed. The final genuine shaded renderer, ordered acceptance, phase/repeat-seek/restore images, tracking, camera modes, drag separation, selection, speed rates, JSON/capture camera isolation, both layouts and keyboard workflows were observed again with the exact bundled dependency. Earlier target-HTML DOM/storage results are retained where independent of the library; initial stale-document findings are not used.",
+    "Transport limits: initial navigation readiness timed out even though a later snapshot showed the correct loaded page; frames() retained a stale frame handle, resolved to the live child before observations. Isolated-world evaluation could not access application lexical globals, so no internal state was exposed or mutated. An early range fill of .25 was rejected by the driver; valid 0.25 input was used. These are reviewer transport limitations, not artifact failures.",
+    "Image evidence: nonzero screenshot clip offsets and locator screenshots unexpectedly included out-of-element header content. Those crops were not treated as claimed element coverage. Final visual comparisons used full viewport images or explicitly inspected top-left regions containing the complete scene, excluding the changing scrollbar. Whole-page byte differences during error messages were not camera failures because scrollbar geometry changed. A playing comparison based on a rounded 17.29 readout was not exact-time proof; the independent exact 17.25 replay produced identical framing. No tolerances were widened. Transient images were inspected, not retained as run evidence.",
+    "D3 remains unverified: deliberately generated console and exception signals were absent from subscriptions on a reviewer-owned scratch page. Empty arrays cannot establish diagnostic cleanliness; a post-load listener cannot establish startup or ordinary console coverage. Functional/resource observations remain usable, and no artifact-caused error was invented from this instrumentation gap.",
+    "Storage fixtures: only app key orbit-observatory-v1 and isolated reviewer key reviewSolMedium-quota-20261020 were touched. Original app key was absent and saved in working memory. All 35 rejection classes were also exercised as persisted payloads; ID errors exposed the confirmed recovery-message defect. Quota search never exceeded 8 MiB of string content and observed expected QuotaExceededError exceptions. Actual capture failed to save while memory stayed usable. Quota filler was removed, interim raw payload restored after each fixture, and final original key absence restored without a later reload altering it. No unrelated storage was inspected or cleared; read-denial recovery was not separately claimed.",
+    "Preservation and cleanup: working-memory before/after comparisons confirm prompt.md, run.json, output/index.html and output/three.min.js were unchanged. Final HTTP source bytes matched the saved output files. All owned scene/fixture/scratch tabs were closed; review-sol-medium-http and review-sol-medium-viewport both reported exited, and the exclusive lease was released. No denied operation occurred. Only reviews/review.json and reviews/review.md are retained review outputs; working draft is removed after final publication."
+  ]
+}
