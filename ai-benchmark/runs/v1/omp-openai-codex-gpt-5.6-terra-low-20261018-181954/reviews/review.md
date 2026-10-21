@@ -4,16 +4,16 @@
 
 Status: partial.
 Mandatory verdict: fail.
-Quality total: 61.55 / 100. Conservative lower bound. Range: 61.55 to 66.68.
+Quality total: 61.55 / 100. Conservative lower bound. Range: 61.55 to 64.68.
 Quality is uncapped. The mandatory verdict is independent of the quality score.
 Mandatory failures (8): S8, T2, T4, T5, U1, U2, U5, D6.
 Mandatory unverified (1): S7.
-Missing checks (2): S7, D3.
-Missing reviewer metadata: reviewer.effort.
+Missing checks (1): S7.
+Missing reviewer metadata: None.
 Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;20T12:39:30Z.
+Reviewed at: 2026&#45;10&#45;21T12:39:18&#46;388381&#43;00:00.
 Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
-Reviewer effort: Unavailable.
+Reviewer effort: high.
 
 ## Scores
 
@@ -24,7 +24,7 @@ Reviewer effort: Unavailable.
 | usability | 1.60 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
 | visual | 3.00 | 15 | V1, V2; determined score; full category denominator |
 | responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 3.00 to 4.00 | 10 | D2, D3, D4, D5, D6; conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator |
+| delivery | 3.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
 
 ## Findings
 
@@ -72,6 +72,12 @@ Status: fail. Rating: 0. Method: http.
 
 Action: At1440x900 and390x844 used Enter for buttons, arrows for time/speed, textarea select&#45;all/backspace, Tab/Shift&#43;Tab, and snapshot restore/delete activation&#46; Expected: Meaningful names, stable visible keyboard focus and normal navigation for every control&#46; Observed: Main controls were named and showed yellow focus outlines; actions worked&#46; However Tab from JSON to Restore briefly focused it, then document&#46;activeElement became BODY and its outline disappeared&#46; This occurred at both sizes even while paused, making ordinary snapshot focus unstable&#46; Direct targeted Enter could execute restore/delete but does not cure normal Tab navigation&#46; index&#46;html:8,10 rebuilds all snapshot buttons in renderUI&#40;&#41; on every animation frame&#46; No general trap in the persistent controls was observed&#46;
 
+#### D3
+
+Status: fail. Rating: 0. Method: http.
+
+Action: Validated deliberate console&#46;error and thrown Error on owned scratch with Runtime&#46;enable plus page&#46;events&#40;&#41;, enabled Runtime/Network before artifact navigation, and delivered native canvas pointerdown at &#40;500,400&#41;, drag to &#40;620,460&#41;, pointerup and wheel before selection/tracking/time/speed, snapshots/JSON, reload/recovery, endpoint and both&#45;size DOM interactions&#46; Expected: No artifact&#45;caused runtime/resource error prevents intended operation&#46; Observed: Both positive&#45;control event types were captured&#46; Real artifact pointerdown threw TypeError: Cannot set properties of undefined &#40;setting &#39;x&#39;&#41; at index&#46;html:10:531; pointermove threw TypeError: Cannot read properties of undefined &#40;reading &#39;x&#39;&#41; at index&#46;html:10:724&#46; Source writes/reads renderer&#46;dataset instead of renderer&#46;domElement&#46;dataset, so exceptions abort the camera handlers and prevent intended orbit&#46; Required document and Three&#46;js CDN script returned HTTP 200; no failed required resource was observed&#46; Three&#46;js emitted a deprecation warning and optional favicon returned 404, neither used as failure evidence&#46; Other exercised snapshot/import/reload/mobile control batches produced no additional qualifying exception; screenshot transport timeouts and one reviewer malformed fill value are not artifact errors&#46; A confirmed exception preventing camera operation establishes fail without claiming fresh completion of every historical rubric matrix clause&#46;
+
 #### D6
 
 Status: fail. Rating: 0. Method: http.
@@ -84,13 +90,7 @@ Action: Reloaded after import/delete/capture; injected malformed, version2 and m
 
 Status: unverified. Rating: Unverified. Method: http.
 
-Actual HTTP Three&#46;js resource loading, canvas rendering, sphere/torus geometry and PerspectiveCamera source &#40;index&#46;html:5–7&#41;, changing apparent sizes with wheel zoom, and occlusion during orbital motion were observed&#46; The required rendered&#45;depth/perspective change while orbiting the camera could not be established because delivered pointer drags did not rotate this artifact &#40;confirmed U1 failure&#41;&#46; A library import/source alone is not promoted to a complete S7 pass, and this is not a claimed flat&#45;renderer failure&#46;
-
-#### D3
-
-Status: unverified. Rating: Unverified. Method: http.
-
-HTTP rendering and the required Three&#46;js resource were observed, but reliable comprehensive console/page&#45;error transport was unavailable&#46; The shared current positive control failed to report deliberate wrapper errors; this review used post&#45;load non&#45;interfering window error/unhandledrejection listeners and captured no errors even around the source&#45;linked broken pointer behavior&#46; Empty arrays cannot prove no artifact errors and post&#45;load listeners omit startup/console&#46;error&#46; No diagnostic pass or captured exception is claimed&#46;
+Focused amendment: actual HTTP startup loaded https://unpkg&#46;com/three@0&#46;160&#46;0/build/three&#46;min&#46;js with status 200 and window&#46;THREE&#46;REVISION 160&#46; Inspected index&#46;html:7 sphere/torus geometry, WebGLRenderer and PerspectiveCamera&#46; Native camera drag at desktop produced captured TypeErrors in pointerdown/pointermove &#40;index&#46;html:10:531 and :724&#41;, preventing the intended orbit interaction&#46; Wheel input was delivered, but fresh rendered depth, occlusion and perspective changes were not visually established: page&#46;screenshot failed with CdpRequestTimeoutError: CDP request timed out: Page&#46;captureScreenshot at both actual 1440x900 and 390x844&#46; Source/import/canvas observations do not establish S7; it remains unverified rather than being classified as a flat renderer&#46; Historical U1 evidence is retained separately, not newly certified&#46;
 
 ### Verified passes
 
@@ -200,10 +200,11 @@ Action: Tested37 separate invalid inputs against a nonempty paused list and vali
 
 Browser method: http.
 Viewports: 1440x900, 390x844.
-Coverage: 17 passed, 8 failed, 2 unverified.
+Coverage: 17 passed, 9 failed, 1 unverified.
 
 ### Notes
 
+- USER&#45;AUTHORIZED MIXED&#45;PROVENANCE FOCUSED AMENDMENT: Only previously unverified S7 and D3 were attempted on 2026&#45;10&#45;21&#46; Every previously verified check object is retained verbatim from the original review at 2026&#45;10&#45;20T12:39:30Z by openai&#45;codex/gpt&#45;6&#45;astra with unresolved effort&#46; These are historical observations, not a fresh full review&#46; Current reviewer owns only new S7/D3 evidence and score recalculation&#46; User explicitly waived full&#45;fresh&#45;review and early&#45;reset requirements&#46; The following original notes retain their historical meaning; old diagnostic and metadata limitations are superseded only for this amendment&#46;
 - Saved prompt independently confirms solar&#45;system&#45;observatory&#45;2, all 15 requirements, eight ordered steps and six extra sequences&#46; Original prompt, run&#46;json and output were not changed&#46; Generator failed status is not quality evidence&#46;
 - Host project&#45;context identifies current reviewer as openai&#45;codex/gpt&#45;6&#45;astra&#46; No actual effort is exposed by current host metadata or an applicable explicit session declaration; effort remains null, preventing complete status&#46; Timestamp from host UTC date command&#46;
 - Applied benchmark&#45;review and host&#45;required Aside browser skill&#46; using&#45;harness&#45;flow explicitly excludes dispatched subagents&#46; User explicitly requested parent&#45;orchestrated parallel reviews; this dispatch exception overrides no&#45;other&#45;model orchestration, and no descendants/models were launched by this worker&#46;
@@ -216,3 +217,8 @@ Coverage: 17 passed, 8 failed, 2 unverified.
 - Image processing used transient screenshot bytes in memory on the reviewer&#45;owned wrapper with OffscreenCanvas&#46; No app internals were exposed&#46; Color&#45;mask centroids were used for repeated positions and selected Jade tracking centers; red mask centroids were asymmetric and were not treated as absolute angular truth&#46; No retained screenshot, log or evidence collector was created in the run&#46;
 - The interface does not match the bundled Terra&#45;xhigh control profile; checks used this artifact’s observed selectors and actual UI, not an incompatible universal adapter&#46; Native coordinate clicks were used for frequently recreated snapshot buttons after locator detachment, with a fresh snapshot after each action&#46;
 - Cleanup complete: original solar&#45;observations key was absent and restored to absence; terraLowReview&#45;quota&#45;20261020 was verified absent after finally and final restoration&#46; Review&#45;created tabs were closed, no scene remained running, output&#45;only rr&#45;terra&#45;low&#45;parallel service was stopped, and BROWSER&#95;RELEASED was sent immediately&#46; Shared viewport service was not stopped&#46; Source prompt/run/output were never edited; only this review pair is published&#46;
+- Amendment metadata: current host project&#45;context identifies openai&#45;codex/gpt&#45;6&#45;astra; applicable &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md explicitly selects thinking&#45;level high&#46; Host provides no conflicting effort&#46; Actual timezone&#45;qualified timestamp obtained from host clock&#46; Generator metadata was not used for reviewer identity&#46;
+- Amendment skills: benchmark&#45;review and host&#45;required ego&#45;browser, with complete installed ego&#45;browser skill guide read&#46; using&#45;harness&#45;flow subagent&#45;stop applied&#46; No Aside transport, descendants, other models, source repair, build, lint, formatter or test suite was used&#46; The artifact does not match the bundled Terra&#45;xhigh profile; its observed controls were used&#46;
+- Amendment transport: exclusive parent&#45;authorized lease, ego&#45;browser nodejs TaskSpace12, initial p1 over output&#45;only 127&#46;0&#46;0&#46;1:8962 and scratch 127&#46;0&#46;0&#46;1:9062&#46; Runtime and Network enabled before startup and in interaction rounds&#46; Both deliberate scratch Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown signals succeeded&#46; Actual top&#45;level CSS viewports measured 1440x900 and 390x844; mobile document scrollWidth 375&#46; This is not touch&#45;device proof&#46; No new timing or visual numeric tolerances were needed: retained timing checks were not re&#45;scored; S7 requires direct observed camera&#45;depth evidence, which was unavailable&#46;
+- Amendment coverage: exercised selection/tracking, pause and seek30, paused2x, resume, list switch and overview/reseek; captured tracking snapshot and changed live state, restored, reached capacity, deleted middle and recaptured/exported&#46; Malformed JSON, unsupported version and mixed&#45;valid/invalid payload produced visible rejection&#46; Valid null&#45;overview and selected&#45;tracking fractional imports/restores, playing import, empty&#45;list replacement and export ran&#46; Reload after import/delete/capture and malformed persisted data recovery ran; endpoint reached120/Resume and resumed after earlier seek&#46; Both viewport DOM/keyboard interactions included selection, track/overview, time/speed, playback and JSON; mobile also capture/restore/delete&#46; This supplies diagnostic coverage across acceptance families, not a fresh full timing, visual, keyboard, rejection or quota matrix&#46; Scene&#45;click target identity and full camera&#45;depth/occlusion inspection were not newly established because screenshots timed out&#46; No new quota/read&#45;denial fixture was attempted; historical D6 stays verbatim&#46;
+- Amendment limitations and cleanup: page&#46;screenshot timed out at both sizes; one speed fill using &#46;25 was rejected by reviewer transport and corrected to 0&#46;25 after inspecting state&#46; These transport errors were not scored as artifact failures&#46; Original solar&#45;observations key absence was recorded and restored to absence; no unrelated storage touched or quota key created&#46; Metrics cleared and owned p1 closed successfully&#46; No finish&#40;&#41; was called after screenshot&#45;error task, per error&#45;cleanup rule; no owned scene remains&#46; Both owned servers stopped, BROWSER&#95;RELEASED broadcast and successor grant sent&#46; Transient script files removed after publication; no screenshots were produced&#46; Before/after prompt&#46;md, run&#46;json and complete output inventory/byte comparison matched in working memory&#46; Only the two assigned review files are published; finalizer reports their individual output states&#46;

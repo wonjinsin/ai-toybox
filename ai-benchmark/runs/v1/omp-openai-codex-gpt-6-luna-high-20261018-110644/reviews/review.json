@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T13:31:44.726Z",
+  "reviewed_at": "2026-10-21T13:14:41.532259+00:00",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "fail",
   "verification": {
     "browser_method": "http",
@@ -50,7 +50,7 @@
       "id": "delivery",
       "weight": 10,
       "score": 2,
-      "score_upper_bound": 3
+      "score_upper_bound": 2
     }
   ],
   "checks": [
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "fail",
+      "rating": 0,
       "method": "http",
-      "evidence": "The artifact rendered and its required local Three.js resource appeared in performance resource timing, but complete console/page-error observation was unavailable. The shared contract reports a current direct-REPL diagnostic positive-control limitation: deliberate console.error and async throw on a reviewer-owned wrapper yielded no transported events. This worker did not repeat that positive control or claim an empty diagnostic stream proves a clean artifact. No qualifying artifact-caused diagnostic failure was established, and complete startup/later console coverage remains unverified."
+      "evidence": "Action: Validate Runtime.consoleAPICalled and Runtime.exceptionThrown with deliberate console-error and asynchronous-throw controls on owned scratch HTTP; enable Runtime and Network before artifact navigation; exercise playback/seek/speed/selection/tracking, camera, snapshot capacity/restore/delete, textarea import/export, reload and storage boundaries at actual 1440x900 and 390x844 top-level CSS viewports. Then import {\"version\":1,\"snapshots\":[{\"id\":\"bad-inherited-reference\",\"time\":30,\"speed\":1.5,\"selectedPlanet\":\"constructor\",\"viewMode\":\"tracking\"}]} through the textarea and activate Restore. Expected: Invalid planet input is rejected without an artifact-caused exception or interrupted operation. Observed: Both diagnostic positive controls were transported. The artifact accepted the inherited-name planet reference and displayed constructor/tracking with a success notice. Native Restore generated two Runtime.exceptionThrown TypeErrors: Cannot read properties of undefined (reading 'x'), through THREE.Vector3.copy and updateScene at index.html:12:415, first from the restore handler at index.html:16:3074 and then the animation loop at index.html:13:361. The live display remained at 23.7 seconds/Full-system overview instead of applying the 30-second tracking snapshot; the restore success notice was not reached. This is an artifact-caused runtime failure, not the deliberate scratch exception. Required index.html and three.min.js loads returned HTTP 200; no Network.loadingFailed was observed. The bundled Three.js deprecation warning and the browser-requested optional favicon.ico HTTP 404 did not prevent operation and were not scored as failures. Ordinary exercised sequences produced no other artifact console errors or page exceptions. The focused diagnostic scope does not freshly recertify all historical functional/visual findings or every fixed-matrix permutation."
     },
     {
       "id": "D4",
@@ -245,11 +245,11 @@
     }
   ],
   "total_score": 78.8,
-  "total_score_upper_bound": 80.8,
+  "total_score_upper_bound": 78.8,
   "coverage": {
     "passed": 22,
-    "failed": 4,
-    "unverified": 1
+    "failed": 5,
+    "unverified": 0
   },
   "notes": [
     "Fresh review of exactly runs/v1/omp-openai-codex-gpt-6-luna-high-20261018-110644. Saved prompt was read in full and matched solar-system-observatory-2, all fifteen requirements, the original eight ordered steps and six additional sequences. Existing review findings and generation status were not used as quality evidence. The parent had already published the all-unverified checkpoint.",
@@ -263,6 +263,15 @@
     "Storage cleanup: original observatory-snapshots-v1 value was absent. Only that app-owned key and the unique __review_lunaHigh_20261020_quota filler key were touched. The quota filler was removed in finally; final observed storage values were app:null and filler:null. No unrelated keys were cleared. Both owned tabs were closed (desktop before opening mobile, mobile at final cleanup), rr-luna-high-parallel was stopped, and the parent's 8890 fixture server was left running. BROWSER_RELEASED was sent immediately after cleanup and before scoring/publication.",
     "Source preservation: prompt.md, run.json and both output files were read but never edited. Only the assigned reviews/review.json and reviews/review.md are publication targets. Screenshots and decoded pixel comparisons were transient tool-memory observations; no screenshots, logs, collectors or evidence directory were retained in the run. The temporary outside-run JSON draft is removed after final publication.",
     "Parent supplement on 2026-10-20 used the same original output and8921 origin under an exclusive browser slot. It observed every playing-list selection, verified the original storage value unchanged without writes, closed its sole tab and stopped rr-luna-high-parent-supplement before releasing browser access. Existing independently observed worker findings were preserved.",
-    "The supplement was performed by the current parent host model openai-codex/gpt-6-astra, with effort still unavailable/null. Host-required aside-browser, injected using-harness-flow/caveman and the required read-only brainstorming route were applied by the parent; the explicitly requested parallel orchestration exception remains disclosed."
+    "The supplement was performed by the current parent host model openai-codex/gpt-6-astra, with effort still unavailable/null. Host-required aside-browser, injected using-harness-flow/caveman and the required read-only brainstorming route were applied by the parent; the explicitly requested parallel orchestration exception remains disclosed.",
+    "FOCUSED AMENDMENT 2026-10-21: User explicitly authorized re-verifying only originally unverified checks, preserving previous pass/fail evidence and waiving the fresh-full-review and early-reset rules. Only D3 changed. All 26 previous verified check objects remain verbatim historical evidence from reviewed_at 2026-10-20T13:31:44.726Z, reviewer openai-codex/gpt-6-astra with effort null. The earlier notes above, including their fresh-review wording, Aside transport, embedded viewports, missing effort and cleanup descriptions, describe that historical attempt only. This is a mixed-provenance amendment, not a fresh full 27-check review. The current reviewer owns the new D3 observation and score recalculation; complete means aggregate evidence and current metadata are populated, not that historical checks were freshly recertified.",
+    "Current amendment reviewer model openai-codex/gpt-6-astra is explicit current host metadata. Effort high comes from the applicable .omp/agents/benchmark-astra-review.md thinking-level configuration because the host does not expose a conflicting effort. Current reviewed_at comes from the actual timezone-qualified UTC clock. No generator metadata or old null effort was used to infer current identity, and the historical missing effort is not retroactively filled.",
+    "Current applied skills: agents/benchmark-review and shared resources; ego-browser and its complete installed 2.1.0 guide required for browser work; using-harness-flow read with its dispatched-subagent stop rule; caveman required by shared host contract for concise communication. No Aside MCP, other browser, descendants, other model, file:// navigation, builds, tests, lint, formatter, dependency install or source repair was used. The user-authorized parallel preparation exception retained exclusive browser operation after BROWSER_GRANTED.",
+    "Current diagnostic transport supersedes only the former D3 transport limitation: owned scratch on 127.0.0.1:9059 positively delivered both deliberate Runtime.consoleAPICalled error and Runtime.exceptionThrown. Owned TaskSpace18 p1 then navigated unchanged output-only 127.0.0.1:8959 with Runtime/Network enabled before navigation and collected events across interactions and reloads. Real top-level metrics were applied and observed as 1440x900 and 390x844, unlike the historical embedded transport. No physical-device, file-protocol, new screenshot/visual rating, or new timing-rate certification is claimed.",
+    "Fresh D3 activity covered automatic-play readouts; Mercury tracking, pause/seek30, paused2x, resume, Venus list switching, overview and repeat seek30; selected capture and live changes followed by restore; capacity-three/fourth rejection, middle deletion and replacement; export, malformed/version/mixed-invalid rejection; valid null-overview and fractional selected-tracking restore; playing imports, empty-list replacement and roundtrip; reload after import, deletion and capture. Both top-level sizes exercised keyboard selection, tracking/overview, speed/time arrows, pause/resume, capture/restore/delete and textarea export/import with Tab/Shift+Tab, plus native centered canvas click, 25-move drag and wheel input. Endpoint119.9/4x stopped at120, then earlier seeking resumed. These actual acceptance-family interactions support D3 diagnostics only; they are not a claim to repeat all timing, pixel-framing, picking or invalid-schema permutations in the historical matrix. No numeric rating outside D3 was reconsidered.",
+    "Fresh storage boundary diagnostics replaced only observatory-snapshots-v1 with malformed JSON and version2 payload and reloaded, observing recovery notices and live defaults. A bounded 8-MiB quota fixture used only __focus_luna_high_quota_20261021, initially absent; it accepted 5,242,796 characters and encountered six QuotaExceededErrors during the bounded search. Real UI capture appended an in-memory entry while stored JSON remained empty and the visible notice incorrectly said Observation captured. This supports the retained historical D6 defect without changing its evidence. No storage read-denial was simulated. The quota key was removed before the inherited-reference reproduction.",
+    "Current transport limit: after mobile JSON filling, page.click(#import) timed out because html intercepted pointer events; inspection showed the button below viewport at top1408.7 and scrollY0. This was treated as reviewer automation scrolling, not an artifact error. Following documented guidance, explicit scrollIntoView and native Enter performed Import and Restore, producing the separately captured artifact TypeErrors. The tool mismatch was reported. No access/security denial occurred.",
+    "Current cleanup: original app-key absence and quota-key absence were restored and both read back null. Viewport emulation was cleared and the sole owned p1 closed. Because an earlier action round errored, finish was not called on that error task; no owned artifact/scratch page remained open. Both tracked servers were stopped. BROWSER_RELEASED was broadcast and the parent-authorized successor grant sent before publication. No screenshots or evidence logs were retained. Temporary outside-run interaction scripts and the draft are removed after publication.",
+    "Source preservation was confirmed from working-memory before/after inventory and byte digests of prompt.md, run.json, output/index.html and output/three.min.js; all unchanged. Digests are not retained here. Only this run's reviews/review.json and reviews/review.md are publication targets, using the required finalize-review.mjs normalizer/generator and its pair readback."
   ]
 }

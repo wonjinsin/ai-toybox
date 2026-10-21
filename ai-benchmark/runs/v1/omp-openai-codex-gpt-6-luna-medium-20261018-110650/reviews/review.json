@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T12:43:16.102Z",
+  "reviewed_at": "2026-10-21T13:12:04.573Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "fail",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 3,
+      "score": 4,
       "score_upper_bound": 4
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Known console.error and asynchronous thrown-exception markers on the reviewer-owned wrapper produced no events from direct REPL console/pageerror subscriptions. Required diagnostic coverage is therefore unavailable. Rendering and source inspection cannot substitute for a clean-console claim."
+      "evidence": "Action: Establish fresh console-error and asynchronous thrown-exception positive controls on the owned scratch origin, then enable Runtime and Network before artifact navigation and throughout native-control sequences at actual top-level 1440x900 and 390x844, including playback/seek/speed/selection/tracking/overview, camera input, snapshots, JSON, reload, malformed saved data and real quota-write failures. Expected: No artifact-caused console/page errors or failed required resources prevent intended operation. Observed: Both Runtime.consoleAPICalled and Runtime.exceptionThrown controls were captured. Artifact sequences produced no console-error calls, uncaught page exceptions or Network.loadingFailed events. index.html and required Three.js returned successful effective HTTP 200 responses (reload revalidation/cache included). The Three.js legacy-build deprecation warning and automatic favicon.ico 404 were nonblocking. Actual UI capture/restore/delete/export/import and reload paths ran; quota capture warned, while quota import still exhibited the historically failed saving-feedback defect without an uncaught error. D3 passes its diagnostic condition, not the separate historical mandatory failures."
     },
     {
       "id": "D4",
@@ -244,14 +244,23 @@
       "evidence": "Action: Reload after import/delete/capture; replace owned persisted data with malformed/version-invalid values; fill a unique quota key and perform UI writes. Expected: Persistent data or visible saving-unavailable feedback with usable in-memory controls. Observed: All normal mutations and derived text survive reload; invalid storage recovers visibly to an empty list. A real failed capture write warns correctly, but a larger valid import fails to change durable storage while replacing the warning with Snapshot list imported; live simulation unchanged. Memory-only import is incorrectly reported as success. Original raw storage was restored and quota key removed."
     }
   ],
-  "total_score": 78.7,
+  "total_score": 80.7,
   "total_score_upper_bound": 80.7,
   "coverage": {
-    "passed": 21,
+    "passed": 22,
     "failed": 5,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
+    "Focused user-authorized mixed-provenance amendment: only previously unverified D3 is freshly evaluated. All other 26 check objects, including evidence, remain verbatim historical findings from 2026-10-20T12:43:16.102Z, reviewer openai-codex/gpt-6-astra, effort null. The old effort remains historically unknown. The full-fresh-review and early all-unverified checkpoint requirements were expressly waived; this is not a fresh full benchmark certification. Current reviewer owns new D3 observations and score recalculation only. Aggregate status complete means all check ratings are now observed across those two provenances, not that all observations were repeated today.",
+    "Current reviewer model openai-codex/gpt-6-astra comes from current host metadata; effort high comes from the specifically assigned .omp/agents/benchmark-astra-review.md thinking-level configuration because current host metadata exposes no conflicting effort. Timestamp is the actual current clock. Generator run identity was not used.",
+    "Fresh browser transport: ego-browser nodejs with documented TaskSpace17, Runtime.enable, Network.enable, page.events and top-level Emulation metrics. Both positive controls succeeded on scratch 9058 before navigating unchanged output at 127.0.0.1:8958. This supersedes the old D3 transport limitation for the current attempt only. Historical notes below retain their original provenance and do not describe this amendment.",
+    "Fresh diagnostic coverage exercised all six acceptance families through native controls at both measured top-level CSS sizes: simulation/selection/view transitions; capture, live edits and restores; three-entry capacity/rejection/deletion/recapture; eleven invalid-import classes including a valid prefix plus invalid later entry; valid fractional null-overview and selected-tracking imports/restores, playing import, empty import and export; capture/delete/import reload persistence; keyboard button/range/textarea operations. Mobile also exercised canvas center click and a 30-pixel/20-move drag, malformed and unsupported-version persisted payloads, and bounded real storage-quota failure. This was focused diagnostic coverage, not a rerun of the full fixed timing/visual/keyboard matrix.",
+    "Pointer seeks initially landed at 29.8 seconds rather than the planned 30 and a later same-knob click retained 31.2 seconds; those are recorded input outcomes, not newly rescored simulation findings. A later native-arrow correction reached exactly 30 with Mercury 180 degrees/tracking. Fractional snapshot restore displayed 17.3 for stored 17.25, null overview restore displayed 30.0/1.50x, endpoint checks displayed 120.0/Resume and earlier resume advanced. No numeric timing or visual finding was remeasured or changed. Optional screenshots were omitted under the parent-authorized D3-only scope; no new rendered-framing, focus-appearance or full scene-picking certification is claimed.",
+    "Fresh storage fixtures touched only solar-observatory-snapshots and a unique reviewer-owned quota key on the isolated origin. Malformed JSON and version 9 recovered visibly with empty snapshots and usable controls. A bounded filler of 5,242,793 characters caused real failed capture/import writes: durable payload remained empty while memory changed. Capture reported saving unavailable; import replaced that warning with an imported-success message, consistent with retained D6 failure. No storage-read denial was simulated. The filler was removed and original app-key absence restored exactly before finishing.",
+    "Cleanup: emulation cleared; owned TaskSpace17 finished once with keep:[]; output8958 and scratch9058 services stopped; BROWSER_RELEASED broadcast and successor lease granted. No screenshots or logs are retained in the run. Before/after working-memory comparisons confirm prompt.md, run.json and the sole output/index.html inventory and bytes unchanged. Temporary reviewer scripts/storage receipt are removed after use; finalizer alone publishes the review pair, and the temporary draft is removed after publication.",
+    "Skills actually applied: benchmark-review and its shared rubric/verification/format resources; host-required ego-browser and complete installed guide plus narrow storage-cleanup guidance; using-harness-flow was read and its subagent-stop followed; caveman affects communication only. No Aside browser, other model, descendant, build, lint, test suite or formatter was used.",
+    "The following unchanged notes are historical from the original review, not statements of fresh amendment coverage:",
     "Fresh review requested for every existing saved run. This run is evaluated independently from unchanged output; previous reviews and scores are not evidence.",
     "Reviewer model openai-codex/gpt-6-astra is supplied by current host project metadata. No current effort is exposed in host metadata or applicable environment; effort remains null rather than borrowing generator/default settings.",
     "Task routing was checked against the full saved solar-system-observatory-2 contract, R1-R15, JSON schema, eight acceptance steps and six additional sequences.",

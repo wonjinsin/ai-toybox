@@ -2,18 +2,18 @@
 
 ## Conclusion
 
-Status: partial.
+Status: complete.
 Mandatory verdict: fail.
-Quality total: 82.30 / 100. Conservative lower bound. Range: 82.30 to 84.30.
+Quality total: 84.30 / 100. Determined score. Range: 84.30.
 Quality is uncapped. The mandatory verdict is independent of the quality score.
 Mandatory failures (3): T4, T5, D6.
 Mandatory unverified (0): None.
-Missing checks (1): D3.
-Missing reviewer metadata: reviewer.effort.
+Missing checks (0): None.
+Missing reviewer metadata: None.
 Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;20T14:05:43&#46;710Z.
+Reviewed at: 2026&#45;10&#45;21T13:26:53&#46;209Z.
 Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
-Reviewer effort: Unavailable.
+Reviewer effort: high.
 
 ## Scores
 
@@ -24,7 +24,7 @@ Reviewer effort: Unavailable.
 | usability | 4.60 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
 | visual | 3.50 | 15 | V1, V2; determined score; full category denominator |
 | responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 3.00 to 4.00 | 10 | D2, D3, D4, D5, D6; conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator |
+| delivery | 4.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
 
 ## Findings
 
@@ -50,11 +50,7 @@ Action: Run fresh bundled persistence, invalid&#45;storage and real quota probes
 
 ### Missing proof
 
-#### D3
-
-Status: unverified. Rating: Unverified. Method: http.
-
-The fresh bundled diagnostics scenario attached console and pageerror listeners and emitted a known console&#46;error and asynchronous exception on the owned wrapper; both event arrays remained empty&#46; Thus the transport positive control failed and empty logs cannot establish error&#45;free execution&#46; Required resources rendered and all independent interactions continued, but complete startup/later diagnostic coverage is unavailable; no qualifying artifact error was observed&#46;
+None.
 
 ### Verified passes
 
@@ -184,6 +180,12 @@ Status: pass. Rating: 5. Method: static.
 
 Action: Inspect output/index&#46;html and its referenced local asset and run output&#45;root HTTP preflight&#46; Expected: Every required local resource exists under output without a build or repository dependency&#46; Observed: The only referenced asset is three&#46;min&#46;js, present alongside index&#46;html and containing Three&#46;js r160; the scene and styling are inline&#46; The bundled preparer matched both served resources to this assigned output directory on port 8927&#46; No repository&#45;root dependency was found; file&#45;protocol execution was excluded&#46;
 
+#### D3
+
+Status: pass. Rating: 5. Method: http.
+
+Action: Freshly verify both Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown positive controls on owned scratch HTTP pages, then enable Runtime and Network before artifact startup/reloads and throughout desktop/mobile acceptance&#45;family interactions, eight unchanged bundled probes, scene selection, camera drags/zoom, endpoint and JSON/storage boundaries&#46; Expected: No artifact&#45;caused console/page errors or failed required resources prevent intended operation&#46; Observed: Both deliberate diagnostic signals were captured in the independent startup control and bundled diagnostics probe&#46; At actual top&#45;level 1440x900 and 390x844 CSS viewports, index&#46;html and three&#46;min&#46;js returned HTTP 200; no artifact console errors, uncaught exceptions or Network&#46;loadingFailed events occurred across the exercised interactions&#46; The repeated Three&#46;js legacy&#45;build deprecation warning and browser&#45;requested favicon&#46;ico HTTP 404 were non&#45;blocking&#46; Snapshot capture/restore/delete, 34 invalid imports at each size, valid paused/playing/empty imports, reload persistence, four malformed/schema&#45;invalid storage cases, bounded quota failure, overview transitions, all planets via canvas/list, keyboard controls, and camera inputs remained operable under diagnostics&#46; Quota failures were caught and the in&#45;memory tool remained usable; the retained D6 failure concerns misleading saving feedback, not an uncaught runtime failure&#46; This newly establishes D3 only; the other 26 check objects remain historical and unchanged&#46;
+
 #### D4
 
 Status: pass. Rating: 5. Method: http.
@@ -200,10 +202,11 @@ Action: Run35 separate invalid textarea imports against a nonempty paused list; 
 
 Browser method: http.
 Viewports: 1440x900, 390x844.
-Coverage: 23 passed, 3 failed, 1 unverified.
+Coverage: 24 passed, 3 failed, 0 unverified.
 
 ### Notes
 
+- FOCUSED AMENDMENT &#40;2026&#45;10&#45;21&#41;, not a fresh full review: the user explicitly authorized re&#45;verification only of previously unverified checks and waived full&#45;review and early&#45;reset rules&#46; All 26 previously verified check objects remain verbatim historical evidence from 2026&#45;10&#45;20T14:05:43&#46;710Z, reviewer openai&#45;codex/gpt&#45;6&#45;astra with effort null&#46; The current reviewer owns only new D3 observations and score recalculation&#46; Historical notes below retain their original provenance and describe the earlier attempt, not current execution&#46;
 - Saved prompt independently confirms solar&#45;system&#45;observatory&#45;2, all R1&#45;R15, eight ordered acceptance steps and six additional sequences&#46; Direct&#45;file execution is excluded&#46; Generation status is not quality evidence&#46;
 - Reviewer model is sourced from current host project metadata &#40;openai&#45;codex/gpt&#45;6&#45;astra&#41;&#46; No actual selected reviewer effort is exposed in current host context or this assignment; effort remains null, preventing complete status&#46; Timestamp is from date &#45;u on the current host&#46;
 - Applied benchmark&#45;review and aside&#45;browser; using&#45;harness&#45;flow says dispatched subagents skip its workflow&#46; User explicitly requested parallel review fan&#45;out, overriding the shared skill prohibition on another model review&#46; This worker did not launch another model; browser access is serialized by parent grant, not isolated single&#45;reviewer orchestration&#46;
@@ -218,3 +221,9 @@ Coverage: 23 passed, 3 failed, 1 unverified.
 - Source preservation: this worker did not write prompt&#46;md, run&#46;json or output resources&#46; Only this run&#39;s two approved review files are publication targets&#46; Source hashes are not embedded in this review; parent owns independent preservation verification&#46; Current score is uncapped quality, not a mandatory&#45;conformance certificate&#46;
 - Parent integration found that the initial T5 pass omitted the saved R12 phrase &#34;standard full&#45;system framing for overview restores&#34;&#46; A fresh exclusive original&#45;output restore supplement directly confirmed clipping at desktop120 and corrected T5 to fail; no new requirement or blanket duplicate penalty was introduced&#46; Other worker observations remain unchanged&#46;
 - Parent supplement used current host openai&#45;codex/gpt&#45;6&#45;astra with unavailable/null effort and host&#45;required aside&#45;browser plus injected using&#45;harness&#45;flow/caveman and read&#45;only brainstorming routing&#46; It used the same8927 origin, restored the exact original app storage value/absence with true readback, closed its sole tab and stopped rr&#45;terra&#45;xhigh&#45;parent&#45;restore before granting the next worker&#46; No original artifact was changed&#46;
+- Current amendment metadata: model openai&#45;codex/gpt&#45;6&#45;astra comes from current host metadata; effort high is explicitly selected in the applicable &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md configuration&#46; Current host did not supply a conflicting effort&#46; Current timestamp is obtained from the host clock&#46; Generator metadata and historical reviewer identity were not used to infer current identity&#46; Applied benchmark&#45;review, host&#45;required ego&#45;browser, and contract&#45;requested caveman for concise communication; using&#45;harness&#45;flow subagent&#45;stop applies&#46; No descendants or other model sessions were launched&#46;
+- Fresh D3 scope and transport: exclusive browser lease; ego&#45;browser nodejs with documented TaskSpace/Page/CDP only, output&#45;only 127&#46;0&#46;0&#46;1:8965 and separate scratch 127&#46;0&#46;0&#46;1:9065&#46; Runtime and Network were enabled before startup and each diagnostic interaction round&#46; Both deliberate console&#45;error and asynchronous&#45;exception signals were received, superseding the historical diagnostic&#45;transport limitation recorded above&#46; Top&#45;level document dimensions were applied and verified per invocation; no iframe review transport, direct&#45;file navigation, alternate browser, source patch, prototype patch or security modification was used&#46;
+- Fresh diagnostic interaction coverage: desktop saved eight&#45;step order included automatic startup, canvas Cinder selection, tracking, pause/seek30, paused2x, resume, Azure list switch, overview and repeat30&#46; At both sizes the snapshot&#45;A/live&#45;edit/repeated&#45;restore family, capacity/delete/append/export family, 34 separate invalid&#45;import cases, valid null/tracking/fractional and playing/empty imports, reloads after import/delete/capture, and keyboard control routes were exercised in sequence&#46; Further diagnostics covered the 120 stop/resume boundary, 0&#46;25/2/4 speed changes paused/playing, each planet through canvas while paused/playing, and orbit/zoom inputs in overview/tracking paused/playing at both sizes&#46; This was D3 interaction coverage, not a fresh remeasurement of all timing, image&#45;position, visual&#45;quality, keyboard&#45;focus or exact&#45;state clauses in the full rubric; those existing findings were deliberately retained&#46; No new timing tolerances were needed or used to re&#45;score historical checks&#46;
+- Matching terra&#45;xhigh profile: all eight bundled prepared scripts were generated and executed unchanged in TaskSpace22: mobile diagnostics/persistence/invalid&#45;storage/quota; mobile overview5&#46;2 paused and17 playing; desktop overview73 and120 paused&#46; All requested setups and overview state&#45;preservation observations succeeded; endpoint byte checks matched the unchanged assigned artifact before/after every probe&#46; Four transient overview screenshots were directly inspected: the scene rendered, with historical outer&#45;planet clipping still visible at5&#46;2/73/120; no other check object was changed&#46; Quota used a bounded5,242,600&#45;character filler with7 quota exceptions and established an actual failed app write; warning&#45;feedback observations still failed while memory restore worked&#46; These ancillary observations support D3 coverage, not fresh replacement evidence for retained T4/T5/D6&#46;
+- Current cleanup and preservation: all bundled storage fixtures restored their exact starting app&#45;key value, and the quota fixture confirmed filler removal&#46; Final cleanup restored the initial absence of solar&#45;system&#45;observatory&#45;2&#45;snapshots with true readback; no unrelated storage was cleared&#46; Emulation was cleared; TaskSpace22 finished once with keep:&#91;&#93;; both owned servers stopped before BROWSER&#95;RELEASED and successor handoff&#46; Temporary probe/helper scripts and screenshots were removed outside the run&#46; prompt&#46;md, run&#46;json, both output resources and output inventory were compared byte&#45;for&#45;byte against pre&#45;inspection working memory and were unchanged&#46; Only reviews/review&#46;json and reviews/review&#46;md are publication targets&#46;
+- Aggregate status complete means all27 recorded checks now have observations and current reviewer metadata is concrete; it does not mean a fresh full review&#46; Twenty&#45;six results remain historical with their original null&#45;effort provenance&#46; Mandatory T4, T5 and D6 failures are retained verbatim, and D3 changes only from unverified to pass&#46; Quality bounds collapse from82&#46;30&#46;&#46;84&#46;30 to84&#46;30&#46;&#46;84&#46;30 without changing the fail mandatory verdict&#46;

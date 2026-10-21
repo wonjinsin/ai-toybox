@@ -2,18 +2,18 @@
 
 ## Conclusion
 
-Status: partial.
+Status: complete.
 Mandatory verdict: pass.
-Quality total: 94.40 / 100. Conservative lower bound. Range: 94.40 to 96.40.
+Quality total: 96.40 / 100. Determined score. Range: 96.40.
 Quality is uncapped. The mandatory verdict is independent of the quality score.
 Mandatory failures (0): None.
 Mandatory unverified (0): None.
-Missing checks (1): D3.
-Missing reviewer metadata: reviewer.effort.
+Missing checks (0): None.
+Missing reviewer metadata: None.
 Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;20T23:14:33&#43;09:00.
+Reviewed at: 2026&#45;10&#45;21T21:19:50&#43;09:00.
 Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
-Reviewer effort: Unavailable.
+Reviewer effort: high.
 
 ## Scores
 
@@ -24,7 +24,7 @@ Reviewer effort: Unavailable.
 | usability | 4.80 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
 | visual | 4.00 | 15 | V1, V2; determined score; full category denominator |
 | responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 4.00 to 5.00 | 10 | D2, D3, D4, D5, D6; conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator |
+| delivery | 5.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
 
 ## Findings
 
@@ -34,11 +34,7 @@ None.
 
 ### Missing proof
 
-#### D3
-
-Status: unverified. Rating: Unverified. Method: http.
-
-Artifact console/page&#45;error absence could not be established: direct REPL console and pageerror subscriptions returned an empty array even after deliberate console&#46;error and asynchronous throw on the reviewer&#45;owned wrapper&#46; Required local resources loaded and no functional blocking error was observed, but an empty failed&#45;positive&#45;control stream cannot certify D3&#46; No alternative browser or raw diagnostic transport was used&#46;
+None.
 
 ### Verified passes
 
@@ -180,6 +176,12 @@ Status: pass. Rating: 5. Method: static.
 
 Action: Inspect index&#46;html, app&#46;js, styles&#46;css and referenced vendor resources under the output root&#46; Expected: All local runtime assets available without a build or repository&#45;root dependency&#46; Observed: styles&#46;css, app&#46;js, vendor/three&#46;min&#46;js and vendor/OrbitControls&#46;js exist under output and are referenced with local relative classic&#45;script/style paths&#46; App geometry and texture are generated in memory; no additional external runtime asset is requested by app&#46;js&#46; Vendor license and delivery notes were also inspected&#46; Direct&#45;file compatibility was excluded&#46;
 
+#### D3
+
+Status: pass. Rating: 5. Method: http.
+
+Action: In a reviewer&#45;owned scratch page, enable Runtime and observe a deliberate console&#46;error and asynchronous thrown Error; enable Runtime and Network before artifact navigation/reloads, then collect events through desktop and mobile task interactions&#46; Expected: Working diagnostic signals and no artifact&#45;caused console/page errors or failed required resources preventing intended operation&#46; Observed: Both Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown carried the distinct deliberate scratch markers&#46; The actual artifact at top&#45;level 1440x900 and 390x844 rendered and operated with no console calls, uncaught exceptions, or Network&#46;loadingFailed events in the collected diagnostic sequences&#46; index&#46;html, styles&#46;css, app&#46;js, vendor/three&#46;min&#46;js and vendor/OrbitControls&#46;js returned HTTP 200&#46; Diagnostic&#45;covered actions included canvas Ochre selection, tracking, pause/seek30/2x/resume/list&#45;switch/overview/reseek30; capture/live edits/repeated restore/capacity/delete/recapture/export; ten invalid imports and valid null/tracking fractional round&#45;trip, playing and empty imports; reload after import/delete/capture; malformed and schema&#45;invalid saved&#45;data recovery; real quota&#45;write failure with visible Saving unavailable and usable memory controls; primary keyboard controls at both sizes; camera orbit/zoom, speed endpoints and the120 boundary&#46; No blocking artifact diagnostic failure occurred; caught validation and quota failures produced intended feedback rather than uncaught errors&#46; This is fresh D3 evidence only; other checks remain historical&#46;
+
 #### D4
 
 Status: pass. Rating: 5. Method: http.
@@ -202,7 +204,7 @@ Action: Reload after separate import,deletion,capture; inject malformed and nume
 
 Browser method: http.
 Viewports: 1440x900, 390x844.
-Coverage: 26 passed, 0 failed, 1 unverified.
+Coverage: 27 passed, 0 failed, 0 unverified.
 
 ### Notes
 
@@ -217,3 +219,10 @@ Coverage: 26 passed, 0 failed, 1 unverified.
 - Diagnostic positive control failed transport: deliberate console&#46;error and asynchronous exception on the owned wrapper produced no subscribed events&#46; D3 remains unverified&#46; A helper name ending &#46;import&#40;&#46;&#46;&#46;&#41; caused the REPL to misclassify ordinary reviewer code as an external module request; renamed reviewer helper and reported tool issue&#46; This was a transport parsing issue, not an artifact defect&#46;
 - Only app key orrery&#45;observations&#45;v1 and unique reviewer quota key review&#45;astra&#45;high&#45;quota&#45;20261020 were touched&#46; Original app value was null/absent&#46; Quota fixture used bounded8MiB string search, observed actual app failed persistence, then removed filler in finally&#46; Final cleanup verified exact original absence and filler absence&#46; Quota proves failed&#45;write recovery, not storage&#45;read&#45;denial behavior&#46;
 - All owned tabs were closed; rr&#45;astra&#45;high&#45;parallel was stopped; shared viewport service was left running&#46; BROWSER&#95;RELEASED was sent immediately after cleanup&#46; Prompt, run record and output were never edited; only the assigned review pair is published&#46; No builds, lint, tests, formatters, dependency installs, source repair or gallery changes were performed&#46;
+- Focused amendment authorized by the user on 2026&#45;10&#45;21: re&#45;verify only previously unverified D3, retain all26 existing pass/fail findings verbatim, and recalculate quality&#46; Full fresh review and early all&#45;unverified checkpoint were expressly waived&#46; This is mixed&#45;provenance evidence, not a new full27&#45;check review&#46; All non&#45;D3 checks and all earlier notes above are historical observations from2026&#45;10&#45;20T23:14:33&#43;09:00 by openai&#45;codex/gpt&#45;6&#45;astra with effort null&#46; The current reviewer owns only the new D3 observation, current metadata and score recalculation&#46; Historical notes that say no prior review was read, missing effort, Aside&#45;only transport, iframe sizes or failed diagnostics describe the previous attempt, not this amendment&#46;
+- Current amendment metadata: model openai&#45;codex/gpt&#45;6&#45;astra is supplied by current host project&#45;context&#46; Effort high is explicitly selected by the applicable dispatched reviewer configuration &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md; actual selected effort is not separately exposed by the host&#46; Current host metadata takes precedence over configuration&#46; Timestamp comes from Python datetime&#46;now&#40;&#41;&#46;astimezone&#40;&#41; on the available host clock&#46; Generator run metadata was not used as reviewer identity or quality evidence&#46;
+- Applied skills for this amendment: benchmark&#45;review and its current shared rubric/verification/format resources; host&#45;required ego&#45;browser and complete installed ego&#45;browser skill guide v2&#46;1&#46;0; using&#45;harness&#45;flow was read and its subagent&#45;stop applied&#46; No Aside browser, alternate runtime, descendants or model launches were used&#46; Explicit parent&#45;directed parallel preparation used an exclusive BROWSER&#95;GRANTED lease for all actual browser operations&#46;
+- Current transport supersedes only the old D3 diagnostic limitation: documented ego&#45;browser nodejs Runtime&#46;enable plus page&#46;events&#40;&#41; positively reported both deliberate console and exception markers on reviewer&#45;owned scratch port9051&#46; Actual artifact output&#45;only loopback port8951 was observed with Runtime and Network enabled before navigation/reloads and throughout the exercised sequences&#46; Both actual top&#45;level CSS viewports1440x900 and390x844 were checked; reported document scrollWidth was1425 and375 respectively&#46; This is CSS emulation, not physical touch&#45;device proof; no file&#45;protocol execution or storage&#45;read denial was attempted&#46;
+- D3 diagnostic scope covered all saved acceptance families, not a fresh exhaustive fixed evidence matrix or timing certification&#46; Startup motion and the core control path were exercised, with an initial pause for stable canvas targeting; exact seek30 and2x were observed&#46; No fresh speed&#45;rate, orbit&#45;period, pixel&#45;equality, every malformed&#45;type permutation or all&#45;planet canvas&#45;route remeasurement was claimed or used to change retained findings&#46; Ten invalid&#45;import attempts produced visible rejection; null30/1&#46;5 overview and17&#46;25/1&#46;5 Azure tracking restores, capacity and persistence paths were exercised&#46; Primary keyboard selection/time/speed/playback/modes/snapshot/textarea/import&#45;export plus Tab/Shift&#43;Tab were exercised at both sizes&#46; All sampled diagnostic batches contained zero artifact console events, zero uncaught exceptions and zero failed network loads&#46;
+- Current storage fixtures touched only app key orrery&#45;observations&#45;v1 and reviewer key review&#45;focus&#45;astra&#45;high&#45;quota&#45;20261021 on the isolated output origin&#46; The original app value was absent&#46; Malformed JSON and numeric&#45;string&#45;time persisted data each produced the visible Recovery notice and empty snapshots&#46; Bounded8MiB quota search accepted5242783 filler characters and caught four expected QuotaExceededError attempts&#46; A real UI capture then added an in&#45;memory entry, left persisted empty&#45;list payload unchanged and displayed Saving unavailable; selection/playback/restore/delete remained usable&#46; Both keys were verified absent afterward, restoring the original app state&#46; Expected caught quota exceptions were not artifact uncaught diagnostic failures&#46;
+- Current cleanup completed: cleared viewport emulation, finished owned TaskSpace7 exactly once with keep:&#91;&#93;, stopped both tracked servers focus&#45;astra&#45;high&#45;output and focus&#45;astra&#45;high&#45;scratch, and broadcast BROWSER&#95;RELEASED before publication&#46; Transient screenshots and reviewer scripts were removed&#46; Source&#45;preservation comparison in working memory confirmed identical prompt&#46;md, run&#46;json and complete output inventory/bytes before and after review&#46; Only reviews/review&#46;json and reviews/review&#46;md in this run are published by the finalizer; no source repair, builds, tests, lint, formatters, dependency installation or gallery changes occurred&#46;

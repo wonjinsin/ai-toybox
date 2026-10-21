@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T21:57:34+09:00",
+  "reviewed_at": "2026-10-21T22:17:17.412317+09:00",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "fail",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 4,
+      "score": 5,
       "score_upper_bound": 5
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Action: Observed the functioning HTTP artifact and loaded Three.js resource, then registered console/pageerror listeners and triggered a known console.error plus asynchronous thrown Error on the reviewer-owned wrapper as a diagnostic positive control. Expected: A qualified transport would report the deliberate events and allow a meaningful artifact-error audit. Observed: Both event arrays remained empty even for the known errors. Thus empty diagnostic output cannot establish absence of artifact console/page errors or failed required resources. No visible failure preventing the exercised operations was observed, but the diagnostic clause remains unverified due to current Aside transport capability, not an asserted artifact defect."
+      "evidence": "Action: Qualified Runtime.consoleAPICalled and Runtime.exceptionThrown using a deliberate console error and asynchronous thrown exception on the owned scratch origin, enabled Runtime and Network before artifact navigation, then observed diagnostics through actual native controls at top-level 1440x900 and 390x844. Exercised startup/playback, pause/seeking/speed, list and canvas selection, tracking/overview, camera drags/zoom, capture/change/restore, capacity/delete/recapture, empty/populated export, rejected and valid paused/playing imports, reload after import/delete/capture, malformed/schema-invalid persistence recovery, keyboard controls, the 120-second boundary/restart, and a real quota-write failure. Expected: No artifact-caused console/page errors or failed required resources prevent intended operation. Observed: Both scratch positive controls were captured. Artifact streams contained no console error, uncaught exception, or Network.loadingFailed event; index.html and three.min.js loaded with HTTP 200, including 12 reload pairs during the main action sequence. The repeated Three.js classic-build deprecation warning and automatic favicon.ico HTTP 404 were nonblocking and are not required-resource failures. Native operations produced live/paused state updates, saved rows, expected validation/capacity/recovery messages, stable imported fractional fields and usable controls. Canvas clicks selected Mercury at both viewports. At quota exhaustion capture remained in memory, left persisted JSON unchanged, and visibly reported saving unavailable. This is a focused D3 observation, not fresh recertification of historical functional/visual findings."
     },
     {
       "id": "D4",
@@ -244,14 +244,21 @@
       "evidence": "Action: Reloaded after valid import, deletion and capture; restored entries; injected malformed and schema-invalid app-owned persisted data; then used a bounded isolated-key real quota fixture and a UI capture before cleanup. Expected: Stable validated versioned snapshots across reload, default live state, visible invalid-data recovery, and visible failed-write feedback with a usable in-memory tool. Observed: Imported IDs/order/values/angles survived reload while live state was0/1x/LIVE/null/overview; deleting Null persisted and a new capture persisted. Saved '{' and a time121 entry each yielded an empty list, a recovery notice and usable pause/selection controls. Quota filling reached5,242,568 characters with8 actual QuotaExceededErrors; UI capture created an in-memory snapshot but persisted JSON remained the prior empty list, and the app explicitly reported 'Saving unavailable; observations remain available in memory only.' Resume, selection, restore and deletion still worked. This establishes real write-failure recovery, not read-denial or an exception-handler inference. Finally restored the exact originally absent app key and removed the unique fixture key; both cleanup assertions were true."
     }
   ],
-  "total_score": 84.9,
+  "total_score": 86.9,
   "total_score_upper_bound": 86.9,
   "coverage": {
-    "passed": 24,
+    "passed": 25,
     "failed": 2,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
+    "Focused amendment authorized by the user for previously unverified D3 only. This is a mixed-provenance aggregate, not a fresh full review. All 26 previously verified check objects, including T4/T5 failures and all ratings/evidence, are retained verbatim from the review dated 2026-10-20T21:57:34+09:00 by openai-codex/gpt-6-astra with effort null. The current reviewer owns only new D3 observations, current metadata and score recalculation. The historical null effort is not retroactively resolved. Original notes below remain historical even where they say Fresh review or current; their old diagnostic limitation is superseded for D3 by this qualified Ego Lite attempt.",
+    "Current reviewer model openai-codex/gpt-6-astra is exposed by current host metadata; effort high is explicitly selected by the applicable .omp/agents/benchmark-astra-review.md configuration. Timestamp is the actual timezone-qualified host clock. Applied benchmark-review and host-required ego-browser; using-harness-flow applied its subagent-stop rule. No descendants or model calls. User-authorized focused scope waived full-review and early-reset rules; previously verified checks were not rescored. Complete denotes a fully observed mixed-provenance aggregate with current metadata, not a new full-matrix certification.",
+    "Fresh transport: ego-browser nodejs, owned TaskSpace19, output-only http://127.0.0.1:8960/index.html and scratch http://127.0.0.1:9060/. Both positive-control signals were observed before trusting empty artifact streams. Runtime and Network were enabled before startup/navigation and covered all executed sequences and reloads. Document dimensions were observed as 1440x900 and 390x844; scrollWidth was 1425 and 375 respectively. Emulation is not touch-device evidence. No file:// navigation, alternate browser, source patch, security change, build, test suite, lint or formatter was used.",
+    "Fresh D3 coverage included all six additional acceptance families and core simulation/selection/camera behavior at both sizes, but did not remeasure rates, visually recertify framing, or replay the entire fixed evidence matrix. No screenshots were requested, as authorized for this D3-only amendment. Initial 30.0/2x paused tracking was observed at both sizes; the later range helper ended at30.9 desktop and31.1 mobile, so this attempt does not newly certify exact repeat-seek identity. Restoring the imported null snapshot did show30.0/1.5x and no selection; imported tracking17.25/1.5x displayed derived169.5/24.8/17.4-degree angles. Historical S5 and other non-D3 findings remain unchanged, not inferred from these diagnostics. Canvas selection used independently projected source-derived coordinates and real native clicks, selecting Mercury at both sizes; no visual rendering judgment is asserted from that projection.",
+    "Fresh diagnostic observations: main sequence had24 required-resource responses (12 index.html and12 three.min.js), all HTTP200, no Runtime.exceptionThrown, no console error and no Network.loadingFailed. Replayed/recurring warning events were the bundled Three.js deprecation notice. Initial automatic favicon.ico404 was observed separately and did not prevent intended operation. Deliberate scratch errors and caught reviewer quota exceptions are not artifact errors. Eleven distinct invalid-import cases per viewport showed rejection messages, including mixed-validity atomicity input; this was diagnostic exercise, not a replacement D5 audit.",
+    "Fresh boundary fixture: app key solar-system-observatory-2:snapshots was originally absent on the isolated8960 origin. Malformed and time121 persisted payloads each produced an empty list and visible recovery notice at both sizes. Bounded8MiB quota filler focus-luna-xhigh-quota-20261021 reached5242785 characters with7 caught QuotaExceededErrors. Real UI capture created1/3 in-memory entry, left persisted JSON unchanged, and reported Saving unavailable; observations remain available in memory only. Playback/selection/restore/delete remained usable. This tests write failure, not storage read denial. Finally restored exact original app-key absence and removed only the owned filler; both cleanup checks were true.",
+    "Fresh cleanup: TaskSpace19 finish({keep:[]}) succeeded once; metrics override cleared; output8960 and scratch9060 services stopped before BROWSER_RELEASED and successor grant. No screenshots, logs, hashes or evidence files are saved in the run. Source inventory and bytes for prompt.md, run.json, output/index.html and output/three.min.js matched the working-memory baseline. Only reviews/review.json and reviews/review.md are published using the finalizer. Temporary action scripts and outside-run draft are removed after publication.",
     "Fresh review of exactly runs/v1/omp-openai-codex-gpt-6-luna-xhigh-20261018-110643 against its saved solar-system-observatory-2 contract: all R1-R15, the original eight steps in order, then six additional sequences and independent fixed-matrix checks. Existing reviews and generator completion status were not evidence. prompt.md, run.json and output were not edited; only the two review outputs are published.",
     "Actual reviewer model comes from current host metadata: openai-codex/gpt-6-astra. The current review effort is not exposed by the host or supplied by an applicable explicit declaration/configuration, so effort remains null. It is not inferred from generator metadata, the folder suffix or a generic default. reviewed_at is the actual timezone-qualified host date -Iseconds result. Missing effort and unqualified diagnostics keep status partial even with numeric quality bounds.",
     "Applied benchmark-review and aside-browser; using-harness-flow recognized the assigned-subagent role. The user explicitly requested parallel review dispatch and the host requires task subagents, overriding benchmark-review's normal no-other-model orchestration restriction for this parent dispatch. This was not isolated single-reviewer orchestration. This worker spawned no descendants or additional models, and browser access was serialized through an explicit parent grant.",

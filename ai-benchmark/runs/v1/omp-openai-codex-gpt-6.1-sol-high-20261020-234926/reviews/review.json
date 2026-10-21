@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T15:13:02.999478+00:00",
+  "reviewed_at": "2026-10-21T13:01:50.658Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
     "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "fail",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 4,
+      "score": 5,
       "score_upper_bound": 5
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Diagnostic coverage is not established. On an owned scratch fixture, console and pageerror subscriptions were registered, then a deliberate console.error and asynchronous thrown exception were emitted; the collected array stayed empty. Therefore empty diagnostics cannot certify a clean artifact. The rendered scene and controls operated and scene-error text remained empty; local Three.js appeared in resource timing, but startup console/page-error coverage and a reliable complete error stream remain unavailable. No artifact-caused failure was inferred from this transport limitation."
+      "evidence": "Action: Validate Runtime.consoleAPICalled and Runtime.exceptionThrown using deliberate console.error and asynchronous exception on an owned scratch origin, then enable Runtime and Network before artifact navigation and collect diagnostic events through real playback/seek/speed/selection/mode, snapshot, JSON, reload, recovery, quota, camera-input and keyboard-control sequences at top-level 1440x900 and 390x844. Expected: no artifact-caused console/page errors or failed required resources prevent intended operation. Observed: both scratch positive controls arrived. In completed fresh sequences no artifact console.error, Runtime.exceptionThrown or Network.loadingFailed occurred; index.html and three.min.js responses were HTTP 200, including reloads. The local Three.js classic-build deprecation warning and automatic favicon.ico 404 were nonblocking, not required-resource failures. Native controls changed time/selection/mode, capture/restore/export/import worked, eleven invalid-import cases displayed rejection notices, reload recovered lists, invalid saved data recovered visibly, and quota capture remained usable in memory with saving-unavailable feedback. Scene-error text stayed empty. One screenshot request timed out and one long desktop round lost its output on timeout; those are reviewer transport limitations, not artifact exceptions. Completed subsequent family sequences supply the fresh diagnostic observations; no full fresh visual/timing matrix is claimed."
     },
     {
       "id": "D4",
@@ -244,14 +244,15 @@
       "evidence": "Action: Reload after valid import, deletion and capture; replace only the app storage key with malformed and schema-invalid data; exhaust bounded origin quota using one reviewer filler key and capture through UI. Expected: persistent validated list with default live state, visible recovery/saving-unavailable feedback, usable memory state. Observed: each successful operation survived reload with IDs/order/values/derived angles retained and live time near zero, 1x/running/null/overview. Malformed JSON and time 121 persisted payloads each produced empty list and Saved observations could not be recovered notice; selection and playback remained usable. Filler accepted 5,242,553 characters within the fixed 8 MiB bound. Capture then created an in-memory entry while the persisted empty payload stayed unchanged and Saving unavailable...unsaved changes may not survive reload appeared, establishing an actual failed app write. Selection/playback continued. Filler was removed, exact fixture-original app value restored, and both cleanup predicates were true. This is quota-write recovery, not storage-read-denial testing."
     }
   ],
-  "total_score": 86.4,
+  "total_score": 88.4,
   "total_score_upper_bound": 88.4,
   "coverage": {
-    "passed": 24,
+    "passed": 25,
     "failed": 2,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
+    "Focused mixed-provenance amendment authorized by the user on 2026-10-21: only previously unverified D3 is newly evaluated. All 26 previously pass/fail check objects are retained verbatim from 2026-10-20T15:13:02.999478+00:00, reviewer openai-codex/gpt-6-astra, effort high. The following 13 original notes are preserved as historical provenance, not current-attempt claims. In particular their old D3 transport limitation and partial status are superseded below. Full-fresh-review and early-reset rules were explicitly waived.",
     "Fresh review of the saved solar-system-observatory-2 contract. An all-unverified checkpoint was published before source/browser inspection. No earlier review or generator check was used as evidence.",
     "Reviewer model comes from current host workstation metadata; effort high comes from the explicit review-worker configuration supplied in the assignment. No generator metadata used. Timestamp from host timezone-qualified clock.",
     "Applied benchmark-review and host-required aside-browser skill; Aside guide and direct REPL guide read. Extra browser skill required by host policy, not a generator requirement.",
@@ -264,6 +265,14 @@
     "Fixed image checks: pause at 73 remained byte-identical after 3.1 seconds; repeated 17/30/73 seeks and post-reload 73 matched. One initial overview-restore full-image comparison differed because scroll framing differed; repeating with matched time-control scroll framing matched exactly. Tracking repeated restore also matched. No tolerance was widened.",
     "Mobile standard overview and null-overview restore clip Nivalis at 30 seconds. T4 and T5 fail their distinct full-system framing clauses. DOM layout/control usability remains observed at both sizes; vertical scrolling is allowed. No extra numeric penalty was applied beyond registered check ratings.",
     "Storage fixtures touched only orbital-observatory-snapshots-v1 and reviewSolHigh-quota-fixture on this isolated review origin. The original raw value for each fixture was retained in memory, quota filler removed, and fixture-original app payload restored exactly without a subsequent reload overwriting it. Unrelated storage was not inspected or cleared. Read denial was not simulated; the allowed actual quota-write failure exercised the saving-unavailable clause.",
-    "Cleanup: every review-created scene/viewport/scratch tab was closed, both tracked review servers stopped with exited status, then exclusive browser lease released successfully. No source repair, extra review evidence files or descendants/model calls. All five generation-source files (prompt.md, run.json, and three output files) had identical before/after inventories and SHA-256 values; hashes remain only in working memory."
+    "Cleanup: every review-created scene/viewport/scratch tab was closed, both tracked review servers stopped with exited status, then exclusive browser lease released successfully. No source repair, extra review evidence files or descendants/model calls. All five generation-source files (prompt.md, run.json, and three output files) had identical before/after inventories and SHA-256 values; hashes remain only in working memory.",
+    "Current amendment reviewer model is established by current host metadata openai-codex/gpt-6-astra; effort high is established by applicable .omp/agents/benchmark-astra-review.md, with no contrary current metadata exposed. Timestamp is from the actual host clock. Generator run metadata did not establish reviewer identity. Applied benchmark-review, required ego-browser and its complete installed guide/storage-cleanup reference; using-harness-flow was read and its subagent-stop applied. No descendants, other models, builds, lint, tests or formatters.",
+    "Fresh transport: ego-browser nodejs only, owned TaskSpace15, output-only http://127.0.0.1:8954 and scratch-only http://127.0.0.1:9054. Runtime and Network enabled before navigation, with deliberate console and exception controls both received. Actual top-level dimensions were 1440x900 (scrollWidth 1425) and 390x844 (scrollWidth 375), re-established in each exercising invocation. Not iframe evidence and not touch-device certification. The terra-xhigh bundled profile does not match these Orbital selectors/planet IDs/storage key.",
+    "Fresh scope is D3, not re-scoring existing checks. Completed diagnostic coverage includes paused 30 seconds/2x tracking, running list switch and overview at 35.53, repeated seek 30; native all-planet directory controls, orbit/zoom input in both modes; keyboard control activation and textarea typing/Tab at both sizes; capture/restore/capacity/delete/recapture/export; eleven saved invalid-import classes including later-invalid atomicity input; null overview and fractional 17.25/1.5 tracking import/restore; playing/empty import; separate import/deletion/capture reloads; malformed and schema-invalid saved-data recovery; endpoint 120 and earlier resume. No rates, framing, immutable-state comparisons, complete keyboard-focus matrix or all 36 historical invalid-input cases were freshly certified. Existing S/T/U/V/L/D4-D6 findings remain historical exactly as saved.",
+    "Fresh diagnostic details: only the Three.js classic-build deprecation warning appeared in completed artifact Runtime console streams. No artifact Runtime.exceptionThrown or console.error and no Network.loadingFailed were observed. Required document/library requests were HTTP 200; the unsolicited favicon.ico request was HTTP 404 and is nonessential. Scratch deliberate console/exception events are reviewer controls, not artifact failures.",
+    "Current observation limits: Page.captureScreenshot timed out, so no fresh screenshot or new visual judgement exists; it was not retried or replaced with another transport. A source-derived overview canvas-click coordinate missed and tracking remained disabled; subsequent directory/tracking and canvas input were exercised, but that initial scene-selection step was not freshly established. A long desktop interaction round timed out after 180 seconds and its printed results were unavailable; those observations were not used to support D3. Completed later rounds covered the acceptance families with collected diagnostics. This is not a claim that the full eight-step visual scenario or complete fixed matrix was rerun successfully.",
+    "Fresh boundary fixture: only orbital-observatory-snapshots-v1 and isolated reviewer key focus-sol-high-20261021-quota were touched. Bounded 8 MiB search accepted 5,242,791 filler characters. Actual UI capture left persisted empty versioned payload unchanged, created one in-memory record and displayed Saving unavailable; selection/playback remained usable. Filler was removed. Original exact app-key value/absence was restored; final restoration and quota-absence predicates were both true. No unrelated storage was inspected or cleared; quota-write failure does not certify storage-read-denial behavior.",
+    "Current cleanup: viewport emulation cleared, only owned p1 closed, and both tracked servers exited. TaskSpace finish was intentionally not called on the error task after screenshot/round failures, per browser rules. BROWSER_RELEASED broadcast and successor grant sent after cleanup. Temporary scripts/storage fixture file are removed after publication; no screenshots, logs or hashes retained in the review. Source preservation is checked against the in-memory baseline for prompt.md, run.json and all three output files.",
+    "Aggregate evidence status complete means all 27 checks now have observations and current amendment metadata is concrete; it does not mean a fresh full review. D3 is the only changed check. Mandatory failures T4 and T5 remain historical and unchanged; the mandatory verdict stays fail. Quality is recomputed independently from the retained ratings plus fresh D3."
   ]
 }

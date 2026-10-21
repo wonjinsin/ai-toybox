@@ -1,10 +1,10 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-19T14:42:45.591Z",
+  "reviewed_at": "2026-10-21T12:35:37.307Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
   "status": "partial",
   "requirements_verdict": "fail",
@@ -50,7 +50,7 @@
       "id": "delivery",
       "weight": 10,
       "score": 2,
-      "score_upper_bound": 4
+      "score_upper_bound": 3
     }
   ],
   "checks": [
@@ -157,7 +157,7 @@
       "status": "unverified",
       "rating": null,
       "method": "http",
-      "evidence": "Fast and slow drags must begin on visible planets. The desktop scene has no visible planets, and the mobile fallback is clipped; a trustworthy planet-targeted drag trajectory cannot be established. DOM interactions were exercised but do not prove the missing drag clauses."
+      "evidence": "Fresh focused attempt: at actual 1440x900, a real fast 80-by-30 CSS-pixel drag and a slow cumulative 40 CSS-pixel drag over 20 two-pixel moves (30 ms waits between moves) were delivered to the blank canvas. Venus selection and all observed live fields remained identical. List, slider, playback, overview/tracking, capture/restore/delete and JSON controls were exercised at desktop and mobile sizes without observed unintended selection changes. The desktop screenshot contains no visible planet on which to start the required planet-targeted drags. A working rendered camera was unavailable; therefore DOM-to-camera isolation and genuine planet-targeted fast/slow drag separation remain unverified. Mobile screenshot capture timed out twice; mobile DOM observations do not fill the visual gap."
     },
     {
       "id": "U3",
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "fail",
+      "rating": 0,
       "method": "http",
-      "evidence": "Current-session console and pageerror listener capability was tested using known wrapper console-error and async-throw markers. Both listener arrays remained empty. This transport gap prevents a trustworthy clean-error claim; source-level renderer failure is not substituted for captured diagnostics."
+      "evidence": "Action: Enable Runtime and Network before navigation, demonstrate deliberate console-error and asynchronous-exception markers on the owned scratch origin, then load the unchanged artifact and collect diagnostics through desktop/mobile controls, import/export, captures, restores, deletion, reload and malformed/schema-invalid storage recovery. Expected: No artifact-caused errors prevent operation. Observed: Both positive controls arrived as Runtime.consoleAPICalled and Runtime.exceptionThrown. Artifact startup logged six WebGL context-type conflicts (Canvas has an existing context of a different type), followed by THREE.WebGLRenderer: Error creating WebGL context and an uncaught Error creating WebGL context, with the stack entering index.html line 11 init. The actual desktop scene was blank and playback controls did not produce visible motion. The same renderer errors recurred on mobile reloads. Document and required Three.js CDN responses were HTTP 200; no Network.loadingFailed was observed. The optional favicon returned 404 and Three.js emitted a deprecation warning, neither the basis of failure. This is an observed artifact initialization failure, not an inferred network restriction."
     },
     {
       "id": "D4",
@@ -234,7 +234,7 @@
       "status": "unverified",
       "rating": null,
       "method": "http",
-      "evidence": "The actual UI rejected 37 invalid cases with visible errors and exact list/live-field preservation, including mixed valid/invalid entries, wrong types, overflow, duplicates and unknown IDs. Valid boundary/fractional/empty/extra-key/case-sensitive-ID payloads succeeded while paused and playing. Imported angles were ignored. However, the grouped camera-preservation clause cannot be established against the nonworking rendered scene; therefore the entire check remains unverified rather than receiving inferred credit."
+      "evidence": "Fresh focused attempt: 39 separate invalid UI imports each showed Invalid snapshot JSON; list and simulation unchanged, preserved the exact exported nonempty list and all observed paused live fields. Cases covered malformed JSON, null/array roots and entries, missing root and each entry field, string/unsupported versions, non-array snapshots, four entries, duplicate/empty/non-string IDs, numeric strings and booleans, time/speed bounds and 1e400 overflow, invalid planet references/modes, null tracking, and a valid first entry followed by an invalid entry. Valid UI imports preserved order and exact IDs including spaced, case-distinct and whitespace-only strings, accepted inclusive endpoints and fractional time 17.25/speed 1.5, ignored extra keys and supplied angles, and exported only required fields. Displayed fractional angles were 157.5/327.5/266.9 degrees rather than supplied 999. Three-entry, two-entry and empty-list imports were exercised; paused and playing-label states retained observed time, speed, selection, playback label and mode. Imported entries were restored through the UI. However, the renderer initialization failure leaves no working camera framing and no genuinely moving playback to compare before/after imports. Blank-image identity and unchanged labels are not proof of camera preservation or preservation during actual running motion. Those grouped clauses remain unverified; no pass is inferred."
     },
     {
       "id": "D6",
@@ -245,13 +245,14 @@
     }
   ],
   "total_score": 18.83,
-  "total_score_upper_bound": 25.83,
+  "total_score_upper_bound": 23.83,
   "coverage": {
     "passed": 6,
-    "failed": 18,
-    "unverified": 3
+    "failed": 19,
+    "unverified": 2
   },
   "notes": [
+    "User-authorized mixed-provenance focused amendment, not a fresh full review. Only originally unverified U2, D3 and D5 were reassessed. All 24 original pass/fail check objects are retained verbatim as historical observations from 2026-10-19T14:42:45.591Z, reviewer openai-codex/gpt-6-astra, effort null. The following 9 original notes are also retained verbatim as historical context; their fresh-review wording, Aside transport and metadata limitations describe that earlier attempt, not this amendment. Current reviewer owns only the new targeted evidence and recalculation. User explicitly waived a full-fresh review and early reset for this focused scope.",
     "Fresh review requested for every existing saved run. This run is evaluated independently from unchanged output; previous reviews and scores are not evidence.",
     "Reviewer model openai-codex/gpt-6-astra is supplied by current host project metadata. No current effort is exposed in host metadata or applicable environment; effort remains null rather than borrowing generator/default settings.",
     "Task routing was checked against the full saved solar-system-observatory-2 contract, R1-R15, JSON schema, eight acceptance steps and six additional sequences.",
@@ -260,6 +261,14 @@
     "HTTP embedded document viewports are checked at1440x900 and390x844. This does not certify file://, physical touch input or excluded generation conditions.",
     "All saved acceptance steps and extra-sequence input families were attempted through the original HTTP artifact. Blank rendering prevents planet-targeted drag, phase, centering and camera-preservation proof; grouped failures name their observed violated clause.",
     "Measured embedded viewports were 1440x900 and 390x844. Console transport could not deliver known diagnostic markers. Keyboard controls were exercised at both sizes.",
-    "Source supplements the observed rendering failure: the same canvas receives a 2D context before attempted WebGL construction. No original output was edited. Temporary quota key was removed, the original storage value restored exactly, and both owned tabs closed."
+    "Source supplements the observed rendering failure: the same canvas receives a 2D context before attempted WebGL construction. No original output was edited. Temporary quota key was removed, the original storage value restored exactly, and both owned tabs closed.",
+    "Current amendment metadata: current host project metadata establishes openai-codex/gpt-6-astra. Applicable .omp/agents/benchmark-astra-review.md explicitly selects thinking-level high; no conflicting host effort was exposed. reviewed_at is the actual current clock timestamp. No generator metadata was used to infer reviewer identity.",
+    "Applied skills: benchmark-review and its shared rubric/verification/format resources; host-required ego-browser for the permitted browser transport. using-harness-flow was read and its subagent-stop applied. No descendants or other model calls. Historical Aside instructions above were not applied in this amendment.",
+    "Preregistered before new observations: U2 slow cumulative drag at least 30 CSS pixels over at least 20 moves, fast drag also attempted; exact selection/list/live-field preservation. D5 JSON types/IDs/order and paused live fields exact; camera comparisons require visible working framing with 2 CSS-pixel tolerance, never treating a blank image as proof. Playing time may only advance naturally with max(0.15s,5% expected delta)+0.1s tolerance. No retained timing ratings remeasured.",
+    "Current transport was ego-browser nodejs only, owned TaskSpace11, unchanged output-only HTTP on 127.0.0.1:8957 and scratch on 127.0.0.1:9057. Actual top-level CSS viewports were 1440x900 and 390x844 (document scroll widths 1425 and 375). Both owned positive diagnostic controls succeeded. This supersedes the earlier missing-console-transport limitation for current D3 evidence only. No file protocol, physical touch or security bypass was used.",
+    "Current diagnostic coverage includes startup and the available selection/tracking, pause/seek/speed/resume/overview input families, fast and slow real mouse drags, wheel input, snapshot capacity/delete/recapture/restore, 39 invalid imports and valid paused/playing-label/empty imports, keyboard DOM controls, persistence reload after import/delete/capture, and malformed/schema-invalid storage reloads at the two actual viewports. The attempted desktop quarter-range seek landed at 28.5 rather than 30; later UI restore reached 30. The complete original timing/position matrix, functioning planet scene selection, deterministic camera comparisons, and quota-write/read-denial fixtures were not newly repeated. Retained checks are not described as newly verified. The captured startup exception already determines D3 failure independently of those remaining families.",
+    "Mobile Page.captureScreenshot timed out twice. After each timeout the same owned page remained responsive to info/evaluate/snapshot and ordinary controls; no denied operation was retried or alternate browser used. Mobile rendered visual/camera evidence is missing, while desktop screenshot directly showed the blank scene. One reviewer-authored Node script had a parse error before any page operation; a separate corrected round was used. These reviewer/transport errors are not charged to the artifact.",
+    "Malformed app-owned persisted JSON produced an empty list with Snapshot storage unavailable; using memory only. Schema-invalid version 2 produced an empty list and Saved snapshot data was invalid; recovered with an empty list. Controls and capture remained available. These were diagnostic coverage observations only; the original D6 failure was retained verbatim. The exact original absence of solar-observatory-v2 was restored and observed afterward; no unrelated storage keys were touched and no quota fixture was installed.",
+    "Source preservation: prompt.md, run.json, output/index.html bytes and the complete one-file output inventory matched the pre-observation working-memory baseline. No source repair or generation occurred. Owned temporary scripts and screenshot files were removed. TaskSpace11 successfully finished once with keep:[] after recovery from screenshot timeouts; viewport override cleared, both owned servers stopped, BROWSER_RELEASED broadcast and successor lease granted. Only the two review outputs are published via the finalizer; working draft is removed after publication."
   ]
 }

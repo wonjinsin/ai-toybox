@@ -2,16 +2,16 @@
 
 ## Conclusion
 
-Status: partial.
+Status: complete.
 Mandatory verdict: pass.
-Quality total: 94.40 / 100. Conservative lower bound. Range: 94.40 to 96.40.
+Quality total: 96.40 / 100. Determined score. Range: 96.40.
 Quality is uncapped. The mandatory verdict is independent of the quality score.
 Mandatory failures (0): None.
 Mandatory unverified (0): None.
-Missing checks (1): D3.
+Missing checks (0): None.
 Missing reviewer metadata: None.
 Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;20T15:43:04&#46;327Z.
+Reviewed at: 2026&#45;10&#45;21T12:29:33&#46;879Z.
 Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
 Reviewer effort: high.
 
@@ -24,7 +24,7 @@ Reviewer effort: high.
 | usability | 4.80 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
 | visual | 4.00 | 15 | V1, V2; determined score; full category denominator |
 | responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 4.00 to 5.00 | 10 | D2, D3, D4, D5, D6; conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator |
+| delivery | 5.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
 
 ## Findings
 
@@ -34,11 +34,7 @@ None.
 
 ### Missing proof
 
-#### D3
-
-Status: unverified. Rating: Unverified. Method: http.
-
-Not fully verified&#46; Required local resources returned successfully and no operation&#45;blocking artifact failure was observed&#46; However direct REPL console/pageerror subscriptions captured neither deliberate console&#46;error nor asynchronous thrown exception on an owned scratch fixture, including a 300 ms observation interval&#46; Empty artifact error arrays therefore cannot establish clean startup/runtime diagnostics&#46; D3 remains unknown, not a pass or an artifact failure&#46;
+None.
 
 ### Verified passes
 
@@ -180,6 +176,12 @@ Status: pass. Rating: 5. Method: static.
 
 Action: Resolve all artifact resource paths under output as the HTTP root&#46; Expected: Complete local assets, no build/repository&#45;root dependency&#46; Observed: index&#46;html references only local classic three&#46;min&#46;js; that file and THREE&#45;LICENSE&#46;txt are present under output&#46; Styles/scripts/graphics are inline or procedurally generated&#46; No local module/build/fetch dependency exists&#46; Browser served the same artifact and bundled library successfully&#46; Direct&#45;file compatibility is excluded&#46;
 
+#### D3
+
+Status: pass. Rating: 5. Method: http.
+
+Action: Validate Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown with deliberate console&#46;error and asynchronous throw on the owned scratch origin, then enable Runtime and Network before navigating unchanged output over HTTP&#46; Observe startup, the saved eight&#45;step interaction, snapshot capture/restore/capacity/deletion, invalid and valid/empty/playing JSON imports and exports, reload persistence, malformed and schema&#45;invalid storage recovery, real quota&#45;write failure, keyboard controls at actual top&#45;level 1440x900 and 390x844, and the 120&#45;second boundary&#46; Expected: No artifact&#45;caused console/page errors or failed required resources prevent intended operation&#46; Observed: Both scratch positive controls arrived through page&#46;events&#40;&#41;&#46; Artifact diagnostics contained the bundled Three&#46;js deprecation warning but no Runtime console error, uncaught exception or Network&#46;loadingFailed event&#46; index&#46;html and three&#46;min&#46;js returned HTTP 200 through startup and reloads; the optional browser&#45;requested favicon returned 404 and did not affect operation&#46; Scene/list selection, tracking, seek30, paused2x/resume, overview, immutable restore, capacity feedback, 11 invalid&#45;import cases, fractional/null restores, playing/empty imports, persistence, keyboard actions and recovery controls remained operable&#46; Quota exhaustion produced visible Saving unavailable feedback and usable in&#45;memory capture/restore rather than an uncaught error&#46; Final endpoint input reached 120&#46;000 paused and an earlier seek resumed to 0&#46;549&#46; No operation&#45;blocking artifact diagnostic failure was observed&#46;
+
 #### D4
 
 Status: pass. Rating: 5. Method: http.
@@ -202,10 +204,11 @@ Action: Reload separately after import, deletion and successful capture; replace
 
 Browser method: http.
 Viewports: 1440x900, 390x844.
-Coverage: 26 passed, 0 failed, 1 unverified.
+Coverage: 27 passed, 0 failed, 0 unverified.
 
 ### Notes
 
+- Focused mixed&#45;provenance amendment authorized by the user on 2026&#45;10&#45;21: only previously unverified D3 was freshly assessed and changed; all other 26 check objects, ratings and evidence remain verbatim historical observations from 2026&#45;10&#45;20T15:43:04&#46;327Z, reviewer openai&#45;codex/gpt&#45;6&#45;astra, effort high&#46; The current reviewer owns the new D3 evidence and score recalculation, not a fresh full review&#46; The user waived the full&#45;fresh&#45;review and early&#45;all&#45;unverified checkpoint rules for this focused amendment&#46; The following original notes are retained unchanged as historical provenance; their fresh&#45;review, old transport and D3&#45;unknown statements describe that original attempt, not this amendment&#46;
 - Fresh review of only the explicitly assigned saved run&#46; Full saved solar&#45;system&#45;observatory&#45;2 contract matches rubric solar&#45;system&#45;5&#46;0 and format 5&#46;0&#46; Early all&#45;unverified checkpoint was published before implementation inspection; no prior review or generator self&#45;report was used as behavioral evidence&#46;
 - Reviewer model openai&#45;codex/gpt&#45;6&#45;astra comes from current host runtime metadata; effort high comes from applicable explicit worker configuration in assignment/shared contract&#46; No concrete runtime effort override was exposed&#46; These are reviewer&#45;session sources, not generator metadata&#46; reviewed&#95;at is the actual host&#45;clock ISO timestamp at final drafting&#46;
 - Preregistered tolerances: rate interval &#62;=3 real seconds; allowed max&#40;0&#46;15 simulation s,5% expected delta&#41;&#43;one displayed increment&#46; Paused comparisons permit one time increment and 1 degree; phase comparisons 2 degrees plus rounding&#46; Repeated framing permits 2 CSS px at identical viewport/mode/selection; tracking within 10% smaller scene dimension for &#62;=3 seconds&#46; State/JSON order/ID/type comparisons exact except measured natural playback&#46; Observed display precision: 0&#46;001 s and 0&#46;001 degree&#46;
@@ -216,3 +219,9 @@ Coverage: 26 passed, 0 failed, 1 unverified.
 - D6 boundary fixtures touched only orbit&#45;observatory&#45;v1&#45;snapshots and unique reviewer filler reviewSolXhigh&#45;quota&#45;20261020 on the isolated owned loopback origin&#46; Original app raw value was saved before each fixture and restored exactly; filler was confirmed absent before use and removed afterward&#46; Quota used bounded binary search &#60;=8 MiB, actual QuotaExceededError, and actual UI capture failure evidence, not prototype monkeypatching&#46; No unrelated storage was read/cleared&#46; Storage read&#45;access denial was not tested&#46;
 - D3 is the only unknown check because diagnostic subscriptions failed positive controls; no functional or mandatory failure was confirmed&#46; Empty diagnostics are not clean&#45;console proof&#46; All 27 registry checks remain in scoring; quality bounds are independent of the mandatory pass verdict and partial evidence status&#46;
 - All review&#45;created desktop/mobile/scratch tabs were closed; both tracked servers stopped; exclusive lease released successfully&#46; No retained screenshots, logs, helpers or evidence files were created in the run&#46; Source&#45;preservation comparison confirmed prompt&#46;md, run&#46;json, output/index&#46;html, three&#46;min&#46;js and THREE&#45;LICENSE&#46;txt unchanged byte&#45;for&#45;byte; hashes stayed in working memory only&#46; No direct&#45;file test, repository build, lint, formatter or source repair was performed&#46;
+- Current amendment metadata: model openai&#45;codex/gpt&#45;6&#45;astra is explicit current host metadata&#46; Effort high is explicit applicable &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md configuration; no concrete runtime effort override was exposed&#46; reviewed&#95;at is an actual timezone&#45;qualified host&#45;clock timestamp&#46; No identity was inferred from generator records&#46; The saved solar&#45;system&#45;observatory&#45;2 task still routes to solar&#45;system&#45;5&#46;0 / format 5&#46;0&#46;
+- Current amendment transport supersedes the historical D3 limitation only: installed ego&#45;browser v2&#46;1&#46;0 guide was read completely and ego&#45;browser nodejs/documented Page APIs alone drove owned TaskSpace10&#46; Fresh scratch controls observed both required Runtime events&#46; Runtime and Network were enabled before artifact navigation and collected throughout interactions and reloads&#46; Both required viewports were verified as actual top&#45;level CSS sizes in each exercising invocation&#46; This is desktop browser CSS emulation, not touch&#45;device or file&#45;protocol certification&#46; No full fixed&#45;matrix remeasurement or fresh certification of retained checks is claimed&#46;
+- Current D3 coverage: the eight&#45;step sequence selected Azure directly in the scene, tracked, paused/searched 30, used paused 2x, resumed, switched list selection to Verdant, returned to overview, then paused/sought 30 again&#46; Additional acceptance families exercised immutable selected restore after live edits and a slow camera drag/wheel; capacity/replacement/export; 11 separate invalid import classes including valid&#45;first/invalid&#45;last; null and fractional tracking restores, playing/empty imports; capture/delete/import persistence plus malformed/schema&#45;invalid storage and quota recovery; DOM keyboard operations at both sizes&#46; Historical timing and geometry ratings were not remeasured or changed&#46; Early brief endpoint sampling still showed 119&#46;990 running; a later visible boundary observation reached exactly 120&#46;000 paused, and earlier resume reached 0&#46;549&#46;
+- Current boundary fixtures touched only orbit&#45;observatory&#45;v1&#45;snapshots and unique reviewer&#45;owned FocusSolXhigh&#45;quota&#45;20261021 at isolated http://127&#46;0&#46;0&#46;1:8955&#46; Original app key was absent&#46; Malformed and null&#45;tracking stored payloads produced visible recovery notices&#46; Bounded quota fill reached 5242794 characters; actual capture left the stored payload unchanged, appended one in&#45;memory row and displayed Saving unavailable&#46; The filler was removed, the pre&#45;quota value restored, and final cleanup restored the original app&#45;key absence; both final absences were confirmed&#46; Storage read denial was not exercised; no prototypes, application state or source were patched&#46;
+- Current applied skills: selected agents/benchmark&#45;review and shared benchmark&#45;review resources; host&#45;required ego&#45;browser and its installed guide for browser tasks, including storage safeguards; host&#45;required caveman affected concise communication only&#46; using&#45;harness&#45;flow was read and its subagent&#45;stop honored&#46; No Aside MCP, descendants, other model launch, builds, lint, tests, formatters or source repairs occurred&#46;
+- Current cleanup and preservation: TaskSpace10 successfully finished once with keep:&#91;&#93; after clearing viewport overrides and restoring original storage&#46; Output&#45;only 127&#46;0&#46;0&#46;1:8955 and scratch&#45;only 127&#46;0&#46;0&#46;1:9055 tracked servers stopped; BROWSER&#95;RELEASED was broadcast and the parent&#45;authorized successor received BROWSER&#95;GRANTED&#46; Transient scripts and screenshots were removed&#46; Before/after inventory and byte comparisons confirmed prompt&#46;md, run&#46;json, and all three output files unchanged; comparison material remains in working memory only&#46; Only reviews/review&#46;json and reviews/review&#46;md are published through the finalizer; no retained evidence files&#46; The finalizer reports actual per&#45;output save/readback states separately&#46;

@@ -1,10 +1,10 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T21:39:36+09:00",
+  "reviewed_at": "2026-10-21T12:26:21.154Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
   "status": "partial",
   "requirements_verdict": "fail",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 3,
+      "score": 4,
       "score_upper_bound": 4
     }
   ],
@@ -59,7 +59,7 @@
       "status": "unverified",
       "rating": null,
       "method": "http",
-      "evidence": "Three differently sized blue/cyan/purple planets and a yellow sun were observed, but enormous intersecting spheres repeatedly hide the sun and other planet centers. Individual 1x samples showed Mercury 156.8→255.2 degrees over 3.2789 wall seconds (17.23→20.51 simulation seconds), Terra 315.7→5.1 over 3.2877 seconds (17.23→20.52), and Neptune 243.8→268.5 over 3.2941 seconds (17.23→20.52), with visible motion and source phases 0, 1, 2 radians. These agree with the 12/24/48-second angle readouts. Full circular rendered trajectories and all three geometric centers were not established to the preregistered tolerance because the intersecting/clipped geometry obscures them; constants and labels are not substituted for that missing visual proof."
+      "evidence": "Focused 2026-10-21 observation: one yellow sun and three differently sized cyan, blue and purple spheres were visible across startup and seek states. With real UI seeking at 0,3,6,9,12,24,36,48,17 and 73 seconds, a native 800-pixel wheel zoom-out and 70-pixel vertical camera drag improved the view; all samples used the same 1440x900 viewport and unchanged camera after that adjustment. The 0 and 48 rendered configurations visually repeated and individual objects moved between samples, but the giant purple sphere still completely hid Mercury/Terra at several samples (notably 6 seconds), clipped at the top/bottom at others, and obscured their geometric centers. Consequently complete circular trajectories, individual 12/24/48-second rendered periods and all fixed geometric phases, including reload stability, could not be established within the preregistered 2-degree-plus-rounding/2-CSS-pixel tolerances. Source phase candidates 0,1,2 radians and angle readouts were not substituted for missing rendered geometry evidence. S1 remains unverified rather than inferred pass or geometry failure."
     },
     {
       "id": "S2",
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Artifact rendering and the required CDN resource succeeded during functional checks, but no complete console/page-error stream was available. The shared current Aside diagnostic positive control produced neither the deliberate console.error nor async exception event; per the shared browser contract that known transport limit is retained. Empty events cannot certify clean startup or runtime diagnostics. No qualifying artifact console/resource error was observed that would establish a failure."
+      "evidence": "Action: Enabled Runtime and Network before top-level HTTP navigation, positively tested console.error and asynchronous throw on an owned separate scratch origin, then collected diagnostics through desktop/mobile interaction rounds, ordered base acceptance controls, snapshot capacity/restore/delete, invalid and valid JSON, reload persistence, malformed/schema-invalid saved data, 120-second endpoint, keyboard operations and real quota-write failure. Expected: Working console/exception transport and no artifact-caused console/page error or failed required resource preventing intended operation. Observed: Scratch returned both Runtime.consoleAPICalled and Runtime.exceptionThrown with the deliberate markers. Artifact rounds returned no Runtime.consoleAPICalled, Runtime.exceptionThrown or Network.loadingFailed events. index.html and Three.js 0.124.0 CDN responses were HTTP 200; the automatic unreferenced favicon.ico request returned 404 without affecting operation. Startup rendered and advanced; 30-second tracking restore, 17.25/1.5x import, capacity warning, invalid-input notices, persisted capture/deletion/import, recovery notices, 120.00-second pause and both-size controls executed. Real quota exhaustion was caught by the app rather than escaping as a page exception; its historical saving-notice defect remains D6 fail. Reviewer input/locator errors are separately disclosed and are not artifact console failures. This is current focused D3 coverage, not a fresh certificate for every retained check."
     },
     {
       "id": "D4",
@@ -244,14 +244,15 @@
       "evidence": "Action: Reloaded after successful import, deletion and playing capture; injected only obs2 with malformed JSON, unsupported-version and mixed-validity persisted payloads; used a real bounded quota filler and attempted capture and then valid import. Expected: Correct persistent IDs/order/values/angles and live defaults; visible recovery and saving-unavailable feedback with usable memory state. Observed: Ordinary persistence and all three invalid-data recovery probes worked, with empty recovered lists, visible Saved snapshots were invalid and were cleared and usable controls. The quota search accepted 5242560 characters with nine QuotaExceededError responses. Capture correctly showed Saving is unavailable; snapshots remain in memory and storage stayed the old empty payload. Under the same real quota limit, valid two-entry import updated the in-memory list while obs2 stayed {\"version\":1,\"snapshots\":[]}, but the only notice was Snapshots imported, suppressing saving-unavailable feedback. Source import calls save(), whose catch sets the warning, then unconditionally overwrites msg with success. This confirmed failed-write feedback violation fails D6 despite otherwise working recovery. Playback, selection and deletion remained usable. Both fixture passes removed their unique filler and restored the exact original obs2 raw value/absence in finally."
     }
   ],
-  "total_score": 71.08,
+  "total_score": 73.08,
   "total_score_upper_bound": 76.2,
   "coverage": {
-    "passed": 19,
+    "passed": 20,
     "failed": 6,
-    "unverified": 2
+    "unverified": 1
   },
   "notes": [
+    "Focused amendment authorized by user on 2026-10-21: only originally unverified S1 and D3 are revisited. Every original pass/fail check is retained verbatim as historical evidence from 2026-10-20T21:39:36+09:00 by openai-codex/gpt-6-astra with effort null. Earlier notes below describe that historical attempt, not fresh observations; this is mixed provenance, not a new full review. Full-review and early-reset requirements were explicitly waived.",
     "Fresh review of the saved solar-system-observatory-2 contract: all 15 requirements, eight ordered steps and six additional sequences. Existing review findings were not read or reused. Initial all-unverified checkpoint was supplied by parent before dispatch.",
     "Reviewer model comes from current host workstation metadata; current effort is not exposed by host or applicable explicit session declaration and remains null. Generation metadata is not reviewer metadata. Timestamp from date -Iseconds.",
     "Host explicitly requested parallel review workers, overriding benchmark skill single-reviewer orchestration restriction. This worker used benchmark-review and aside-browser; using-harness-flow exempts dispatched subagents. No descendant or other model launched by this worker.",
@@ -264,6 +265,14 @@
     "Source supplements: the only source file is minified onto line 1. Planet SphereGeometry uses period/4, snapshot draw recreates buttons every animation frame, and import overwrites the save failure notice. These source causes are tied to fresh runtime observations, not historical reviews.",
     "Real quota-write failure exercises the saving-unavailable alternative; storage read-denial was not exercised and is not claimed. No unrelated storage key was inspected or altered. The exact original obs2 value/absence and unique terraMediumReviewQuota20261020 filler absence were verified restored in finally after both quota passes, with no subsequent reload changing that final restoration.",
     "Cleanup completed before releasing browser: all owned desktop/mobile tabs closed; rr-terra-medium-parallel output-only server stopped; parent-owned viewport server untouched. BROWSER_RELEASED sent immediately after cleanup. No screenshots/logs/collectors retained in the run; temporary tool-managed screenshot displays were not copied.",
-    "S1 remains unverified because complete circular rendered trajectories cannot be measured through the oversized intersecting/clipped geometry; all independent functional probes continued. D3 remains unverified because the shared current diagnostic positive control failed transport. Reviewer effort is null, so evidence status remains partial independently of quality arithmetic."
+    "S1 remains unverified because complete circular rendered trajectories cannot be measured through the oversized intersecting/clipped geometry; all independent functional probes continued. D3 remains unverified because the shared current diagnostic positive control failed transport. Reviewer effort is null, so evidence status remains partial independently of quality arithmetic.",
+    "Current reviewer model openai-codex/gpt-6-astra is supplied by host metadata; effort high comes from applicable .omp/agents/benchmark-astra-review.md thinking-level configuration because current host does not expose an effort override. Clock timestamp is current system time. Generator run metadata supplies neither reviewer identity nor reviewer effort.",
+    "Applied benchmark-review and host-required ego-browser (installed guide v2.1.0); using-harness-flow subagent exemption; caveman for concise communication. No descendants, additional model, source repairs, build, lint, tests or formatter. Current browser evidence uses only ego-browser nodejs, top-level loopback HTTP; historical Aside/iframe limitations are not assumed to apply now.",
+    "Preregistered S1 tolerances before browser observations: fixed-phase prediction 2 degrees plus 0.1-degree displayed rounding; any unchanged-camera repeated center comparison 2 CSS pixels. Projected screen angle is not orbital angle: judge a perspective-projected circular path using fixed camera and identifiable geometric centers, never promote labels/constants to geometry proof. Period samples require at least 3 seconds where timed, tolerance max(0.15 seconds,5% expected simulation delta) plus .01-second display increment. Seek sample times 0,3,6,9,12,24,36,48 and noncanonical 17,73; source phase candidates 0,1,2 radians only guide comparison, not pass evidence. Count, visible size/color, fixed phase, periodicity and complete circular paths all required for S1 pass.",
+    "Current focused browser evidence: owned TaskSpace8 on http://127.0.0.1:8963/index.html, diagnostic scratch http://127.0.0.1:9063/. Both positive controls succeeded. Runtime and Network were enabled before navigation and on every exercise invocation. Actual top-level CSS dimensions 1440x900 and 390x844 were checked; mobile scrollWidth was 375. These supersede the historical D3 transport limitation, not the old evidence provenance. No file:// or native-touch claim.",
+    "Current exercised base sequence: automatic motion, native scene Mercury selection/tracking, pause/seek30 and 2x, resume briefly, list Terra selection, overview, pause/seek30. No rate remeasurement was required for retained S4. Snapshot A at 30/2x/Terra/tracking restored after unrelated edits and manual camera input; capacity, middle deletion/replacement and export exercised. Ten saved invalid-import cases plus 24 additional type/range/missing-field cases produced visible rejection; valid 30/1.5x/null overview and 17.25/1.5x/Mercury tracking entries restored and round-tripped while paused/playing. Reloads followed import, deletion and capture. Malformed and unsupported-version storage fixtures showed recovery notices. Keyboard primary controls were exercised at both sizes; dynamic snapshot keyboard instability remains historical U5 fail, with successful native pointer restore/delete separately observed. This exercises all acceptance families for diagnostics but is not a fresh full 27-check matrix or fresh remeasurement of retained checks.",
+    "Current quota fixture on isolated origin: unique focusTerraMediumQuota20261021 filler accepted 5242819 characters within an 8-MiB bound, with six caught QuotaExceededError responses. Capture showed Saving is unavailable; snapshots remain in memory. A subsequent two-entry import changed the in-memory list but retained the persisted empty payload and showed Snapshots imported, consistent with retained D6 failure. No escaped page/console exception occurred. Storage read denial was not exercised. Original obs2 value was absent; exact absence and filler absence were restored and observed after the last recovery fixture, without subsequent reload.",
+    "Current reviewer/input limits: reapplying CSS metrics between invocations could retain an oversized canvas intrinsic layout until reload; later invocation setup reapplied metrics and reloaded before comparisons. One initial scene click therefore did not select and disabled tracking timed out. A range fill using .25 was rejected as malformed by browser transport; corrected 0.25 worked. Dynamic snapshot element replacement caused one detached-element action timeout; subsequent snapshot operations used native mouse clicks at freshly observed button rectangles. These are not counted as artifact console exceptions or new scores for retained checks. No access/security denial occurred. Temporary image contact-sheet preparation lacked PIL; no dependency installed, individual images were inspected directly.",
+    "Current cleanup: original prompt.md, run.json and output inventory/bytes were compared before and after; all unchanged and output contains only index.html. No hash is retained in this review. All 21 owned temporary scripts/screenshots were removed. Scratch page closed; viewport override cleared; TaskSpace8 finish({keep:[]}) completed exactly once. Both output8963 and scratch9063 servers stopped, then BROWSER_RELEASED and successor grant were sent. Only reviews/review.json and reviews/review.md are published; temporary draft is removed after finalizer. Finalizer reports publication/readback states separately."
   ]
 }

@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T23:14:33+09:00",
+  "reviewed_at": "2026-10-21T21:19:50+09:00",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "pass",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 4,
+      "score": 5,
       "score_upper_bound": 5
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Artifact console/page-error absence could not be established: direct REPL console and pageerror subscriptions returned an empty array even after deliberate console.error and asynchronous throw on the reviewer-owned wrapper. Required local resources loaded and no functional blocking error was observed, but an empty failed-positive-control stream cannot certify D3. No alternative browser or raw diagnostic transport was used."
+      "evidence": "Action: In a reviewer-owned scratch page, enable Runtime and observe a deliberate console.error and asynchronous thrown Error; enable Runtime and Network before artifact navigation/reloads, then collect events through desktop and mobile task interactions. Expected: Working diagnostic signals and no artifact-caused console/page errors or failed required resources preventing intended operation. Observed: Both Runtime.consoleAPICalled and Runtime.exceptionThrown carried the distinct deliberate scratch markers. The actual artifact at top-level 1440x900 and 390x844 rendered and operated with no console calls, uncaught exceptions, or Network.loadingFailed events in the collected diagnostic sequences. index.html, styles.css, app.js, vendor/three.min.js and vendor/OrbitControls.js returned HTTP 200. Diagnostic-covered actions included canvas Ochre selection, tracking, pause/seek30/2x/resume/list-switch/overview/reseek30; capture/live edits/repeated restore/capacity/delete/recapture/export; ten invalid imports and valid null/tracking fractional round-trip, playing and empty imports; reload after import/delete/capture; malformed and schema-invalid saved-data recovery; real quota-write failure with visible Saving unavailable and usable memory controls; primary keyboard controls at both sizes; camera orbit/zoom, speed endpoints and the120 boundary. No blocking artifact diagnostic failure occurred; caught validation and quota failures produced intended feedback rather than uncaught errors. This is fresh D3 evidence only; other checks remain historical."
     },
     {
       "id": "D4",
@@ -244,12 +244,12 @@
       "evidence": "Action: Reload after separate import,deletion,capture; inject malformed and numeric-string-time persisted payloads; fill one reviewer-owned quota key and capture through the UI. Expected: Versioned persistence, startup defaults, visible invalid-data recovery, genuine failed-write feedback and usable memory state. Observed: Each ordinary reload retained exact serialized IDs/order/values and derived angles while live playback restarted near0 at1x,null,overview. Both bad persisted payloads yielded empty lists and visible Recovery notices with working pause/selection. Bounded quota search accepted5242716 filler characters and encountered QuotaExceededError; UI capture left persisted raw payload unchanged, added an in-memory snapshot and displayed Saving unavailable. Playback, selection, restore and deletion remained usable. Filler was removed and the originally absent app key restored exactly in cleanup."
     }
   ],
-  "total_score": 94.4,
+  "total_score": 96.4,
   "total_score_upper_bound": 96.4,
   "coverage": {
-    "passed": 26,
+    "passed": 27,
     "failed": 0,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
     "Saved prompt independently confirmed solar-system-observatory-2 with all15 requirements, the original eight ordered steps and six additional sequences. Generation run.json status and construction notes were not used as quality evidence; no prior review was read as evidence. The parent had already saved the required all-unverified checkpoint.",
@@ -262,6 +262,13 @@
     "Image evidence was transient. Same-viewport decoded canvas comparisons used reviewer-owned wrapper OffscreenCanvas, not app runtime variables or source mutation. Repeated30/17/73 seeks before/after reload, paused speed changes, repeated null/tracking restore and state-isolated snapshot/JSON operations produced0 changed pixels among338238 compared pixels. Screenshots were inspected directly; no image/log/evidence file was retained in the run.",
     "Diagnostic positive control failed transport: deliberate console.error and asynchronous exception on the owned wrapper produced no subscribed events. D3 remains unverified. A helper name ending .import(...) caused the REPL to misclassify ordinary reviewer code as an external module request; renamed reviewer helper and reported tool issue. This was a transport parsing issue, not an artifact defect.",
     "Only app key orrery-observations-v1 and unique reviewer quota key review-astra-high-quota-20261020 were touched. Original app value was null/absent. Quota fixture used bounded8MiB string search, observed actual app failed persistence, then removed filler in finally. Final cleanup verified exact original absence and filler absence. Quota proves failed-write recovery, not storage-read-denial behavior.",
-    "All owned tabs were closed; rr-astra-high-parallel was stopped; shared viewport service was left running. BROWSER_RELEASED was sent immediately after cleanup. Prompt, run record and output were never edited; only the assigned review pair is published. No builds, lint, tests, formatters, dependency installs, source repair or gallery changes were performed."
+    "All owned tabs were closed; rr-astra-high-parallel was stopped; shared viewport service was left running. BROWSER_RELEASED was sent immediately after cleanup. Prompt, run record and output were never edited; only the assigned review pair is published. No builds, lint, tests, formatters, dependency installs, source repair or gallery changes were performed.",
+    "Focused amendment authorized by the user on 2026-10-21: re-verify only previously unverified D3, retain all26 existing pass/fail findings verbatim, and recalculate quality. Full fresh review and early all-unverified checkpoint were expressly waived. This is mixed-provenance evidence, not a new full27-check review. All non-D3 checks and all earlier notes above are historical observations from2026-10-20T23:14:33+09:00 by openai-codex/gpt-6-astra with effort null. The current reviewer owns only the new D3 observation, current metadata and score recalculation. Historical notes that say no prior review was read, missing effort, Aside-only transport, iframe sizes or failed diagnostics describe the previous attempt, not this amendment.",
+    "Current amendment metadata: model openai-codex/gpt-6-astra is supplied by current host project-context. Effort high is explicitly selected by the applicable dispatched reviewer configuration .omp/agents/benchmark-astra-review.md; actual selected effort is not separately exposed by the host. Current host metadata takes precedence over configuration. Timestamp comes from Python datetime.now().astimezone() on the available host clock. Generator run metadata was not used as reviewer identity or quality evidence.",
+    "Applied skills for this amendment: benchmark-review and its current shared rubric/verification/format resources; host-required ego-browser and complete installed ego-browser skill guide v2.1.0; using-harness-flow was read and its subagent-stop applied. No Aside browser, alternate runtime, descendants or model launches were used. Explicit parent-directed parallel preparation used an exclusive BROWSER_GRANTED lease for all actual browser operations.",
+    "Current transport supersedes only the old D3 diagnostic limitation: documented ego-browser nodejs Runtime.enable plus page.events() positively reported both deliberate console and exception markers on reviewer-owned scratch port9051. Actual artifact output-only loopback port8951 was observed with Runtime and Network enabled before navigation/reloads and throughout the exercised sequences. Both actual top-level CSS viewports1440x900 and390x844 were checked; reported document scrollWidth was1425 and375 respectively. This is CSS emulation, not physical touch-device proof; no file-protocol execution or storage-read denial was attempted.",
+    "D3 diagnostic scope covered all saved acceptance families, not a fresh exhaustive fixed evidence matrix or timing certification. Startup motion and the core control path were exercised, with an initial pause for stable canvas targeting; exact seek30 and2x were observed. No fresh speed-rate, orbit-period, pixel-equality, every malformed-type permutation or all-planet canvas-route remeasurement was claimed or used to change retained findings. Ten invalid-import attempts produced visible rejection; null30/1.5 overview and17.25/1.5 Azure tracking restores, capacity and persistence paths were exercised. Primary keyboard selection/time/speed/playback/modes/snapshot/textarea/import-export plus Tab/Shift+Tab were exercised at both sizes. All sampled diagnostic batches contained zero artifact console events, zero uncaught exceptions and zero failed network loads.",
+    "Current storage fixtures touched only app key orrery-observations-v1 and reviewer key review-focus-astra-high-quota-20261021 on the isolated output origin. The original app value was absent. Malformed JSON and numeric-string-time persisted data each produced the visible Recovery notice and empty snapshots. Bounded8MiB quota search accepted5242783 filler characters and caught four expected QuotaExceededError attempts. A real UI capture then added an in-memory entry, left persisted empty-list payload unchanged and displayed Saving unavailable; selection/playback/restore/delete remained usable. Both keys were verified absent afterward, restoring the original app state. Expected caught quota exceptions were not artifact uncaught diagnostic failures.",
+    "Current cleanup completed: cleared viewport emulation, finished owned TaskSpace7 exactly once with keep:[], stopped both tracked servers focus-astra-high-output and focus-astra-high-scratch, and broadcast BROWSER_RELEASED before publication. Transient screenshots and reviewer scripts were removed. Source-preservation comparison in working memory confirmed identical prompt.md, run.json and complete output inventory/bytes before and after review. Only reviews/review.json and reviews/review.md in this run are published by the finalizer; no source repair, builds, tests, lint, formatters, dependency installation or gallery changes occurred."
   ]
 }

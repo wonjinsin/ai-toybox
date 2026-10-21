@@ -2,18 +2,18 @@
 
 ## Conclusion
 
-Status: partial.
+Status: complete.
 Mandatory verdict: fail.
-Quality total: 78.80 / 100. Conservative lower bound. Range: 78.80 to 80.80.
+Quality total: 78.80 / 100. Determined score. Range: 78.80.
 Quality is uncapped. The mandatory verdict is independent of the quality score.
 Mandatory failures (4): T4, T5, D5, D6.
 Mandatory unverified (0): None.
-Missing checks (1): D3.
-Missing reviewer metadata: reviewer.effort.
+Missing checks (0): None.
+Missing reviewer metadata: None.
 Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;20T13:31:44&#46;726Z.
+Reviewed at: 2026&#45;10&#45;21T13:14:41&#46;532259&#43;00:00.
 Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
-Reviewer effort: Unavailable.
+Reviewer effort: high.
 
 ## Scores
 
@@ -24,7 +24,7 @@ Reviewer effort: Unavailable.
 | usability | 4.60 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
 | visual | 3.00 | 15 | V1, V2; determined score; full category denominator |
 | responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 2.00 to 3.00 | 10 | D2, D3, D4, D5, D6; conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator |
+| delivery | 2.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
 
 ## Findings
 
@@ -42,6 +42,12 @@ Status: fail. Rating: 0. Method: http.
 
 Action: Restore selected Venus tracking at 30/2x after unrelated live changes and manual orbit/zoom; repeat the restore&#46; Import and restore null&#45;selection overview at 30/1&#46;5x after tracking, alter the camera and restore it again&#46; Expected: Atomic saved state, paused playback, synchronized positions/information/target, deterministic standard tracking or full&#45;system overview framing&#46; Observed: Saved state and selection clearing worked; repeated tracking and overview restores returned visually matching standard orientations&#46; However the restored null&#45;selection overview at 30 seconds did not include Mars within the desktop scene, violating the required full&#45;system standard framing&#46; Source index&#46;html:16 resets yaw/pitch/distance to &#46;6/&#46;45/11 regardless of aspect; the fixed&#45;distance fit defect is visible after the actual restore&#46; Repeated framing was visually compared, not independently quantified to a 2&#45;CSS&#45;pixel threshold; that missing precision does not erase the established full&#45;system failure&#46;
 
+#### D3
+
+Status: fail. Rating: 0. Method: http.
+
+Action: Validate Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown with deliberate console&#45;error and asynchronous&#45;throw controls on owned scratch HTTP; enable Runtime and Network before artifact navigation; exercise playback/seek/speed/selection/tracking, camera, snapshot capacity/restore/delete, textarea import/export, reload and storage boundaries at actual 1440x900 and 390x844 top&#45;level CSS viewports&#46; Then import &#123;&#34;version&#34;:1,&#34;snapshots&#34;:&#91;&#123;&#34;id&#34;:&#34;bad&#45;inherited&#45;reference&#34;,&#34;time&#34;:30,&#34;speed&#34;:1&#46;5,&#34;selectedPlanet&#34;:&#34;constructor&#34;,&#34;viewMode&#34;:&#34;tracking&#34;&#125;&#93;&#125; through the textarea and activate Restore&#46; Expected: Invalid planet input is rejected without an artifact&#45;caused exception or interrupted operation&#46; Observed: Both diagnostic positive controls were transported&#46; The artifact accepted the inherited&#45;name planet reference and displayed constructor/tracking with a success notice&#46; Native Restore generated two Runtime&#46;exceptionThrown TypeErrors: Cannot read properties of undefined &#40;reading &#39;x&#39;&#41;, through THREE&#46;Vector3&#46;copy and updateScene at index&#46;html:12:415, first from the restore handler at index&#46;html:16:3074 and then the animation loop at index&#46;html:13:361&#46; The live display remained at 23&#46;7 seconds/Full&#45;system overview instead of applying the 30&#45;second tracking snapshot; the restore success notice was not reached&#46; This is an artifact&#45;caused runtime failure, not the deliberate scratch exception&#46; Required index&#46;html and three&#46;min&#46;js loads returned HTTP 200; no Network&#46;loadingFailed was observed&#46; The bundled Three&#46;js deprecation warning and the browser&#45;requested optional favicon&#46;ico HTTP 404 did not prevent operation and were not scored as failures&#46; Ordinary exercised sequences produced no other artifact console errors or page exceptions&#46; The focused diagnostic scope does not freshly recertify all historical functional/visual findings or every fixed&#45;matrix permutation&#46;
+
 #### D5
 
 Status: fail. Rating: 0. Method: http.
@@ -56,11 +62,7 @@ Action: Reload after valid import, deletion and capture; inject malformed and un
 
 ### Missing proof
 
-#### D3
-
-Status: unverified. Rating: Unverified. Method: http.
-
-The artifact rendered and its required local Three&#46;js resource appeared in performance resource timing, but complete console/page&#45;error observation was unavailable&#46; The shared contract reports a current direct&#45;REPL diagnostic positive&#45;control limitation: deliberate console&#46;error and async throw on a reviewer&#45;owned wrapper yielded no transported events&#46; This worker did not repeat that positive control or claim an empty diagnostic stream proves a clean artifact&#46; No qualifying artifact&#45;caused diagnostic failure was established, and complete startup/later console coverage remains unverified&#46;
+None.
 
 ### Verified passes
 
@@ -200,7 +202,7 @@ Action: Export empty and populated lists through the labeled textarea, round&#45
 
 Browser method: http.
 Viewports: 1440x900, 390x844.
-Coverage: 22 passed, 4 failed, 1 unverified.
+Coverage: 22 passed, 5 failed, 0 unverified.
 
 ### Notes
 
@@ -216,3 +218,12 @@ Coverage: 22 passed, 4 failed, 1 unverified.
 - Source preservation: prompt&#46;md, run&#46;json and both output files were read but never edited&#46; Only the assigned reviews/review&#46;json and reviews/review&#46;md are publication targets&#46; Screenshots and decoded pixel comparisons were transient tool&#45;memory observations; no screenshots, logs, collectors or evidence directory were retained in the run&#46; The temporary outside&#45;run JSON draft is removed after final publication&#46;
 - Parent supplement on 2026&#45;10&#45;20 used the same original output and8921 origin under an exclusive browser slot&#46; It observed every playing&#45;list selection, verified the original storage value unchanged without writes, closed its sole tab and stopped rr&#45;luna&#45;high&#45;parent&#45;supplement before releasing browser access&#46; Existing independently observed worker findings were preserved&#46;
 - The supplement was performed by the current parent host model openai&#45;codex/gpt&#45;6&#45;astra, with effort still unavailable/null&#46; Host&#45;required aside&#45;browser, injected using&#45;harness&#45;flow/caveman and the required read&#45;only brainstorming route were applied by the parent; the explicitly requested parallel orchestration exception remains disclosed&#46;
+- FOCUSED AMENDMENT 2026&#45;10&#45;21: User explicitly authorized re&#45;verifying only originally unverified checks, preserving previous pass/fail evidence and waiving the fresh&#45;full&#45;review and early&#45;reset rules&#46; Only D3 changed&#46; All 26 previous verified check objects remain verbatim historical evidence from reviewed&#95;at 2026&#45;10&#45;20T13:31:44&#46;726Z, reviewer openai&#45;codex/gpt&#45;6&#45;astra with effort null&#46; The earlier notes above, including their fresh&#45;review wording, Aside transport, embedded viewports, missing effort and cleanup descriptions, describe that historical attempt only&#46; This is a mixed&#45;provenance amendment, not a fresh full 27&#45;check review&#46; The current reviewer owns the new D3 observation and score recalculation; complete means aggregate evidence and current metadata are populated, not that historical checks were freshly recertified&#46;
+- Current amendment reviewer model openai&#45;codex/gpt&#45;6&#45;astra is explicit current host metadata&#46; Effort high comes from the applicable &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md thinking&#45;level configuration because the host does not expose a conflicting effort&#46; Current reviewed&#95;at comes from the actual timezone&#45;qualified UTC clock&#46; No generator metadata or old null effort was used to infer current identity, and the historical missing effort is not retroactively filled&#46;
+- Current applied skills: agents/benchmark&#45;review and shared resources; ego&#45;browser and its complete installed 2&#46;1&#46;0 guide required for browser work; using&#45;harness&#45;flow read with its dispatched&#45;subagent stop rule; caveman required by shared host contract for concise communication&#46; No Aside MCP, other browser, descendants, other model, file:// navigation, builds, tests, lint, formatter, dependency install or source repair was used&#46; The user&#45;authorized parallel preparation exception retained exclusive browser operation after BROWSER&#95;GRANTED&#46;
+- Current diagnostic transport supersedes only the former D3 transport limitation: owned scratch on 127&#46;0&#46;0&#46;1:9059 positively delivered both deliberate Runtime&#46;consoleAPICalled error and Runtime&#46;exceptionThrown&#46; Owned TaskSpace18 p1 then navigated unchanged output&#45;only 127&#46;0&#46;0&#46;1:8959 with Runtime/Network enabled before navigation and collected events across interactions and reloads&#46; Real top&#45;level metrics were applied and observed as 1440x900 and 390x844, unlike the historical embedded transport&#46; No physical&#45;device, file&#45;protocol, new screenshot/visual rating, or new timing&#45;rate certification is claimed&#46;
+- Fresh D3 activity covered automatic&#45;play readouts; Mercury tracking, pause/seek30, paused2x, resume, Venus list switching, overview and repeat seek30; selected capture and live changes followed by restore; capacity&#45;three/fourth rejection, middle deletion and replacement; export, malformed/version/mixed&#45;invalid rejection; valid null&#45;overview and fractional selected&#45;tracking restore; playing imports, empty&#45;list replacement and roundtrip; reload after import, deletion and capture&#46; Both top&#45;level sizes exercised keyboard selection, tracking/overview, speed/time arrows, pause/resume, capture/restore/delete and textarea export/import with Tab/Shift&#43;Tab, plus native centered canvas click, 25&#45;move drag and wheel input&#46; Endpoint119&#46;9/4x stopped at120, then earlier seeking resumed&#46; These actual acceptance&#45;family interactions support D3 diagnostics only; they are not a claim to repeat all timing, pixel&#45;framing, picking or invalid&#45;schema permutations in the historical matrix&#46; No numeric rating outside D3 was reconsidered&#46;
+- Fresh storage boundary diagnostics replaced only observatory&#45;snapshots&#45;v1 with malformed JSON and version2 payload and reloaded, observing recovery notices and live defaults&#46; A bounded 8&#45;MiB quota fixture used only &#95;&#95;focus&#95;luna&#95;high&#95;quota&#95;20261021, initially absent; it accepted 5,242,796 characters and encountered six QuotaExceededErrors during the bounded search&#46; Real UI capture appended an in&#45;memory entry while stored JSON remained empty and the visible notice incorrectly said Observation captured&#46; This supports the retained historical D6 defect without changing its evidence&#46; No storage read&#45;denial was simulated&#46; The quota key was removed before the inherited&#45;reference reproduction&#46;
+- Current transport limit: after mobile JSON filling, page&#46;click&#40;&#35;import&#41; timed out because html intercepted pointer events; inspection showed the button below viewport at top1408&#46;7 and scrollY0&#46; This was treated as reviewer automation scrolling, not an artifact error&#46; Following documented guidance, explicit scrollIntoView and native Enter performed Import and Restore, producing the separately captured artifact TypeErrors&#46; The tool mismatch was reported&#46; No access/security denial occurred&#46;
+- Current cleanup: original app&#45;key absence and quota&#45;key absence were restored and both read back null&#46; Viewport emulation was cleared and the sole owned p1 closed&#46; Because an earlier action round errored, finish was not called on that error task; no owned artifact/scratch page remained open&#46; Both tracked servers were stopped&#46; BROWSER&#95;RELEASED was broadcast and the parent&#45;authorized successor grant sent before publication&#46; No screenshots or evidence logs were retained&#46; Temporary outside&#45;run interaction scripts and the draft are removed after publication&#46;
+- Source preservation was confirmed from working&#45;memory before/after inventory and byte digests of prompt&#46;md, run&#46;json, output/index&#46;html and output/three&#46;min&#46;js; all unchanged&#46; Digests are not retained here&#46; Only this run&#39;s reviews/review&#46;json and reviews/review&#46;md are publication targets, using the required finalize&#45;review&#46;mjs normalizer/generator and its pair readback&#46;

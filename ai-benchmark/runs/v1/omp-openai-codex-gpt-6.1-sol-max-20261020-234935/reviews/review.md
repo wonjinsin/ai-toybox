@@ -2,16 +2,16 @@
 
 ## Conclusion
 
-Status: partial.
+Status: complete.
 Mandatory verdict: fail.
-Quality total: 84.90 / 100. Conservative lower bound. Range: 84.90 to 86.90.
+Quality total: 86.90 / 100. Determined score. Range: 86.90.
 Quality is uncapped. The mandatory verdict is independent of the quality score.
 Mandatory failures (2): T4, T5.
 Mandatory unverified (0): None.
-Missing checks (1): D3.
+Missing checks (0): None.
 Missing reviewer metadata: None.
 Format: 5&#46;0. Rubric: solar&#45;system&#45;5&#46;0.
-Reviewed at: 2026&#45;10&#45;20T15:26:10&#46;038Z.
+Reviewed at: 2026&#45;10&#45;21T13:08:53&#46;994Z.
 Reviewer model: openai&#45;codex/gpt&#45;6&#45;astra.
 Reviewer effort: high.
 
@@ -24,7 +24,7 @@ Reviewer effort: high.
 | usability | 4.80 | 15 | U1, U2, U3, U4, U5; determined score; full category denominator |
 | visual | 3.50 | 15 | V1, V2; determined score; full category denominator |
 | responsive | 5.00 | 15 | L1, L2; determined score; full category denominator |
-| delivery | 4.00 to 5.00 | 10 | D2, D3, D4, D5, D6; conservative lower bound; unknown ratings range from 0 to 5 with the full category denominator |
+| delivery | 5.00 | 10 | D2, D3, D4, D5, D6; determined score; full category denominator |
 
 ## Findings
 
@@ -44,11 +44,7 @@ Action: Restored30/2x/Cirrus/tracking and30/1&#46;5x/null/overview after live ed
 
 ### Missing proof
 
-#### D3
-
-Status: unverified. Rating: Unverified. Method: http.
-
-Unverified: Required console/page&#45;error coverage could not be established&#46; Two reviewer&#45;owned scratch positive controls emitted a deliberate console&#46;error and scheduled thrown Error; page&#46;on&#40;console/pageerror&#41; subscriptions returned no signals, including after a250ms settling interval on the second probe&#46; Empty streams therefore cannot establish an error&#45;free artifact, especially startup&#46; Actual scene/UI operation and200 responses for both required local scripts were observed; no qualifying artifact&#45;caused diagnostic failure was established&#46; A reviewer evaluation ReferenceError for isolated THREE access is not attributed to the artifact&#46;
+None.
 
 ### Verified passes
 
@@ -178,6 +174,12 @@ Status: pass. Rating: 5. Method: static.
 
 Action: Inspected the output inventory and dependency references with output as HTTP root&#46; Expected: Every referenced local asset exists beneath output without build/repository&#45;root dependence&#46; Observed: index&#46;html references only bundled three&#46;min&#46;js and OrbitControls&#46;js, both present alongside it; favicon is an inline data URI and styles/app logic are inline&#46; There is no application external module/build/root dependency&#46; Generic loader code within Three&#46;js is not an invoked missing asset&#46; Direct&#45;file execution is excluded&#46;
 
+#### D3
+
+Status: pass. Rating: 5. Method: http.
+
+Action: In the owned Ego Lite TaskSpace, enabled Runtime on an isolated scratch and observed both deliberate console&#46;error and asynchronous thrown&#45;Error controls; enabled Runtime and Network before navigating the unchanged artifact, then collected events through desktop/mobile control sequences, snapshot/JSON operations, reloads and storage boundaries&#46; Expected: No artifact&#45;caused console/page error or failed required resource prevents intended operation&#46; Observed: Both positive&#45;control signals arrived as Runtime&#46;consoleAPICalled and Runtime&#46;exceptionThrown&#46; Artifact startup, native canvas/list selection, pause/seek30/2x/resume/overview, capture/restore/capacity/delete, 34 invalid imports, valid fractional/null/tracking and playing/empty imports, capture/delete/import reloads, malformed/schema&#45;invalid storage recovery, bounded real quota failure, 120&#45;second endpoint and keyboard/camera interactions at actual top&#45;level1440x900 and390x844 completed with zero captured artifact console events, uncaught exceptions or Network&#46;loadingFailed events&#46; index&#46;html, three&#46;min&#46;js and OrbitControls&#46;js returned200 on initial load and every observed reload&#46; Quota exhaustion was caught and visibly reported as memory&#45;only saving rather than an uncaught page error&#46; These are fresh D3 observations only; retained visual/state&#45;quality findings are historical, not newly recertified&#46;
+
 #### D4
 
 Status: pass. Rating: 5. Method: http.
@@ -200,10 +202,11 @@ Action: Reloaded separately after valid import, deletion and capture in the same
 
 Browser method: http.
 Viewports: 1440x900, 390x844.
-Coverage: 24 passed, 2 failed, 1 unverified.
+Coverage: 25 passed, 2 failed, 0 unverified.
 
 ### Notes
 
+- Focused mixed&#45;provenance amendment authorized by the user on 2026&#45;10&#45;21: only formerly unverified D3 is freshly evaluated&#46; All other 26 check objects, including evidence and ratings, are retained verbatim from the historical review dated 2026&#45;10&#45;20T15:26:10&#46;038Z by openai&#45;codex/gpt&#45;6&#45;astra / high&#46; Original notes below describe that prior attempt, not the present amendment; their all&#45;fresh, Aside transport, viewport, cleanup and unavailable&#45;diagnostics statements remain historical only&#46; The user waived full fresh review and the early all&#45;unverified reset&#46; The current reviewer owns D3 observations and recalculated aggregate only; complete aggregate evidence does not mean a fresh 27&#45;check review&#46;
 - Reviewed only the explicitly assigned saved solar&#45;system&#45;observatory&#45;2 contract&#46; No generator measurements or previous findings were used as quality evidence; all findings above come from this attempt&#46; The early all&#45;unverified checkpoint preceded artifact evaluation&#46;
 - Reviewer model openai&#45;codex/gpt&#45;6&#45;astra is established by current host metadata&#46; Effort high is the explicit current worker configuration supplied by the host assignment, not inferred from generator identity&#46; reviewed&#95;at is an actual current&#45;host UTC Date timestamp&#46; No other model or descendants were launched&#46;
 - Applied benchmark&#45;review and additionally the host&#45;required aside&#45;browser skill, reading its actual aside guide/repl documentation&#46; Used only connected Aside MCP direct repl over loopback HTTP&#46; The bundled terra&#45;xhigh control profile does not match this artifact; direct observed Kepler selectors were used instead&#46;
@@ -214,3 +217,8 @@ Coverage: 24 passed, 2 failed, 1 unverified.
 - Confirmed failures are mobile full&#45;system framing through overview &#40;T4&#41; and snapshot restore &#40;T5&#41;&#46; At17/17&#46;25 seconds the standard narrow frame cuts off Cirrus and its name, despite correct live state&#46; Independent input/layout/JSON/persistence checks continued after this failure&#46; D3 alone remains unverified because diagnostic positive&#45;control subscriptions did not deliver either deliberate signal; no clean&#45;console claim is made&#46;
 - Storage fixtures touched only kepler&#46;observatory&#46;snapshots&#46;v1 and the absent&#45;before&#45;use review&#45;owned quota filler&#46; Original app value was absent and was restored exactly after fixtures and again after all later UI operations&#46; Filler absence was confirmed&#46; No localStorage&#46;clear, prototype/getter overrides, security changes or fabricated write exceptions were used&#46; Quota observations do not establish read&#45;denial recovery&#46;
 - Cleanup confirmed all review&#45;created desktop/mobile/scratch tabs closed, both owned servers exited, and exclusive browser lease released without denial&#46; No screenshots/logs/evidence files were retained in the run&#46; Hash comparisons in working memory confirmed prompt&#46;md, run&#46;json and all three output files unchanged; hashes are intentionally not retained in this review&#46;
+- Current amendment metadata: model openai&#45;codex/gpt&#45;6&#45;astra comes from current host model metadata; effort high comes from the applicable &#46;omp/agents/benchmark&#45;astra&#45;review&#46;md explicit thinking&#45;level, with no contrary current runtime value exposed&#46; Timestamp is the actual host Date UTC clock&#46; Only assigned run reviewed; no descendants, other model, build, lint, formatter, source repair or regeneration&#46; Applied benchmark&#45;review and host&#45;required ego&#45;browser, including complete installed ego&#45;browser skill guide and scoped storage guidance&#46; using&#45;harness&#45;flow subagent&#45;stop applied&#46; The historical Aside skill and transport notes above do not describe this amendment&#46;
+- Current diagnostic method supersedes only the historical D3 limitation: ego&#45;browser nodejs documented Runtime&#46;enable, Network&#46;enable and page&#46;events&#40;&#41; worked&#46; Own scratch console and exception controls both succeeded before artifact navigation&#46; Same owned initial p1 then navigated to output&#45;only127&#46;0&#46;0&#46;1:8956; scratch&#45;only127&#46;0&#46;0&#46;1:9056 served no repository files&#46; Exclusive browser grant was respected&#46; CSS viewports were actual top&#45;level1440x900 and390x844, verified each invocation, not iframe transport or touch&#45;device proof&#46; No file:// test or screenshot was attempted; optional screenshot omission was explicitly authorized for D3&#45;only work&#46; No new visual certification or timing/orbital&#45;measurement recertification is claimed&#46;
+- Fresh diagnostic interaction scope: startup showed LIVE/no selection/overview and later time26&#46;9065 at1x&#46; A real canvas click selected Aster after seek0; subsequent tracking, paused30/2x, resume, Brine list switch, overview and repeat30 produced expected control readouts&#46; Captured Cirrus30/2x/tracking retained its displayed saved fields through live edits and repeated restore/camera inputs&#46; Three entries rejected a fourth with a capacity message, middle deletion and recapture worked, and empty/populated export used the textarea&#46; All34 invalid payload submissions displayed Import rejected with3/3 entries and paused time30 retained; this D3 amendment did not independently recertify every historical full&#45;state comparison&#46; Valid null30/1&#46;5x and Cirrus17&#46;25/2x snapshots restored, round&#45;tripped, imported while LIVE and cleared/reimported&#46; Reloads after import/delete/capture restored the intended rows and restarted live defaults&#46; Native keyboard activation, arrows, Tab/Shift&#43;Tab and typed JSON operated at both sizes; camera drag/wheel inputs were exercised in overview/tracking and playing/paused states&#46; Speed0&#46;25/2/4 and seek0/17/30/73/119&#46;9/120 were exercised;120 stopped and earlier17 resumed&#46; This covers all acceptance families for diagnostics, not a newly executed full27&#45;check measurement matrix&#46;
+- Fresh storage boundary scope: only app key kepler&#46;observatory&#46;snapshots&#46;v1 and initially absent review filler FocusSolMax&#46;quota&#46;20261021 were touched on the isolated output origin&#46; Malformed JSON and unsupported&#45;version persisted payloads recovered with visible notice and usable selection/playback&#46; An8MiB&#45;bounded search stored5242795 filler characters and caught5 QuotaExceededErrors&#46; Actual capture then added an in&#45;memory row while persisted payload remained the empty version1 list and the UI stated Saving unavailable — observations are in memory only and may not survive reload&#46; This is real write&#45;failure coverage, not read&#45;access&#45;denial proof&#46; Filler removed; original app&#45;key absence and filler absence restored and observed at final cleanup&#46; No prototype override, fabricated exception, localStorage&#46;clear or unrelated storage access&#46;
+- Current cleanup: emulation cleared; TaskSpace16 finished once with keep:&#91;&#93;; both tracked servers exited; BROWSER&#95;RELEASED broadcast and authorized successor grant sent after cleanup&#46; No screenshots or evidence logs retained&#46; Working&#45;memory inventory/byte comparisons confirmed prompt&#46;md, run&#46;json and all three output files unchanged before publication&#46; Only review&#46;json and review&#46;md are publication targets; temporary host&#45;side scripts and draft are removed after finalization&#46; Historical mandatory T4/T5 failures remain unchanged&#46;

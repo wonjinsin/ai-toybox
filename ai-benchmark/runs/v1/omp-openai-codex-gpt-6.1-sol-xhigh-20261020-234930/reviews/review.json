@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T15:43:04.327Z",
+  "reviewed_at": "2026-10-21T12:29:33.879Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
     "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "pass",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 4,
+      "score": 5,
       "score_upper_bound": 5
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Not fully verified. Required local resources returned successfully and no operation-blocking artifact failure was observed. However direct REPL console/pageerror subscriptions captured neither deliberate console.error nor asynchronous thrown exception on an owned scratch fixture, including a 300 ms observation interval. Empty artifact error arrays therefore cannot establish clean startup/runtime diagnostics. D3 remains unknown, not a pass or an artifact failure."
+      "evidence": "Action: Validate Runtime.consoleAPICalled and Runtime.exceptionThrown with deliberate console.error and asynchronous throw on the owned scratch origin, then enable Runtime and Network before navigating unchanged output over HTTP. Observe startup, the saved eight-step interaction, snapshot capture/restore/capacity/deletion, invalid and valid/empty/playing JSON imports and exports, reload persistence, malformed and schema-invalid storage recovery, real quota-write failure, keyboard controls at actual top-level 1440x900 and 390x844, and the 120-second boundary. Expected: No artifact-caused console/page errors or failed required resources prevent intended operation. Observed: Both scratch positive controls arrived through page.events(). Artifact diagnostics contained the bundled Three.js deprecation warning but no Runtime console error, uncaught exception or Network.loadingFailed event. index.html and three.min.js returned HTTP 200 through startup and reloads; the optional browser-requested favicon returned 404 and did not affect operation. Scene/list selection, tracking, seek30, paused2x/resume, overview, immutable restore, capacity feedback, 11 invalid-import cases, fractional/null restores, playing/empty imports, persistence, keyboard actions and recovery controls remained operable. Quota exhaustion produced visible Saving unavailable feedback and usable in-memory capture/restore rather than an uncaught error. Final endpoint input reached 120.000 paused and an earlier seek resumed to 0.549. No operation-blocking artifact diagnostic failure was observed."
     },
     {
       "id": "D4",
@@ -244,14 +244,15 @@
       "evidence": "Action: Reload separately after import, deletion and successful capture; replace only app snapshot key with malformed and schema-invalid data; exercise bounded real quota exhaustion, then restore fixtures. Expected: Versioned validated persistence, default live startup, visible recovery/saving-unavailable notices and usable in-memory tool. Observed: Imported IDs/order/values/derived angles, deletion and confirmed capture obs-mvguhomb-1 survived reload with 1x/running/null/overview startup. Both malformed JSON and null-selection tracking persisted payload recovered to empty log with explicit recovery notice and usable seek/selection. Quota filler reached 5242401 characters (8 MiB bound); actual capture appended in memory while stored app value stayed exact and Saving unavailable...may not survive reload appeared. Playback and selection still worked. Filler removal and exact original app-key restoration both returned true. Read-denial was not simulated; this is real write-failure coverage."
     }
   ],
-  "total_score": 94.4,
+  "total_score": 96.4,
   "total_score_upper_bound": 96.4,
   "coverage": {
-    "passed": 26,
+    "passed": 27,
     "failed": 0,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
+    "Focused mixed-provenance amendment authorized by the user on 2026-10-21: only previously unverified D3 was freshly assessed and changed; all other 26 check objects, ratings and evidence remain verbatim historical observations from 2026-10-20T15:43:04.327Z, reviewer openai-codex/gpt-6-astra, effort high. The current reviewer owns the new D3 evidence and score recalculation, not a fresh full review. The user waived the full-fresh-review and early-all-unverified checkpoint rules for this focused amendment. The following original notes are retained unchanged as historical provenance; their fresh-review, old transport and D3-unknown statements describe that original attempt, not this amendment.",
     "Fresh review of only the explicitly assigned saved run. Full saved solar-system-observatory-2 contract matches rubric solar-system-5.0 and format 5.0. Early all-unverified checkpoint was published before implementation inspection; no prior review or generator self-report was used as behavioral evidence.",
     "Reviewer model openai-codex/gpt-6-astra comes from current host runtime metadata; effort high comes from applicable explicit worker configuration in assignment/shared contract. No concrete runtime effort override was exposed. These are reviewer-session sources, not generator metadata. reviewed_at is the actual host-clock ISO timestamp at final drafting.",
     "Preregistered tolerances: rate interval >=3 real seconds; allowed max(0.15 simulation s,5% expected delta)+one displayed increment. Paused comparisons permit one time increment and 1 degree; phase comparisons 2 degrees plus rounding. Repeated framing permits 2 CSS px at identical viewport/mode/selection; tracking within 10% smaller scene dimension for >=3 seconds. State/JSON order/ID/type comparisons exact except measured natural playback. Observed display precision: 0.001 s and 0.001 degree.",
@@ -261,6 +262,12 @@
     "Saved eight-step scenario was performed in order: automatic motion; scene Azure selection/tracking; pause/seek30; paused2x; measured2x resume; list Verdant switch; overview; pause/seek30. Then six additional sequences ran in order: immutable restore; capacity/delete/export; invalid imports; valid/null/fractional/playing imports; persistence/recovery/quota; keyboard at desktop then mobile. Remaining fixed-matrix probes covered endpoints, noncanonical seeks/reload phases, complete selection/camera matrices, slow drag, valid three-entry JSON, framing and diagnostics. Initial missed camera gesture while scrolled offscreen was not credited; later visible actual drag/zoom and repeated restores supplied evidence.",
     "D6 boundary fixtures touched only orbit-observatory-v1-snapshots and unique reviewer filler reviewSolXhigh-quota-20261020 on the isolated owned loopback origin. Original app raw value was saved before each fixture and restored exactly; filler was confirmed absent before use and removed afterward. Quota used bounded binary search <=8 MiB, actual QuotaExceededError, and actual UI capture failure evidence, not prototype monkeypatching. No unrelated storage was read/cleared. Storage read-access denial was not tested.",
     "D3 is the only unknown check because diagnostic subscriptions failed positive controls; no functional or mandatory failure was confirmed. Empty diagnostics are not clean-console proof. All 27 registry checks remain in scoring; quality bounds are independent of the mandatory pass verdict and partial evidence status.",
-    "All review-created desktop/mobile/scratch tabs were closed; both tracked servers stopped; exclusive lease released successfully. No retained screenshots, logs, helpers or evidence files were created in the run. Source-preservation comparison confirmed prompt.md, run.json, output/index.html, three.min.js and THREE-LICENSE.txt unchanged byte-for-byte; hashes stayed in working memory only. No direct-file test, repository build, lint, formatter or source repair was performed."
+    "All review-created desktop/mobile/scratch tabs were closed; both tracked servers stopped; exclusive lease released successfully. No retained screenshots, logs, helpers or evidence files were created in the run. Source-preservation comparison confirmed prompt.md, run.json, output/index.html, three.min.js and THREE-LICENSE.txt unchanged byte-for-byte; hashes stayed in working memory only. No direct-file test, repository build, lint, formatter or source repair was performed.",
+    "Current amendment metadata: model openai-codex/gpt-6-astra is explicit current host metadata. Effort high is explicit applicable .omp/agents/benchmark-astra-review.md configuration; no concrete runtime effort override was exposed. reviewed_at is an actual timezone-qualified host-clock timestamp. No identity was inferred from generator records. The saved solar-system-observatory-2 task still routes to solar-system-5.0 / format 5.0.",
+    "Current amendment transport supersedes the historical D3 limitation only: installed ego-browser v2.1.0 guide was read completely and ego-browser nodejs/documented Page APIs alone drove owned TaskSpace10. Fresh scratch controls observed both required Runtime events. Runtime and Network were enabled before artifact navigation and collected throughout interactions and reloads. Both required viewports were verified as actual top-level CSS sizes in each exercising invocation. This is desktop browser CSS emulation, not touch-device or file-protocol certification. No full fixed-matrix remeasurement or fresh certification of retained checks is claimed.",
+    "Current D3 coverage: the eight-step sequence selected Azure directly in the scene, tracked, paused/searched 30, used paused 2x, resumed, switched list selection to Verdant, returned to overview, then paused/sought 30 again. Additional acceptance families exercised immutable selected restore after live edits and a slow camera drag/wheel; capacity/replacement/export; 11 separate invalid import classes including valid-first/invalid-last; null and fractional tracking restores, playing/empty imports; capture/delete/import persistence plus malformed/schema-invalid storage and quota recovery; DOM keyboard operations at both sizes. Historical timing and geometry ratings were not remeasured or changed. Early brief endpoint sampling still showed 119.990 running; a later visible boundary observation reached exactly 120.000 paused, and earlier resume reached 0.549.",
+    "Current boundary fixtures touched only orbit-observatory-v1-snapshots and unique reviewer-owned FocusSolXhigh-quota-20261021 at isolated http://127.0.0.1:8955. Original app key was absent. Malformed and null-tracking stored payloads produced visible recovery notices. Bounded quota fill reached 5242794 characters; actual capture left the stored payload unchanged, appended one in-memory row and displayed Saving unavailable. The filler was removed, the pre-quota value restored, and final cleanup restored the original app-key absence; both final absences were confirmed. Storage read denial was not exercised; no prototypes, application state or source were patched.",
+    "Current applied skills: selected agents/benchmark-review and shared benchmark-review resources; host-required ego-browser and its installed guide for browser tasks, including storage safeguards; host-required caveman affected concise communication only. using-harness-flow was read and its subagent-stop honored. No Aside MCP, descendants, other model launch, builds, lint, tests, formatters or source repairs occurred.",
+    "Current cleanup and preservation: TaskSpace10 successfully finished once with keep:[] after clearing viewport overrides and restoring original storage. Output-only 127.0.0.1:8955 and scratch-only 127.0.0.1:9055 tracked servers stopped; BROWSER_RELEASED was broadcast and the parent-authorized successor received BROWSER_GRANTED. Transient scripts and screenshots were removed. Before/after inventory and byte comparisons confirmed prompt.md, run.json, and all three output files unchanged; comparison material remains in working memory only. Only reviews/review.json and reviews/review.md are published through the finalizer; no retained evidence files. The finalizer reports actual per-output save/readback states separately."
   ]
 }

@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T14:05:43.710Z",
+  "reviewed_at": "2026-10-21T13:26:53.209Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
-    "effort": null
+    "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "fail",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 3,
+      "score": 4,
       "score_upper_bound": 4
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "The fresh bundled diagnostics scenario attached console and pageerror listeners and emitted a known console.error and asynchronous exception on the owned wrapper; both event arrays remained empty. Thus the transport positive control failed and empty logs cannot establish error-free execution. Required resources rendered and all independent interactions continued, but complete startup/later diagnostic coverage is unavailable; no qualifying artifact error was observed."
+      "evidence": "Action: Freshly verify both Runtime.consoleAPICalled and Runtime.exceptionThrown positive controls on owned scratch HTTP pages, then enable Runtime and Network before artifact startup/reloads and throughout desktop/mobile acceptance-family interactions, eight unchanged bundled probes, scene selection, camera drags/zoom, endpoint and JSON/storage boundaries. Expected: No artifact-caused console/page errors or failed required resources prevent intended operation. Observed: Both deliberate diagnostic signals were captured in the independent startup control and bundled diagnostics probe. At actual top-level 1440x900 and 390x844 CSS viewports, index.html and three.min.js returned HTTP 200; no artifact console errors, uncaught exceptions or Network.loadingFailed events occurred across the exercised interactions. The repeated Three.js legacy-build deprecation warning and browser-requested favicon.ico HTTP 404 were non-blocking. Snapshot capture/restore/delete, 34 invalid imports at each size, valid paused/playing/empty imports, reload persistence, four malformed/schema-invalid storage cases, bounded quota failure, overview transitions, all planets via canvas/list, keyboard controls, and camera inputs remained operable under diagnostics. Quota failures were caught and the in-memory tool remained usable; the retained D6 failure concerns misleading saving feedback, not an uncaught runtime failure. This newly establishes D3 only; the other 26 check objects remain historical and unchanged."
     },
     {
       "id": "D4",
@@ -244,14 +244,15 @@
       "evidence": "Action: Run fresh bundled persistence, invalid-storage and real quota probes on the isolated assigned origin, plus acceptance reloads after import/delete/capture. Expected: Durable validated snapshots and visible saving-unavailable feedback after failed writes while memory remains usable. Observed: Capture/import/delete persisted exact IDs/order/values and reload started live defaults; malformed JSON, version2, unknown planet and duplicate-ID saved data recovered to empty lists with visible notice and usable controls. A bounded filler of5242601 characters caused six quota exceptions; third capture enlarged in-memory snapshots while persisted JSON stayed at the original two entries, proving the app write failed. The visible notice instead said Captured observation-mvgqo1sz-1. Subsequent deletion said Deleted probe-A and import said Imported1 snapshot without changing live state although neither was durable. In-memory restore still worked. Source cause: saveSnapshots sets a warning and storageAvailable=false (178), but capture/delete immediately overwrite the same notice (211,213); later saves return early and import announces success (241). Filler removal and exact original storage restoration both returned true. Quota tests write failure, not storage-read denial."
     }
   ],
-  "total_score": 82.3,
+  "total_score": 84.3,
   "total_score_upper_bound": 84.3,
   "coverage": {
-    "passed": 23,
+    "passed": 24,
     "failed": 3,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
+    "FOCUSED AMENDMENT (2026-10-21), not a fresh full review: the user explicitly authorized re-verification only of previously unverified checks and waived full-review and early-reset rules. All 26 previously verified check objects remain verbatim historical evidence from 2026-10-20T14:05:43.710Z, reviewer openai-codex/gpt-6-astra with effort null. The current reviewer owns only new D3 observations and score recalculation. Historical notes below retain their original provenance and describe the earlier attempt, not current execution.",
     "Saved prompt independently confirms solar-system-observatory-2, all R1-R15, eight ordered acceptance steps and six additional sequences. Direct-file execution is excluded. Generation status is not quality evidence.",
     "Reviewer model is sourced from current host project metadata (openai-codex/gpt-6-astra). No actual selected reviewer effort is exposed in current host context or this assignment; effort remains null, preventing complete status. Timestamp is from date -u on the current host.",
     "Applied benchmark-review and aside-browser; using-harness-flow says dispatched subagents skip its workflow. User explicitly requested parallel review fan-out, overriding the shared skill prohibition on another model review. This worker did not launch another model; browser access is serialized by parent grant, not isolated single-reviewer orchestration.",
@@ -265,6 +266,12 @@
     "The app-owned storage key was solar-system-observatory-2-snapshots; its original raw value was absent. Each bundled storage probe restored its exact original value; quota filler cleanup was true. Final manual cleanup restored the original absence and readback returned true. No unrelated keys were cleared. Only review-created tabs were closed and rr-terra-xhigh-parallel was stopped; parent viewport service remained running. BROWSER_RELEASED was sent immediately after cleanup. No cleanup gap was observed.",
     "Source preservation: this worker did not write prompt.md, run.json or output resources. Only this run's two approved review files are publication targets. Source hashes are not embedded in this review; parent owns independent preservation verification. Current score is uncapped quality, not a mandatory-conformance certificate.",
     "Parent integration found that the initial T5 pass omitted the saved R12 phrase \"standard full-system framing for overview restores\". A fresh exclusive original-output restore supplement directly confirmed clipping at desktop120 and corrected T5 to fail; no new requirement or blanket duplicate penalty was introduced. Other worker observations remain unchanged.",
-    "Parent supplement used current host openai-codex/gpt-6-astra with unavailable/null effort and host-required aside-browser plus injected using-harness-flow/caveman and read-only brainstorming routing. It used the same8927 origin, restored the exact original app storage value/absence with true readback, closed its sole tab and stopped rr-terra-xhigh-parent-restore before granting the next worker. No original artifact was changed."
+    "Parent supplement used current host openai-codex/gpt-6-astra with unavailable/null effort and host-required aside-browser plus injected using-harness-flow/caveman and read-only brainstorming routing. It used the same8927 origin, restored the exact original app storage value/absence with true readback, closed its sole tab and stopped rr-terra-xhigh-parent-restore before granting the next worker. No original artifact was changed.",
+    "Current amendment metadata: model openai-codex/gpt-6-astra comes from current host metadata; effort high is explicitly selected in the applicable .omp/agents/benchmark-astra-review.md configuration. Current host did not supply a conflicting effort. Current timestamp is obtained from the host clock. Generator metadata and historical reviewer identity were not used to infer current identity. Applied benchmark-review, host-required ego-browser, and contract-requested caveman for concise communication; using-harness-flow subagent-stop applies. No descendants or other model sessions were launched.",
+    "Fresh D3 scope and transport: exclusive browser lease; ego-browser nodejs with documented TaskSpace/Page/CDP only, output-only 127.0.0.1:8965 and separate scratch 127.0.0.1:9065. Runtime and Network were enabled before startup and each diagnostic interaction round. Both deliberate console-error and asynchronous-exception signals were received, superseding the historical diagnostic-transport limitation recorded above. Top-level document dimensions were applied and verified per invocation; no iframe review transport, direct-file navigation, alternate browser, source patch, prototype patch or security modification was used.",
+    "Fresh diagnostic interaction coverage: desktop saved eight-step order included automatic startup, canvas Cinder selection, tracking, pause/seek30, paused2x, resume, Azure list switch, overview and repeat30. At both sizes the snapshot-A/live-edit/repeated-restore family, capacity/delete/append/export family, 34 separate invalid-import cases, valid null/tracking/fractional and playing/empty imports, reloads after import/delete/capture, and keyboard control routes were exercised in sequence. Further diagnostics covered the 120 stop/resume boundary, 0.25/2/4 speed changes paused/playing, each planet through canvas while paused/playing, and orbit/zoom inputs in overview/tracking paused/playing at both sizes. This was D3 interaction coverage, not a fresh remeasurement of all timing, image-position, visual-quality, keyboard-focus or exact-state clauses in the full rubric; those existing findings were deliberately retained. No new timing tolerances were needed or used to re-score historical checks.",
+    "Matching terra-xhigh profile: all eight bundled prepared scripts were generated and executed unchanged in TaskSpace22: mobile diagnostics/persistence/invalid-storage/quota; mobile overview5.2 paused and17 playing; desktop overview73 and120 paused. All requested setups and overview state-preservation observations succeeded; endpoint byte checks matched the unchanged assigned artifact before/after every probe. Four transient overview screenshots were directly inspected: the scene rendered, with historical outer-planet clipping still visible at5.2/73/120; no other check object was changed. Quota used a bounded5,242,600-character filler with7 quota exceptions and established an actual failed app write; warning-feedback observations still failed while memory restore worked. These ancillary observations support D3 coverage, not fresh replacement evidence for retained T4/T5/D6.",
+    "Current cleanup and preservation: all bundled storage fixtures restored their exact starting app-key value, and the quota fixture confirmed filler removal. Final cleanup restored the initial absence of solar-system-observatory-2-snapshots with true readback; no unrelated storage was cleared. Emulation was cleared; TaskSpace22 finished once with keep:[]; both owned servers stopped before BROWSER_RELEASED and successor handoff. Temporary probe/helper scripts and screenshots were removed outside the run. prompt.md, run.json, both output resources and output inventory were compared byte-for-byte against pre-inspection working memory and were unchanged. Only reviews/review.json and reviews/review.md are publication targets.",
+    "Aggregate status complete means all27 recorded checks now have observations and current reviewer metadata is concrete; it does not mean a fresh full review. Twenty-six results remain historical with their original null-effort provenance. Mandatory T4, T5 and D6 failures are retained verbatim, and D3 changes only from unverified to pass. Quality bounds collapse from82.30..84.30 to84.30..84.30 without changing the fail mandatory verdict."
   ]
 }

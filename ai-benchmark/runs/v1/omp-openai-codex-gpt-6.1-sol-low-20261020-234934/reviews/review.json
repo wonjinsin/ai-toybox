@@ -1,12 +1,12 @@
 {
   "format_version": "5.0",
   "rubric_version": "solar-system-5.0",
-  "reviewed_at": "2026-10-20T15:12:42.674Z",
+  "reviewed_at": "2026-10-21T12:45:03.580Z",
   "reviewer": {
     "model": "openai-codex/gpt-6-astra",
     "effort": "high"
   },
-  "status": "partial",
+  "status": "complete",
   "requirements_verdict": "fail",
   "verification": {
     "browser_method": "http",
@@ -49,7 +49,7 @@
     {
       "id": "delivery",
       "weight": 10,
-      "score": 4,
+      "score": 5,
       "score_upper_bound": 5
     }
   ],
@@ -217,10 +217,10 @@
     },
     {
       "id": "D3",
-      "status": "unverified",
-      "rating": null,
+      "status": "pass",
+      "rating": 5,
       "method": "http",
-      "evidence": "Console/page-error cleanliness remains unverified. The direct REPL Page.on console and pageerror subscriptions on an owned scratch fixture captured neither deliberate console.error(reviewSolLow-console-positive) nor an asynchronous thrown reviewSolLow-error-positive. Empty subscriptions therefore cannot establish absence of application errors, particularly startup errors. Actual scene/control operations worked and the local three.min.js resource entry was observed, but complete diagnostic transport was unavailable; no artifact error is fabricated from this limitation."
+      "evidence": "Action: In an owned Ego Lite TaskSpace, enabled Runtime and Network before top-level HTTP navigation, positively controlled both console-error and asynchronous exception events on a separate owned scratch page, and collected diagnostic events through startup, desktop and mobile artifact input, snapshot/JSON operations, reloads and storage boundaries. Expected: no artifact-caused console/page errors or failed required resources prevent intended operation. Observed: Runtime.consoleAPICalled and Runtime.exceptionThrown both captured the deliberate scratch signals; artifact event streams contained the bundled Three.js deprecation warning but no console error or uncaught exception. index.html and three.min.js returned HTTP 200 on initial navigation and all six subsequent reloads. An optional favicon.ico 404 and a canceled pre-navigation document request did not prevent operation. Real controls exercised pause/seek 30/requested 2x/resume/list selection/tracking/overview, capture/restore/capacity/delete/export, 33 invalid imports, valid fractional/null/tracking imports paused and playing, persistence/recovery/quota handling, keyboard input at 1440x900 and 390x844, canvas click/drag/wheel and the 120-second boundary. Snapshot A showed 30/2x/aurelia/tracking with 180/170/55-degree values; invalid imports produced visible rejection; storage corruption produced recovery and quota failure produced Saving unavailable while in-memory controls remained usable. No qualifying D3 failure occurred. The screenshot transport timed out, so this amendment does not claim new rendered-framing judgments or a complete fresh visual/timing matrix; historical findings on other checks are retained unchanged."
     },
     {
       "id": "D4",
@@ -244,14 +244,23 @@
       "evidence": "Action: Reloaded after valid import, deletion and capture; replaced only orbital-observatory-v1 with malformed JSON and a schema-invalid null-tracking payload, then exercised bounded quota failure. Expected: same IDs/order/values/derived angles survive successful writes; live defaults reset; bad data recovers visibly; failed writes warn while memory remains usable. Observed: imported and captured entries survived, deletion remained deleted, and every reload restarted 1x/running/null/overview rather than applying a snapshot. Both corrupt fixtures showed empty rows and Recovery: invalid saved observations discarded; pause and selection remained usable. Unique filler key reviewSolLow-quota-20261020 was absent initially; bounded search up to 8 MiB found 5,242,612 characters accepted with six QuotaExceededError results. UI capture then produced Saving unavailable. Changes remain in memory only; the app key stayed absent, proving failed persistence, while the new row, pause/selection and restore worked. Filler removed and exact originally absent app key restored at end. This tests genuine write failure, not storage read denial."
     }
   ],
-  "total_score": 91.28,
+  "total_score": 93.28,
   "total_score_upper_bound": 93.28,
   "coverage": {
-    "passed": 25,
+    "passed": 26,
     "failed": 1,
-    "unverified": 1
+    "unverified": 0
   },
   "notes": [
+    "Mixed-provenance focused amendment explicitly authorized by the user: only originally unverified D3 was freshly evaluated and changed. Every other pass/fail check, rating, method and evidence is retained verbatim from the review dated 2026-10-20T15:12:42.674Z by openai-codex/gpt-6-astra, effort high. The current reviewer owns only the new D3 observations and recalculation. This is not a fresh full review. The old full-fresh-review and early all-unverified checkpoint rules were waived for this amendment.",
+    "Current metadata: model openai-codex/gpt-6-astra from current host metadata, effort high from the explicitly applicable .omp/agents/benchmark-astra-review.md configuration; reviewed_at is the actual host Date clock. Generator identity and the old review were not used to infer current metadata. Current format 5 and saved solar-system-observatory-2 contract retained.",
+    "Current applied skills: benchmark-review and its shared resources, plus host-required ego-browser and complete installed ego-browser skill guide. using-harness-flow explicitly stops for dispatched subagents. No Aside MCP, browser memory, descendant/model launch, build, test, linter or formatter was used. The bundled Terra-xhigh control profile does not match this artifact, so actual observed Orbital controls were used.",
+    "Current D3 transport supersedes the historical empty-subscription limitation only for this amendment. Runtime.enable plus page.events captured both deliberate scratch console error and asynchronous thrown exception. The first immediate event read preceded the asynchronous signal; a subsequent 100-ms bounded positive-control observation captured both signals. Runtime and Network were enabled before artifact navigation and each interaction round; startup and interaction events were read throughout. No empty failed-control stream was treated as clean. Ordinary repeated Runtime.enable can replay the same earlier Three.js warning; duplicate warnings are not new failures.",
+    "Current diagnostic exercise covered the saved acceptance families, not a newly rescored 27-check matrix: desktop motion/control sequence and snapshot A restore, three-entry capacity/deletion, 33 separately rejected JSON cases, valid null/tracking/fractional roundtrip and playing import, import/delete/capture reloads, malformed and schema-invalid saved data, bounded quota-write failure, and keyboard DOM operations at both actual top-level CSS viewports. Additional mobile input exercised 119.9 at 4x through the clamped 120.00 endpoint, earlier seeking/resume, 0.25x playback, tracked canvas click, slow 25-move cumulative drag, and overview/tracking wheel/orbit input. The first selection route in the desktop sequence was the list; canvas input was exercised later. No fresh rate measurements or visual position-tolerance verdicts were made, and retained S4 failure was not reconsidered even though the current typed 2x commit succeeded.",
+    "Current viewport evidence: documented Emulation.setDeviceMetricsOverride applied and actual dimensions checked on each size-specific invocation; 1440x900 with scrollWidth 1425 and 390x844 with scrollWidth 375. These are top-level CSS viewports, not historical iframe evidence or touch-device proof. Initial page.screenshot timed out with CdpRequestTimeoutError: CDP request timed out: Page.captureScreenshot. Reported to tool QA; no alternate browser, permission change or screenshot workaround was used. Snapshots, DOM observations, input and diagnostic APIs continued to operate. New rendered geometry/framing and visible-focus judgments are not claimed.",
+    "Current storage fixture: isolated output origin 127.0.0.1:8952 had orbital-observatory-v1 absent initially. Malformed JSON and a null-selection tracking payload each yielded visible recovery. Unique FocusSolLow-quota-20261021 filler accepted 5,242,804 characters within the fixed 8-MiB bound with six expected QuotaExceededError results; capture showed Saving unavailable and left the persisted empty list unchanged while the in-memory row/selection/restore remained usable. This is genuine write-failure coverage, not read-denial coverage. At cleanup both the app key and filler key were confirmed absent, restoring exact original state; unrelated storage was untouched.",
+    "Current cleanup and preservation: owned TaskSpace13 p1 and p2 were closed and emulation cleared; finish was intentionally not called after the screenshot command error, per error-task cleanup rules. Output8952 and scratch9052 tracked services stopped before browser lease release and direct authorized handoff. No screenshots/logs were saved as review evidence. Before/after prompt.md, run.json, output/index.html and output/three.min.js bytes and the two-file output inventory matched in working memory. Only the named review pair is published with finalize-review.mjs; temporary reviewer scripts and outside-run draft are removed after publication. Finalizer output states are reported in the handoff.",
+    "Historical provenance follows: the remaining original notes are retained verbatim as observations and limitations of the 2026-10-20 review, not fresh claims. In particular its Aside transport, iframe viewport, diagnostic-unverified and cleanup statements refer only to that historical attempt.",
     "Model from current host workstation metadata openai-codex/gpt-6-astra; effort high from explicitly applicable reviewer-agent configuration in assignment and shared execution contract. Timestamp from host Date clock. Generator metadata is not reviewer identity.",
     "Preregistered before observations: speed intervals >=3 seconds, tolerance max(0.15 simulation seconds,5% expected delta)+0.01 displayed increment; pause 0.01 seconds and 1 degree; predicted angles 2 degrees plus 0.01-degree rounding; identical-framing center repeat tolerance 2 CSS pixels; tracking offset <=10% smaller scene dimension sampled for >=3 seconds and immediately after seeking; exact JSON/state identity except natural measured playback advance.",
     "Host-mandated aside-browser skill and actual aside guide/repl guide applied for connected direct MCP REPL. No matching site-specific skill. Loopback HTTP and fixed-size secure iframe method documented by benchmark verification. Bundled terra-xhigh profile does not match this artifact controls or planet IDs; use observed mapping rather than that probe.",
