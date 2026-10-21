@@ -50,7 +50,7 @@ See the [rubric](skills/benchmark-review/references/rubric.md) and [scoring desi
 
 - Open **`ai-benchmark/` as the project** in your host and choose the model and effort before starting. A fresh conversation per attempt is recommended.
 - Use **Node.js 22 or newer** for the bundled record/review helpers, gallery scripts, and tests. These tools need no `npm install` step.
-- For browser verification, install and connect **Aside MCP before the attempt**. The skills use its direct `repl` tool, not `exec` or a natural-language browser task that could launch another model.
+- For generation browser verification, install and connect **Aside MCP before the attempt**. `benchmark-record` uses its direct `repl` tool. For review, install **ego-browser (Ego Lite)** beforehand; `benchmark-review` uses `ego-browser nodejs` and the installed `ego-browser skill` guide, not Aside or a second model.
 - A `completed` record needs a verified current-session identity, model, effort, elapsed work time, and full-interval input/output token totals. If accounting is unavailable, the skill still builds what it can and saves honest nulls and a `failed` record.
 
 For Codex, register an existing [Aside CLI installation](https://docs.aside.com/help/developers), replacing the executable path:
@@ -122,7 +122,7 @@ The reviewer reads the saved prompt to select the compatible rubric. It does not
 
 **Re-review replaces both reports.** There are no timestamped review backups or retained screenshot/evidence archives; unrelated existing files are preserved. Each replacement is atomic, but the pair is not a filesystem transaction. Publication is complete only after both files pass read-back.
 
-Reviews use connected Aside's direct REPL and permitted loopback HTTP serving only the unchanged output directory. **Direct-file execution is outside review scope**, even though generation requires it. Functional defects are findings, not reasons to abandon unrelated checks. Unavailable capabilities leave affected checks unverified; missing required reviewer metadata keeps the review partial. See [review verification](skills/benchmark-review/references/verification.md) and the [review format](skills/benchmark-review/references/review-format.md).
+Reviews use **ego-browser (Ego Lite)** and permitted loopback HTTP serving only the unchanged output directory. Read `ego-browser skill`, use one TaskSpace per review, and follow the documented Page APIs. **Direct-file execution remains outside review scope**, even though generation requires it. Functional defects are findings, not reasons to abandon unrelated checks. Unavailable capabilities leave affected checks unverified; missing required reviewer metadata keeps the review partial. See [review verification](skills/benchmark-review/references/verification.md) and the [review format](skills/benchmark-review/references/review-format.md).
 
 ## Saved files and measurements
 

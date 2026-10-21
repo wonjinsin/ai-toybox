@@ -1,8 +1,8 @@
-(async function probeObservatory({ frame, tab, snapshot, profile, scenario, time = 5.2, playing = false, isolatedOrigin = false }) {
+(async function probeObservatory({ frame, tab, profile, scenario, time = 5.2, playing = false, isolatedOrigin = false }) {
   const scenarios = ['overview', 'persistence', 'invalid-storage', 'quota', 'diagnostics'];
   if (!scenarios.includes(scenario)) throw new Error(`Unsupported probe scenario: ${scenario}`);
   if (profile.id !== 'terra-xhigh-observatory-2') throw new Error('Unsupported control profile');
-  const url = new URL(frame.url());
+  const url = new URL(await frame.url());
   if (url.protocol !== 'http:' || url.hostname !== '127.0.0.1' || !isolatedOrigin) {
     throw new Error('Use an isolated, probe-owned loopback origin');
   }
@@ -18,8 +18,12 @@
     report.observations.push({ scenario_id: id, check_id: check,
       status: passed === null ? 'unverified' : passed ? 'pass' : 'fail', action, expected, observed });
   };
-  const refresh = async () => { console.log((await snapshot(tab, { interactive: true })).diff); };
-  const click = async selector => { await frame.locator(selector).click(); await refresh(); };
+  const refresh = async () => { console.log(await frame.snapshot()); };
+  const click = async selector => {
+    await frame.evaluate(selector => document.querySelector(selector).scrollIntoView({ block: 'center' }), selector);
+    await frame.click(selector);
+    await refresh();
+  };
   const live = () => frame.evaluate(p => ({
     time: Number(document.querySelector(p.time).value), speed: Number(document.querySelector(p.speed).value),
     playback: document.querySelector(p.pause).textContent,
@@ -33,26 +37,20 @@
   const persisted = () => frame.evaluate(key => localStorage.getItem(key), profile.storage_key);
   const exportList = async () => {
     await click(profile.export);
-    return JSON.parse(await frame.locator(profile.json).inputValue());
+    return JSON.parse(await frame.evaluate(selector => document.querySelector(selector).value, profile.json));
   };
   const importList = async payload => {
-    await frame.locator(profile.json).fill(JSON.stringify(payload));
+    await frame.fill(profile.json, JSON.stringify(payload));
     await click(profile.import);
   };
   const reload = async () => {
-    await tab.evaluate(artifactUrl => new Promise((resolve, reject) => {
-      const iframe = Array.from(document.querySelectorAll('iframe')).find(node => node.src === artifactUrl);
-      if (!iframe) throw new Error('The owned viewport wrapper has no matching artifact frame');
-      const timeout = setTimeout(() => reject(new Error('Artifact reload did not finish')), 15000);
-      iframe.addEventListener('load', () => { clearTimeout(timeout); resolve(); }, { once: true });
-      iframe.src = artifactUrl;
-    }), url.href);
-    await frame.locator(profile.capture).waitFor({ state: 'visible', timeout: 15000 });
+    await frame.reload();
+    await frame.waitForSelector(profile.capture, { state: 'visible', timeout: 15000 });
     await refresh();
   };
   const preparePaused = async () => {
-    await frame.locator(profile.time).fill('17.25');
-    await frame.locator(profile.speed).fill('1.5');
+    await frame.fill(profile.time, '17.25');
+    await frame.fill(profile.speed, '1.5');
     await click(profile.planet);
     await click(profile.tracking);
   };
@@ -61,14 +59,13 @@
   await refresh();
 
   if (scenario === 'diagnostics') {
-    const wrapper = new URL(tab.url());
+    const wrapper = new URL(await tab.url());
     if (wrapper.hostname !== '127.0.0.1' || wrapper.origin === url.origin) {
-      throw new Error('Diagnostic control requires a separate owned viewport wrapper');
+      throw new Error('Diagnostic control requires a separate owned scratch origin');
     }
-    const consoleEvents = [], pageErrors = [];
+    await tab.cdp('Runtime.enable');
+    await tab.events();
     const marker = `observatory-diagnostic-${Date.now()}`;
-    tab.on('console', message => { if (message.text().includes(marker)) consoleEvents.push(message.text()); });
-    tab.on('pageerror', error => { if (String(error).includes(marker)) pageErrors.push(String(error)); });
     await tab.evaluate(marker => new Promise(resolve => {
       const script = document.createElement('script');
       script.textContent = `console.error(${JSON.stringify(marker)});setTimeout(()=>{throw new Error(${JSON.stringify(marker)})},0);`;
@@ -76,8 +73,11 @@
       script.remove();
       setTimeout(resolve, 250);
     }), marker);
+    const events = await tab.events();
+    const consoleEvents = events.filter(event => event.method === 'Runtime.consoleAPICalled' && JSON.stringify(event.params).includes(marker));
+    const pageErrors = events.filter(event => event.method === 'Runtime.exceptionThrown' && JSON.stringify(event.params).includes(marker));
     observe('diagnostic-positive-control', 'D3', consoleEvents.length > 0 && pageErrors.length > 0 ? true : null,
-      'Emit console.error and an asynchronous exception on the owned wrapper after attaching listeners.',
+      'Enable Runtime events, then emit console.error and an asynchronous exception on the owned scratch page.',
       'Both diagnostic channels capture their deliberate signal before empty logs can be trusted.',
       JSON.stringify({ consoleEvents, pageErrors, limitation: 'This tests transport, not artifact error-free execution.' }));
     report.finished_at = new Date().toISOString();
@@ -85,8 +85,8 @@
   }
 
   if (scenario === 'overview') {
-    await frame.locator(profile.time).fill(String(time));
-    await frame.locator(profile.speed).fill('1.5');
+    await frame.fill(profile.time, String(time));
+    await frame.fill(profile.speed, '1.5');
     await click(profile.planet);
     await click(profile.tracking);
     const setup = await live();
@@ -107,7 +107,7 @@
     observe(`overview-state-${time}-${playing ? 'playing' : 'paused'}`, 'T4', passed,
       'Seek, select Cinder, track, then return to overview through the controls.',
       'The requested time, speed, selection and tracking mode are reached; overview preserves those values and playback.', JSON.stringify({ setup, setupReached, before, after, elapsed }));
-    await frame.locator(profile.canvas).scrollIntoViewIfNeeded();
+    await frame.evaluate(selector => document.querySelector(selector).scrollIntoView({ block: 'start' }), profile.canvas);
     observe(`overview-framing-${time}-${playing ? 'playing' : 'paused'}`, 'T4', null,
       'Prepare the actual overview scene for screenshot inspection.',
       'The sun, all three planets and their full orbits fit the rendered canvas.',
@@ -221,8 +221,8 @@
         'Import a larger valid payload after saving became unavailable.',
         'The JSON panel reports memory-only operation unless the exact import really persisted.',
         JSON.stringify({ imported: same(imported, larger), durable: importDurable, notice: importNotice }));
-      await frame.locator(profile.time).fill('73');
-      await frame.locator(profile.speed).fill('0.25');
+      await frame.fill(profile.time, '73');
+      await frame.fill(profile.speed, '0.25');
       await click(profile.overview);
       await click(profile.pause);
       const beforeRestore = await live();

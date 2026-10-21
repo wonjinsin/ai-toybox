@@ -2,10 +2,13 @@
 
 ## Permitted method
 
-Use only connected Aside MCP's direct `repl` tool. Read its current documentation
-before navigation and choose a supported, permitted method. Do not use Aside
-`exec`, natural-language CLI tasks, another browser runtime, raw CDP or another
-model session. Do not install/register tools during a review.
+Use only ego-browser (Ego Lite) through `ego-browser nodejs`. Run
+`ego-browser skill` and read the complete installed guide before navigation.
+Use its documented TaskSpace and Page APIs; do not assume Playwright APIs.
+Do not use Aside MCP, natural-language browser tasks, another browser runtime,
+or another model session. Do not install/register/upgrade tools during a review.
+Documented `page.cdp()` is permitted for viewport emulation and diagnostic
+events, never to change security settings or bypass an access denial.
 
 Use loopback HTTP for review. Confirm that it is documented and host-permitted
 before navigation. Do not navigate to `file://` or inspect file-protocol
@@ -22,10 +25,17 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory "<run>/output"
 
 Replace `<run>/output` with the actual output directory (quote paths containing
 spaces); use `--directory output` when already in the run directory. Wait for
-startup, then use direct REPL `openTab("http://127.0.0.1:8765/index.html")`.
-If the port is occupied, choose another available port and use it in both places;
-do not stop an unrelated process. Retain the process handle/PID for cleanup.
-Do not use Aside `exec` to start the server.
+startup. Create one uniquely named TaskSpace for the review and navigate its
+initial `p1`, rather than creating another tab:
+
+```sh
+ego-browser nodejs -e 'const task = await taskSpace("review-unique-run"); console.log({spaceId: task.spaceId}); const page = task.page("p1"); await page.goto("http://127.0.0.1:8765/index.html"); console.log(await page.snapshot());'
+```
+
+Replace the example space name with a unique review name. Resume its printed
+numeric ID in later invocations; JavaScript variables do not persist between
+commands. If the port is occupied, choose another available port and use it in
+both places; do not stop an unrelated process. Retain the server handle/PID.
 
 Record actual HTTP rendering, interactions and resource-loading results.
 External CDN resources are permitted; distinguish observed loading failures
@@ -34,7 +44,7 @@ from environment/network restrictions.
 An explicit host/tool access or security-policy denial stops the affected
 operation under the [continuation and access rules](../SKILL.md#continue-independent-permitted-checks).
 Do not retry denied access, change permissions or switch protocols/tools to bypass
-a denial. Continue only independent permitted work. Missing Aside or a required
+a denial. Continue only independent permitted work. Missing ego-browser or a required
 browser capability leaves affected checks unverified; it does not prohibit
 permitted static inspection for D2 or erase observed findings. A confirmed
 functional failure is fail; continue other checks. Finalize partial when usable
@@ -43,63 +53,53 @@ an invented OS permission diagnosis. A past review's denial is historical contex
 not a fresh attempt on this target or proof of a current restriction. Never infer
 rendering or interaction success from HTML, old screenshots, or mocks.
 
-Create a new review tab; do not inspect unrelated tabs or browsing memory. Close
-only that tab and stop the temporary server on every exit. Inspect screenshots
-transiently; do not retain images, videos, logs or an evidence directory.
+Keep all review pages in that one TaskSpace; do not inspect unrelated tabs,
+profiles, or browsing memory. On successful completion call
+`await task.finish({ keep: [] })` exactly once. On an error close only owned
+pages where still permitted; do not call `finish()` on a stopped/error task.
+User takeover or a browser permission prompt requires handoff, not retries or
+cleanup that overrides user control. Stop owned servers on exit and disclose
+any cleanup gap. Inspect screenshots transiently and delete their temporary
+files afterward; retain no images, videos, logs, or evidence directory.
 
 ## Verify real document viewports
 
-A missing `page.setViewportSize` alone is not a verification blocker. Check the
-actual document dimensions; Aside's outer viewport may be fixed or change with
-browser presentation. When no viewport setter is available, use direct REPL's
-documented frame support to load the unchanged artifact in a fresh, fixed-size
-iframe. This tests a real CSS viewport, not a screenshot crop or scaled layout.
-
-Do not use an `about:blank` parent. Its opaque, potentially insecure context can
-disable storage or `crypto.randomUUID` in an otherwise secure loopback child.
-That fixture failure is not an artifact failure. Start the fixture-only server
-alongside the output-only server. It reads no repository or output files:
-
-```sh
-node "<skill-root>/scripts/serve-viewport.mjs" 8766
-```
-
-Use an available port and retain its process handle for cleanup. Open a fresh
-fixture for each size with direct REPL:
+Use the installed guide's documented `page.cdp()` escape hatch for CSS viewport
+emulation. In the existing TaskSpace, apply the metrics before navigation:
 
 ```js
-const fixtureUrl = new URL("http://127.0.0.1:8766/");
-fixtureUrl.searchParams.set("url", "http://127.0.0.1:8765/index.html");
-fixtureUrl.searchParams.set("size", "mobile");
-const viewTab = await openTab(fixtureUrl.href);
-console.log((await snapshot(viewTab, { interactive: true })).tree);
+const task = await taskSpace(reviewSpaceId);
+const page = task.page("p1");
+await page.cdp("Emulation.setDeviceMetricsOverride", {
+  width: 390, height: 844, deviceScaleFactor: 1, mobile: false,
+});
+await page.goto("http://127.0.0.1:8765/index.html");
+console.log(await page.evaluate(() => ({
+  width: innerWidth, height: innerHeight, secure: isSecureContext,
+  clientWidth: document.documentElement.clientWidth,
+  scrollWidth: document.documentElement.scrollWidth,
+  mobileQuery: matchMedia("(max-width: 600px)").matches,
+})));
+console.log(await page.snapshot());
 ```
 
-Use `size=desktop` for 1440x900 and `size=mobile` for 390x844. Verify
-`isSecureContext` inside the child before judging secure-context-dependent
-operations. Both servers must use `127.0.0.1`, not mixed hostnames.
+Supply the actual numeric space ID and server URL. Require actual 390x844 and
+1440x900 document dimensions, repeating with desktop metrics. Apply and verify
+metrics in each `ego-browser nodejs` invocation that exercises that size; the
+override is not guaranteed to survive the command's CDP session.
+Exercise real controls through `page.click`, `page.fill`, `page.press`, and the
+documented mouse/keyboard APIs, then inspect a transient screenshot at each size.
+If automatic scrolling leaves a control offscreen under emulation, inspect its
+rectangle, scroll it into view with `page.evaluate()`, then use normal Page
+input. Do not replace input with DOM `.click()` or state mutation.
+CSS emulation is not touch-device proof. Never patch artifact DOM, styles,
+scripts, runtime state, or reported viewport properties.
 
-Wait for the snapshot to show the loaded artifact, taking another snapshot if
-navigation is still pending. Resolve its frame with `await viewTab.frames()`,
-then measure inside that frame with `frame.evaluate`: `innerWidth`,
-`innerHeight`, the applicable media query, and the document's `clientWidth` and
-`scrollWidth`. Require the requested CSS dimensions before judging the layout.
-Exercise actual frame controls through `frame.locator(...)` or snapshot frame
-refs, and inspect a transient screenshot. Repeat at 1440x900 and 390x844.
-
-The fixture server creates only its own wrapper. Never modify the artifact DOM,
-CSS, script, runtime state, or reported viewport properties. The persisted-data
-and storage-quota fixtures below are the only storage-boundary exceptions.
-Recheck dimensions before comparing repeated positions; a changed viewport
-invalidates a pixel comparison, not the artifact.
-Do not use raw CDP, another browser, permission changes or an iframe to bypass
-an access denial. If no permitted frame path can perform a required viewport
-check, leave that check unverified with its reason and continue independent
-allowed checks. Preserve already observed passes and failures in partial JSON.
-
-Record the actual document sizes and disclose embedded-frame verification in
-notes and Markdown. It is not top-level viewport or touch-device proof.
-Close the fixture tabs and stop both review-created servers on every exit.
+Recheck dimensions before comparing repeated positions. Clear the override
+with `await page.cdp("Emulation.clearDeviceMetricsOverride")` after the checks.
+A missing capability leaves affected checks unverified; a denial stops the
+affected operation without fallback to another tool, protocol, or frame.
+Preserve independent findings and report actual document sizes in the review.
 
 ## Focused regression automation
 
@@ -109,20 +109,39 @@ control selectors are explicit, not a universal adapter for arbitrary generated
 pages. A different interface needs its own observed control mapping before use.
 The probe does not replace the saved acceptance scenario or the complete rubric.
 
-`scripts/prepare-probe.mjs` prints a JSON input for connected Aside's direct
-`repl` tool. It does not launch a browser. The host must be allowed to supply the
-owned script and profile as tool input. Do not use it to bypass an access denial.
-Start the output-only and viewport servers described above, then run:
+`scripts/prepare-probe.mjs` prints JSON with a `code` field for
+`ego-browser nodejs`; it does not launch a browser. Supply the existing review
+TaskSpace ID with `--space`; the generated code reuses `p1`, never creates a
+second TaskSpace, and sets and verifies the requested top-level CSS viewport.
+The host must permit supplying the owned script/profile as browser input.
+Do not use it to bypass an access denial. Start the output-only server above
+and a separate reviewer-owned diagnostic scratch origin:
+
+```sh
+node "<skill-root>/scripts/serve-viewport.mjs" 8766
+```
+
+This fixture server reads no repository files. Its root without query parameters
+is used only as the diagnostic scratch page, not as an artifact iframe.
+Then prepare one scenario:
 
 ```sh
 node skills/benchmark-review/scripts/prepare-probe.mjs \
   --artifact "<run>/output" \
   --url http://127.0.0.1:8765/index.html \
   --fixture http://127.0.0.1:8766/ \
-  --size mobile --scenario quota
+  --space 7 --size mobile --scenario quota
 ```
 
-Pass the emitted object to the direct REPL unchanged. Supported scenarios are
+Replace `7` with the review's printed TaskSpace ID. Save the emitted `code`
+unchanged to a temporary `.mjs` outside the run, then execute it:
+
+```sh
+ego-browser nodejs -e 'await import("file:///absolute/path/to/probe-round-01.mjs")'
+```
+
+This imports agent-owned Node.js code, not browser `file://` navigation.
+Use a new script per round and delete it afterward. Supported scenarios are
 `overview`, `persistence`, `invalid-storage`, `quota` and `diagnostics`.
 `overview` also accepts `--time 5.2` and `--playing false`. Use `desktop` for
 1440x900 or `mobile` for 390x844. The preparer rejects a served artifact that
@@ -132,10 +151,14 @@ server, not captured navigation-response bodies.
 
 The `OBSERVATORY_PROBE_JSON=` line contains the report. Read its observations,
 not the fact that the script returned. Setup must reach the requested state.
-Restoration is tested only after changing live state. Reloads wait for the owned
-iframe's load event. Storage fixtures restore the exact original raw value and
-remove their own quota key without a later reload changing that restoration.
-The preparer closes its tab, including on errors. Stop the owned servers afterward.
+Restoration is tested only after changing live state. Reloads use `page.reload()`
+and wait for the actual capture control. Storage fixtures restore the exact
+original raw value and remove their own quota key without a later reload changing
+that restoration. The preparer closes its diagnostic scratch page and clears
+viewport emulation in `finally`; it leaves `p1` in the review TaskSpace for
+continued checks. An `OBSERVATORY_SCREENSHOT=` line names a temporary image to
+inspect and delete. Finish the TaskSpace once after the review and stop owned
+servers; the preparer does not finish the shared space.
 
 Framing stays `unverified` in automated output. Inspect the actual rendered
 screenshot separately. Diagnostics test both deliberate console and exception
@@ -166,8 +189,13 @@ judgments by their exact report-file SHA-256. Missing observations cannot shrink
 the comparison. A remaining failure, lost coverage, unverified required framing,
 or absence of any repaired scenario causes a nonzero exit.
 
+Saved experiment reports retain their original runner identity. After a transport
+or probe change, they are historical evidence, not verification of the current
+runner. Do not rewrite their hashes to make the comparison pass; a fresh paired
+comparison requires explicit scope and new observations.
+
 For fresh evidence, run all eight cases on both outputs. Use separate owned
-output-only origins and the same viewport wrapper:
+output-only origins and the same top-level CSS viewport metrics:
 
 - `mobile` with `quota`, `persistence`, `invalid-storage` and `diagnostics`.
 - `mobile` with `overview --time 5.2 --playing false`.
@@ -212,7 +240,7 @@ Measure rates with only the review's target scene running. Close review-created
 duplicate scene and viewport tabs before timing, and serialize timing across
 reviews that share a browser. Holding other tool calls is insufficient while
 their WebGL scenes still render. Keep each before/read, timed wait, and after/read
-in one uninterrupted REPL call. Record actual wall time and visibility. If a
+in one uninterrupted `ego-browser nodejs` invocation. Record actual wall time and visibility. If a
 sample was contaminated, retain it with its context and repeat under controlled
 conditions without widening the tolerance. Never close unrelated user tabs.
 
@@ -224,11 +252,14 @@ cause. Source references are supplementary; no retained screenshot is required.
 
 ### Validate diagnostic transport
 
-Before trusting console or page-error subscriptions, exercise them on a
-reviewer-owned scratch page with a deliberate console error and thrown exception.
-An empty result from a subscription that failed this positive control is not
-evidence of a clean console. Do not use undocumented raw CDP or another browser
-to compensate.
+Before trusting console or page-error events, exercise them on a reviewer-owned
+scratch page with a deliberate console error and thrown exception. Enable
+`Runtime` through documented `page.cdp("Runtime.enable")`, then read and clear
+the buffered events with `page.events()`. Require both `Runtime.consoleAPICalled`
+and `Runtime.exceptionThrown` signals before trusting empty arrays. For the
+artifact, enable diagnostics before navigation and collect throughout the
+sequences, not only after loading. A failed positive control leaves diagnostic
+coverage unverified; do not switch runtimes or use undocumented transport.
 
 Non-interfering `error` and `unhandledrejection` listeners may observe later
 events. Do not prevent default handling, wrap application functions, or change
@@ -348,7 +379,7 @@ Identify only this app's snapshot storage key from source and its actual UI
 writes. Save its exact original value or absence in working memory. Do not inspect,
 clear, or delete unrelated storage. Never call `localStorage.clear()`.
 
-For invalid saved data, use documented direct REPL page evaluation or supported
+For invalid saved data, use documented `page.evaluate()` or supported
 storage inspection to replace only that app-owned key with malformed JSON, then
 with a schema-invalid versioned payload. Reload after each and observe empty
 snapshots, a visible recovery notice, and usable live controls. Restore the exact

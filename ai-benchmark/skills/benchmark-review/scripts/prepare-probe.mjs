@@ -9,14 +9,16 @@ try {
   const args = process.argv.slice(2);
   for (let index = 0; index < args.length; index += 2) {
     const key = args[index], value = args[index + 1];
-    if (!['--artifact', '--url', '--fixture', '--size', '--scenario', '--time', '--playing'].includes(key) || !value || Object.hasOwn(options, key)) {
-      throw new Error('Usage: node prepare-probe.mjs --artifact OUTPUT --url LOOPBACK_URL --fixture LOOPBACK_URL --size mobile|desktop --scenario overview|persistence|invalid-storage|quota|diagnostics [--time SECONDS] [--playing true|false]');
+    if (!['--artifact', '--url', '--fixture', '--space', '--size', '--scenario', '--time', '--playing'].includes(key) || !value || Object.hasOwn(options, key)) {
+      throw new Error('Usage: node prepare-probe.mjs --artifact OUTPUT --url LOOPBACK_URL --fixture LOOPBACK_URL --space TASK_SPACE_ID --size mobile|desktop --scenario overview|persistence|invalid-storage|quota|diagnostics [--time SECONDS] [--playing true|false]');
     }
     options[key] = value;
   }
-  for (const key of ['--artifact', '--url', '--fixture', '--size', '--scenario']) {
+  for (const key of ['--artifact', '--url', '--fixture', '--space', '--size', '--scenario']) {
     if (!options[key]) throw new Error(`Missing ${key}`);
   }
+  const spaceId = Number(options['--space']);
+  if (!Number.isSafeInteger(spaceId) || spaceId < 1) throw new Error('Invalid task space ID');
   const artifactUrl = new URL(options['--url']);
   const fixtureUrl = new URL(options['--fixture']);
   for (const url of [artifactUrl, fixtureUrl]) {
@@ -54,18 +56,26 @@ try {
   const source = await readFile(new URL('./probe-observatory.js', import.meta.url), 'utf8');
   const profileSource = await readFile(new URL('../assets/probe-terra-xhigh.json', import.meta.url), 'utf8');
   const profile = JSON.parse(profileSource);
-  fixtureUrl.searchParams.set('url', artifactUrl.href);
-  fixtureUrl.searchParams.set('size', options['--size']);
+  const viewport = options['--size'] === 'mobile' ? { width: 390, height: 844 } : { width: 1440, height: 900 };
   const provenance = { artifact_directory: root, artifact_sha256: hash(JSON.stringify(files)), files,
     runner_sha256: hash(source), profile_sha256: hash(profileSource) };
   const call = { scenario: options['--scenario'], time, playing: options['--playing'] === 'true', isolatedOrigin: true };
   const code = `var preparedProbe = ${source};
 var preparedProfile = ${JSON.stringify(profile)};
-var preparedTab = await openTab(${JSON.stringify(fixtureUrl.href)});
+var preparedTask = await taskSpace(${spaceId});
+var preparedFrame = preparedTask.page('p1');
+var preparedTab;
 try {
-  console.log((await snapshot(preparedTab, { interactive: true })).tree);
-  var preparedFrame = (await preparedTab.frames()).find(frame => frame.url() === ${JSON.stringify(artifactUrl.href)});
-  if (!preparedFrame) throw new Error('The expected artifact frame did not load');
+  await preparedFrame.cdp('Emulation.setDeviceMetricsOverride', { ...${JSON.stringify(viewport)}, deviceScaleFactor: 1, mobile: false });
+  await preparedFrame.goto(${JSON.stringify(artifactUrl.href)});
+  await preparedFrame.waitForSelector(preparedProfile.capture, { state: 'visible', timeout: 15000 });
+  var preparedViewport = await preparedFrame.evaluate(() => ({ width: innerWidth, height: innerHeight }));
+  if (preparedViewport.width !== ${viewport.width} || preparedViewport.height !== ${viewport.height}) throw new Error('The requested CSS viewport was not applied');
+  console.log(await preparedFrame.snapshot());
+  if (${JSON.stringify(call.scenario)} === 'diagnostics') {
+    preparedTab = await preparedTask.newPage();
+    await preparedTab.goto(${JSON.stringify(fixtureUrl.href)});
+  }
   var verifyPreparedFiles = async () => preparedFrame.evaluate(async expected => {
     const actual = [];
     for (const file of expected) {
@@ -80,12 +90,15 @@ try {
     return actual;
   }, ${JSON.stringify(files)});
   var preparedServedBefore = await verifyPreparedFiles();
-  var preparedReport = await preparedProbe({frame:preparedFrame,tab:preparedTab,snapshot,profile:preparedProfile,...${JSON.stringify(call)}});
+  var preparedReport = await preparedProbe({frame:preparedFrame,tab:preparedTab,profile:preparedProfile,...${JSON.stringify(call)}});
   preparedReport.provenance = ${JSON.stringify(provenance)};
-  preparedReport.served_files = { url: preparedFrame.url(), before: preparedServedBefore, after: await verifyPreparedFiles() };
-  if (preparedReport.scenario === 'overview') display(await preparedTab.screenshot());
+  preparedReport.served_files = { url: await preparedFrame.url(), before: preparedServedBefore, after: await verifyPreparedFiles() };
+  if (preparedReport.scenario === 'overview') console.log('OBSERVATORY_SCREENSHOT=' + await preparedFrame.screenshot());
   console.log('OBSERVATORY_PROBE_JSON=' + JSON.stringify(preparedReport));
-} finally { await closeTab(preparedTab); }`;
+} finally {
+  if (preparedTab) await preparedTab.close();
+  await preparedFrame.cdp('Emulation.clearDeviceMetricsOverride');
+}`;
   process.stdout.write(`${JSON.stringify({ title: `Observatory ${options['--scenario']} ${options['--size']}`, code })}\n`);
 } catch (error) {
   console.error(`prepare-probe: ${error.message}`);

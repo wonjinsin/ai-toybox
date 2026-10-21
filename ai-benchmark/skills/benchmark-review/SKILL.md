@@ -19,9 +19,11 @@ Do not invoke `benchmark-record` or launch another model to review the work.
 
 ## Continue independent permitted checks
 
-Apply the [browser transport rules](references/verification.md). Review the
-unchanged artifact over documented, host-permitted loopback HTTP. Direct-file
-execution and compatibility are outside review scope; do not test `file://`.
+Use ego-browser (Ego Lite) through `ego-browser nodejs`, following the
+[browser transport rules](references/verification.md) and installed
+`ego-browser skill` guide. Review the unchanged artifact over documented,
+host-permitted loopback HTTP. Direct-file execution and compatibility remain
+outside review scope; do not test `file://`.
 
 A confirmed functional failure is a `fail`, not a reason to abandon the review.
 Record its evidence and continue independent checks. A missing browser capability,
