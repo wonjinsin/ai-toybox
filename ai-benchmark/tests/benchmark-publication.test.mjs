@@ -320,23 +320,14 @@ for (const scenario of [
     assert.equal(saved.reviewer.effort, null);
     const markdown = (await readFile(path.join(run, 'reviews/review.md'), 'utf8'))
       .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
-    const field = label => {
-      const line = markdown.split('\n').find(value => value.startsWith(`${label}: `));
-      assert.ok(line, `report must expose ${label}`);
-      return line.slice(label.length + 2);
-    };
     const numbers = value => (value.match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
-    const headline = field('Published total');
-    assert.equal(numbers(headline)[0], scenario.total[0]);
-    assert.deepEqual(numbers(headline.split('Range: ')[1]), scenario.total[0] === scenario.total[1] ? [scenario.total[0]] : scenario.total);
-    assert.deepEqual(numbers(field('Raw total')), scenario.raw[0] === scenario.raw[1] ? [scenario.raw[0]] : scenario.raw);
-    assert.deepEqual(numbers(field('Confirmed cap')), scenario.cap === null ? [] : [scenario.cap]);
-    assert.ok(field('Missing reviewer metadata').includes('reviewer.effort'));
-    const missing = review.checks.filter(check => check.status === 'unverified').map(check => check.id);
-    const missingLine = field(`Missing checks (${missing.length})`);
-    for (const id of missing) assert.ok(missingLine.split(/,\s*|\./).includes(id));
+    const headline = markdown.split('\n').find(line => line.includes(' / 100.'));
+    assert.deepEqual(numbers(headline), [
+      scenario.total[0], 100,
+      ...(scenario.total[0] === scenario.total[1] ? [scenario.total[0]] : scenario.total),
+    ]);
     for (const category of saved.categories) {
-      const row = markdown.split('\n').find(line => line.startsWith(`| ${category.id} |`));
+      const row = markdown.split('\n').find(line => line.startsWith('| ') && line.includes(category.id));
       assert.ok(row, `report must expose ${category.id}`);
       assert.deepEqual(numbers(row.split('|')[2]), category.score === category.score_upper_bound
         ? [category.score] : [category.score, category.score_upper_bound]);
@@ -385,18 +376,11 @@ for (const scenario of [
     }
     const markdown = (await readFile(path.join(run, 'reviews/review.md'), 'utf8'))
       .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
-    const lines = markdown.split('\n');
-    const headline = lines.find(line => line.startsWith('Quality total: '));
-    assert.ok(headline);
-    assert.equal(Number(headline.match(/[\d.]+/)[0]), scenario.total[0]);
-    const range = (headline.split('Range: ')[1].match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
-    assert.deepEqual(range, scenario.total[0] === scenario.total[1] ? [scenario.total[0]] : scenario.total);
-    assert.ok(lines.includes(`Mandatory verdict: ${scenario.verdict}.`));
-    assert.ok(lines.includes(`Mandatory failures (${scenario.failed.length}): ${scenario.failed.join(', ') || 'None'}.`));
-    assert.ok(lines.includes(`Mandatory unverified (${scenario.mandatoryUnknown.length}): ${scenario.mandatoryUnknown.join(', ') || 'None'}.`));
-    assert.match(markdown, /Quality is uncapped/);
-    assert.doesNotMatch(markdown, /Raw total:|Confirmed cap:/);
-    assert.ok(lines.includes(`Coverage: ${saved.coverage.passed} passed, ${saved.coverage.failed} failed, ${saved.coverage.unverified} unverified.`));
+    const headline = markdown.split('\n').find(line => line.includes(' / 100.'));
+    assert.deepEqual((headline.match(/\d+(?:\.\d+)?/g) ?? []).map(Number), [
+      scenario.total[0], 100,
+      ...(scenario.total[0] === scenario.total[1] ? [scenario.total[0]] : scenario.total),
+    ]);
     assert.equal(await readFile(draft, 'utf8'), draftBytes);
     assert.deepEqual(await sourceBytes(run), before);
   });

@@ -120,6 +120,13 @@ The reviewer reads the saved prompt to select the compatible rubric. It does not
 - `reviews/review.json`: structured checks, scores, coverage, and verification limits.
 - `reviews/review.md`: human-readable findings and reproduction steps.
 
+New reviews use Korean for report headings, findings, JSON evidence and notes,
+checkpoints, and the final reply across all supported formats. JSON keys and enum
+values, identifiers, and the evidence markers `Action:`, `Expected:`, and
+`Observed:` remain unchanged. Quoted UI labels and errors retain their original
+text. This applies to newly written reviews; existing saved reports are not
+automatically translated.
+
 **Re-review replaces both reports.** There are no timestamped review backups or retained screenshot/evidence archives; unrelated existing files are preserved. Each replacement is atomic, but the pair is not a filesystem transaction. Publication is complete only after both files pass read-back.
 
 Reviews use **ego-browser (Ego Lite)** and permitted loopback HTTP serving only the unchanged output directory. Read `ego-browser skill`, use one TaskSpace per review, and follow the documented Page APIs. **Direct-file execution remains outside review scope**, even though generation requires it. Functional defects are findings, not reasons to abandon unrelated checks. Unavailable capabilities leave affected checks unverified; missing required reviewer metadata keeps the review partial. See [review verification](skills/benchmark-review/references/verification.md) and the [review format](skills/benchmark-review/references/review-format.md).
