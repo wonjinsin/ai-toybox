@@ -11,6 +11,13 @@ Review one existing run without repairing or regenerating it. Save only
 those two files; do not create timestamp directories, backups, screenshots or
 other retained evidence files. Never modify `prompt.md`, `run.json` or `output/`.
 
+Write all review prose in Korean, including JSON `evidence` and `notes`,
+checkpoints, generated Markdown, and the final reply, for every supported format.
+This overrides the repository's English documentation convention for review
+outputs only. Preserve JSON keys, enum values, IDs, model names, paths, commands,
+and exact quoted UI/error text. Keep the validator's `Action:`, `Expected:`,
+and `Observed:` markers in English; write their descriptions in Korean.
+
 Resolve resources relative to this file. Read [task routing and the current rubric](references/rubric.md),
 [browser checks](references/verification.md) and [format routing](references/review-format.md)
 before evaluating. Select the current or frozen historical rubric/template from

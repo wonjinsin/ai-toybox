@@ -233,7 +233,8 @@ blocked outcomes. Existing saved reviews are not fresh evidence.
 
 ## Markdown report
 
-Write the report in English with these sections:
+Generate the report in Korean under the [review language contract](../SKILL.md),
+using these sections:
 
 1. **Conclusion.** Evidence status, mandatory verdict, uncapped quality bounds,
    mandatory failed and unverified IDs, timestamp, and reviewer. Identify a

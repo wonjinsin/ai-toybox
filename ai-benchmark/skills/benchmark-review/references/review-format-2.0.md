@@ -110,7 +110,8 @@ cleanup, and readback use the same rules as format 3.
 
 ## Markdown report
 
-Write `review.md` in English, consistent with repository documentation. Use:
+Generate `review.md` in Korean under the [review language contract](../SKILL.md).
+Use:
 
 1. **Conclusion:** review status, mandatory-requirement verdict, total out of 100
    or `Unscored`, review time and reviewer when known.
