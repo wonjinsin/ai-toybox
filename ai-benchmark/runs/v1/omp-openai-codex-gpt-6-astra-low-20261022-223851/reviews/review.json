@@ -1,0 +1,267 @@
+{
+  "format_version": "5.0",
+  "rubric_version": "solar-system-5.0",
+  "reviewed_at": "2026-10-22T14:56:32.143878+00:00",
+  "reviewer": {
+    "model": "openai-codex/gpt-6-astra",
+    "effort": "high"
+  },
+  "status": "complete",
+  "requirements_verdict": "pass",
+  "verification": {
+    "browser_method": "http",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ]
+  },
+  "categories": [
+    {
+      "id": "simulation",
+      "weight": 25,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "selection",
+      "weight": 20,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "usability",
+      "weight": 15,
+      "score": 4.6,
+      "score_upper_bound": 4.6
+    },
+    {
+      "id": "visual",
+      "weight": 15,
+      "score": 4,
+      "score_upper_bound": 4
+    },
+    {
+      "id": "responsive",
+      "weight": 15,
+      "score": 5,
+      "score_upper_bound": 5
+    },
+    {
+      "id": "delivery",
+      "weight": 10,
+      "score": 5,
+      "score_upper_bound": 5
+    }
+  ],
+  "checks": [
+    {
+      "id": "S1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 초기 자동 재생과0/3/6/12/24/48/30/17/73/120초 실제 seek 화면 및 세 정보 각도를 관찰했다. Expected: 태양1개·서로 다른 크기/색의 행성3개, 원궤도와 고정 위상 및12/24/48초 주기가 보여야 한다. Observed: 주황/청록/보라 구체와 태양을 확인했다. Ember 중심은0/12초 모두(615.5,393.5), Azure는0/24초 모두(445,466), Iris는0/48초 모두(464.5,289.5)였다. 표준 카메라 투영을 역산한 실제 이미지 중심 각도는 위상0/100/225도 및 주기12/24/48초 식과 최대0.74도 이내로 일치했다. 중간 시각의 궤도상 위치와 자동 운동도 이미지로 관찰했다."
+    },
+    {
+      "id": "S2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 새 HTTP 탐색과 reload 직후 DOM을 읽고 초기 및3초 이후 장면 이미지를 비교했다. Expected: 0초·1×·재생·무선택·overview로 시작하고 자동으로 움직여야 한다. Observed: 최초 준비 직후0.17초/1×/Pause/무선택/overview, 초기 이미지0.25초와 이후3.6초대 이미지에서 세 행성이 실제 이동했다. 초기 highlight가 없고 명시적인 무선택 정보와 disabled Track가 보였다. reload도0.14~0.27초의 로드 경과만 있는 같은 기본값이었다."
+    },
+    {
+      "id": "S3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 30초에서 정지한 장면을3.3초 이상 떨어져 촬영하고 짧게 resume한 뒤 다시 정지했다. 정지 중 선택·orbit·zoom도 조작했다. Expected: 시간과 모든 궤도 위치가 동결되고 resume은 위치 점프 없이 이어져야 한다. Observed: 30초 정지 전후 scene 픽셀이 완전히 같았다. 재생 후30.10초 장면의 세 위치는 그 시간의 예측 각도와 최대0.37도 차이였고 불연속 점프가 없었다. 정지 상태의 선택 및 두 모드 카메라 조작도 실제 highlight·원근/확대 변화를 보였다."
+    },
+    {
+      "id": "S4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 정지17초에서0.25×/2×/4×를 설정하고 각각3.3초 이상 재생했다. 재생 중에도2×/4×/0.25×로 변경했다. Expected: 현재 시간·위치를 보존하며 모든 궤도의 상대 속도와 설정 속도가 유지되어야 한다. Observed: 정지 세 속도의 scene 픽셀이 baseline과 완전히 같았다. 실제/시뮬레이션 증분은0.25×:3.3039/0.83초,2×:3.3088/6.62초,4×:3.3217/13.28초로 사전 오차 안이었다. 재생 중 변경에서 시간이 reset되지 않았고 old/new 속도 사이의 자연 진행만 있었다. 각 rate 종료와 변경 뒤 세 렌더 위치를 읽은 시간과 비교한 각도 오차는 최대0.66도였다."
+    },
+    {
+      "id": "S5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 실제 time range의 클릭·Home/End·방향키로0/30/120/17/73초를 seek하고 속도/선택/재생 변경과 reload 후 반복했다. Expected: seek가 정지 및 즉시 위치/정보 갱신을 수행하고 같은 시각은 같은 위치를 재현해야 한다. Observed: 모든 seek에서 Resume 상태였다.30초 각도180/190/90도,17초150/355/352.5도,73초30/115/52.5도가 실제 위치와 맞았다.30/17/73초의 변경 전후 및0/30/17/73초 reload 전후 scene 픽셀이 완전히 같았다.17.25초 imported restore도157.50/358.75/354.38도와 해당 렌더 위치를 재현했다."
+    },
+    {
+      "id": "S6",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 119초·4×에서 재생하고3.3초 뒤 및 추가3.1초 뒤 관찰한 다음17초로 seek하여 재생했다. Expected: 120초에서 wrap/초과 없이 정지하고 이전 시각에서 재생 가능해야 한다. Observed: 두 endpoint 관찰 모두 정확히120초/Resume이었고 이미지도120초 위치였다. 이전 seek 후 재생하여18.79초 및 새로운 궤도 위치로 진행했다."
+    },
+    {
+      "id": "S7",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 로컬 Three.js 자원과 WebGLRenderer/SphereGeometry/PerspectiveCamera 구현을 검사하고 실제 HTTP scene의 orbit·zoom을 네 playback/mode 조합에서 촬영했다. Expected: 진짜3D 기하의 원근·가림·깊이 변화가 보여야 한다. Observed: three.min.js가669884 decoded bytes로 로드됐다. 실제 drag에서 궤도 타원의 기울기와 구체 간 상대 배치·가림이 바뀌었고 wheel로 투영 크기가 증가했다. tracking에서는 선택 구체 뒤의 궤도와 다른 구체가 상대적으로 이동했다. flat label/import만을 근거로 하지 않았다."
+    },
+    {
+      "id": "S8",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 정지·재생 중 capture하고 모든 live 필드를 변경한 뒤 저장값을 비교했다. 캡처 ID를 export→UI import→reload→restore하고 fractional imported 항목도 관찰했다. Expected: 다섯 필드와 세 derived angles를 표시하고 고유 ID·값이 유지되며 capture가 live state를 바꾸지 않아야 한다. Observed: 캡처 obs-mvjncsji-p638sx의30초/2×/ember/tracking 및180/190/90도가 live 편집과 전체 round-trip 후 같았다. 재생 캡처31.707149999997824초/1.5×/azure/overview 및231.21/215.61/102.80도도 이후 편집에 불변이었다. 안정화한 capture 전후 scene 픽셀이 같았다.17.25초 fractional 각도는157.50/358.75/354.38도였으며 reload 후도 같은 이미지와 값이었다."
+    },
+    {
+      "id": "T1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 세 행성을 각각 canvas와 labeled select로 선택하고 정지 및0.25×재생에서 두 경로를 모두 촬영했다. Expected: 두 선택 경로가 같은 선택·정보·가시 highlight를 갱신해야 한다. Observed: Ember/Azure/Iris 모두 실제 canvas 클릭으로 선택됐고 select값·이름/주기/각도 및 해당 구체의 민트 halo가 일치했다. 별도 list 변경도 정지/재생 각각 세 행성으로 halo를 옮겼다."
+    },
+    {
+      "id": "T2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 세 행성의 정보와 렌더 위치를 재생·seek에서 대조하고 null overview snapshot을 restore했다. Expected: 이름·주기·각도가 렌더와 맞으며 무선택은 정보와 highlight가 지워져야 한다. Observed: Ember12초/Azure24초/Iris48초 정보와 실제 위치 각도 오차가 최대0.74도였다. 재생에서 각도가 계속 갱신됐다. null restore 후 No planet selected. Choose a planet to inspect its orbit.와 disabled Track가 나타났고 이미지에서 halo가 없어졌다."
+    },
+    {
+      "id": "T3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: desktop/mobile에서 tracking 재생을3초 이상3회 촬영하고 seek 및 다른 행성 선택을 수행했다. Expected: 선택 구체가 scene 중심 근처에 유지되고 seek/선택 변경이 target·정보·highlight를 함께 갱신해야 한다. Observed: desktop Iris는3.94~7.63초 사이 중심(534,376)에 유지됐다. mobile17.04~20.63초는(188,275.5~276)였고73초 seek 직후도 같았다. 각각 작은 scene변520/350px의10% 기준보다 훨씬 작았다. Azure로 변경하면 halo·정보·중심 구체가 함께 바뀌면서 time/speed/playback을 보존했다. 무선택에서는 Track disabled가 유지됐다."
+    },
+    {
+      "id": "T4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 재생/정지 tracking 및 수동 카메라 변경에서 Overview로 돌아오고 양 viewport의 여러 시각을 촬영했다. Expected: full-system framing을 복원하면서 선택·시간·속도·재생을 보존해야 한다. Observed: desktop에서 구체3개와 전체 궤도가 다시 보였고 정지17초/선택Iris/0.25×가 유지됐다. 재생은 자연 시간만 진행했다. mobile5.2/17/73/120초에서도 전체 시스템이 scene 안에 보였으며 selected와 playback이 의도치 않게 바뀌지 않았다."
+    },
+    {
+      "id": "T5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: tracking과null overview snapshot을 live 편집 및 orbit/zoom 뒤 restore하고 같은 viewport에서 반복했다. Expected: 저장 필드를 함께 적용하고 정지하며 정보/위치/target과 결정적 표준 framing을 복원해야 한다. Observed: 30초/2×/ember tracking 및30초/1.5×/null overview,17.25초 tracking을 복원했다. null은 정보를 지웠고 tracking은 선택 구체를 중심에 두었다. orbit/zoom 뒤 restore의 중심 차이는 사전2px 이내였으며 안정화 후 repeated tracking restore와 fractional reload restore의 scene 픽셀은 완전히 같았다."
+    },
+    {
+      "id": "U1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: overview/tracking×playing/paused 네 조합에서 실제 pointer drag와 wheel 전후 이미지를 비교했다. Expected: 각 조합에서 카메라 orbit·zoom이 작동하고 simulation state를 바꾸지 않아야 한다. Observed: 모든 조합에서 궤도 투영 방향·구체의 상대 배치가 변했고 wheel로 구체가 확대됐다. 정지17초는 그대로였고 재생은 자연 시간만 진행했다. 선택과mode/speed도 유지됐다."
+    },
+    {
+      "id": "U2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 행성 위치에서 빠른80×40px drag와1.6px씩20회=32px 느린 drag를 수행하고 list/range/button/snapshot/JSON 실제 입력의 scene을 비교했다. Expected: drag가 click selection이 되지 않고 DOM 입력이 scene 선택/카메라로 누출되지 않아야 한다. Observed: 두 drag는 카메라 방향만 바꾸고 무선택을 유지했다. list는 의도한 halo만 변경했다. 속도 변경, capture/delete, export/import 및 반복 seek에서 보존 대상 scene 프레이밍이 같았다.35개 invalid import 전후 scene 픽셀도 모두 같았고 입력 누출은 없었다."
+    },
+    {
+      "id": "U3",
+      "status": "pass",
+      "rating": 3,
+      "method": "http",
+      "evidence": "Action: 양 viewport에서 playback·selection·tracking·archive·JSON·용량/저장 오류 피드백을 관찰했다. Expected: 주요 목적과 상태·동작 결과가 이해 가능해야 한다. Observed: 명확한 제목,Pause/Resume,속도/시간,planet-ID mapping,restore·capacity·Import error·Saving unavailable 피드백이 읽혔다. 다만 정지 중 LIVE SIMULATION 헤더와 매우 긴 캡처 소수 표현은 덜 정제됐다. 명료하고 사용 가능한 보통 수준의3점을 부여한다."
+    },
+    {
+      "id": "U4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 세 캡처 뒤 네 번째를 시도하고 가운데 항목을 삭제한 다음 다시 캡처했다. Expected: 최대3개·가시 용량 거부·append 순서·나머지 ID/값·live state 보존 및 ID 비충돌을 만족해야 한다. Observed: 네 번째는 Archive full: delete an observation before capturing another.를 표시하고 세 export 항목을 보존했다. middle 삭제 뒤 나머지 순서/값/ID를 유지하고 새 obs-mvjncvzz-l4hhw0를 끝에 추가했다. time/speed/selection/mode/playback은 그대로였고 안정화한 capture/delete 전후 scene 픽셀도 같았다."
+    },
+    {
+      "id": "U5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 1440×900과390×844에서 Tab/Shift+Tab,Enter,range 방향키,select typeahead로 모든 primary DOM control을 조작하고 각 동작 직후 결과와 focus 이미지를 관찰했다. Expected: 의미 있는 accessible name,가시 focus,정상 keyboard 결과와 trap 없는 이동을 제공해야 한다. Observed: play/resume/seek/speed/selection/track/overview/capture/restore/delete/textarea/import/export를 모두 수행했다. capture 뒤 시간·선택·mode를 바꾸고 keyboard restore가 원래4필드와정지를 복원했다.각 input 연결 label과 snapshot별 aria-label이 있었고 실제 이미지에서 금색 outline이 보였다. Shift+Tab으로 textarea 밖을 이동해 trap이 없었다."
+    },
+    {
+      "id": "V1",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: 양 viewport의 overview/tracking,선택·seek·camera 상태와 캡처 이미지를 직접 확인했다. Expected: 관측 대상과 선택이 읽기 쉬워야 한다. Observed: 서로 구별되는 주황·청록·보라 구체와 밝은 태양,민트 halo가 선명했다. tracking에서는 선택을 크게 보고 overview는 전체를 볼 수 있었다. 얇은 궤도선의 대비가 다소 약한 점을 제외하면 상태가 읽기 쉬워4점을 부여한다."
+    },
+    {
+      "id": "V2",
+      "status": "pass",
+      "rating": 4,
+      "method": "http",
+      "evidence": "Action: 양 viewport의 full-page panel 배치와 keyboard focus·archive·JSON 영역을 직접 확인했다. Expected: 타이포·간격·색·계층이 일관되고 읽기 쉬워야 한다. Observed: 어두운 카드,민트 transport 강조,명확한 섹션 제목과 일관된 간격이 desktop2열/mobile1열에 유지됐다. snapshot 값과 JSON은 조밀하고 긴 소수는 다소 산만하지만 전반적으로 정돈된 계층이어서4점을 부여한다."
+    },
+    {
+      "id": "L1",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 실제1440×900 document에서 모든 primary control과 snapshot/JSON을 pointer·keyboard로 조작하고 일반/full-page 이미지를 확인했다. Expected: 가로 스크롤이나 panel 가림 없이 scene과control을 사용 가능해야 한다. Observed: innerWidth1440/innerHeight900/scrollWidth1425였다. scene,transport,우측 selection/JSON은 겹치지 않았고 아래 archive의restore/delete는 수직 스크롤로 접근했다. 모든 기본 동작이 성공했고 가로로 숨은 control은 없었다."
+    },
+    {
+      "id": "L2",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 실제390×844에서 selection/tracking/overview/seek/speed/play/capture/restore/delete/JSON을 조작하고 focus 및 전체 panel 이미지를 확인했다. Expected: mobile에서도 가로 스크롤·차단 panel 없이 같은 기능을 제공해야 한다. Observed: innerWidth390/innerHeight844/scrollWidth375였다. scene은350×360 정도의 영역에서 overview 전체와 tracking 선택을 읽을 수 있었고 panel들은 수직으로 쌓였다. 3개 archive와 JSON이 긴 페이지를 만들지만 수직 이동으로 모든 control이 정상 사용됐고 가로 overflow나 겹침은 없었다."
+    },
+    {
+      "id": "D2",
+      "status": "pass",
+      "rating": 5,
+      "method": "static",
+      "evidence": "Action: output/index.html의 모든 자원 참조와 output 디렉터리를 검사했다. Expected: 모든 로컬 자산이 output HTTP root 아래에 있고 build/root 의존성이 없어야 한다. Observed: 유일한 로컬 script 참조 three.min.js가 output/three.min.js로 존재했다. CSS와 앱 script는 인라인이며 추가 font/texture/build/root 의존성은 없었다."
+    },
+    {
+      "id": "D3",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: Ego의 Runtime/Network 진단을 탐색 전에 켜고 scratch 및보완 p2 about:blank에서 console.error/비동기 exception 양성 대조를 수행한 뒤각 시퀀스 events를 수집했다. Expected: 의도한 작업을 막는 artifact 원인의 page/console/resource 오류가 없어야 한다. Observed: Runtime.consoleAPICalled(error)와Runtime.exceptionThrown을 모두 수신해 진단 전송을 확인했다. artifact에서는 오류/Network.loadingFailed가 수집되지 않았고 로컬 Three.js가 로드됐다. classic-build deprecation warning만 있었다. 앞선 screenshot transport 장애는 artifact 오류로 세지 않았으며 보완에서는 캡처와 기능 관찰이 정상 완료됐다."
+    },
+    {
+      "id": "D4",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 명시 Export/Import와 labeled textarea로 empty/populated 목록을 교환하고 캡처 payload의 export→import→reload를 수행했다. Expected: 정확한 version1 및5필드만 내보내고 ID/타입/순서·목록·live state를 보존해야 한다. Observed: 빈 export는{version:1,snapshots:[]}였고 populated export에는id/time/speed/selectedPlanet/viewMode만 있었다.각도/playback/camera offset은 없었다. 실제 행성 ID mapping과stable IDs·순서가 유지됐고 캡처 ID도 전체 round-trip에서 같았다. export/import 전후 정지 scene 픽셀과 live UI가 같았고 재생 교환은 자연 진행만 유지했다."
+    },
+    {
+      "id": "D5",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 실제 textarea/import로35개 invalid 사례 및 empty/3-entry·경계값·fraction·extra-key 유효 payload를 각각 적용하고 목록/live UI/scene 이미지를 비교했다. Expected: 전체 atomic validation과list-only replacement,정확한 ID·순서·derived angles 및camera 보존을 만족해야 한다. Observed: malformed,root/entry null·array,누락필드,version문자열/2,숫자문자열/boolean,범위초과,1e400,non-array list,4개/중복/빈·숫자ID,잘못된planet/mode/null tracking,mixed-validity를 모두 visible error로 거부했다. 기존 비어있지 않은 payload/live state 및35개 scene 이미지가 모두 같았다.공백/A/a ID,0·120초/.25·4×/17.25초·1.5×를 보존하고extra keys/999도 입력은 무시했다. 정지 valid/empty import 전후 scene도 같았고 재생 import는0.2044초에0.30초(1.5×)만 진행하며camera framing을 유지했다."
+    },
+    {
+      "id": "D6",
+      "status": "pass",
+      "rating": 5,
+      "method": "http",
+      "evidence": "Action: 같은8891 origin/context에서 import/delete/capture 각각 reload하고 app 전용 key의invalid payload와bounded quota fixture를 시험했다. Expected: 목록 persistence·R2 live 기본값·invalid 복구·저장실패 안내와 memory 사용성을 제공해야 한다. Observed: 각 mutation의 ID/순서/값/각도가reload에 유지됐고 live는0.14~0.33초/1×/재생/무선택/overview였다. malformed/version2/문자열time 저장값은 빈목록과가시 recovery notice를 보였다. quota filler5242803문자에서 capture는 memory에 추가됐지만 저장 raw는빈목록으로남고 Saving unavailable. Observations remain in memory only.가 보였다.재생/선택/복원/삭제는계속가능했다. fixture 원값 복원과filler 제거,마지막 최초 key absence 복원을확인했다.별도read-denial은시험하지않았고허용된실제write-failure경로를입증했다."
+    }
+  ],
+  "total_score": 95.8,
+  "total_score_upper_bound": 95.8,
+  "coverage": {
+    "passed": 27,
+    "failed": 0,
+    "unverified": 0
+  },
+  "notes": [
+    "범위는 지정된 solar-system-observatory-2 Low 실행 하나이다. 처음 all-unverified 체크포인트와 partial 검토 뒤 사용자 요구에 따라 같은 작업의 누락 검증을 실질 보완했다. 이번 최종 판단은 새 UI·이미지 관찰을 근거로 하며 이전 리뷰 JSON을 증거로 복사하지 않았다. 생성 run.json의 failed 측정 상태나 generation notes는 품질 증거/감점 근거로 사용하지 않았다.",
+    "리뷰어 모델 openai-codex/gpt-6-astra는 현재 호스트 주입 메타데이터,effort high는 이 리뷰 대리 작업에 명시 적용된 구성에 근거한다. 독립 runtime effort scalar는 노출되지 않았으며 generic default나 생성 폴더에서 추정하지 않았다. 최종시각은 현재 호스트 Python UTC 실제 시계이다.",
+    "명시된 benchmark-review를 적용했다. using-harness-flow는 대리 작업 예외를 읽었고,호스트 필수 ego-browser를 적용하여 설치된 전체 가이드를 읽었다. screenshot 장애 조사 때문에 부모와 이 대리 작업은 higher-priority mandatory systematic-debugging을 추가 적용했다. 모델 변경·새 모델·descendant·Aside·다른 브라우저·dependency 설치는 없었다.",
+    "사전 허용오차를 유지했다: 속도는3초 이상, max(0.15초,기대delta의5%)+표시0.01초;정지0.01초/각도1도;예측각도2도+표시0.01도;동일상태 중심2 CSS px;tracking은scene 작은변의10%;ID/순서/타입/보존필드는정확비교. 실패 뒤 허용오차를 넓히지 않았다.",
+    "원래8단계를 보완에서 canvas Iris선택부터 올바른순서로 재실행했다: 자동운동→scene선택/추적→정지30초→정지2×→2×재생3초이상→list Azure전환→overview→정지30초반복. 이어 저장된추가1~6(snapshot restore,capacity,invalid JSON,valid round-trip,persistence/recovery,양viewport keyboard)를수행하고남은전체matrix를관찰했다.",
+    "원래p1의 첫1440×900 screenshot만성공하고후속 Page.captureScreenshot timeout 및 fromSurface:false의 Unable to capture screenshot이있었다. 근본원인은미확정이다. 부모는동일TaskSpace1의기존빈공간에서p2를생성하여blank/desktop/mobile 캡처정상화를확인했고,승인받은보완은그p2만사용했다. 다른공간/런타임으로우회하거나원인을확정했다고주장하지않는다. Browser.getWindowForTarget 실패는반복하지않았다.",
+    "보완은Ego nodejs의문서화Page/keyboard/mouse/evaluate/cdp만사용하고127.0.0.1:8891이변경없는output만제공했다. 매호출viewport를다시설정하고실제1440×900/390×844를확인했다.스크린샷을직접읽었고임시contact sheet는실제scene/focus pixels를crop/배치한것이다. 설치된ffmpeg와표준Python으로색구체중심을측정하고검사된표준카메라투영을역산했다.앱내부camera/mesh state를노출하거나DOM/Three.js를mock/수정하지않았다.",
+    "보완의정지repeat-seek/reload/속도변경,안정화capture/delete/repeated restore,export/import 및35개invalid scene 비교는픽셀동일이었다. 일부초기자동스크롤직후이미지는페이지전체가1~2px이동했으므로동일픽셀이라고보고하지않았고,표준framing 반복중심은사전2px이내였다. 별도안정화된관찰에서는snapshot/camera보존의정확한scene동일성도확인했다.",
+    "초기시도의비동기1×표본3.2042초→3.01초는사전오차밖이었고보존한다. 당시느린갱신과캡처장애원인을앱결함으로확정하지않았다. 보완의단독scene에서는.25/2/4×에3.3039/3.3088/3.3217초동안.83/6.62/13.28초진행했고visibilityState는visible이었다. time range의기존thumb안클릭으로값이안바뀌어리뷰helper가중단된두경우는현재DOM을확인한뒤실제Home/End와range입력으로해결했다.앱오류나숨은state수정이아니다.",
+    "저장소는app key orbit-observatory-2-snapshots와독립review filler만접근했다.8MiB이하bounded search로실제QuotaExceededError를만들었으며prototype/security설정은변경하지않았다.각fixture원raw값을복원했고최종app key 최초부재및이전/새filler부재를확인했다. 직접file://실행,터치실기기,별도storage read-denial은범위의인증에포함하지않는다.",
+    "정리: 부모소유p2는최신지시에따라닫거나finish하지않고about:blank로돌려scene렌더를종료했으며emulation을해제하고부모에게반환했다.부모소유proc://low-capture-diagnosis 서버종료를요청했다.임시스크립트/이미지/metadata/draft는최종게시후삭제한다.초기와보완후prompt.md/run.json/output두파일의SHA-256일치를작업메모리에서확인했으며해시자체는리뷰파일에보존하지않는다."
+  ]
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101319">
+  <title>Orbit — A small solar observatory</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="vendor/three.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="#observatory" aria-label="Orbit observatory"><span class="brand-orbit" aria-hidden="true"></span>ORBIT<span class="edition">/ 03</span></a>
+    <span class="masthead-description">A SMALL SOLAR OBSERVATORY</span>
+    <span class="system-badge"><span class="status-dot"></span> SYSTEM ONLINE</span>
+  </header>
+  <main id="observatory">
+    <div class="page-heading"><div><p class="eyebrow">EXPLORATION LAB · NO. 001</p><h1>A little perspective.</h1><p class="intro">Three worlds. One star. Your point of view.</p></div><div class="system-spec">CIRCULAR ORBITS<br><span>DETERMINISTIC SIMULATION</span></div></div>
+    <div class="workspace">
+      <div class="observation-column">
+        <section class="scene-panel" aria-label="Interactive three-dimensional solar system">
+          <div class="scene-toolbar"><span><span class="small-cross" aria-hidden="true">+</span> LIVE OBSERVATION</span><span id="view-label">FULL SYSTEM</span></div>
+          <div id="scene" aria-label="3D scene. Drag to orbit, scroll or pinch to zoom. Select planets here or use the planet list."><p id="scene-error" role="alert" hidden></p></div>
+          <div class="scene-legend"><span class="axis-mark" aria-hidden="true">Y<br>└ X</span><span>DRAG TO ORBIT <b>·</b> SCROLL / PINCH TO ZOOM</span><span class="three-mark">3D / THREE.JS</span></div>
+        </section>
+        <section class="transport panel" aria-label="Simulation controls">
+          <div class="transport-top"><button id="play" class="primary" aria-label="Pause simulation"><span id="play-icon" aria-hidden="true">Ⅱ</span><span id="play-label">Pause</span></button><div class="time-display"><span class="eyebrow">SIMULATION TIME</span><output id="time-readout" for="time">000.00 <small>s</small></output></div><span id="play-status" class="running-label">RUNNING</span></div>
+          <label class="sr-only" for="time">Simulation time in seconds</label><input id="time" type="range" min="0" max="120" step="0.1" value="0" aria-describedby="seek-help"><div class="scale"><span>0 s</span><span>30</span><span>60</span><span>90</span><span>120 s</span></div>
+          <div class="speed-row"><label for="speed">Playback speed</label><input id="speed" type="range" min="0.25" max="4" step="0.01" value="1"><output id="speed-readout" for="speed">1×</output></div><p id="seek-help" class="hint">Seeking pauses the simulation. Playback stops at 120 seconds.</p>
+        </section>
+        <section class="field-notes"><span class="note-number">01 /</span><div><h2>Watch a system unfold.</h2><p>Select a world to inspect its orbit. Track it through space, freeze an instant, or save an observation to return to later. These 12, 24 and 48-second orbits are a study in motion, not astronomical scale.</p></div></section>
+        <section class="panel json-panel" aria-labelledby="json-heading"><div class="section-heading"><h2 id="json-heading">Observation data</h2><span class="eyebrow">JSON / V1</span></div><label for="snapshot-json">Snapshot JSON</label><p class="hint">Export your entire archive or replace it with a validated list. Import never changes the live scene. IDs: <code>aurel</code>, <code>nereid</code>, <code>vesper</code>.</p><textarea id="snapshot-json" rows="7" spellcheck="false" placeholder='{"version":1,"snapshots":[]}'></textarea><div class="json-actions"><button id="export">Export JSON <span aria-hidden="true">↗</span></button><button id="import">Import JSON <span aria-hidden="true">↙</span></button></div><p id="json-message" role="status" aria-live="polite" class="notice"></p></section>
+      </div>
+      <aside class="instrument-column" aria-label="Planet details and saved observations">
+        <section class="panel planet-panel" aria-labelledby="planet-heading"><div class="section-heading"><h2 id="planet-heading">The system</h2><span class="eyebrow">03 WORLDS</span></div><div id="planet-list" aria-label="Select a planet"><button class="planet-option" data-planet="aurel" aria-pressed="false"><span class="planet-dot aurel"></span><span class="planet-title">Aurel<code>ID: aurel</code></span><span class="period">12 s <span aria-hidden="true">↗</span></span></button><button class="planet-option" data-planet="nereid" aria-pressed="false"><span class="planet-dot nereid"></span><span class="planet-title">Nereid<code>ID: nereid</code></span><span class="period">24 s <span aria-hidden="true">↗</span></span></button><button class="planet-option" data-planet="vesper" aria-pressed="false"><span class="planet-dot vesper"></span><span class="planet-title">Vesper<code>ID: vesper</code></span><span class="period">48 s <span aria-hidden="true">↗</span></span></button></div><div class="selection-details"><p class="eyebrow">SELECTED WORLD</p><h3 id="selected-name">No planet selected</h3><p id="selection-hint" class="hint">Choose a planet in the scene or the list above.</p><dl><div><dt>Orbital period</dt><dd id="selected-period">—</dd></div><div><dt>Orbital angle</dt><dd id="selected-angle">—</dd></div></dl></div><div class="view-controls"><button id="track" disabled aria-pressed="false">Track planet <span aria-hidden="true">⌾</span></button><button id="overview" aria-pressed="true">Overview <span aria-hidden="true">↖</span></button></div></section>
+        <section class="panel archive-panel" aria-labelledby="archive-heading"><div class="section-heading"><h2 id="archive-heading">Saved observations</h2><span id="snapshot-count" class="eyebrow">00 / 03</span></div><p class="hint">Capture an instant. Restore it paused, with a fresh standard camera view.</p><button id="capture" class="capture-button"><span aria-hidden="true">+</span> Capture observation</button><p id="snapshot-message" role="status" aria-live="polite" class="notice"></p><ol id="snapshots" class="snapshots"></ol><p id="empty-snapshots" class="empty-state"><span aria-hidden="true">◎</span>No observations yet.<br><small>Find a moment worth keeping.</small></p><p id="storage-message" role="status" aria-live="polite" class="storage-note">Snapshots save on this browser. Live playback starts fresh on reload.</p></section>
+        <div class="coordinate-note"><span class="status-dot"></span><span>FIXED PHASES · REPEATABLE POSITIONS<br>LOCAL ASSETS · NO CONNECTION NEEDED</span></div>
+      </aside>
+    </div>
+    <footer><span>ORBIT / AN OBSERVATION TOOL</span><span>MADE FOR A MOMENT OF DISCOVERY</span></footer>
+  </main>
+</body>
+</html>
